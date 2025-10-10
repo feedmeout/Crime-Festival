@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Φάκελος Υπόθεσης - Φεστιβάλ Αστυνομικής Λογοτεχνίας 2025</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .animated-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0.1;
+            background-image: repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,107,0,0.5) 35px, rgba(255,107,0,0.5) 70px);
+            animation: slide 20s linear infinite;
+        }
+
+        @keyframes slide {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(70px); }
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
+            padding: 30px 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            position: relative;
+            z-index: 10;
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #000;
+            font-size: 32px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(255,255,255,0.3);
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #1a1a1a;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 24px;
+            }
+            .header p {
+                font-size: 14px;
+            }
+        }
+
+        .container {
+            padding: 40px 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .intro-box {
+            background: rgba(255, 255, 255, 0.95);
+            border: 3px solid #ff6b00;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .intro-box h2 {
+            color: #1a1a2e;
+            font-size: 24px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .intro-box p {
+            color: #333;
+            line-height: 1.8;
+            font-size: 16px;
+        }
+
+        .case-summary {
+            background: linear-gradient(135deg, rgba(220,53,69,0.1) 0%, rgba(220,53,69,0.05) 100%);
+            border-left: 4px solid #dc3545;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 8px;
+        }
+
+        .case-summary h3 {
+            color: #dc3545;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .case-summary ul {
+            margin-left: 20px;
+            line-height: 1.8;
+            color: #333;
+        }
+
+        .section-title {
+            color: #fff;
+            margin-bottom: 25px;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(255, 107, 0, 0.5);
+        }
+
+        .evidence-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .evidence-card {
+            background: rgba(255, 255, 255, 0.95);
+            border: 3px solid #ff6b00;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+
+        .evidence-card.active:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(255, 107, 0, 0.4);
+        }
+
+        .evidence-card.inactive {
+            opacity: 0.7;
+            border-color: #ccc;
+        }
+
+        .evidence-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .evidence-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            box-shadow: 0 4px 15px rgba(255, 107, 0, 0.3);
+            flex-shrink: 0;
+        }
+
+        .evidence-card.inactive .evidence-icon {
+            background: linear-gradient(135deg, #999 0%, #666 100%);
+        }
+
+        .evidence-info h3 {
+            color: #1a1a2e;
+            font-size: 20px;
+            margin-bottom: 5px;
+            font-family: monospace;
+            letter-spacing: 1px;
+        }
+
+        .evidence-info p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .evidence-description {
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .evidence-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            font-size: 14px;
+            border: 2px solid transparent;
+            cursor: pointer;
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+        }
+
+        .btn-ar {
+            background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 107, 0, 0.3);
+        }
+
+        .btn-ar:hover:not(:disabled) {
+            box-shadow: 0 6px 20px rgba(255, 107, 0, 0.5);
+        }
+
+        .btn-qr {
+            background: white;
+            color: #ff6b00;
+            border-color: #ff6b00;
+        }
+
+        .btn-qr:hover:not(:disabled) {
+            background: #fff5f0;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-coming {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .critical-tag {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #dc3545;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .instructions-box {
+            background: linear-gradient(135deg, rgba(255,107,0,0.1) 0%, rgba(255,136,0,0.1) 100%);
+            border: 2px solid #ff6b00;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+
+        .instructions-box h2 {
+            color: #ff6b00;
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+
+        .instructions-box ul {
+            margin-left: 20px;
+            line-height: 1.8;
+            color: #333;
+        }
+
+        .instructions-box strong {
+            color: #ff6b00;
+        }
+
+        .footer {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            text-align: center;
+            color: #fff;
+            border-top: 2px solid rgba(255, 107, 0, 0.3);
+            margin-top: 40px;
+        }
+
+        .footer p {
+            margin: 5px 0;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .evidence-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .evidence-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-background"></div>
+
+    <div class="header">
+        <h1>⚠️ ΦΑΚΕΛΟΣ ΥΠΟΘΕΣΗΣ ⚠️</h1>
+        <p>Φεστιβάλ Αστυνομικής Λογοτεχνίας 2025 • Διαδραστική Έρευνα</p>
+    </div>
+
+    <div class="container">
+        <div class="intro-box">
+            <h2>🔍 Περίληψη Υπόθεσης</h2>
+            <p>
+                Ο Δημητρίου Πέτρος βρέθηκε νεκρός στο γραφείο του από δηλητηρίαση με κυάνιο. 
+                Αρχικά θεωρήθηκε αυτοκτονία, αλλά τα στοιχεία δείχνουν κάτι διαφορετικό...
+            </p>
+            <div class="case-summary">
+                <h3>🚨 Κρίσιμα Σημεία</h3>
+                <ul>
+                    <li><strong>Θύμα:</strong> Δημητρίου Πέτρος (CEO εταιρείας)</li>
+                    <li><strong>Τόπος:</strong> Γραφείο θύματος, 7ος όροφος</li>
+                    <li><strong>Ημερομηνία:</strong> 22/09/2025, ~22:15</li>
+                    <li><strong>Αιτία θανάτου:</strong> Δηλητηρίαση με κυάνιο</li>
+                    <li><strong>Ύποπτοι:</strong> Παπαδοπούλου Μαρία, Αναγνώστου Κωνσταντίνος, Πετρόπουλος Γεώργιος</li>
+                </ul>
+            </div>
+        </div>
+
+        <h2 class="section-title">📦 Τεκμήρια από τη Σκηνή (11 Συνολικά)</h2>
+
+        <div class="evidence-grid">
+            <!-- TEK #001 - ACTIVE -->
+            <div class="evidence-card active">
+                <span class="critical-tag">ΚΡΙΣΙΜΟ</span>
+                <div class="evidence-header">
+                    <div class="evidence-icon">🍾</div>
+                    <div class="evidence-info">
+                        <h3>ΤΕΚ #001</h3>
+                        <p>Μπουκάλι Johnnie Walker Black</p>
+                    </div>
+                </div>
+                <p class="evidence-description">
+                    <strong>Τοποθεσία:</strong> Γραφείο θύματος<br>
+                    <strong>Ευρήματα:</strong> Κυάνιο στον πάτο + αποτυπώματα θύματος, Παπαδοπούλου, Αναγνώστου, Πετρόπουλου
+                </p>
+                <div class="evidence-actions">
+                    <a href="TEK1_AR.html" class="btn btn-ar">
+                        👁️ Προβολή σε AR/3D
+                    </a>
+                    <a href="TEK1_QR.html" class="btn btn-qr">
+                        📱 Κάρτα QR
+                    </a>
+                </div>
+                <span class="status-badge status-active">✅ ΔΙΑΘΕΣΙΜΟ</span>
+            </div>
+
+            <!-- TEK #002 -->
+            <div class="evidence-card inactive">
+                <span class="critical-tag">ΚΡΙΣΙΜΟ</span>
+                <div class="evidence-header">
+                    <div class="evidence-icon">🥃</div>
+                    <div class="evidence-info">
+                        <h3>ΤΕΚ #002</h3>
+                        <p>Δύο κρυστάλλινα ποτήρια</p>
+                    </div>
+                </div>
+                <p class="evidence-description">
+                    <strong>Ποτήρι Α:</strong> DNA θύματος + κυάνιο + αποτυπώματα θύματος<br>
+                    <strong>Ποτήρι Β:</strong> Μερικό DNA (υπό ανάλυση) + ίχνη ουίσκι + αποτυπώματα μερικώς σβησμένα
+                </p>
+                <div class="evidence-actions">
+                    <button class="btn btn-ar" disabled>👁️ Προβολή σε AR/3D</button>
+                    <button class="btn btn-qr" disabled>📱 Κάρτα QR</button>
+                </div>
+                <span class="status-badge status-coming">⏳ ΣΥΝΤΟΜΑ</span>
+            </div>
+
+            <!-- TEK #003 -->
+            <div class="evidence-card inactive">
+                <div class="evidence-header">
+                    <div class="evidence-icon">📱</div>
+                    <div class="evidence-info">
+                        <h3>ΤΕΚ #003</h3>
+                        <p>Κινητό θύματος</p>
+                    </div>
+                </div>
+                <p class="evidence-description">
+                    <strong>SMS 20:45:</strong> «Θα τελειώσει απόψε»<br>
+                    <strong>Προέλευση:</strong> Προπληρωμένη κάρτα, εντοπισμένη σε ακτίνα 250m από το κτίριο
+                </p>
+                <div class="evidence-actions">
+                    <button class="btn btn-ar" disabled>👁️ Προβολή σε AR/3D</button>
+                    <button class="btn btn-qr" disabled>📱 Κάρτα QR</button>
+                </div>
+                <span class="status-badge status-coming">⏳ ΣΥΝΤΟΜΑ</span>
+            </div>
+
+            <!-- TEK #004 -->
+            <div class="evidence-card inactive">
+                <div class="evidence-header">
+                    <div class="evidence-icon">💻</div>
+                    <div class="evidence-info">
+                        <h3>ΤΕΚ #004</h3>
+                        <p>Email «αυτοκτονίας»</p>
+                    </div>
+                </div>
+                <p class="evidence-description">
+                    <strong>IP:</strong> 192.168.1.23 - 7ος όροφος<br>
+                    <strong>Προέλευση:</strong> Κοινόχρηστος υπολογιστής αίθουσας συσκέψεων (δεν απαιτεί κωδικό)
+                </p>
+                <div class="evidence-actions">
+                    <button class="btn btn-ar" disabled>👁️ Προβολή σε AR/3D</button>
+                    <button class="btn btn-qr" disabled>📱 Κάρτα QR</button>
+                </div>
+                <span class="status-badge status-coming">⏳ ΣΥΝΤΟΜΑ</span>
+            </div>
+
+            <!-- TEK #005 -->
+            <div class="evidence-card inactive">
+                <span class="critical-tag">ΑΠΟΡΡΗΤΟ</span>
+                <div class="evidence-header">
+                    <div class="evidence-icon">🏥</div>
+                    <div class="evidence-info">
+                        <h3>ΤΕΚ #005</h3>
+                        <p>Ιατρική γνωμάτευση (κρυφή)</p>
+                    </div>
+                </div>
+                <p class="evidence-description">
+                    <strong>Διάγνωση:</strong> Καρκίνος παγκρέατος σταδίου IV<br>
+                    <strong>Ημερομηνία:</strong> Πριν 3 εβδομάδες<br>
+                    <strong>Πρόγνωση:</strong> 2-3 μήνες ζωής • Γιατρός: Δρ. Σταυρίδης
+                </p>
+                <div class="evidence-actions">
+                    <button class="btn btn-ar" disabled>👁️ Προβολή σε AR/3D</button>
+                    <button class="btn btn-qr" disabled>📱 Κάρτα QR</button>
+                </div>
+                <span class="status-badge status-coming">⏳ ΣΥΝΤΟΜΑ</span>
+            </div>
+
+            <!-- TEK #006 -->
+            <div class="evidence-card inactive">
+                <div class="evidence-header">
+                    <div class="evidence-icon">🧤</div>
+                    <div class="evidence-info">
+                        <h3>ΤΕΚ #006</h3>
+                        <p>Ίχνη γαντιών λάτεξ</p>
+                    </div>
+                </div>
+                <p class="evidence-description">
+                    <strong>Τοποθεσία:</strong> Πόμολο πόρτας<br>
+                    <strong>Τύπος:</strong> Γάντια ιατρικού τύπου, μέγεθος M<br>
+                    <strong>Προέλευση:</strong> Κουτί πρώτων βοηθειών (πρόσβαση: όλο το προσωπικό)
+                </p>
+                <div class="evidence-actions">
+                    <button class="btn btn-ar" disabled>👁️ Προβολή σε AR/3D</button>
+                    <button class="btn btn-qr" disabled>📱 Κάρτα QR</button>
+                </div>
+                <span class="status-badge status-coming">⏳ ΣΥΝΤΟΜΑ</span>
+            </div>
+
+            <!-- TEK #007 -->
+            <div class="evidence-card inactive">
+                <div class="evidence-header">
+                    <div class="evidence-icon">✍️</div>
+                    <div class="evidence-info">
+                        <h3>ΤΕΚ #007</h3>
+                        <p>Χειρόγραφο σημείωμα</p>
+                    </div>
+                </div>
+                <p class="evidence-description">
+                    <strong>Κείμενο:</strong> «Συγχώρεσέ με Μ.»<br>
+                    <strong>Ανάλυση:</strong> Μίμηση γραφικού χαρακτήρα (65% ταύτιση, πίεση ασυνεπής)
+                </p>
+                <div class="evidence-actions">
+                    <button class="btn btn-ar" disabled>👁️ Προβολή σε AR/3D</button>
+                    <button class="btn btn-qr" disabled>📱 Κάρτα QR</button>
+                </div>
+                <span class="status-badge status-coming">⏳ ΣΥΝΤΟΜΑ</span>
+            </div>
+
+            <!-- TEK #008 -->
+            <div class="evidence-card inactive">
+                <span class="critical-tag">ΕΚΒΙΑΣΜΟΣ</span>
+                <div class="evidence-header">
+                    <div class="evidence-icon">📂</div>
+                    <div class="evidence-info">
+                        <h3>ΤΕΚ #008</h3>
+                        <p>Φάκελος «ΕΜΠΙΣΤΕΥΤΙΚΟ»</p>
+                    </div>
+                </div>
+                <p class="evidence-description">
+                    <strong>Περιεχόμενα:</strong><br>
+                    • Υπεξαίρεση €1,5εκ (Αναγνώστου)<br>
+                    • Ερωτικές φωτογραφίες (Μαυρίδη)<br>
+                    • Κλοπή χειρογράφων (Νικολάου)
+                </p>
+                <div class="evidence-actions">
+                    <button class="btn btn-ar" disabled>👁️ Προβολή σε AR/3D</button>
+                    <button class="btn btn-qr" disabled>📱 Κάρτα QR</button>
+                </div>
+                <span class="status-badge status-coming">⏳ ΣΥΝΤΟΜΑ</span>
+            </div>
+
+            <!-- TEK #009 -->
+            <div class="evidence-card inactive">
+                <span class="critical-tag">ΚΡΙΣΙΜΟ</span>
+                <div class="evidence-header">
+                    <div class="evidence-icon">🧪</div>
+                    <div class="evidence-info">
+                        <h3>ΤΕΚ #009</h3>
+                        <p>Απόδειξη αγοράς χημικών</p>
+                    </div>
+                </div>
+                <p class="evidence-description">
+                    <strong>Ημερομηνία:</strong> 19/09, 14:30<br>
+                    <strong>Αγορά:</strong> Κυανιούχο κάλιο από «ΧημικάPlus»<br>
+                    <strong>Άδεια:</strong> Απεντόμωση εταιρείας • Υπογραφή: Γ. Πετρόπουλος (υπό γραφολογική εξέταση)
+                </p>
+                <div class="evidence-actions">
+                    <button class="btn btn-ar" disabled>👁️ Προβολή σε AR/3D</button>
+                    <button class="btn btn-qr" disabled>📱 Κάρτα QR</button>
+                </div>
+                <span class="status-badge status-coming">⏳ ΣΥΝΤΟΜΑ</span>
+            </div>
+
+            <!-- TEK #010 -->
+            <div class="evidence-card inactive">
+                <div class="evidence-header">
+                    <div class="evidence-icon">🔑</div>
+                    <div class="evidence-info">
+                        <h3>ΤΕΚ #010</h3>
+                        <p>Κλειδί χρηματοκιβωτίου</p>
+                    </div>
+                </div>
+                <p class="evidence-description">
+                    <strong>Αποτυπώματα:</strong> Δημητρίου, Αναγνώστου<br>
+                    <strong>Ίχνη:</strong> Σκόνη ταλκ (από latex γάντια)
+                </p>
+                <div class="evidence-actions">
+                    <button class="btn btn-ar" disabled>👁️ Προβολή σε AR/3D</button>
+                    <button class="btn btn-qr" disabled>📱 Κάρτα QR</button>
+                </div>
+                <span class="status-badge status-coming">⏳ ΣΥΝΤΟΜΑ</span>
+            </div>
+
+            <!-- TEK #011 -->
+            <div class="evidence-card inactive">
+                <span class="critical-tag">ΣΑΜΠΟΤΑΖ</span>
+                <div class="evidence-header">
+                    <div class="evidence-icon">📹</div>
+                    <div class="evidence-info">
+                        <h3>ΤΕΚ #011</h3>
+                        <p>Κάμερες ασφαλείας</p>
+                    </div>
+                </div>
+                <p class="evidence-description">
+                    <strong>Απενεργοποίηση:</strong> 20:55<br>
+                    <strong>Τετράδιο Συμβάντων:</strong> «20:58 - Τεχνική βλάβη CCTV»<br>
+                    <strong>Υπογραφή:</strong> ΠΕΤΡΟΠΟΥΛΟΣ Γ. (γνησιότητα υπό εξέταση)
+                </p>
+                <div class="evidence-actions">
+                    <button class="btn btn-ar" disabled>👁️ Προβολή σε AR/3D</button>
+                    <button class="btn btn-qr" disabled>📱 Κάρτα QR</button>
+                </div>
+                <span class="status-badge status-coming">⏳ ΣΥΝΤΟΜΑ</span>
+            </div>
+        </div>
+
+        <div class="instructions-box">
+            <h2>💡 Οδηγίες Χρήσης</h2>
+            <p style="margin-bottom: 15px;"><strong>📱 Για AR/3D Προβολή:</strong></p>
+            <ul style="margin-bottom: 20px;">
+                <li>Πατήστε "Προβολή σε AR/3D" σε οποιοδήποτε διαθέσιμο τεκμήριο</li>
+                <li>Περιστρέψτε το 3D μοντέλο με το ποντίκι ή το δάχτυλο σας</li>
+                <li><strong>Σε κινητό:</strong> Πατήστε "ΔΕΣ ΣΕ AR" για να τοποθετήσετε το αντικείμενο στον πραγματικό χώρο</li>
+                <li>Μπορείτε να περπατήσετε γύρω από το τεκμήριο και να το εξετάσετε από κοντά</li>
+            </ul>
+            <p style="margin-bottom: 15px;"><strong>🖨️ Για Εκτύπωση Καρτών QR:</strong></p>
+            <ul>
+                <li>Πατήστε "Κάρτα QR" για να δείτε την εκτυπώσιμη κάρτα</li>
+                <li>Εκτυπώστε σε A4 χαρτί (landscape orientation)</li>
+                <li>Κόψτε την κάρτα και τοποθετήστε τη στη σκηνή του μυστηρίου</li>
+                <li>Οι παίκτες σκανάρουν τον QR κωδικό με το κινητό τους για άμεση πρόσβαση</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p><strong>Φεστιβάλ Αστυνομικής Λογοτεχνίας 2025</strong></p>
+        <p>Διαδραστική Εμπειρία Αστυνομικού Μυστηρίου με Augmented Reality</p>
+        <p style="margin-top: 10px; opacity: 0.7; font-size: 12px;">
+            11 Τεκμήρια • 3 Ύποπτοι • 1 Αλήθεια
+        </p>
+    </div>
+</body>
+</html>
