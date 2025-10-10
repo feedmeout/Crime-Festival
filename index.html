@@ -59,6 +59,20 @@
             font-weight: bold;
         }
 
+        .team-info {
+            background: rgba(0,0,0,0.2);
+            padding: 10px 20px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: inline-block;
+        }
+
+        .team-info strong {
+            color: #fff;
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+
         @media (max-width: 768px) {
             .header h1 {
                 font-size: 24px;
@@ -120,6 +134,49 @@
             color: #333;
         }
 
+        .progress-bar-container {
+            background: rgba(255, 255, 255, 0.95);
+            border: 3px solid #ff6b00;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .progress-title {
+            color: #1a1a2e;
+            font-size: 20px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            background: #e0e0e0;
+            height: 30px;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 10px;
+        }
+
+        .progress-fill {
+            background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
+            height: 100%;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .progress-text {
+            color: #666;
+            font-size: 16px;
+            text-align: center;
+        }
+
         .section-title {
             color: #fff;
             margin-bottom: 25px;
@@ -148,14 +205,15 @@
             position: relative;
         }
 
-        .evidence-card.active:hover {
+        .evidence-card.unlocked:hover {
             transform: translateY(-5px);
             box-shadow: 0 15px 50px rgba(255, 107, 0, 0.4);
         }
 
-        .evidence-card.inactive {
-            opacity: 0.7;
-            border-color: #ccc;
+        .evidence-card.locked {
+            opacity: 0.6;
+            border-color: #999;
+            background: rgba(200, 200, 200, 0.95);
         }
 
         .evidence-header {
@@ -178,8 +236,9 @@
             flex-shrink: 0;
         }
 
-        .evidence-card.inactive .evidence-icon {
+        .evidence-card.locked .evidence-icon {
             background: linear-gradient(135deg, #999 0%, #666 100%);
+            filter: grayscale(100%);
         }
 
         .evidence-info h3 {
@@ -188,6 +247,10 @@
             margin-bottom: 5px;
             font-family: monospace;
             letter-spacing: 1px;
+        }
+
+        .evidence-card.locked .evidence-info h3 {
+            color: #666;
         }
 
         .evidence-info p {
@@ -201,6 +264,10 @@
             line-height: 1.6;
             margin-bottom: 20px;
             font-size: 14px;
+        }
+
+        .evidence-card.locked .evidence-description {
+            color: #999;
         }
 
         .evidence-actions {
@@ -237,19 +304,11 @@
             box-shadow: 0 6px 20px rgba(255, 107, 0, 0.5);
         }
 
-        .btn-qr {
-            background: white;
-            color: #ff6b00;
-            border-color: #ff6b00;
-        }
-
-        .btn-qr:hover:not(:disabled) {
-            background: #fff5f0;
-        }
-
         .btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
+            background: #ccc;
+            color: #666;
         }
 
         .status-badge {
@@ -261,16 +320,16 @@
             margin-top: 10px;
         }
 
-        .status-active {
+        .status-unlocked {
             background: #d4edda;
             color: #155724;
             border: 1px solid #c3e6cb;
         }
 
-        .status-coming {
-            background: #fff3cd;
-            color: #856404;
-            border: 1px solid #ffeaa7;
+        .status-locked {
+            background: #f8f9fa;
+            color: #6c757d;
+            border: 1px solid #dee2e6;
         }
 
         .critical-tag {
@@ -285,28 +344,13 @@
             font-weight: bold;
         }
 
-        .instructions-box {
-            background: linear-gradient(135deg, rgba(255,107,0,0.1) 0%, rgba(255,136,0,0.1) 100%);
-            border: 2px solid #ff6b00;
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 40px;
-        }
-
-        .instructions-box h2 {
-            color: #ff6b00;
-            margin-bottom: 20px;
-            font-size: 22px;
-        }
-
-        .instructions-box ul {
-            margin-left: 20px;
-            line-height: 1.8;
-            color: #333;
-        }
-
-        .instructions-box strong {
-            color: #ff6b00;
+        .lock-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 48px;
+            opacity: 0.3;
         }
 
         .footer {
@@ -346,6 +390,9 @@
     <div class="header">
         <h1>⚠️ ΦΑΚΕΛΟΣ ΥΠΟΘΕΣΗΣ ⚠️</h1>
         <p>Φεστιβάλ Αστυνομικής Λογοτεχνίας 2025 • Διαδραστική Έρευνα</p>
+        <div class="team-info" id="teamInfo" style="display: none;">
+            <strong id="teamName"></strong>
+        </div>
     </div>
 
     <div class="container">
@@ -367,240 +414,19 @@
             </div>
         </div>
 
+        <!-- Progress Bar -->
+        <div class="progress-bar-container">
+            <div class="progress-title">📊 Πρόοδος Έρευνας</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill">0%</div>
+            </div>
+            <div class="progress-text" id="progressText">Έχετε ξεκλειδώσει 0 από 11 τεκμήρια</div>
+        </div>
+
         <h2 class="section-title">📦 Τεκμήρια από τη Σκηνή (11 Συνολικά)</h2>
 
-        <div class="evidence-grid">
-            <!-- TEK #001 - ACTIVE -->
-            <div class="evidence-card active">
-                <span class="critical-tag">ΚΡΙΣΙΜΟ</span>
-                <div class="evidence-header">
-                    <div class="evidence-icon">🍾</div>
-                    <div class="evidence-info">
-                        <h3>ΤΕΚ #001</h3>
-                        <p>Μπουκάλι Johnnie Walker Black</p>
-                    </div>
-                </div>
-                <p class="evidence-description">
-                    <strong>Τοποθεσία:</strong> Γραφείο θύματος<br>
-                    <strong>Ευρήματα:</strong> Κυάνιο στον πάτο + αποτυπώματα θύματος, Παπαδοπούλου, Αναγνώστου, Πετρόπουλου
-                </p>
-                <div class="evidence-actions">
-                    <a href="TEK1_AR.html" class="btn btn-ar">
-                        👁️ Προβολή Τεκμηρίου
-                    </a>
-                </div>
-                <span class="status-badge status-active">✅ ΔΙΑΘΕΣΙΜΟ</span>
-            </div>
-
-            <!-- TEK #002 -->
-            <div class="evidence-card inactive">
-                <span class="critical-tag">ΚΡΙΣΙΜΟ</span>
-                <div class="evidence-header">
-                    <div class="evidence-icon">🥃</div>
-                    <div class="evidence-info">
-                        <h3>ΤΕΚ #002</h3>
-                        <p>Δύο κρυστάλλινα ποτήρια</p>
-                    </div>
-                </div>
-                <p class="evidence-description">
-                    <strong>Ποτήρι Α:</strong> DNA θύματος + κυάνιο + αποτυπώματα θύματος<br>
-                    <strong>Ποτήρι Β:</strong> Μερικό DNA (υπό ανάλυση) + ίχνη ουίσκι + αποτυπώματα μερικώς σβησμένα
-                </p>
-                <div class="evidence-actions">
-                    <button class="btn btn-ar" disabled>👁️ Προβολή Τεκμηρίου</button>
-                </div>
-                <span class="status-badge status-coming">⏳ ΣΥΝΤΟΜΑ</span>
-            </div>
-
-            <!-- TEK #003 -->
-            <div class="evidence-card inactive">
-                <div class="evidence-header">
-                    <div class="evidence-icon">📱</div>
-                    <div class="evidence-info">
-                        <h3>ΤΕΚ #003</h3>
-                        <p>Κινητό θύματος</p>
-                    </div>
-                </div>
-                <p class="evidence-description">
-                    <strong>SMS 20:45:</strong> «Θα τελειώσει απόψε»<br>
-                    <strong>Προέλευση:</strong> Προπληρωμένη κάρτα, εντοπισμένη σε ακτίνα 250m από το κτίριο
-                </p>
-                <div class="evidence-actions">
-                    <button class="btn btn-ar" disabled>👁️ Προβολή σε AR/3D</button>
-                    <button class="btn btn-qr" disabled>📱 Κάρτα QR</button>
-                </div>
-                <span class="status-badge status-coming">⏳ ΣΥΝΤΟΜΑ</span>
-            </div>
-
-            <!-- TEK #004 -->
-            <div class="evidence-card inactive">
-                <div class="evidence-header">
-                    <div class="evidence-icon">💻</div>
-                    <div class="evidence-info">
-                        <h3>ΤΕΚ #004</h3>
-                        <p>Email «αυτοκτονίας»</p>
-                    </div>
-                </div>
-                <p class="evidence-description">
-                    <strong>IP:</strong> 192.168.1.23 - 7ος όροφος<br>
-                    <strong>Προέλευση:</strong> Κοινόχρηστος υπολογιστής αίθουσας συσκέψεων (δεν απαιτεί κωδικό)
-                </p>
-                <div class="evidence-actions">
-                    <button class="btn btn-ar" disabled>👁️ Προβολή σε AR/3D</button>
-                    <button class="btn btn-qr" disabled>📱 Κάρτα QR</button>
-                </div>
-                <span class="status-badge status-coming">⏳ ΣΥΝΤΟΜΑ</span>
-            </div>
-
-            <!-- TEK #005 -->
-            <div class="evidence-card inactive">
-                <span class="critical-tag">ΑΠΟΡΡΗΤΟ</span>
-                <div class="evidence-header">
-                    <div class="evidence-icon">🏥</div>
-                    <div class="evidence-info">
-                        <h3>ΤΕΚ #005</h3>
-                        <p>Ιατρική γνωμάτευση (κρυφή)</p>
-                    </div>
-                </div>
-                <p class="evidence-description">
-                    <strong>Διάγνωση:</strong> Καρκίνος παγκρέατος σταδίου IV<br>
-                    <strong>Ημερομηνία:</strong> Πριν 3 εβδομάδες<br>
-                    <strong>Πρόγνωση:</strong> 2-3 μήνες ζωής • Γιατρός: Δρ. Σταυρίδης
-                </p>
-                <div class="evidence-actions">
-                    <button class="btn btn-ar" disabled>👁️ Προβολή σε AR/3D</button>
-                    <button class="btn btn-qr" disabled>📱 Κάρτα QR</button>
-                </div>
-                <span class="status-badge status-coming">⏳ ΣΥΝΤΟΜΑ</span>
-            </div>
-
-            <!-- TEK #006 -->
-            <div class="evidence-card inactive">
-                <div class="evidence-header">
-                    <div class="evidence-icon">🧤</div>
-                    <div class="evidence-info">
-                        <h3>ΤΕΚ #006</h3>
-                        <p>Ίχνη γαντιών λάτεξ</p>
-                    </div>
-                </div>
-                <p class="evidence-description">
-                    <strong>Τοποθεσία:</strong> Πόμολο πόρτας<br>
-                    <strong>Τύπος:</strong> Γάντια ιατρικού τύπου, μέγεθος M<br>
-                    <strong>Προέλευση:</strong> Κουτί πρώτων βοηθειών (πρόσβαση: όλο το προσωπικό)
-                </p>
-                <div class="evidence-actions">
-                    <button class="btn btn-ar" disabled>👁️ Προβολή σε AR/3D</button>
-                    <button class="btn btn-qr" disabled>📱 Κάρτα QR</button>
-                </div>
-                <span class="status-badge status-coming">⏳ ΣΥΝΤΟΜΑ</span>
-            </div>
-
-            <!-- TEK #007 -->
-            <div class="evidence-card inactive">
-                <div class="evidence-header">
-                    <div class="evidence-icon">✍️</div>
-                    <div class="evidence-info">
-                        <h3>ΤΕΚ #007</h3>
-                        <p>Χειρόγραφο σημείωμα</p>
-                    </div>
-                </div>
-                <p class="evidence-description">
-                    <strong>Κείμενο:</strong> «Συγχώρεσέ με Μ.»<br>
-                    <strong>Ανάλυση:</strong> Μίμηση γραφικού χαρακτήρα (65% ταύτιση, πίεση ασυνεπής)
-                </p>
-                <div class="evidence-actions">
-                    <button class="btn btn-ar" disabled>👁️ Προβολή σε AR/3D</button>
-                    <button class="btn btn-qr" disabled>📱 Κάρτα QR</button>
-                </div>
-                <span class="status-badge status-coming">⏳ ΣΥΝΤΟΜΑ</span>
-            </div>
-
-            <!-- TEK #008 -->
-            <div class="evidence-card inactive">
-                <span class="critical-tag">ΕΚΒΙΑΣΜΟΣ</span>
-                <div class="evidence-header">
-                    <div class="evidence-icon">📂</div>
-                    <div class="evidence-info">
-                        <h3>ΤΕΚ #008</h3>
-                        <p>Φάκελος «ΕΜΠΙΣΤΕΥΤΙΚΟ»</p>
-                    </div>
-                </div>
-                <p class="evidence-description">
-                    <strong>Περιεχόμενα:</strong><br>
-                    • Υπεξαίρεση €1,5εκ (Αναγνώστου)<br>
-                    • Ερωτικές φωτογραφίες (Μαυρίδη)<br>
-                    • Κλοπή χειρογράφων (Νικολάου)
-                </p>
-                <div class="evidence-actions">
-                    <button class="btn btn-ar" disabled>👁️ Προβολή σε AR/3D</button>
-                    <button class="btn btn-qr" disabled>📱 Κάρτα QR</button>
-                </div>
-                <span class="status-badge status-coming">⏳ ΣΥΝΤΟΜΑ</span>
-            </div>
-
-            <!-- TEK #009 -->
-            <div class="evidence-card inactive">
-                <span class="critical-tag">ΚΡΙΣΙΜΟ</span>
-                <div class="evidence-header">
-                    <div class="evidence-icon">🧪</div>
-                    <div class="evidence-info">
-                        <h3>ΤΕΚ #009</h3>
-                        <p>Απόδειξη αγοράς χημικών</p>
-                    </div>
-                </div>
-                <p class="evidence-description">
-                    <strong>Ημερομηνία:</strong> 19/09, 14:30<br>
-                    <strong>Αγορά:</strong> Κυανιούχο κάλιο από «ΧημικάPlus»<br>
-                    <strong>Άδεια:</strong> Απεντόμωση εταιρείας • Υπογραφή: Γ. Πετρόπουλος (υπό γραφολογική εξέταση)
-                </p>
-                <div class="evidence-actions">
-                    <button class="btn btn-ar" disabled>👁️ Προβολή σε AR/3D</button>
-                    <button class="btn btn-qr" disabled>📱 Κάρτα QR</button>
-                </div>
-                <span class="status-badge status-coming">⏳ ΣΥΝΤΟΜΑ</span>
-            </div>
-
-            <!-- TEK #010 -->
-            <div class="evidence-card inactive">
-                <div class="evidence-header">
-                    <div class="evidence-icon">🔑</div>
-                    <div class="evidence-info">
-                        <h3>ΤΕΚ #010</h3>
-                        <p>Κλειδί χρηματοκιβωτίου</p>
-                    </div>
-                </div>
-                <p class="evidence-description">
-                    <strong>Αποτυπώματα:</strong> Δημητρίου, Αναγνώστου<br>
-                    <strong>Ίχνη:</strong> Σκόνη ταλκ (από latex γάντια)
-                </p>
-                <div class="evidence-actions">
-                    <button class="btn btn-ar" disabled>👁️ Προβολή σε AR/3D</button>
-                    <button class="btn btn-qr" disabled>📱 Κάρτα QR</button>
-                </div>
-                <span class="status-badge status-coming">⏳ ΣΥΝΤΟΜΑ</span>
-            </div>
-
-            <!-- TEK #011 -->
-            <div class="evidence-card inactive">
-                <span class="critical-tag">ΣΑΜΠΟΤΑΖ</span>
-                <div class="evidence-header">
-                    <div class="evidence-icon">📹</div>
-                    <div class="evidence-info">
-                        <h3>ΤΕΚ #011</h3>
-                        <p>Κάμερες ασφαλείας</p>
-                    </div>
-                </div>
-                <p class="evidence-description">
-                    <strong>Απενεργοποίηση:</strong> 20:55<br>
-                    <strong>Τετράδιο Συμβάντων:</strong> «20:58 - Τεχνική βλάβη CCTV»<br>
-                    <strong>Υπογραφή:</strong> ΠΕΤΡΟΠΟΥΛΟΣ Γ. (γνησιότητα υπό εξέταση)
-                </p>
-                <div class="evidence-actions">
-                    <button class="btn btn-ar" disabled>👁️ Προβολή σε AR/3D</button>
-                    <button class="btn btn-qr" disabled>📱 Κάρτα QR</button>
-                </div>
-                <span class="status-badge status-coming">⏳ ΣΥΝΤΟΜΑ</span>
-            </div>
+        <div class="evidence-grid" id="evidenceGrid">
+            <!-- TEKs will be dynamically generated here -->
         </div>
     </div>
 
@@ -611,5 +437,210 @@
             11 Τεκμήρια • 3 Ύποπτοι • 1 Αλήθεια
         </p>
     </div>
+
+    <script>
+        // TEK definitions
+        const teks = [
+            {
+                id: '1',
+                name: 'Μπουκάλι Ουίσκι',
+                subtitle: 'Μπουκάλι Johnnie Walker Black',
+                icon: '🍾',
+                description: '<strong>Τοποθεσία:</strong> Γραφείο θύματος<br><strong>Ευρήματα:</strong> Κυάνιο στον πάτο + αποτυπώματα θύματος, Παπαδοπούλου, Αναγνώστου, Πετρόπουλου',
+                page: 'TEK1_AR.html',
+                critical: true
+            },
+            {
+                id: '2',
+                name: 'Κρυστάλλινα Ποτήρια',
+                subtitle: 'Δυο κρυστάλλινα ποτήρια',
+                icon: '🥃',
+                description: '<strong>Ποτήρι Α:</strong> DNA θύματος + κυάνιο + αποτυπώματα θύματος<br><strong>Ποτήρι Β:</strong> Μερικό DNA (υπό ανάλυση) + ίχνη ουίσκι + αποτυπώματα μερικώς σβησμένα',
+                page: 'TEK2_AR.html',
+                critical: true
+            },
+            {
+                id: '3',
+                name: 'Κινητό Θύματος',
+                subtitle: 'Κινητό θύματος',
+                icon: '📱',
+                description: '<strong>SMS 20:45:</strong> «Θα τελειώσει απόψε»<br><strong>Προέλευση:</strong> Προπληρωμένη κάρτα, εντοπισμένη σε ακτίνα 250m από το κτίριο',
+                page: 'TEK3_AR.html',
+                critical: false
+            },
+            {
+                id: '4',
+                name: 'Email Αυτοκτονίας',
+                subtitle: 'Email «αυτοκτονίας»',
+                icon: '💻',
+                description: '<strong>IP:</strong> 192.168.1.23 - 7ος όροφος<br><strong>Προέλευση:</strong> Κοινόχρηστος υπολογιστής αίθουσας συσκέψεων (δεν απαιτεί κωδικό)',
+                page: 'TEK4_AR.html',
+                critical: false
+            },
+            {
+                id: '5',
+                name: 'Ιατρική Γνωμάτευση',
+                subtitle: 'Ιατρική γνωμάτευση (κρυφή)',
+                icon: '🥼',
+                description: '<strong>Διάγνωση:</strong> Καρκίνος παγκρέατος σταδίου IV<br><strong>Ημερομηνία:</strong> Πριν 3 εβδομάδες<br><strong>Πρόγνωση:</strong> 2-3 μήνες ζωής • Διατρός: Δρ. Σταυρίδης',
+                page: 'TEK5_AR.html',
+                critical: false,
+                secret: true
+            },
+            {
+                id: '6',
+                name: 'Γάντια Λάτεξ',
+                subtitle: 'Ίχνη γαντιών λάτεξ',
+                icon: '🧤',
+                description: '<strong>Τοποθεσία:</strong> Πόμολο πόρτας<br><strong>Τύπος:</strong> Γάντια ιατρικού τύπου, μέγεθος M<br><strong>Προέλευση:</strong> Κουτί πρώτων βοηθειών (πρόσβαση: όλο το προσωπικό)',
+                page: 'TEK6_AR.html',
+                critical: false
+            },
+            {
+                id: '7',
+                name: 'Χειρόγραφο Σημείωμα',
+                subtitle: 'Χειρόγραφο σημείωμα',
+                icon: '✍️',
+                description: '<strong>Κείμενο:</strong> «Συγχώρεσέ με Μ.»<br><strong>Ανάλυση:</strong> Μίμηση γραφικού χαρακτήρα (65% ταύτιση, πίεση ασυνεπής)',
+                page: 'TEK7_AR.html',
+                critical: false
+            },
+            {
+                id: '8',
+                name: 'Φάκελος Εμπιστευτικό',
+                subtitle: 'Φάκελος «ΕΜΠΙΣΤΕΥΤΙΚΟ»',
+                icon: '📂',
+                description: '<strong>Περιεχόμενα:</strong><br>• Υπεξαίρεση €1,5εκ (Αναγνώστου)<br>• Ερωτικές φωτογραφίες (Μαυρίδη)<br>• Κλοπή χειρογράφων (Νικολάου)',
+                page: 'TEK8_AR.html',
+                critical: false,
+                blackmail: true
+            },
+            {
+                id: '9',
+                name: 'Απόδειξη Χημικών',
+                subtitle: 'Απόδειξη αγοράς χημικών',
+                icon: '🧪',
+                description: '<strong>Ημερομηνία:</strong> 19/09, 14:30<br><strong>Αγορά:</strong> Κυανιούχο κάλιο από «ΧημικάPlus»<br><strong>Άδεια:</strong> Απεντόμωση εταιρείας • Υπογραφή: Γ. Πετρόπουλος (υπό γραφολογική εξέταση)',
+                page: 'TEK9_AR.html',
+                critical: true
+            },
+            {
+                id: '10',
+                name: 'Κλειδί Χρηματοκιβωτίου',
+                subtitle: 'Κλειδί χρηματοκιβωτίου',
+                icon: '🔑',
+                description: '<strong>Αποτυπώματα:</strong> Δημητρίου, Αναγνώστου<br><strong>Ίχνη:</strong> Σκόνη ταλκ (από latex γάντια)',
+                page: 'TEK10_AR.html',
+                critical: false
+            },
+            {
+                id: '11',
+                name: 'Κάμερες Ασφαλείας',
+                subtitle: 'Κάμερες ασφαλείας',
+                icon: '📹',
+                description: '<strong>Απενεργοποίηση:</strong> 20:55<br><strong>Τετράδιο Συμβάντων:</strong> «20:58 - Τεχνική βλάβη CCTV»<br><strong>Υπογραφή:</strong> ΠΕΤΡΟΠΟΥΛΟΣ Γ. (γνησιότητα υπό εξέταση)',
+                page: 'TEK11_AR.html',
+                critical: false,
+                sabotage: true
+            }
+        ];
+
+        // Get team code from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const teamCode = urlParams.get('team') || 'default';
+
+        // Show team info if not default
+        if (teamCode !== 'default') {
+            document.getElementById('teamInfo').style.display = 'block';
+            document.getElementById('teamName').textContent = `Ομάδα: ${teamCode}`;
+        }
+
+        // Get storage key for this team
+        function getStorageKey() {
+            return `unlocked_teks_${teamCode}`;
+        }
+
+        // Get unlocked TEKs
+        function getUnlockedTeks() {
+            return JSON.parse(localStorage.getItem(getStorageKey()) || '[]');
+        }
+
+        // Update progress bar
+        function updateProgress() {
+            const unlockedTeks = getUnlockedTeks();
+            const total = teks.length;
+            const unlocked = unlockedTeks.length;
+            const percentage = Math.round((unlocked / total) * 100);
+
+            document.getElementById('progressFill').style.width = percentage + '%';
+            document.getElementById('progressFill').textContent = percentage + '%';
+            document.getElementById('progressText').textContent = 
+                `Έχετε ξεκλειδώσει ${unlocked} από ${total} τεκμήρια`;
+        }
+
+        // Build team URL parameter
+        function buildUrl(page) {
+            return teamCode !== 'default' ? `${page}?team=${teamCode}` : page;
+        }
+
+        // Render evidence cards
+        function renderEvidence() {
+            const unlockedTeks = getUnlockedTeks();
+            const grid = document.getElementById('evidenceGrid');
+            
+            grid.innerHTML = teks.map(tek => {
+                const isUnlocked = unlockedTeks.includes(tek.id);
+                const cardClass = isUnlocked ? 'unlocked' : 'locked';
+                
+                let criticalTag = '';
+                if (tek.critical) criticalTag = '<span class="critical-tag">ΚΡΙΣΙΜΟ</span>';
+                else if (tek.secret) criticalTag = '<span class="critical-tag">ΑΠΟΡΡΗΤΟ</span>';
+                else if (tek.blackmail) criticalTag = '<span class="critical-tag">ΕΚΒΙΑΣΜΟΣ</span>';
+                else if (tek.sabotage) criticalTag = '<span class="critical-tag">ΣΑΜΠΟΤΑΖ</span>';
+                
+                return `
+                    <div class="evidence-card ${cardClass}">
+                        ${criticalTag}
+                        ${!isUnlocked ? '<div class="lock-overlay">🔒</div>' : ''}
+                        <div class="evidence-header">
+                            <div class="evidence-icon">${tek.icon}</div>
+                            <div class="evidence-info">
+                                <h3>ΤΕΚ #${tek.id.padStart(3, '0')}</h3>
+                                <p>${tek.subtitle}</p>
+                            </div>
+                        </div>
+                        <p class="evidence-description">
+                            ${isUnlocked ? tek.description : '🔒 Ξεκλειδώστε αυτό το τεκμήριο για να δείτε λεπτομέρειες'}
+                        </p>
+                        <div class="evidence-actions">
+                            ${isUnlocked ? 
+                                `<a href="${buildUrl(tek.page)}" class="btn btn-ar">
+                                    👁️ Προβολή Τεκμηρίου
+                                </a>` :
+                                `<button class="btn btn-ar" disabled>🔒 Κλειδωμένο</button>`
+                            }
+                        </div>
+                        <span class="status-badge ${isUnlocked ? 'status-unlocked' : 'status-locked'}">
+                            ${isUnlocked ? '✅ ΔΙΑΘΕΣΙΜΟ' : '🔒 ΚΛΕΙΔΩΜΕΝΟ'}
+                        </span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Initialize
+        window.addEventListener('DOMContentLoaded', () => {
+            renderEvidence();
+            updateProgress();
+        });
+
+        // Listen for storage changes (for multiple tabs)
+        window.addEventListener('storage', (e) => {
+            if (e.key === getStorageKey()) {
+                renderEvidence();
+                updateProgress();
+            }
+        });
+    </script>
 </body>
 </html>
