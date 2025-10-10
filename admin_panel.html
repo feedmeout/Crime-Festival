@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - TEK Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: rgba(255,255,255,0.9);
+            font-size: 16px;
+        }
+
+        .section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .section h2 {
+            color: #1a1a2e;
+            font-size: 24px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #ff6b00;
+        }
+
+        .team-input {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .team-input input {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px 20px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .team-input input:focus {
+            outline: none;
+            border-color: #ff6b00;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255,107,0,0.3);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 6px 20px rgba(255,107,0,0.5);
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+            box-shadow: 0 4px 15px rgba(220,53,69,0.3);
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+            box-shadow: 0 4px 15px rgba(40,167,69,0.3);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .team-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .team-card {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            padding: 20px;
+            transition: transform 0.2s ease;
+        }
+
+        .team-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .team-card h3 {
+            color: #0f3460;
+            font-size: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .progress-bar {
+            background: #e0e0e0;
+            height: 25px;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-fill {
+            background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+            transition: width 0.3s ease;
+        }
+
+        .team-stats {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .team-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .team-actions .btn {
+            font-size: 13px;
+            padding: 8px 16px;
+        }
+
+        .tek-grid {
+            display: grid;
+            grid-template-columns: repeat(11, 1fr);
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        .tek-box {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 5px;
+            font-size: 11px;
+            font-weight: bold;
+            border: 2px solid #ddd;
+            background: white;
+        }
+
+        .tek-box.unlocked {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .alert-danger {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+        }
+
+        .url-generator {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .url-generator h3 {
+            color: #0f3460;
+            margin-bottom: 15px;
+        }
+
+        .url-list {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            font-family: monospace;
+            font-size: 13px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .url-list div {
+            padding: 5px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .url-list div:last-child {
+            border-bottom: none;
+        }
+
+        @media (max-width: 768px) {
+            .team-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .quick-actions {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔐 TEK Management Admin Panel</h1>
+            <p>Διαχείριση Ομάδων & Παρακολούθηση Προόδου</p>
+        </div>
+
+        <!-- Add Team Section -->
+        <div class="section">
+            <h2>➕ Προσθήκη Ομάδας</h2>
+            <div class="team-input">
+                <input type="text" id="newTeamName" placeholder="Όνομα ομάδας (π.χ. alpha, beta, red, team1...)" />
+                <button class="btn btn-primary" onclick="addTeam()">Προσθήκη Ομάδας</button>
+            </div>
+            <div id="addTeamAlert"></div>
+        </div>
+
+        <!-- Teams Overview -->
+        <div class="section">
+            <h2>👥 Ενεργές Ομάδες</h2>
+            <div class="quick-actions">
+                <button class="btn btn-success" onclick="refreshTeams()">🔄 Ανανέωση</button>
+                <button class="btn btn-secondary" onclick="unlockAllForAll()">🔓 Ξεκλείδωμα Όλων (Όλες Ομάδες)</button>
+                <button class="btn btn-danger" onclick="resetAll()">🗑️ Διαγραφή Όλων</button>
+            </div>
+            <div id="teamsContainer" class="team-list"></div>
+            <div id="noTeams" style="display: none; text-align: center; padding: 40px; color: #999;">
+                <p style="font-size: 18px;">Δεν υπάρχουν ομάδες ακόμα</p>
+                <p style="font-size: 14px;">Προσθέστε μια ομάδα παραπάνω για να ξεκινήσετε</p>
+            </div>
+        </div>
+
+        <!-- URL Generator -->
+        <div class="section">
+            <h2>🔗 Generator URLs για QR Codes</h2>
+            <div class="team-input">
+                <input type="text" id="urlTeamName" placeholder="Όνομα ομάδας" />
+                <button class="btn btn-primary" onclick="generateUrls()">Δημιουργία URLs</button>
+            </div>
+            <div class="url-generator" id="urlOutput" style="display: none;">
+                <h3>URLs για QR Codes:</h3>
+                <div class="url-list" id="urlList"></div>
+                <button class="btn btn-secondary" style="margin-top: 15px;" onclick="copyAllUrls()">📋 Αντιγραφή Όλων</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const BASE_URL = window.location.origin + window.location.pathname.replace('admin.html', '');
+        const TOTAL_TEKS = 11;
+
+        // Get all teams from localStorage
+        function getAllTeams() {
+            const teams = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.startsWith('unlocked_teks_')) {
+                    const teamName = key.replace('unlocked_teks_', '');
+                    const unlockedTeks = JSON.parse(localStorage.getItem(key));
+                    teams.push({ name: teamName, unlocked: unlockedTeks });
+                }
+            }
+            return teams;
+        }
+
+        // Add new team
+        function addTeam() {
+            const teamName = document.getElementById('newTeamName').value.trim().toLowerCase();
+            const alertDiv = document.getElementById('addTeamAlert');
+            
+            if (!teamName) {
+                alertDiv.innerHTML = '<div class="alert alert-danger">⚠️ Παρακαλώ εισάγετε όνομα ομάδας</div>';
+                return;
+            }
+
+            const key = `unlocked_teks_${teamName}`;
+            
+            if (localStorage.getItem(key)) {
+                alertDiv.innerHTML = '<div class="alert alert-warning">⚠️ Η ομάδα υπάρχει ήδη</div>';
+                return;
+            }
+
+            // Create new team with no unlocked TEKs
+            localStorage.setItem(key, JSON.stringify([]));
+            
+            alertDiv.innerHTML = `<div class="alert alert-success">✅ Η ομάδα "${teamName}" δημιουργήθηκε</div>`;
+            document.getElementById('newTeamName').value = '';
+            
+            setTimeout(() => {
+                alertDiv.innerHTML = '';
+            }, 3000);
+            
+            refreshTeams();
+        }
+
+        // Render teams
+        function refreshTeams() {
+            const teams = getAllTeams();
+            const container = document.getElementById('teamsContainer');
+            const noTeams = document.getElementById('noTeams');
+
+            if (teams.length === 0) {
+                container.innerHTML = '';
+                noTeams.style.display = 'block';
+                return;
+            }
+
+            noTeams.style.display = 'none';
+
+            container.innerHTML = teams.map(team => {
+                const progress = Math.round((team.unlocked.length / TOTAL_TEKS) * 100);
+                
+                return `
+                    <div class="team-card">
+                        <h3>
+                            <span style="font-size: 24px;">👥</span>
+                            ${team.name.toUpperCase()}
+                        </h3>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${progress}%;">
+                                ${progress}%
+                            </div>
+                        </div>
+                        <div class="team-stats">
+                            📊 Ξεκλειδωμένα: ${team.unlocked.length} / ${TOTAL_TEKS} TEKs
+                        </div>
+                        <div class="tek-grid">
+                            ${Array.from({length: TOTAL_TEKS}, (_, i) => {
+                                const tekNum = (i + 1).toString();
+                                const isUnlocked = team.unlocked.includes(tekNum);
+                                return `<div class="tek-box ${isUnlocked ? 'unlocked' : ''}">${i + 1}</div>`;
+                            }).join('')}
+                        </div>
+                        <div class="team-actions">
+                            <button class="btn btn-primary" onclick="viewTeam('${team.name}')">
+                                👁️ Προβολή
+                            </button>
+                            <button class="btn btn-success" onclick="unlockAll('${team.name}')">
+                                🔓 Όλα
+                            </button>
+                            <button class="btn btn-secondary" onclick="resetTeam('${team.name}')">
+                                🔄 Reset
+                            </button>
+                            <button class="btn btn-danger" onclick="deleteTeam('${team.name}')">
+                                🗑️ Διαγραφή
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // View team
+        function viewTeam(teamName) {
+            window.open(`${BASE_URL}index.html?team=${teamName}`, '_blank');
+        }
+
+        // Unlock all TEKs for a team
+        function unlockAll(teamName) {
+            if (confirm(`Ξεκλείδωμα όλων των TEKs για την ομάδα "${teamName}";`)) {
+                const allTeks = Array.from({length: TOTAL_TEKS}, (_, i) => (i + 1).toString());
+                localStorage.setItem(`unlocked_teks_${teamName}`, JSON.stringify(allTeks));
+                refreshTeams();
+            }
+        }
+
+        // Reset team progress
+        function resetTeam(teamName) {
+            if (confirm(`Reset πρόοδο για την ομάδα "${teamName}";`)) {
+                localStorage.setItem(`unlocked_teks_${teamName}`, JSON.stringify([]));
+                refreshTeams();
+            }
+        }
+
+        // Delete team
+        function deleteTeam(teamName) {
+            if (confirm(`Διαγραφή ομάδας "${teamName}";`)) {
+                localStorage.removeItem(`unlocked_teks_${teamName}`);
+                refreshTeams();
+            }
+        }
+
+        // Unlock all for all teams
+        function unlockAllForAll() {
+            if (confirm('Ξεκλείδωμα ΟΛΩΝ των TEKs για ΟΛΕΣ τις ομάδες;')) {
+                const teams = getAllTeams();
+                const allTeks = Array.from({length: TOTAL_TEKS}, (_, i) => (i + 1).toString());
+                teams.forEach(team => {
+                    localStorage.setItem(`unlocked_teks_${team.name}`, JSON.stringify(allTeks));
+                });
+                refreshTeams();
+            }
+        }
+
+        // Reset all teams
+        function resetAll() {
+            if (confirm('ΔΙΑΓΡΑΦΗ ΟΛΩΝ των ομάδων;')) {
+                const teams = getAllTeams();
+                teams.forEach(team => {
+                    localStorage.removeItem(`unlocked_teks_${team.name}`);
+                });
+                refreshTeams();
+            }
+        }
+
+        // Generate URLs for QR codes
+        function generateUrls() {
+            const teamName = document.getElementById('urlTeamName').value.trim().toLowerCase();
+            const output = document.getElementById('urlOutput');
+            const urlList = document.getElementById('urlList');
+
+            if (!teamName) {
+                alert('Παρακαλώ εισάγετε όνομα ομάδας');
+                return;
+            }
+
+            const urls = [];
+            urls.push(`<strong>Entry URL:</strong><br>${BASE_URL}index.html?team=${teamName}<br><br>`);
+            urls.push(`<strong>Unlock URLs:</strong><br>`);
+            
+            for (let i = 1; i <= TOTAL_TEKS; i++) {
+                urls.push(`TEK ${i.toString().padStart(2, '0')}: ${BASE_URL}unlock_system.html?tek=${i}&team=${teamName}`);
+            }
+
+            urlList.innerHTML = urls.join('<br>');
+            output.style.display = 'block';
+        }
+
+        // Copy all URLs
+        function copyAllUrls() {
+            const urlList = document.getElementById('urlList');
+            const text = urlList.innerText;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                alert('✅ URLs αντιγράφηκαν στο clipboard!');
+            });
+        }
+
+        // Initialize
+        window.addEventListener('DOMContentLoaded', () => {
+            refreshTeams();
+        });
+
+        // Auto-refresh every 10 seconds
+        setInterval(refreshTeams, 10000);
+    </script>
+</body>
+</html>

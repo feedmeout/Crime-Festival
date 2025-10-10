@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ξεκλείδωμα Τεκμηρίου</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            padding: 20px;
+        }
+
+        .animated-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0.1;
+            background-image: repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,107,0,0.5) 35px, rgba(255,107,0,0.5) 70px);
+            animation: slide 20s linear infinite;
+        }
+
+        @keyframes slide {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(70px); }
+        }
+
+        @keyframes unlock {
+            0% { transform: scale(0) rotate(-180deg); opacity: 0; }
+            50% { transform: scale(1.3) rotate(10deg); }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border: 4px solid #ff6b00;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            position: relative;
+            z-index: 10;
+            text-align: center;
+        }
+
+        .unlock-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: unlock 0.8s ease-out;
+        }
+
+        h1 {
+            color: #1a1a2e;
+            font-size: 28px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .team-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #0f3460 0%, #16213e 100%);
+            color: #fff;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .tek-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 10px;
+            font-size: 24px;
+            font-weight: bold;
+            margin: 20px 0;
+            font-family: monospace;
+            letter-spacing: 2px;
+            box-shadow: 0 4px 15px rgba(255,107,0,0.3);
+        }
+
+        .message {
+            color: #333;
+            font-size: 18px;
+            line-height: 1.6;
+            margin: 20px 0;
+        }
+
+        .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            text-decoration: none;
+            margin: 10px;
+            box-shadow: 0 4px 15px rgba(255,107,0,0.3);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255,107,0,0.5);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #ff6b00;
+            border: 2px solid #ff6b00;
+        }
+
+        .btn-secondary:hover {
+            background: #fff5f0;
+        }
+
+        .already-unlocked {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .already-unlocked h2 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .error {
+            background: #f8d7da;
+            border: 2px solid #dc3545;
+            color: #721c24;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #ff6b00;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .progress-info {
+            color: #28a745;
+            font-weight: bold;
+            margin: 20px 0;
+            font-size: 18px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 20px;
+            }
+            h1 {
+                font-size: 22px;
+            }
+            .message {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-background"></div>
+    
+    <div class="container" id="unlockContainer">
+        <div class="loading" id="loader"></div>
+        <p style="color: #666; margin-top: 20px;">Επεξεργασία...</p>
+    </div>
+
+    <script>
+        // TEK information mapping
+        const tekInfo = {
+            '1': { name: 'Μπουκάλι Ουίσκι', icon: '🍾', page: 'TEK1_AR.html' },
+            '2': { name: 'Κρυστάλλινα Ποτήρια', icon: '🥃', page: 'TEK2_AR.html' },
+            '3': { name: 'Κινητό Θύματος', icon: '📱', page: 'TEK3_AR.html' },
+            '4': { name: 'Email Αυτοκτονίας', icon: '💻', page: 'TEK4_AR.html' },
+            '5': { name: 'Ιατρική Γνωμάτευση', icon: '🥼', page: 'TEK5_AR.html' },
+            '6': { name: 'Γάντια Λάτεξ', icon: '🧤', page: 'TEK6_AR.html' },
+            '7': { name: 'Χειρόγραφο Σημείωμα', icon: '✍️', page: 'TEK7_AR.html' },
+            '8': { name: 'Φάκελος Εμπιστευτικό', icon: '📂', page: 'TEK8_AR.html' },
+            '9': { name: 'Απόδειξη Χημικών', icon: '🧪', page: 'TEK9_AR.html' },
+            '10': { name: 'Κλειδί Χρηματοκιβωτίου', icon: '🔑', page: 'TEK10_AR.html' },
+            '11': { name: 'Κάμερες Ασφαλείας', icon: '📹', page: 'TEK11_AR.html' }
+        };
+
+        // Get parameters from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const tekNumber = urlParams.get('tek');
+        const teamCode = urlParams.get('team') || 'default';
+
+        // Initialize
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                processUnlock();
+            }, 500);
+        });
+
+        function getStorageKey() {
+            return `unlocked_teks_${teamCode}`;
+        }
+
+        function processUnlock() {
+            const container = document.getElementById('unlockContainer');
+
+            // Validate TEK number
+            if (!tekNumber || !tekInfo[tekNumber]) {
+                container.innerHTML = `
+                    <div class="error">
+                        <h2>❌ Σφάλμα</h2>
+                        <p>Μη έγκυρος κωδικός τεκμηρίου!</p>
+                    </div>
+                    <a href="index.html${teamCode !== 'default' ? '?team=' + teamCode : ''}" class="btn">Επιστροφή</a>
+                `;
+                return;
+            }
+
+            const tek = tekInfo[tekNumber];
+
+            // Get unlocked TEKs for this team
+            let unlockedTeks = JSON.parse(localStorage.getItem(getStorageKey()) || '[]');
+
+            // Check if already unlocked
+            if (unlockedTeks.includes(tekNumber)) {
+                showAlreadyUnlocked(tek, tekNumber);
+            } else {
+                unlockNew(tek, tekNumber, unlockedTeks);
+            }
+        }
+
+        function showAlreadyUnlocked(tek, tekNumber) {
+            const container = document.getElementById('unlockContainer');
+            container.innerHTML = `
+                <div class="unlock-icon">⚠️</div>
+                ${teamCode !== 'default' ? `<div class="team-badge">Ομάδα: ${teamCode}</div>` : ''}
+                <h1>Τεκμήριο Ήδη Ξεκλειδωμένο</h1>
+                <div class="tek-badge">ΤΕΚ #${tekNumber.padStart(3, '0')}</div>
+                <div class="already-unlocked">
+                    <h2>Έχετε ήδη συλλέξει αυτό το τεκμήριο!</h2>
+                    <p style="font-size: 40px; margin: 15px 0;">${tek.icon}</p>
+                    <p><strong>${tek.name}</strong></p>
+                </div>
+                <a href="${tek.page}${teamCode !== 'default' ? '?team=' + teamCode : ''}" class="btn">Προβολή Τεκμηρίου</a>
+                <a href="index.html${teamCode !== 'default' ? '?team=' + teamCode : ''}" class="btn btn-secondary">Επιστροφή στον Φάκελο</a>
+            `;
+        }
+
+        function unlockNew(tek, tekNumber, unlockedTeks) {
+            // Add to unlocked list
+            unlockedTeks.push(tekNumber);
+            localStorage.setItem(getStorageKey(), JSON.stringify(unlockedTeks));
+
+            // Show unlock animation
+            const container = document.getElementById('unlockContainer');
+            container.innerHTML = `
+                <div class="unlock-icon">✅</div>
+                ${teamCode !== 'default' ? `<div class="team-badge">Ομάδα: ${teamCode}</div>` : ''}
+                <h1>Νέο Τεκμήριο Ξεκλειδώθηκε!</h1>
+                <div class="tek-badge">ΤΕΚ #${tekNumber.padStart(3, '0')}</div>
+                <div style="font-size: 60px; margin: 20px 0; animation: pulse 1s ease-in-out infinite;">
+                    ${tek.icon}
+                </div>
+                <p class="message">
+                    <strong>${tek.name}</strong><br>
+                    προστέθηκε στον φάκελο υπόθεσης!
+                </p>
+                <p class="progress-info">
+                    📊 Έχετε ξεκλειδώσει ${unlockedTeks.length} από 11 τεκμήρια
+                </p>
+                <a href="${tek.page}${teamCode !== 'default' ? '?team=' + teamCode : ''}" class="btn">Προβολή Τεκμηρίου</a>
+                <a href="index.html${teamCode !== 'default' ? '?team=' + teamCode : ''}" class="btn btn-secondary">Επιστροφή στον Φάκελο</a>
+            `;
+        }
+    </script>
+</body>
+</html>
