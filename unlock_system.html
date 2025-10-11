@@ -4,6 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ξεκλείδωμα Τεκμηρίου</title>
+    
+    <!-- ADD FIREBASE (same config as admin.html) -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, doc, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        // 🔥 SAME CONFIG AS admin.html
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY_HERE",
+            authDomain: "YOUR_PROJECT.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT.appspot.com",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        window.firebaseDB = db;
+        window.firebaseDoc = doc;
+        window.firebaseSetDoc = setDoc;
+        window.firebaseGetDoc = getDoc;
+        window.firebaseReady = true;
+    </script>
+    
     <style>
         * {
             margin: 0;
@@ -204,7 +230,6 @@
     </div>
 
     <script>
-        // TEK information mapping
         const tekInfo = {
             '1': { name: 'Μπουκάλι Ουίσκι', icon: '🍾', page: 'TEK1_AR.html' },
             '2': { name: 'Κρυστάλλινα Ποτήρια', icon: '🥃', page: 'TEK2_AR.html' },
@@ -219,26 +244,74 @@
             '11': { name: 'Κάμερες Ασφαλείας', icon: '📹', page: 'TEK11_AR.html' }
         };
 
-        // Get parameters from URL
         const urlParams = new URLSearchParams(window.location.search);
         const tekNumber = urlParams.get('tek');
         const teamCode = urlParams.get('team') || 'default';
+        const USE_FIREBASE = typeof window.firebaseReady !== 'undefined';
 
-        // Initialize
+        // === FIREBASE FUNCTIONS ===
+        async function saveToFirebase(teamName, unlockedTeks) {
+            if (!USE_FIREBASE) return;
+            try {
+                await window.firebaseSetDoc(
+                    window.firebaseDoc(window.firebaseDB, 'teams', teamName),
+                    { 
+                        unlocked: unlockedTeks,
+                        lastUpdate: new Date().toISOString()
+                    }
+                );
+                console.log('✅ Saved to Firebase');
+            } catch (error) {
+                console.error('Firebase save error:', error);
+            }
+        }
+
+        async function loadFromFirebase(teamName) {
+            if (!USE_FIREBASE) return null;
+            try {
+                const docRef = window.firebaseDoc(window.firebaseDB, 'teams', teamName);
+                const docSnap = await window.firebaseGetDoc(docRef);
+                if (docSnap.exists()) {
+                    console.log('✅ Loaded from Firebase');
+                    return docSnap.data().unlocked;
+                }
+                return null;
+            } catch (error) {
+                console.error('Firebase load error:', error);
+                return null;
+            }
+        }
+
+        // === HYBRID STORAGE ===
+        function getStorageKey() {
+            return `unlocked_teks_${teamCode}`;
+        }
+
+        async function getUnlockedTeks() {
+            // Try Firebase first
+            const firebaseData = await loadFromFirebase(teamCode);
+            if (firebaseData) return firebaseData;
+            
+            // Fallback to localStorage
+            return JSON.parse(localStorage.getItem(getStorageKey()) || '[]');
+        }
+
+        async function saveUnlockedTeks(unlockedTeks) {
+            // Save to both
+            localStorage.setItem(getStorageKey(), JSON.stringify(unlockedTeks));
+            await saveToFirebase(teamCode, unlockedTeks);
+        }
+
+        // === UNLOCK LOGIC ===
         window.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 processUnlock();
             }, 500);
         });
 
-        function getStorageKey() {
-            return `unlocked_teks_${teamCode}`;
-        }
-
-        function processUnlock() {
+        async function processUnlock() {
             const container = document.getElementById('unlockContainer');
 
-            // Validate TEK number
             if (!tekNumber || !tekInfo[tekNumber]) {
                 container.innerHTML = `
                     <div class="error">
@@ -251,15 +324,12 @@
             }
 
             const tek = tekInfo[tekNumber];
+            const unlockedTeks = await getUnlockedTeks();
 
-            // Get unlocked TEKs for this team
-            let unlockedTeks = JSON.parse(localStorage.getItem(getStorageKey()) || '[]');
-
-            // Check if already unlocked
             if (unlockedTeks.includes(tekNumber)) {
                 showAlreadyUnlocked(tek, tekNumber);
             } else {
-                unlockNew(tek, tekNumber, unlockedTeks);
+                await unlockNew(tek, tekNumber, unlockedTeks);
             }
         }
 
@@ -280,12 +350,10 @@
             `;
         }
 
-        function unlockNew(tek, tekNumber, unlockedTeks) {
-            // Add to unlocked list
+        async function unlockNew(tek, tekNumber, unlockedTeks) {
             unlockedTeks.push(tekNumber);
-            localStorage.setItem(getStorageKey(), JSON.stringify(unlockedTeks));
+            await saveUnlockedTeks(unlockedTeks);
 
-            // Show unlock animation
             const container = document.getElementById('unlockContainer');
             container.innerHTML = `
                 <div class="unlock-icon">✅</div>
@@ -301,6 +369,7 @@
                 </p>
                 <p class="progress-info">
                     📊 Έχετε ξεκλειδώσει ${unlockedTeks.length} από 11 τεκμήρια
+                    ${USE_FIREBASE ? '<br>☁️ Αποθηκεύτηκε στο cloud' : ''}
                 </p>
                 <a href="${tek.page}${teamCode !== 'default' ? '?team=' + teamCode : ''}" class="btn">Προβολή Τεκμηρίου</a>
                 <a href="index.html${teamCode !== 'default' ? '?team=' + teamCode : ''}" class="btn btn-secondary">Επιστροφή στον Φάκελο</a>

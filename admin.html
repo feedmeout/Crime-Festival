@@ -4,6 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel - TEK Management</title>
+    
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, doc, setDoc, getDoc, getDocs, collection, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyA_9_40aa_wO_19g-1bIrSB6742aMOPwjo",
+  authDomain: "crime-festival-2025.firebaseapp.com",
+  projectId: "crime-festival-2025",
+  storageBucket: "crime-festival-2025.firebasestorage.app",
+  messagingSenderId: "663770004335",
+  appId: "1:663770004335:web:e42dbd983ab9b5277bc69a"
+};
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Make available globally
+        window.firebaseDB = db;
+        window.firebaseDoc = doc;
+        window.firebaseSetDoc = setDoc;
+        window.firebaseGetDoc = getDoc;
+        window.firebaseGetDocs = getDocs;
+        window.firebaseCollection = collection;
+        window.firebaseDeleteDoc = deleteDoc;
+        
+        console.log("✅ Firebase connected!");
+    </script>
+    
     <style>
         * {
             margin: 0;
@@ -192,6 +229,7 @@
             grid-template-columns: repeat(11, 1fr);
             gap: 5px;
             margin-top: 10px;
+            margin-bottom: 15px;
         }
 
         .tek-box {
@@ -216,6 +254,7 @@
             display: flex;
             gap: 15px;
             flex-wrap: wrap;
+            margin-bottom: 20px;
         }
 
         .alert {
@@ -275,6 +314,19 @@
             border-bottom: none;
         }
 
+        #firebaseStatus {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            display: none;
+        }
+
         @media (max-width: 768px) {
             .team-list {
                 grid-template-columns: 1fr;
@@ -310,8 +362,10 @@
             <h2>👥 ΕΝΕΡΓΕΣ ΟΜΑΔΕΣ</h2>
             <div class="quick-actions">
                 <button class="btn btn-success" onclick="refreshTeams()">🔄 ΑΝΑΝΕΩΣΗ</button>
-                <button class="btn btn-secondary" onclick="unlockAllForAll()">🔓 ΞΕΚΛΕΙΔΩΜΑ ΟΛΩΝ (ΟΜΑΔΕΣ)</button>
-                <button class="btn btn-danger" onclick="resetAll()">🗑️ ΔΙΑΓΡΑΦΗ ΟΛΩΝ (ΟΜΑΔΕΣ)</button>
+                <button class="btn" style="background: #17a2b8; color: white;" onclick="exportAllData()">💾 EXPORT BACKUP</button>
+                <button class="btn" style="background: #6c757d; color: white;" onclick="importData()">📥 IMPORT BACKUP</button>
+                <button class="btn btn-secondary" onclick="unlockAllForAll()">🔓 ΞΕΚΛΕΙΔΩΜΑ ΟΛΩΝ</button>
+                <button class="btn btn-danger" onclick="resetAll()">🗑️ ΔΙΑΓΡΑΦΗ ΟΛΩΝ</button>
             </div>
             <div id="teamsContainer" class="team-list"></div>
             <div id="noTeams" style="display: none; text-align: center; padding: 40px; color: #999;">
@@ -334,11 +388,66 @@
         </div>
     </div>
 
+    <div id="firebaseStatus">
+        ✅ Firebase Connected - Data Synced to Cloud
+    </div>
+
     <script>
         const BASE_URL = window.location.origin + window.location.pathname.replace('admin.html', '');
         const TOTAL_TEKS = 11;
+        const USE_FIREBASE = typeof window.firebaseDB !== 'undefined';
 
-        function getAllTeams() {
+        // === FIREBASE FUNCTIONS ===
+        async function saveTeamToFirebase(teamName, unlockedTeks) {
+            if (!USE_FIREBASE) return;
+            try {
+                await window.firebaseSetDoc(
+                    window.firebaseDoc(window.firebaseDB, 'teams', teamName),
+                    { unlocked: unlockedTeks, lastUpdate: new Date().toISOString() }
+                );
+            } catch (error) {
+                console.error('Firebase save error:', error);
+            }
+        }
+
+        async function loadTeamFromFirebase(teamName) {
+            if (!USE_FIREBASE) return null;
+            try {
+                const docRef = window.firebaseDoc(window.firebaseDB, 'teams', teamName);
+                const docSnap = await window.firebaseGetDoc(docRef);
+                return docSnap.exists() ? docSnap.data().unlocked : null;
+            } catch (error) {
+                console.error('Firebase load error:', error);
+                return null;
+            }
+        }
+
+        async function getAllTeamsFromFirebase() {
+            if (!USE_FIREBASE) return [];
+            try {
+                const querySnapshot = await window.firebaseGetDocs(
+                    window.firebaseCollection(window.firebaseDB, 'teams')
+                );
+                const teams = [];
+                querySnapshot.forEach((doc) => {
+                    if (!doc.data().deleted) {
+                        teams.push({ name: doc.id, unlocked: doc.data().unlocked || [] });
+                    }
+                });
+                return teams;
+            } catch (error) {
+                console.error('Firebase load all error:', error);
+                return [];
+            }
+        }
+
+        // === HYBRID STORAGE ===
+        async function getAllTeams() {
+            if (USE_FIREBASE) {
+                const firebaseTeams = await getAllTeamsFromFirebase();
+                if (firebaseTeams.length > 0) return firebaseTeams;
+            }
+            
             const teams = [];
             for (let i = 0; i < localStorage.length; i++) {
                 const key = localStorage.key(i);
@@ -351,7 +460,56 @@
             return teams;
         }
 
-        function addTeam() {
+        async function saveTeam(teamName, unlockedTeks) {
+            localStorage.setItem(`unlocked_teks_${teamName}`, JSON.stringify(unlockedTeks));
+            await saveTeamToFirebase(teamName, unlockedTeks);
+        }
+
+        // === EXPORT / IMPORT ===
+        async function exportAllData() {
+            const teams = await getAllTeams();
+            
+            const dataStr = JSON.stringify({ 
+                exportDate: new Date().toISOString(),
+                teams: teams 
+            }, null, 2);
+            
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `crime-festival-backup-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            alert(`✅ Exported ${teams.length} teams to JSON file!`);
+        }
+
+        function importData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'application/json';
+            
+            input.onchange = async (e) => {
+                const file = e.target.files[0];
+                const text = await file.text();
+                const data = JSON.parse(text);
+                
+                let imported = 0;
+                for (const team of data.teams) {
+                    await saveTeam(team.name, team.unlocked);
+                    imported++;
+                }
+                
+                alert(`✅ Imported ${imported} teams!`);
+                refreshTeams();
+            };
+            
+            input.click();
+        }
+
+        // === UI FUNCTIONS ===
+        async function addTeam() {
             const teamName = document.getElementById('newTeamName').value.trim().toLowerCase();
             const alertDiv = document.getElementById('addTeamAlert');
             
@@ -360,27 +518,23 @@
                 return;
             }
 
-            const key = `unlocked_teks_${teamName}`;
-            
-            if (localStorage.getItem(key)) {
+            const existing = localStorage.getItem(`unlocked_teks_${teamName}`);
+            if (existing) {
                 alertDiv.innerHTML = '<div class="alert alert-warning">⚠️ Η ομάδα υπάρχει ήδη</div>';
                 return;
             }
 
-            localStorage.setItem(key, JSON.stringify([]));
+            await saveTeam(teamName, []);
             
             alertDiv.innerHTML = `<div class="alert alert-success">✅ Η ομάδα "${teamName}" δημιουργήθηκε</div>`;
             document.getElementById('newTeamName').value = '';
             
-            setTimeout(() => {
-                alertDiv.innerHTML = '';
-            }, 3000);
-            
+            setTimeout(() => { alertDiv.innerHTML = ''; }, 3000);
             refreshTeams();
         }
 
-        function refreshTeams() {
-            const teams = getAllTeams();
+        async function refreshTeams() {
+            const teams = await getAllTeams();
             const container = document.getElementById('teamsContainer');
             const noTeams = document.getElementById('noTeams');
 
@@ -391,24 +545,16 @@
             }
 
             noTeams.style.display = 'none';
-
             container.innerHTML = teams.map(team => {
                 const progress = Math.round((team.unlocked.length / TOTAL_TEKS) * 100);
                 
                 return `
                     <div class="team-card">
-                        <h3>
-                            <span style="font-size: 24px;">👥</span>
-                            ${team.name.toUpperCase()}
-                        </h3>
+                        <h3><span style="font-size: 24px;">👥</span> ${team.name.toUpperCase()}</h3>
                         <div class="progress-bar">
-                            <div class="progress-fill" style="width: ${progress}%;">
-                                ${progress}%
-                            </div>
+                            <div class="progress-fill" style="width: ${progress}%;">${progress}%</div>
                         </div>
-                        <div class="team-stats">
-                            📊 Ξεκλειδωμένα: ${team.unlocked.length} / ${TOTAL_TEKS} TEKs
-                        </div>
+                        <div class="team-stats">📊 Ξεκλειδωμένα: ${team.unlocked.length} / ${TOTAL_TEKS} TEKs</div>
                         <div class="tek-grid">
                             ${Array.from({length: TOTAL_TEKS}, (_, i) => {
                                 const tekNum = (i + 1).toString();
@@ -417,18 +563,10 @@
                             }).join('')}
                         </div>
                         <div class="team-actions">
-                            <button class="btn btn-primary" onclick="viewTeam('${team.name}')">
-                                👁️ Προβολή
-                            </button>
-                            <button class="btn btn-success" onclick="unlockAll('${team.name}')">
-                                🔓 Όλα
-                            </button>
-                            <button class="btn btn-secondary" onclick="resetTeam('${team.name}')">
-                                🔄 Reset
-                            </button>
-                            <button class="btn btn-danger" onclick="deleteTeam('${team.name}')">
-                                🗑️ Διαγραφή
-                            </button>
+                            <button class="btn btn-primary" onclick="viewTeam('${team.name}')">👁️ Προβολή</button>
+                            <button class="btn btn-success" onclick="unlockAll('${team.name}')">🔓 Όλα</button>
+                            <button class="btn btn-secondary" onclick="resetTeam('${team.name}')">🔄 Reset</button>
+                            <button class="btn btn-danger" onclick="deleteTeam('${team.name}')">🗑️ Διαγραφή</button>
                         </div>
                     </div>
                 `;
@@ -439,45 +577,63 @@
             window.open(`${BASE_URL}index.html?team=${teamName}`, '_blank');
         }
 
-        function unlockAll(teamName) {
+        async function unlockAll(teamName) {
             if (confirm(`Ξεκλείδωμα όλων των TEKs για την ομάδα "${teamName}";`)) {
                 const allTeks = Array.from({length: TOTAL_TEKS}, (_, i) => (i + 1).toString());
-                localStorage.setItem(`unlocked_teks_${teamName}`, JSON.stringify(allTeks));
+                await saveTeam(teamName, allTeks);
                 refreshTeams();
             }
         }
 
-        function resetTeam(teamName) {
+        async function resetTeam(teamName) {
             if (confirm(`Reset πρόοδο για την ομάδα "${teamName}";`)) {
-                localStorage.setItem(`unlocked_teks_${teamName}`, JSON.stringify([]));
+                await saveTeam(teamName, []);
                 refreshTeams();
             }
         }
 
-        function deleteTeam(teamName) {
+        async function deleteTeam(teamName) {
             if (confirm(`Διαγραφή ομάδας "${teamName}";`)) {
                 localStorage.removeItem(`unlocked_teks_${teamName}`);
+                if (USE_FIREBASE) {
+                    try {
+                        await window.firebaseDeleteDoc(
+                            window.firebaseDoc(window.firebaseDB, 'teams', teamName)
+                        );
+                    } catch (error) {
+                        console.error('Firebase delete error:', error);
+                    }
+                }
                 refreshTeams();
             }
         }
 
-        function unlockAllForAll() {
+        async function unlockAllForAll() {
             if (confirm('Ξεκλείδωμα ΟΛΩΝ των TEKs για ΟΛΕΣ τις ομάδες;')) {
-                const teams = getAllTeams();
+                const teams = await getAllTeams();
                 const allTeks = Array.from({length: TOTAL_TEKS}, (_, i) => (i + 1).toString());
-                teams.forEach(team => {
-                    localStorage.setItem(`unlocked_teks_${team.name}`, JSON.stringify(allTeks));
-                });
+                for (const team of teams) {
+                    await saveTeam(team.name, allTeks);
+                }
                 refreshTeams();
             }
         }
 
-        function resetAll() {
+        async function resetAll() {
             if (confirm('ΔΙΑΓΡΑΦΗ ΟΛΩΝ των ομάδων;')) {
-                const teams = getAllTeams();
-                teams.forEach(team => {
+                const teams = await getAllTeams();
+                for (const team of teams) {
                     localStorage.removeItem(`unlocked_teks_${team.name}`);
-                });
+                    if (USE_FIREBASE) {
+                        try {
+                            await window.firebaseDeleteDoc(
+                                window.firebaseDoc(window.firebaseDB, 'teams', team.name)
+                            );
+                        } catch (error) {
+                            console.error('Firebase delete error:', error);
+                        }
+                    }
+                }
                 refreshTeams();
             }
         }
@@ -513,8 +669,17 @@
             });
         }
 
+        // === INITIALIZATION ===
         window.addEventListener('DOMContentLoaded', () => {
             refreshTeams();
+            
+            const status = document.getElementById('firebaseStatus');
+            if (USE_FIREBASE) {
+                console.log('✅ Firebase is ACTIVE - data is cloud-synced');
+                status.style.display = 'block';
+            } else {
+                console.warn('⚠️ Firebase not loaded - using localStorage only');
+            }
         });
 
         setInterval(refreshTeams, 10000);
