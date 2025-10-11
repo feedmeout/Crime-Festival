@@ -525,7 +525,7 @@
             margin-top: 40px;
         }
 
-.footer p {
+        .footer p {
             margin: 5px 0;
             font-size: 14px;
             opacity: 0.9;
@@ -633,7 +633,7 @@
         </div>
     </div>
 
-<div class="container">
+    <div class="container">
         <!-- Tab Navigation -->
         <div class="tabs-container">
             <div class="tabs-nav">
@@ -711,6 +711,7 @@
             11 ΤΕΚΜΗΡΙΑ | 5 ΥΠΟΠΤΟΙ | 1 ΑΛΗΘΕΙΑ
         </p>
     </div>
+    
     <script src="suspects.js"></script>
 
     <script>
@@ -904,7 +905,7 @@
             }).join('');
         }
 
-window.addEventListener('DOMContentLoaded', () => {
+        window.addEventListener('DOMContentLoaded', () => {
             if (typeof SuspectsModule !== 'undefined') {
                 SuspectsModule.renderSuspects('suspectsContainer');
             } else {
@@ -921,8 +922,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 updateProgress();
             }
         });
-
-        // Tab functionality
+		
         function initTabs() {
             const tabButtons = document.querySelectorAll('.tab-button');
             const tabPanes = document.querySelectorAll('.tab-pane');
@@ -931,24 +931,13 @@ window.addEventListener('DOMContentLoaded', () => {
                 button.addEventListener('click', () => {
                     const targetTab = button.getAttribute('data-tab');
 
-                    // Remove active class from all buttons and panes
                     tabButtons.forEach(btn => btn.classList.remove('active'));
                     tabPanes.forEach(pane => pane.classList.remove('active'));
-
-                    // Add active class to clicked button and corresponding pane
                     button.classList.add('active');
                     document.getElementById(`tab-${targetTab}`).classList.add('active');
                 });
             });
         }
-    </script>
-
-        window.addEventListener('storage', (e) => {
-            if (e.key === getStorageKey()) {
-                renderEvidence();
-                updateProgress();
-            }
-        });
     </script>
 </body>
 </html>
