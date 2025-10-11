@@ -158,36 +158,44 @@
             background: rgba(255, 255, 255, 0.95);
             border: 3px solid #17a2b8;
             border-radius: 15px;
-            padding: 20px;
+            padding: 15px 20px;
             margin-bottom: 20px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.3);
             display: none;
         }
 
+        .timer-section h2 {
+            color: #1a1a2e;
+            font-size: 16px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
         .timer-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
         }
 
         .timer-box {
             background: #f8f9fa;
-            padding: 15px;
-            border-radius: 10px;
+            padding: 10px;
+            border-radius: 8px;
             border-left: 4px solid #17a2b8;
         }
 
         .timer-box strong {
             display: block;
             color: #0f3460;
-            font-size: 12px;
-            margin-bottom: 5px;
+            font-size: 11px;
+            margin-bottom: 4px;
             text-transform: uppercase;
         }
 
         .timer-box .value {
-            font-size: 24px;
+            font-size: 20px;
             font-weight: bold;
             color: #17a2b8;
             font-family: monospace;
@@ -689,6 +697,34 @@
             color: #0d47a1;
         }
 
+        .story-box {
+            background: rgba(255, 255, 255, 0.95);
+            border: 3px solid #6c757d;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .story-box h2 {
+            color: #1a1a2e;
+            font-size: 18px;
+            text-transform: uppercase;
+            border-bottom: 2px solid #000;
+            padding-bottom: 8px;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+
+        .story-box p {
+            color: #333;
+            line-height: 1.8;
+            font-size: 14px;
+            margin: 15px 0;
+            text-align: justify;
+            font-style: italic;
+        }
+
         .footer {
             background: rgba(255, 255, 255, 0.1);
             padding: 20px;
@@ -813,9 +849,7 @@
     <div class="container">
         <!-- Timer Section -->
         <div class="timer-section" id="timerSection">
-            <h2 style="color: #1a1a2e; font-size: 20px; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
-                ⏱️ Χρονομέτρηση Ομάδας
-            </h2>
+            <h2>⏱️ Χρονομέτρηση Ομάδας</h2>
             <div class="timer-grid">
                 <div class="timer-box">
                     <strong>Έναρξη</strong>
@@ -831,9 +865,9 @@
         <!-- Tab Navigation -->
         <div class="tabs-container">
             <div class="tabs-nav">
-                <button class="tab-button active" data-tab="intro">🔍 ΠΕΡΙΣΤΑΤΙΚΟ</button>
-                <button class="tab-button" data-tab="suspects">👥 ΚΑΤΑΛΟΓΟΣ ΥΠΟΠΤΩΝ</button>
+                <button class="tab-button active" data-tab="intro">📋 ΠΕΡΙΣΤΑΤΙΚΟ</button>
                 <button class="tab-button" data-tab="forensics">🥼 ΙΑΤΡΟΔΙΚΑΣΤΙΚΗ & ΧΡΟΝΟΛΟΓΙΟ</button>
+                <button class="tab-button" data-tab="suspects">👥 ΚΑΤΑΛΟΓΟΣ ΥΠΟΠΤΩΝ</button>
                 <button class="tab-button" data-tab="evidence">📦 ΤΕΚΜΗΡΙΑ</button>
                 <button class="tab-button" data-tab="solution">✅ ΛΥΣΗ</button>
             </div>
@@ -843,22 +877,24 @@
                 <!-- Tab 1: Intro -->
                 <div class="tab-pane active" id="tab-intro">
                     <div class="intro-box">
-                        <h2>🔍 ΠΕΡΙΣΤΑΤΙΚΟ</h2>
-                        <p><strong>ΘΥΜΑ:</strong> ΔΗΜΗΤΡΙΟΥ ΠΕΤΡΟΣ του ΙΩΑΝΝΗ, ΑΦΜ: 074ΧΧΧΧΧΧ</p>
+                        <h2>📋 ΠΕΡΙΣΤΑΤΙΚΟ</h2>
+                        <p><strong>ΘΥΜΑ:</strong> ΔΗΜΗΤΡΙΟΥ ΠΕΤΡΟΣ του ΙΩΑΝΝΗ, ΑΦΜ: 074XXXXXX</p>
                         <p><strong>ΗΛΙΚΙΑ:</strong> 55 ετών | <strong>ΟΙΚ. ΚΑΤΑΣΤΑΣΗ:</strong> Διαζευγμένος, 2 τέκνα</p>
                         <p><strong>ΕΠΑΓΓΕΛΜΑ:</strong> Εκδότης, Ιδρυτής/CEO «ΛΟΓΟΣ ΕΚΔΟΣΕΙΣ Α.Ε.»</p>
                         <p><strong>ΤΟΠΟΣ ΕΥΡΕΣΗΣ:</strong> Ιδιωτικό γραφείο, Σταδίου 47, 7ος όροφος</p>
                         <p><strong>ΗΜΕΡΑ ΕΥΡΕΣΗΣ:</strong> Παρασκευή 31/10, 07:00 π.μ. | <strong>ΚΛΗΣΗ ΑΣΤΥΝΟΜΙΑΣ:</strong> 07:03</p>
                         <p style="font-style: italic; color: #00008b; margin-top: 15px;">Σημείωση: Ασφάλεια ζωής €1εκ. - ακυρώνεται σε περίπτωση αυτοκτονίας</p>
                     </div>
+
+                    <div class="story-box">
+                        <h2>📖 Η ΥΠΟΘΕΣΗ</h2>
+                        <p>Ο Πέτρος Δημητρίου ήταν γνωστός εκδοτικός μεγιστάνας με επιτυχημένη καριέρα τριών δεκαετιών. Πριν από τρεις εβδομάδες έλαβε μια διάγνωση που άλλαξε τα πάντα: καρκίνος παγκρέατος τελικού σταδίου, με προσδόκιμο ζωής 2-3 μήνες. Η είδηση ήταν γνωστή μόνο στον ιατρό του, τη γραμματέα του και την πρώην σύζυγό του.</p>
+                        <p>Το πρωί της Παρασκευής 31 Οκτωβρίου, η καθαρίστρια Μαρία Παπαδοπούλου φτάνει για τον συνηθισμένο καθαρισμό του γραφείου του στον 7ο όροφο και ανακαλύπτει το άψυχο σώμα του στις τουαλέτες του ορόφου. Στον υπολογιστή του γραφείου βρέθηκε ένα email «αυτοκτονίας» αποσταλμένο στις 21:25 το προηγούμενο βράδυ. Οι πρώτες ενδείξεις έδειχναν αυτοκτονία από δηλητηρίαση με κυάνιο.</p>
+                        <p>Ωστόσο, η ιατροδικαστική εξέταση αποκάλυψε ανωμαλίες που προκαλούν ερωτήματα...</p>
+                    </div>
                 </div>
 
-                <!-- Tab 2: Suspects -->
-                <div class="tab-pane" id="tab-suspects">
-                    <div id="suspectsContainer"></div>
-                </div>
-
-                <!-- Tab 3: Forensics & Timeline -->
+                <!-- Tab 2: Forensics & Timeline (moved from position 3) -->
                 <div class="tab-pane" id="tab-forensics">
                     <div class="forensic-box">
                         <h2>🥼 ΙΑΤΡΟΔΙΚΑΣΤΙΚΗ ΕΚΘΕΣΗ</h2>
@@ -881,6 +917,11 @@
                     </div>
                 </div>
 
+                <!-- Tab 3: Suspects (moved from position 2) -->
+                <div class="tab-pane" id="tab-suspects">
+                    <div id="suspectsContainer"></div>
+                </div>
+
                 <!-- Tab 4: Evidence -->
                 <div class="tab-pane" id="tab-evidence">
                     <div class="progress-bar-container">
@@ -896,7 +937,8 @@
                     <div class="evidence-grid" id="evidenceGrid">
                     </div>
                 </div>
-<!-- Tab 5: Solution -->
+
+                <!-- Tab 5: Solution -->
                 <div class="tab-pane" id="tab-solution">
                     <div class="intro-box">
                         <h2>✅ ΥΠΟΒΟΛΗ ΛΥΣΗΣ</h2>
@@ -942,7 +984,7 @@
                             <label for="justification">ΑΙΤΙΟΛΟΓΗΣΗ ΛΥΣΗΣ: *</label>
                             <textarea 
                                 id="justification" 
-                                placeholder="Προσθέστε την ανάλυσή / αιτιολόγησή σας..."
+                                placeholder="Προσθέστε την ανάλυση / αιτιολόγησή σας..."
                                 required
                             ></textarea>
                         </div>
@@ -958,7 +1000,7 @@
                                 required
                             >
                             <p style="font-size: 12px; color: #666; margin-top: 5px;">
-                                Να γίνει υπό την επίβλεψη ενός Game Master.
+                                Θα γίνει υπό την επίβλεψη ενός Game Master.
                             </p>
                         </div>
 
@@ -989,7 +1031,7 @@
                 name: 'Μπουκάλι Ουίσκι',
                 subtitle: 'Μπουκάλι Jack Daniels',
                 icon: '🍾',
-                description: '<strong>Τοποθεσία:</strong> Γραφείο θύματος<br><strong>Ευρήματα:</strong> Κυάνιο στον πάτο + αποτυπώματα θύματος, Παπαδοπούλου, Αναγνώστου, Πετρόπουλου',
+                description: '<strong>Τοποθεσία:</strong> Γραφείο θύματος<br><strong>Ευρήματα:</strong> Κυάνιο στον πάτο + αποτυπώματα θύματος, Παπαδοπούλου, Αναγνώστου, Πετρόπουλος',
                 page: 'TEK1_AR.html',
                 critical: true
             },
@@ -1027,7 +1069,7 @@
                 name: 'Ιατρική Γνωμάτευση',
                 subtitle: 'Ιατρική γνωμάτευση (κρυφή)',
                 icon: '🥼',
-                description: '<strong>Διάγνωση:</strong> Καρκίνος παγκρέατος σταδίου IV<br><strong>Ημερομηνία:</strong> Πριν 3 εβδομάδες<br><strong>Πρόγνωση:</strong> 2-3 μήνες ζωής • Γιατρός: Δρ. Σταυρίδης',
+                description: '<strong>Διάγνωση:</strong> Καρκίνος παγκρέατος σταδίου IV<br><strong>Ημερομηνία:</strong> Πριν 3 εβδομάδες<br><strong>Πρόγνωση:</strong> 2-3 μήνες ζωής • Διατρός: Δρ. Σταυρίδης',
                 page: 'TEK5_AR.html',
                 critical: false,
                 secret: true
@@ -1244,6 +1286,7 @@
                 }
             }
         }
+
 function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
     let score = 0;
     let breakdown = [];
@@ -1274,7 +1317,7 @@ function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
                 `   • Δολοφονία από: ${killerNames}`,
                 '   • Αυτοκτονία',
                 '',
-                'Αυτές οι δύο επιλογές αλληλοαποκλείονται!',
+                'Αυτές οι δυο επιλογές αλληλοαποκλείονται!',
                 'Δεν μπορεί να είναι και δολοφονία ΚΑΙ αυτοκτονία.',
                 '',
             ],
@@ -1308,29 +1351,29 @@ function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
         }
     });
         
-    breakdown.push('✓ ΘΕΤΙΚΑ ΣΤΟΙΧΕΙΑ:');    
+    breakdown.push('✔ ΘΕΤΙΚΑ ΣΤΟΙΧΕΙΑ:');    
     score += SCORING.murder_diagnosis;
-    breakdown.push(`✓ Διάγνωση Δολοφονίας: +${SCORING.murder_diagnosis}`);
+    breakdown.push(`✔ Διάγνωση Δολοφονίας: +${SCORING.murder_diagnosis}`);
     if (correctCount > 0) {
         const points = correctCount * SCORING.perpetrator;
         score += points;
-        breakdown.push(`✓ Σωστοί Δράστες (${correctCount}/3): +${points}`);
+        breakdown.push(`✔ Σωστοί Δράστες (${correctCount}/3): +${points}`);
     } else {
         breakdown.push(`✗ Σωστοί Δράστες (0/3): +0`);
     }
     if (correctCount >= 2) {
         score += SCORING.cooperation;
-        breakdown.push(`✓ Εντοπισμός Συνεργασίας: +${SCORING.cooperation}`);
+        breakdown.push(`✔ Εντοπισμός Συνεργασίας: +${SCORING.cooperation}`);
     } else {
         breakdown.push(`✗ Εντοπισμός Συνεργασίας: +0 (απαιτούνται 2+ σωστοί)`);
     }
     if (correctCount === 3 && selectedSuspects.length === 3) {
         const bonus = SCORING.timeline + SCORING.exclusion + SCORING.evidence_use;
         score += bonus;
-        breakdown.push(`✓ Τέλεια Λύση (όλα σωστά): +${bonus}`);
+        breakdown.push(`✔ Τέλεια Λύση (όλα σωστά): +${bonus}`);
     } else if (correctCount >= 2) {
         score += SCORING.evidence_use;
-        breakdown.push(`✓ Χρήση Τεκμηρίων: +${SCORING.evidence_use}`);
+        breakdown.push(`✔ Χρήση Τεκμηρίων: +${SCORING.evidence_use}`);
     }
     if (totalTimeMs && correctCount >= 2) {
         const minutes = totalTimeMs / 60000;
@@ -1468,13 +1511,13 @@ function displaySolutionResult(solution) {
     let grade = '';
     let gradeColor = '';
     if (percentage >= 90) {
-        grade = 'ΑΡΧΙ-ΝΤΕΤΕΚΤΙΒΣ 🕵️';
+        grade = 'ΑΡΧΙ-ΝΤΕΤΕΚΤΙΒΑΣ 🕵️';
         gradeColor = '#00d4ff';
     } else if (percentage >= 80) {
         grade = 'ΑΝΩΤΕΡΟΙ ΑΝΑΚΡΙΤΕΣ 🎖️';
         gradeColor = '#ffd700';
     } else if (percentage >= 70) {
-        grade = 'ΝΤΕΤΕΚΤΙΒΣ 🔎';
+        grade = 'ΝΤΕΤΕΚΤΙΒΑΣ 🔎';
         gradeColor = '#c0c0c0';
     } else if (percentage >= 60) {
         grade = 'ΑΣΤΥΝΟΜΟΙ 👮';
@@ -1517,7 +1560,7 @@ function displaySolutionResult(solution) {
             borderColor = '#dc3545';
             textColor = '#721c24';
             fontWeight = 'bold';
-        } else if (item.includes('✓') || item.includes('+')) {
+        } else if (item.includes('✔') || item.includes('+')) {
             bgColor = '#d4edda';
             borderColor = '#28a745';
             textColor = '#155724';
@@ -1591,20 +1634,14 @@ function displaySolutionResult(solution) {
         '<button onclick="revealSolution()" style="padding: 10px 20px; background: #ffc107; color: #000; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">Εμφάνιση</button>' +
         '</div>' +
         '<div id="correctSolution" style="display: none; margin-top: 20px; padding-top: 20px; border-top: 2px solid #ffc107;">' +
-        
-        // BREAKDOWN SECTION
         '<div style="background: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; border: 2px solid #28a745;">' +
         '<h4 style="color: #1a1a2e; margin-bottom: 15px; font-size: 18px; border-bottom: 2px solid #ff6b00; padding-bottom: 8px;">📊 ΑΝΑΛΥΣΗ ΒΑΘΜΟΛΟΓΙΑΣ ΣΑΣ</h4>' +
         '<div style="font-family: \'Courier New\', monospace; line-height: 1.8; font-size: 14px;">' +
         breakdownHTML +
         '</div>' +
         '</div>' +
-        
-        // SOLUTION SECTION - NEW VISUAL VERSION
         '<div style="background: white; padding: 20px; border-radius: 10px; border: 2px solid #dc3545;">' +
         '<h4 style="color: #dc3545; margin-bottom: 15px; font-size: 18px; border-bottom: 2px solid #dc3545; padding-bottom: 8px;">🎯 ΛΥΣΗ: ΣΥΝΕΡΓΑΤΙΚΗ ΔΟΛΟΦΟΝΙΑ</h4>' +
-        
-// PERPETRATORS - Enhanced cards with full info
         '<h5 style="color: #1a1a2e; margin: 15px 0 10px 0; font-size: 15px; display: flex; align-items: center; gap: 8px;">⚠️ ΔΡΑΣΤΕΣ & ΡΟΛΟΣ</h5>' +
         
         '<div style="background: #fff5f5; border-left: 4px solid #dc3545; padding: 15px; margin-bottom: 10px; border-radius: 6px; box-shadow: 0 2px 4px rgba(220,53,69,0.1);">' +
@@ -1625,7 +1662,7 @@ function displaySolutionResult(solution) {
         '<span style="background: #ff6b00; color: white; padding: 2px 8px; border-radius: 12px; font-size: 10px; font-weight: bold;">ΣΥΝΕΡΓΟΣ</span>' +
         '</div>' +
         '<div style="color: #666; font-size: 13px; line-height: 1.5;">' +
-        '<div style="margin-bottom: 4px;"><strong style="color: #333;">Ρόλος:</strong> Φύλακας κτιρίου • Πρόσβαση παντού</div>' +
+        '<div style="margin-bottom: 4px;"><strong style="color: #333;">Ρόλος:</strong> Φρύλακας κτιρίου • Πρόσβαση παντού</div>' +
         '<div style="margin-bottom: 4px;"><strong style="color: #333;">Κίνητρο:</strong> Χρέη €60k στους τοκογλύφους</div>' +
         '<div><strong style="color: #333;">Συμβολή:</strong> Προμήθευσε το κυάνιο • Απενεργοποίησε κάμερες 20:55</div>' +
         '</div>' +
@@ -1642,8 +1679,6 @@ function displaySolutionResult(solution) {
         '<div><strong style="color: #333;">Συμβολή:</strong> Έστειλε fake email «αυτοκτονίας» 21:25 • Πλαστό σημείωμα</div>' +
         '</div>' +
         '</div>' +
-        
-        // KEY EVIDENCE - Icon boxes
         '<h5 style="color: #1a1a2e; margin: 20px 0 10px 0; font-size: 15px; display: flex; align-items: center; gap: 8px;">🔍 ΚΡΙΣΙΜΑ ΣΤΟΙΧΕΙΑ</h5>' +
         '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; margin-bottom: 15px;">' +
         '<div style="background: #e3f2fd; padding: 10px; border-radius: 6px; border-left: 3px solid #2196f3;">' +
@@ -1651,7 +1686,7 @@ function displaySolutionResult(solution) {
         '<div style="font-size: 12px; color: #555;">«Θα τελειώσει απόψε»</div>' +
         '</div>' +
         '<div style="background: #fff3cd; padding: 10px; border-radius: 6px; border-left: 3px solid #ffc107;">' +
-        '<div style="font-weight: bold; color: #856404; margin-bottom: 4px;">🥃 Δύο Ποτήρια</div>' +
+        '<div style="font-weight: bold; color: #856404; margin-bottom: 4px;">🥃 Δυο Ποτήρια</div>' +
         '<div style="font-size: 12px; color: #555;">Ένα με κυάνιο, ένα καθαρό</div>' +
         '</div>' +
         '<div style="background: #f8d7da; padding: 10px; border-radius: 6px; border-left: 3px solid #dc3545;">' +
@@ -1671,30 +1706,24 @@ function displaySolutionResult(solution) {
         '<div style="font-size: 12px; color: #555;">Φαγητό για 2, θύμα μόνο</div>' +
         '</div>' +
         '</div>' +
-		
-// ALIBIS - Expanded format with analysis
         '<h5 style="color: #1a1a2e; margin: 20px 0 10px 0; font-size: 15px; display: flex; align-items: center; gap: 8px;">' +
-        '📍 ΑΝΑΛΥΣΗ ΑΛΛΟΘΙ' +
+        '📝 ΑΝΑΛΥΣΗ ΑΛΛΟΘΙ' +
         '<span style="background: #dc3545; color: white; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-left: 10px;">ΩΡΑ ΔΟΛΟΦΟΝΙΑΣ: 21:30-21:50</span>' +
         '</h5>' +
         
         '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; margin-bottom: 15px;">' +
-        
-        // Παπαδοπούλου - Innocent
         '<div style="background: #d4edda; padding: 12px; border-radius: 6px; border-left: 4px solid #28a745;">' +
         '<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">' +
         '<span style="font-size: 18px;">👩</span>' +
         '<strong style="color: #155724; font-size: 13px;">Παπαδοπούλου Μαρία</strong>' +
-        '<span style="background: #28a745; color: white; padding: 2px 6px; border-radius: 8px; font-size: 9px; font-weight: bold; margin-left: auto;">✓ ΙΣΧΥΡΟ</span>' +
+        '<span style="background: #28a745; color: white; padding: 2px 6px; border-radius: 8px; font-size: 9px; font-weight: bold; margin-left: auto;">✔ ΙΣΧΥΡΟ</span>' +
         '</div>' +
         '<div style="font-size: 11px; color: #155724; line-height: 1.5;">' +
         '<div>• Γιατρός 18:30-19:30 (επιβεβαιωμένο)</div>' +
         '<div>• Δείπνο με αδελφή 19:45-22:30</div>' +
-        '<div style="margin-top: 4px; padding: 4px 6px; background: rgba(40,167,69,0.1); border-radius: 3px;">✓ Κάλυψε όλο το κρίσιμο χρονικό παράθυρο!</div>' +
+        '<div style="margin-top: 4px; padding: 4px 6px; background: rgba(40,167,69,0.1); border-radius: 3px;">✔ Κάλυψε όλο το κρίσιμο χρονικό παράθυρο!</div>' +
         '</div>' +
         '</div>' +
-        
-        // Αναγνώστου - Guilty
         '<div style="background: #f8d7da; padding: 12px; border-radius: 6px; border-left: 4px solid #dc3545;">' +
         '<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">' +
         '<span style="font-size: 18px;">👨‍💼</span>' +
@@ -1707,8 +1736,6 @@ function displaySolutionResult(solution) {
         '<div style="margin-top: 4px; padding: 4px 6px; background: rgba(220,53,69,0.1); border-radius: 3px;">❌ Χρόνος 20:30-21:50: ΧΩΡΙΣ ΚΑΛΥΨΗ!</div>' +
         '</div>' +
         '</div>' +
-        
-        // Μαυρίδη - Guilty
         '<div style="background: #f8d7da; padding: 12px; border-radius: 6px; border-left: 4px solid #dc3545;">' +
         '<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">' +
         '<span style="font-size: 18px;">👩‍🦰</span>' +
@@ -1721,8 +1748,6 @@ function displaySolutionResult(solution) {
         '<div style="margin-top: 4px; padding: 4px 6px; background: rgba(220,53,69,0.1); border-radius: 3px;">❌ Ομολογεί παρουσία στο κτίριο κατά τη δολοφονία!</div>' +
         '</div>' +
         '</div>' +
-        
-        // Πετρόπουλος - Guilty
         '<div style="background: #f8d7da; padding: 12px; border-radius: 6px; border-left: 4px solid #dc3545;">' +
         '<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">' +
         '<span style="font-size: 18px;">👮</span>' +
@@ -1735,8 +1760,6 @@ function displaySolutionResult(solution) {
         '<div style="margin-top: 4px; padding: 4px 6px; background: rgba(220,53,69,0.1); border-radius: 3px;">❌ ΑΠΟΔΕΙΞΗ: Απενεργοποίησε κάμερες 20:55!</div>' +
         '</div>' +
         '</div>' +
-        
-        // Νικολάου - Innocent but weak
         '<div style="background: #fff3cd; padding: 12px; border-radius: 6px; border-left: 4px solid #ffc107;">' +
         '<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">' +
         '<span style="font-size: 18px;">👩‍💻</span>' +
@@ -1751,8 +1774,6 @@ function displaySolutionResult(solution) {
         '</div>' +
         
         '</div>' +
-        
-        // Summary box
         '<div style="background: #e7f3ff; border: 2px solid #2196f3; padding: 15px; border-radius: 8px; margin-top: 10px;">' +
         '<div style="font-weight: bold; color: #0d47a1; margin-bottom: 8px; font-size: 13px;">💡 ΣΥΜΠΕΡΑΣΜΑ</div>' +
         '<div style="font-size: 12px; color: #1565c0; line-height: 1.6;">' +

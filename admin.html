@@ -535,12 +535,12 @@
             </div>
             
             <div class="sort-controls">
-                <label>Ταξινόμηση:</label>
+                <label>ΤΑΞΙΝΟΜΗΣΗ:</label>
                 <select id="sortOrder" onchange="refreshTeams()">
-                    <option value="name">Όνομα</option>
-                    <option value="progress">Πρόοδος</option>
-                    <option value="completion">Χρόνος Ολοκλήρωσης (Ταχύτερο)</option>
-                    <option value="recent">Πιο Πρόσφατο</option>
+                    <option value="name">ΟΝΟΜΑ</option>
+                    <option value="progress">ΠΡΟΟΔΟΣ</option>
+                    <option value="completion">ΧΡΟΝΟΣ ΟΛΟΚΛΗΡΩΣΗΣ (ΤΑΧΥΤΕΡΟ)</option>
+                    <option value="recent">ΠΙΟ ΠΡΟΣΦΑΤΟ</option>
                 </select>
                 <div class="last-update-box" id="lastRefresh">
                     <span class="icon">🔄</span>
@@ -550,7 +550,7 @@
             
             <div id="teamsContainer" class="team-list"></div>
             <div id="noTeams" style="display: none; text-align: center; padding: 40px; color: #999;">
-                <p style="font-size: 18px;">Δεν υπάρχουν ομάδες ακόμα</p>
+                <p style="font-size: 18px;">ΔΕΝ ΥΠΑΡΧΟΥΝ ΟΜΑΔΕΣ ΑΚΟΜΑ</p>
             </div>
         </div>
 
@@ -879,7 +879,7 @@
         if (lastRefreshEl) {
             lastRefreshEl.innerHTML = `
                 <span class="icon">🔄</span>
-                <span>Τελευταία ενημέρωση: ${now}</span>
+                <span>ΤΕΛΕΥΤΑΙΑ ΕΝΗΜΕΡΩΣΗ: ${now}</span>
             `;
         }
     }
