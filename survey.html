@@ -433,7 +433,6 @@
     </div>
 
     <script>
-        // GET OR CREATE DEVICE ID
         function getDeviceId() {
             let deviceId = localStorage.getItem('crime_festival_device_id');
             if (!deviceId) {
@@ -451,10 +450,9 @@
         let branchPath = null;
         let totalSections = 0;
         let existingPreData = null;
+        let existingPostData = null;
 
         console.log('Device ID:', DEVICE_ID);
-
-        // Wait for Firebase to initialize
         let initAttempts = 0;
         const maxAttempts = 50;
         
@@ -477,6 +475,12 @@
                 const preSnap = await window.firebaseGetDoc(preDocRef);
                 if (preSnap.exists()) {
                     existingPreData = preSnap.data();
+                }
+
+                const postDocRef = window.firebaseDoc(window.firebaseDB, 'surveys', DEVICE_ID + '_post');
+                const postSnap = await window.firebaseGetDoc(postDocRef);
+                if (postSnap.exists()) {
+                    existingPostData = postSnap.data();
                 }
             } catch (error) {
                 console.error('Error checking existing data:', error);
@@ -532,6 +536,7 @@
 
         function renderWelcomeScreen() {
             const hasPreData = existingPreData !== null;
+            const hasPostData = existingPostData !== null;
             
             return `
                 <div class="section-content">
@@ -552,11 +557,25 @@
                         </div>
                     ` : ''}
                     
+                    ${hasPostData ? `
+                        <div style="background: #d4edda; border: 2px solid #28a745; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                            <p style="color: #155724; font-weight: 600; margin-bottom: 10px;">✅ Έχετε ήδη συμπληρώσει την έρευνα ΜΕΤΑ-παρέμβασης</p>
+                            <p style="color: #155724; font-size: 14px;">Ημερομηνία: ${new Date(existingPostData.submittedAt).toLocaleString('el-GR')}</p>
+                        </div>
+                    ` : ''}
+                    
+                    ${hasPreData && hasPostData ? `
+                        <div style="background: #fff3cd; border: 2px solid #ffc107; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                            <p style="color: #856404; font-weight: 600; text-align: center;">🎉 Έχετε ολοκληρώσει και τις δύο έρευνες! Ευχαριστούμε!</p>
+                        </div>
+                    ` : ''}
+                    
                     <div class="info-box">
                         <p><strong>📌 Σημαντικό:</strong></p>
                         <p>• Η έρευνα είναι ανώνυμη</p>
                         <p>• Διάρκεια: 5-10 λεπτά</p>
                         <p>• Οι απαντήσεις σας συνδέονται αυτόματα με τη συσκευή σας</p>
+                        <p>• <strong>⚠️ ΜΗΝ κλείσετε το παράθυρο μεταξύ PRE και POST έρευνας!</strong></p>
                     </div>
                     
                     <div class="form-group" style="margin-top: 40px;">
@@ -572,20 +591,20 @@
                                     <small style="color: #666;">${hasPreData ? '✓ Ήδη συμπληρωμένη' : 'ΠΡΙΝ τη δραστηριότητα'}</small>
                                 </div>
                             </label>
-                            <label class="radio-option" style="padding: 25px;">
-                                <input type="radio" name="survey-type" value="post" required>
+                            <label class="radio-option" style="padding: 25px; ${hasPostData ? 'opacity: 0.5;' : ''}">
+                                <input type="radio" name="survey-type" value="post" required ${hasPostData ? 'disabled' : ''}>
                                 <div>
                                     <div style="font-size: 24px; margin-bottom: 8px;">📊</div>
                                     <strong style="display: block; margin-bottom: 5px;">ΜΕΤΑ-Παρέμβασης</strong>
-                                    <small style="color: #666;">ΜΕΤΑ τη δραστηριότητα</small>
+                                    <small style="color: #666;">${hasPostData ? '✓ Ήδη συμπληρωμένη' : 'ΜΕΤΑ τη δραστηριότητα'}</small>
                                 </div>
                             </label>
                         </div>
                     </div>
                     
                     <div style="text-align: center; margin-top: 40px;">
-                        <button class="btn btn-primary" onclick="startSurvey()" style="font-size: 18px; padding: 20px 50px;">
-                            ΕΝΑΡΞΗ →
+                        <button class="btn btn-primary" onclick="startSurvey()" style="font-size: 18px; padding: 20px 50px;" ${hasPreData && hasPostData ? 'disabled' : ''}>
+                            ${hasPreData && hasPostData ? '✅ ΟΛΟΚΛΗΡΩΜΕΝΟ' : 'ΕΝΑΡΞΗ →'}
                         </button>
                     </div>
                 </div>
@@ -603,6 +622,11 @@
             
             if (surveyType === 'pre' && existingPreData) {
                 alert('Έχετε ήδη συμπληρώσει την έρευνα ΠΡΟ-παρέμβασης!');
+                return;
+            }
+            
+            if (surveyType === 'post' && existingPostData) {
+                alert('Έχετε ήδη συμπληρώσει την έρευνα ΜΕΤΑ-παρέμβασης!');
                 return;
             }
             
