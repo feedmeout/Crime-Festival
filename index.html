@@ -474,7 +474,6 @@
 
     <div class="header">
         <h1>⚠️ ΦΑΚΕΛΟΣ ΥΠΟΘΕΣΗΣ ⚠️</h1>
-        <p>Φεστιβάλ Αστυνομικής Λογοτεχνίας 2025 • Διαδραστική Έρευνα</p>
         <div class="team-info" id="teamInfo" style="display: none;">
             <strong id="teamName"></strong>
         </div>
@@ -482,13 +481,12 @@
 
     <div class="container">
         <div class="intro-box">
-            <h2>🔍 Περίληψη Υπόθεσης</h2>
+            <h2>🔍 ΠΕΡΙΣΤΑΤΙΚΟ</h2>
             <p>
-                Ο Δημητρίου Πέτρος βρέθηκε νεκρός στο γραφείο του. 
-                Αυτοκτονία ή Δολοφονία;
+                Ο Δημητρίου Πέτρος βρέθηκε νεκρός στο γραφείο του. Αυτοκτονία ή Δολοφονία;
             </p>
             <div class="case-summary">
-                <h3>🚨 ΠΕΡΙΣΤΑΤΙΚΟ</h3>
+                <h3> ΣΤΟΙΧΕΙΑ ΥΠΟΘΕΣΗΣ </h3>
                 <ul>
                     <li><strong>ΘΥΜΑ:</strong> ΔΗΜΗΤΡΙΟΥ ΠΕΤΡΟΣ του ΙΩΑΝΝΗ, ΑΦΜ: 074ΧΧΧΧΧΧ</li>
                     <li><strong>ΗΛΙΚΙΑ:</strong> 55 ετών | <strong>ΟΙΚ. ΚΑΤΑΣΤΑΣΗ:</strong>  Διαζευγμένος, 2 τέκνα</li>
@@ -500,10 +498,7 @@
             </div>
         </div>
 
-        <!-- SUSPECTS SECTION - This div will be populated by the suspects module -->
         <div id="suspectsContainer"></div>
-
-        <!-- Progress Bar -->
         <div class="progress-bar-container">
             <div class="progress-title">📊 Πρόοδος Έρευνας</div>
             <div class="progress-bar">
@@ -521,17 +516,13 @@
 
     <div class="footer">
         <p><strong>Φεστιβάλ Αστυνομικής Λογοτεχνίας 2025</strong></p>
-        <p>Διαδραστική Εμπειρία Αστυνομικού Μυστηρίου με Augmented Reality</p>
         <p style="margin-top: 10px; opacity: 0.7; font-size: 12px;">
-            11 Τεκμήρια • 5 Ύποπτοι • 1 Αλήθεια
+            11 Τεκμήρια | 5 Ύποπτοι | 1 Αλήθεια
         </p>
     </div>
-
-    <!-- IMPORTANT: Include the suspects module BEFORE the main script -->
     <script src="suspects.js"></script>
 
     <script>
-        // TEK definitions
         const teks = [
             {
                 id: '1',
@@ -641,28 +632,18 @@
                 sabotage: true
             }
         ];
-
-        // Get team code from URL
         const urlParams = new URLSearchParams(window.location.search);
         const teamCode = urlParams.get('team') || 'default';
-
-        // Show team info if not default
         if (teamCode !== 'default') {
             document.getElementById('teamInfo').style.display = 'block';
             document.getElementById('teamName').textContent = `Ομάδα: ${teamCode}`;
         }
-
-        // Get storage key for this team
         function getStorageKey() {
             return `unlocked_teks_${teamCode}`;
         }
-
-        // Get unlocked TEKs
         function getUnlockedTeks() {
             return JSON.parse(localStorage.getItem(getStorageKey()) || '[]');
         }
-
-        // Update progress bar
         function updateProgress() {
             const unlockedTeks = getUnlockedTeks();
             const total = teks.length;
@@ -674,13 +655,9 @@
             document.getElementById('progressText').textContent = 
                 `Έχετε ξεκλειδώσει ${unlocked} από ${total} τεκμήρια`;
         }
-
-        // Build team URL parameter
         function buildUrl(page) {
             return teamCode !== 'default' ? `${page}?team=${teamCode}` : page;
         }
-
-        // Render evidence cards
         function renderEvidence() {
             const unlockedTeks = getUnlockedTeks();
             const grid = document.getElementById('evidenceGrid');
@@ -729,21 +706,15 @@
             }).join('');
         }
 
-        // Initialize
         window.addEventListener('DOMContentLoaded', () => {
-            // Render suspects using the module
             if (typeof SuspectsModule !== 'undefined') {
                 SuspectsModule.renderSuspects('suspectsContainer');
             } else {
                 console.error('SuspectsModule not loaded! Make sure suspects.js is included before this script.');
             }
-            
-            // Render evidence
             renderEvidence();
             updateProgress();
         });
-
-        // Listen for storage changes (for multiple tabs)
         window.addEventListener('storage', (e) => {
             if (e.key === getStorageKey()) {
                 renderEvidence();
