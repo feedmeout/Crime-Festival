@@ -1248,12 +1248,7 @@
 function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
     let score = 0;
     let breakdown = [];
-    
-    // ========================================
-    // STEP 1: VALIDATION & INSTANT FAILURES
-    // ========================================
-    
-    // Empty selection
+
     if (selectedSuspects.length === 0) {
         return {
             score: 0,
@@ -1262,8 +1257,7 @@ function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
             correctCount: 0
         };
     }
-    
-    // Check for logical contradiction (killer + suicide) - INSTANT 0
+	
     const hasSuicide = selectedSuspects.includes('suicide');
     const hasKiller = selectedSuspects.some(s => s !== 'suicide');
     
@@ -1290,8 +1284,7 @@ function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
             correctCount: 0
         };
     }
-    
-    // Pure suicide answer (consistent but wrong)
+
     if (hasSuicide && !hasKiller) {
         return {
             score: 0,
@@ -1305,12 +1298,7 @@ function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
             correctCount: 0
         };
     }
-    
-    // ========================================
-    // STEP 2: MURDER DIAGNOSIS - CALCULATE SCORE
-    // ========================================
-    
-    // Count correct and wrong suspects
+	
     let correctCount = 0;
     let wrongSuspects = [];
     
@@ -1371,19 +1359,14 @@ function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
             breakdown.push(`🎯 Bonus Αποδοτικότητας (11-15 prompts): +${SCORING.prompts_11_15}`);
         }
     }
-    if (wrongSuspects.length > 0 || correctCount < 3) {
-        breakdown.push('');
-        breakdown.push('✗ ΑΡΝΗΤΙΚΑ ΣΤΟΙΧΕΙΑ:');
-    }
-	
-    if (wrongSuspects.length > 0) {
-        const penalty = wrongSuspects.length * 5;
-        score -= penalty;
-        breakdown.push(`✗ Λάθος Ύποπτοι (${wrongSuspects.length}): -${penalty}`);
-        wrongSuspects.forEach(name => {
-            breakdown.push(`   → ${name}`);
-});
-    }
+if (wrongSuspects.length > 0) {
+    breakdown.push('');
+    breakdown.push('✗ ΑΡΝΗΤΙΚΑ ΣΤΟΙΧΕΙΑ:');
+    
+    const penalty = wrongSuspects.length * 5;
+    score -= penalty;
+    breakdown.push(`✗ Λάθος Ύποπτοι (${wrongSuspects.length}): -${penalty}`);
+}
     
     score = Math.max(0, score);
     
@@ -1472,8 +1455,7 @@ function displaySolutionResult(solution) {
     const resultDiv = document.getElementById('solutionResult');
     
     const percentage = Math.round((solution.score / solution.maxScore) * 100);
-    
-    // Grade system
+	
     let grade = '';
     let gradeColor = '';
     if (percentage >= 90) {
@@ -1498,14 +1480,12 @@ function displaySolutionResult(solution) {
         grade = 'NO TROPHY';
         gradeColor = '#6c757d';
     }
-    
-    // Determine if they got it right
+
     const isPerfect = solution.correctCount === 3 && solution.suspects.length === 3;
     const hasSuicide = solution.suspects.includes('suicide');
     const hasKiller = solution.suspects.some(s => s !== 'suicide');
     const isContradiction = hasSuicide && hasKiller;
     
-    // Header color based on result
     let headerGradient = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
     let headerShadow = 'rgba(40,167,69,0.3)';
     
@@ -1555,7 +1535,6 @@ function displaySolutionResult(solution) {
             </h3>
             <div style="font-family: 'Courier New', monospace; line-height: 1.8; font-size: 14px;">
                 ${solution.breakdown.map(item => {
-                    // Determine styling based on content
                     let bgColor = '#f8f9fa';
                     let borderColor = '#dee2e6';
                     let textColor = '#333';
@@ -1589,14 +1568,11 @@ function displaySolutionResult(solution) {
                         fontWeight = 'bold';
                         fontSize = '16px';
                     } else if (item.includes('═') || item.includes('─')) {
-                        // Separator lines - no background
                         return `<div style="color: #999; margin: 5px 0;">${item}</div>`;
                     } else if (item.trim() === '') {
-                        // Empty lines for spacing
                         return '<div style="height: 5px;"></div>';
                     }
-                    
-                    // Indented lines (starting with spaces)
+					
                     if (item.startsWith('   ')) {
                         return `<div style="padding: 4px 4px 4px 30px; margin: 2px 0; color: ${textColor}; font-size: 13px;">${item}</div>`;
                     }
@@ -1628,8 +1604,6 @@ function displaySolutionResult(solution) {
     
     resultDiv.style.display = 'block';
     resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    
-    // Disable form after submission
     document.getElementById('solutionForm').style.opacity = '0.6';
     document.getElementById('solutionForm').style.pointerEvents = 'none';
     
@@ -1638,7 +1612,7 @@ function displaySolutionResult(solution) {
 
         window.revealSolution = function() {
             const password = document.getElementById('solutionPassword').value.toUpperCase();
-            const correctPassword = 'MURDER'; // Change this to your desired password
+            const correctPassword = 'MURDER';
             
             if (password === correctPassword) {
                 document.getElementById('correctSolution').style.display = 'block';
