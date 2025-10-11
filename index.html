@@ -1374,7 +1374,6 @@ function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
     if (wrongSuspects.length > 0 || correctCount < 3) {
         breakdown.push('');
         breakdown.push('✗ ΑΡΝΗΤΙΚΑ ΣΤΟΙΧΕΙΑ:');
-        breakdown.push('─────────────────────────────');
     }
 	
     if (wrongSuspects.length > 0) {
@@ -1385,15 +1384,11 @@ function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
             breakdown.push(`   → ${name}`);
         });
     }
-    if (correctCount < 3) {
-        const missed = 3 - correctCount;
-        const missedNames = CORRECT_SUSPECTS
-            .filter(s => !selectedSuspects.includes(s))
-            .map(s => SUSPECT_NAMES[s])
-            .join(', ');
-        
-        breakdown.push(`⚠️ Χάσατε ${missed} σωστό${missed > 1 ? 'ύς' : ''} δράστη: ${missedNames}`);
-    }
+if (correctCount < 3) {
+    const missed = 3 - correctCount;
+    
+    breakdown.push(`⚠️ Χάσατε ${missed} σωστό${missed > 1 ? 'ύς δράστες' : ' δράστη'}`);
+}
     score = Math.max(0, score);
     breakdown.push('');
     breakdown.push('═════════════════════════════');
