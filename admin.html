@@ -495,12 +495,12 @@
             </div>
             
             <div class="sort-controls">
-                <label>Ταξινόμηση:</label>
+                <label>ΤΑΞΙΝΟΜΗΣΗ:</label>
                 <select id="sortOrder" onchange="refreshTeams()">
-                    <option value="name">Όνομα</option>
-                    <option value="progress">Πρόοδος</option>
-                    <option value="completion">Χρόνος Ολοκλήρωσης (Ταχύτερο)</option>
-                    <option value="recent">Πιο Πρόσφατο</option>
+                    <option value="name">ΟΝΟΜΑ</option>
+                    <option value="progress">ΠΡΟΟΔΟΣ</option>
+                    <option value="completion">ΧΡΟΝΟΣ ΟΛΟΚΛΗΡΩΣΗΣ (ΤΑΧΥΤΕΡΟ)</option>
+                    <option value="recent">ΠΙΟ ΠΡΟΣΦΑΤΟ</option>
                 </select>
             </div>
             
@@ -578,8 +578,7 @@
             second: '2-digit'
         });
     }
-
-    // === FIREBASE FUNCTIONS ===
+	
     async function saveTeamToFirebase(teamName, data) {
         if (!isFirebaseReady()) return;
         try {
@@ -625,8 +624,7 @@
 
     async function getAllTeams() {
         const allTeams = new Map();
-        
-        // Get from localStorage first
+
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
             if (key.startsWith('unlocked_teks_')) {
@@ -643,7 +641,6 @@
             }
         }
         
-        // Merge with Firebase (Firebase takes priority)
         if (isFirebaseReady()) {
             const firebaseTeams = await getAllTeamsFromFirebase();
             firebaseTeams.forEach(team => {
@@ -655,7 +652,6 @@
     }
 
     async function saveTeam(teamName, data) {
-        // Save unlocked array to localStorage for backward compatibility
         localStorage.setItem(`unlocked_teks_${teamName}`, JSON.stringify(data.unlocked || []));
         await saveTeamToFirebase(teamName, data);
     }
@@ -701,8 +697,7 @@
         
         input.click();
     }
-
-    // === UI FUNCTIONS ===
+	
     async function addTeam() {
         const teamName = document.getElementById('newTeamName').value.trim().toLowerCase();
         const alertDiv = document.getElementById('addTeamAlert');
@@ -744,8 +739,7 @@
             noTeams.style.display = 'block';
             return;
         }
-
-        // Sort teams
+		
         teams = sortTeams(teams, sortOrder);
 
         noTeams.style.display = 'none';
@@ -823,7 +817,6 @@
                 return teams.sort((a, b) => b.unlocked.length - a.unlocked.length);
             
             case 'completion':
-                // Completed teams first, sorted by time, then incomplete teams
                 const completed = teams.filter(t => t.completedAt).sort((a, b) => a.totalTimeMs - b.totalTimeMs);
                 const incomplete = teams.filter(t => !t.completedAt).sort((a, b) => b.unlocked.length - a.unlocked.length);
                 return [...completed, ...incomplete];
@@ -874,8 +867,6 @@
         if (team.timestamps && Object.keys(team.timestamps).length > 0) {
             html += '<h3 style="margin: 20px 0 10px 0;">Ξεκλειδώματα ΤΕΚ:</h3>';
             html += '<ul class="timestamp-list">';
-            
-            // Sort by timestamp
             const sortedTeks = Object.entries(team.timestamps)
                 .sort((a, b) => new Date(a[1]) - new Date(b[1]));
             
@@ -901,8 +892,7 @@
         const modal = document.getElementById('timestampModal');
         modal.classList.remove('active');
     }
-
-    // Close modal when clicking outside
+	
     window.onclick = function(event) {
         const modal = document.getElementById('timestampModal');
         if (event.target === modal) {
@@ -920,7 +910,7 @@
             const now = new Date().toISOString();
             const timestamps = {};
             allTeks.forEach((tek, i) => {
-                timestamps[tek] = new Date(Date.now() + i * 1000).toISOString(); // Stagger by 1 second
+                timestamps[tek] = new Date(Date.now() + i * 1000).toISOString();
             });
             
             await saveTeam(teamName, {
@@ -1036,8 +1026,7 @@
             alert('✅ URLs αντιγράφηκαν στο clipboard!');
         });
     }
-
-    // === INITIALIZATION ===
+	
     window.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             const status = document.getElementById('firebaseStatus');
