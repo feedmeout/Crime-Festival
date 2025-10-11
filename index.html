@@ -1360,7 +1360,6 @@ function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
     if (wrongSuspects.length > 0 || correctCount < 3) {
         breakdown.push('');
         breakdown.push('✗ ΑΡΝΗΤΙΚΑ ΣΤΟΙΧΕΙΑ:');
-        breakdown.push('─────────────────────────────');
     }
 	
     if (wrongSuspects.length > 0) {
@@ -1371,15 +1370,15 @@ function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
             breakdown.push(`   → ${name}`);
         });
     }
-    if (correctCount < 3) {
-        const missed = 3 - correctCount;
-        const missedNames = CORRECT_SUSPECTS
-            .filter(s => !selectedSuspects.includes(s))
-            .map(s => SUSPECT_NAMES[s])
-            .join(', ');
-        
-        breakdown.push(`⚠️ Χάσατε ${missed} σωστό${missed > 1 ? 'ύς' : ''} δράστη: ${missedNames}`);
-    }
+if (correctCount < 3) {
+    const missed = 3 - correctCount;
+    const missedNames = CORRECT_SUSPECTS
+        .filter(s => !selectedSuspects.includes(s))
+        .map(s => SUSPECT_NAMES[s])
+        .join(', ');
+    
+    breakdown.push(`⚠️ Χάσατε ${missed} σωστό${missed > 1 ? 'ύς δράστες' : ' δράστη'}: ${missedNames}`);
+}
     score = Math.max(0, score);    
     return { score, breakdown, maxScore: 140, correctCount };
 }
@@ -1605,35 +1604,42 @@ function displaySolutionResult(solution) {
         '<div style="background: white; padding: 20px; border-radius: 10px; border: 2px solid #dc3545;">' +
         '<h4 style="color: #dc3545; margin-bottom: 15px; font-size: 18px; border-bottom: 2px solid #dc3545; padding-bottom: 8px;">🎯 ΛΥΣΗ: ΣΥΝΕΡΓΑΤΙΚΗ ΔΟΛΟΦΟΝΙΑ</h4>' +
         
-        // PERPETRATORS - Red highlight boxes
-        '<h5 style="color: #1a1a2e; margin: 15px 0 10px 0; font-size: 15px; display: flex; align-items: center; gap: 8px;">⚠️ ΔΡΑΣΤΕΣ</h5>' +
-        '<div style="background: #fff5f5; border-left: 4px solid #dc3545; padding: 12px; margin-bottom: 8px; border-radius: 4px;">' +
-        '<strong style="color: #dc3545;">👨‍💼 Αναγνώστου Κωνσταντίνος</strong><br>' +
-        '<span style="color: #666; font-size: 13px;">CFO με υπεξαίρεση €1.5εκ • Χειριστής του σχεδίου</span>' +
+// PERPETRATORS - Enhanced cards with full info
+        '<h5 style="color: #1a1a2e; margin: 15px 0 10px 0; font-size: 15px; display: flex; align-items: center; gap: 8px;">⚠️ ΔΡΑΣΤΕΣ & ΡΟΛΟΣ</h5>' +
+        
+        '<div style="background: #fff5f5; border-left: 4px solid #dc3545; padding: 15px; margin-bottom: 10px; border-radius: 6px; box-shadow: 0 2px 4px rgba(220,53,69,0.1);">' +
+        '<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">' +
+        '<strong style="color: #dc3545; font-size: 15px;">👨‍💼 Αναγνώστου Κωνσταντίνος</strong>' +
+        '<span style="background: #dc3545; color: white; padding: 2px 8px; border-radius: 12px; font-size: 10px; font-weight: bold;">ΜΑΣΤΡΟΣ</span>' +
         '</div>' +
-        '<div style="background: #fff5f5; border-left: 4px solid #dc3545; padding: 12px; margin-bottom: 8px; border-radius: 4px;">' +
-        '<strong style="color: #dc3545;">👮 Πετρόπουλος Γεώργιος</strong><br>' +
-        '<span style="color: #666; font-size: 13px;">Φύλακας με χρέη €60k • Προμηθευτής του κυανίου</span>' +
+        '<div style="color: #666; font-size: 13px; line-height: 1.5;">' +
+        '<div style="margin-bottom: 4px;"><strong style="color: #333;">Ρόλος:</strong> CFO εταιρείας • Χειριστής του σχεδίου</div>' +
+        '<div style="margin-bottom: 4px;"><strong style="color: #333;">Κίνητρο:</strong> Υπεξαίρεση €1.5εκ που επρόκειτο να αποκαλυφθεί</div>' +
+        '<div><strong style="color: #333;">Συμβολή:</strong> Έριξε το κυάνιο στο ουίσκι • Ενέκρινε την άδεια αγοράς</div>' +
         '</div>' +
-        '<div style="background: #fff5f5; border-left: 4px solid #dc3545; padding: 12px; margin-bottom: 15px; border-radius: 4px;">' +
-        '<strong style="color: #dc3545;">👩‍🦰 Μαυρίδη Ελένη</strong><br>' +
-        '<span style="color: #666; font-size: 13px;">Πρώην ερωμένη • Συγκάλυψη με ψευδές email αυτοκτονίας</span>' +
         '</div>' +
         
-        // METHOD - Timeline style
-        '<h5 style="color: #1a1a2e; margin: 20px 0 10px 0; font-size: 15px; display: flex; align-items: center; gap: 8px;">⏱️ ΧΡΟΝΟΛΟΓΙΟ ΕΚΤΕΛΕΣΗΣ</h5>' +
-        '<div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px;">' +
-        '<div style="display: flex; align-items: start; margin-bottom: 10px; padding: 8px; background: white; border-radius: 4px; border-left: 3px solid #ff6b00;">' +
-        '<span style="background: #ff6b00; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; margin-right: 10px;">20:50-21:20</span>' +
-        '<span style="flex: 1; color: #333; font-size: 13px;">💊 <strong>Αναγνώστου:</strong> Έριξε κυάνιο στο ουίσκι του θύματος</span>' +
+        '<div style="background: #fff5f5; border-left: 4px solid #dc3545; padding: 15px; margin-bottom: 10px; border-radius: 6px; box-shadow: 0 2px 4px rgba(220,53,69,0.1);">' +
+        '<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">' +
+        '<strong style="color: #dc3545; font-size: 15px;">👮 Πετρόπουλος Γεώργιος</strong>' +
+        '<span style="background: #ff6b00; color: white; padding: 2px 8px; border-radius: 12px; font-size: 10px; font-weight: bold;">ΣΥΝΕΡΓΟΣ</span>' +
         '</div>' +
-        '<div style="display: flex; align-items: start; margin-bottom: 10px; padding: 8px; background: white; border-radius: 4px; border-left: 3px solid #ff6b00;">' +
-        '<span style="background: #ff6b00; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; margin-right: 10px;">20:55</span>' +
-        '<span style="flex: 1; color: #333; font-size: 13px;">📹 <strong>Πετρόπουλος:</strong> Απενεργοποίησε κάμερες ασφαλείας</span>' +
+        '<div style="color: #666; font-size: 13px; line-height: 1.5;">' +
+        '<div style="margin-bottom: 4px;"><strong style="color: #333;">Ρόλος:</strong> Φύλακας κτιρίου • Πρόσβαση παντού</div>' +
+        '<div style="margin-bottom: 4px;"><strong style="color: #333;">Κίνητρο:</strong> Χρέη €60k στους τοκογλύφους</div>' +
+        '<div><strong style="color: #333;">Συμβολή:</strong> Προμήθευσε το κυάνιο • Απενεργοποίησε κάμερες 20:55</div>' +
         '</div>' +
-        '<div style="display: flex; align-items: start; padding: 8px; background: white; border-radius: 4px; border-left: 3px solid #ff6b00;">' +
-        '<span style="background: #ff6b00; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; margin-right: 10px;">21:25</span>' +
-        '<span style="flex: 1; color: #333; font-size: 13px;">💻 <strong>Μαυρίδη:</strong> Έστειλε fake email «αυτοκτονίας»</span>' +
+        '</div>' +
+        
+        '<div style="background: #fff5f5; border-left: 4px solid #dc3545; padding: 15px; margin-bottom: 15px; border-radius: 6px; box-shadow: 0 2px 4px rgba(220,53,69,0.1);">' +
+        '<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">' +
+        '<strong style="color: #dc3545; font-size: 15px;">👩‍🦰 Μαυρίδη Ελένη</strong>' +
+        '<span style="background: #ff8800; color: white; padding: 2px 8px; border-radius: 12px; font-size: 10px; font-weight: bold;">ΣΥΓΚΑΛΥΨΗ</span>' +
+        '</div>' +
+        '<div style="color: #666; font-size: 13px; line-height: 1.5;">' +
+        '<div style="margin-bottom: 4px;"><strong style="color: #333;">Ρόλος:</strong> Πρώην ερωμένη θύματος • IT δεξιότητες</div>' +
+        '<div style="margin-bottom: 4px;"><strong style="color: #333;">Κίνητρο:</strong> Εκβιασμός με ερωτικές φωτογραφίες</div>' +
+        '<div><strong style="color: #333;">Συμβολή:</strong> Έστειλε fake email "αυτοκτονίας" 21:25 • Πλαστό σημείωμα</div>' +
         '</div>' +
         '</div>' +
         
@@ -1669,9 +1675,9 @@ function displaySolutionResult(solution) {
         // ACCESS TO CYANIDE - Compact
         '<h5 style="color: #1a1a2e; margin: 20px 0 10px 0; font-size: 15px; display: flex; align-items: center; gap: 8px;">☠️ ΠΡΟΣΒΑΣΗ ΣΕ ΚΥΑΝΙΟ</h5>' +
         '<div style="background: #fff9e6; border: 1px solid #ffe066; padding: 12px; border-radius: 6px; margin-bottom: 15px;">' +
-        '<div style="margin-bottom: 6px;"><strong style="color: #dc3545;">⚗️ Πετρόπουλος:</strong> <span style="color: #666; font-size: 13px;">Αγόρασε 19/09 με άδεια εταιρείας</span></div>' +
-        '<div style="margin-bottom: 6px;"><strong style="color: #dc3545;">📋 Αναγνώστου:</strong> <span style="color: #666; font-size: 13px;">Ως CFO εξέδωσε/ενέκρινε την άδεια</span></div>' +
-        '<div><strong style="color: #28a745;">✓ Άλλοι:</strong> <span style="color: #666; font-size: 13px;">Καμία τεκμηριωμένη πρόσβαση</span></div>' +
+        '<div style="margin-bottom: 6px;"><strong style="color: #dc3545;">Πετρόπουλος:</strong> <span style="color: #666; font-size: 13px;">Αγόρασε 19/09 με άδεια εταιρείας</span></div>' +
+        '<div style="margin-bottom: 6px;"><strong style="color: #dc3545;">Αναγνώστου:</strong> <span style="color: #666; font-size: 13px;">Ως CFO εξέδωσε/ενέκρινε την άδεια</span></div>' +
+        '<div><strong style="color: #28a745;">Άλλοι:</strong> <span style="color: #666; font-size: 13px;">Καμία τεκμηριωμένη πρόσβαση</span></div>' +
         '</div>' +
         
         // MOTIVES - Colored cards
