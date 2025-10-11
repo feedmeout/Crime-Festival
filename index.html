@@ -1149,16 +1149,16 @@ const SCORING = {
             murder_diagnosis: 25,
             cooperation: 20,
             perpetrator: 15,
-            perfect_solution_bonus: 30,
+            perfect_solution_bonus: 20,
             evidence_use: 5,
-            prompts_1_5: 20,
+            prompts_1_5: 15,
             prompts_6_10: 10,
             prompts_11_15: 5,
             time_under_30: 15,
             time_30_45: 10,
             time_45_60: 5
         };
-
+		
         const urlParams = new URLSearchParams(window.location.search);
         const teamCode = urlParams.get('team') || 'default';
 
@@ -1289,6 +1289,7 @@ const SCORING = {
 function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
     let score = 0;
     let breakdown = [];
+    
     if (selectedSuspects.length === 0) {
         return {
             score: 0,
@@ -1351,6 +1352,7 @@ function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
     });
         
     breakdown.push('✔ ΘΕΤΙΚΑ ΣΤΟΙΧΕΙΑ:');    
+    
     score += SCORING.murder_diagnosis;
     breakdown.push(`✔ Διάγνωση Δολοφονίας: +${SCORING.murder_diagnosis}`);
     
@@ -1369,14 +1371,12 @@ function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
         breakdown.push(`✗ Εντοπισμός Συνεργασίας: +0 (απαιτούνται 2+ σωστοί)`);
     }
     
-    if (correctCount === 3 && selectedSuspects.length === 3) {
-        score += SCORING.perfect_solution_bonus;
-        breakdown.push(`✔ Τέλεια Λύση (μόνο οι 3 σωστοί δράστες): +${SCORING.perfect_solution_bonus}`);
-    } else if (correctCount === 3 && selectedSuspects.length > 3) {
-        breakdown.push(`⚠️ Βρήκατε και τους 3 δράστες, αλλά επιλέξατε και λάθος υπόπτους`);
-    }
+    const isPerfect = (correctCount === 3 && selectedSuspects.length === 3);
     
-    if (correctCount >= 2) {
+    if (isPerfect) {
+        score += SCORING.perfect_solution_bonus;
+        breakdown.push(`✔ Τέλεια Λύση (μόνο οι 3 σωστοί): +${SCORING.perfect_solution_bonus}`);
+    } else if (correctCount >= 2) {
         score += SCORING.evidence_use;
         breakdown.push(`✔ Χρήση Τεκμηρίων: +${SCORING.evidence_use}`);
     }
@@ -1416,17 +1416,17 @@ function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
     if (wrongSuspects.length > 0) {
         const penalty = Math.pow(wrongSuspects.length, 2) * 10;
         score -= penalty;
-        breakdown.push(`✗ Λάθος Ύποπτοι (${wrongSuspects.length}): -${penalty} [εκθετική ποινή]`);
+        breakdown.push(`✗ Λάθος Ύποπτοι (${wrongSuspects.length}): -${penalty}`);
         wrongSuspects.forEach(name => {
             breakdown.push(`   → ${name}`);
         });
         
         if (wrongSuspects.length === 1) {
-            breakdown.push(`💡 Ποινή για 1 λάθος: -10 πόντοι`);
+            breakdown.push(`💡 Ποινή: 1² × 10 = -10 πόντοι`);
         } else if (wrongSuspects.length === 2) {
-            breakdown.push(`💡 Ποινή για 2 λάθη: -40 πόντοι (2² × 10)`);
-        } else if (wrongSuspects.length >= 3) {
-            breakdown.push(`💡 Ποινή για ${wrongSuspects.length} λάθη: -${penalty} πόντοι (${wrongSuspects.length}² × 10)`);
+            breakdown.push(`💡 Ποινή: 2² × 10 = -40 πόντοι`);
+        } else {
+            breakdown.push(`💡 Ποινή: ${wrongSuspects.length}² × 10 = -${penalty} πόντοι`);
         }
     }
     
@@ -1440,7 +1440,8 @@ function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
         breakdown.push(`⚠️ Χάσατε ${missed} σωστό${missed > 1 ? 'ύς δράστες' : ' δράστη'}: ${missedNames}`);
     }
     
-    score = Math.max(0, score);    
+    score = Math.max(0, Math.min(score, 140));
+    
     return { score, breakdown, maxScore: 140, correctCount };
 }
 
