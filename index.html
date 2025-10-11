@@ -525,10 +525,78 @@
             margin-top: 40px;
         }
 
-        .footer p {
+.footer p {
             margin: 5px 0;
             font-size: 14px;
             opacity: 0.9;
+        }
+
+        /* TABS STYLES */
+        .tabs-container {
+            margin-bottom: 40px;
+        }
+
+        .tabs-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 15px;
+        }
+
+        .tab-button {
+            flex: 1;
+            min-width: 180px;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 107, 0, 0.3);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .tab-button:hover {
+            background: rgba(255, 107, 0, 0.2);
+            border-color: rgba(255, 107, 0, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .tab-button.active {
+            background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
+            border-color: #ff6b00;
+            box-shadow: 0 4px 15px rgba(255, 107, 0, 0.4);
+            color: #000;
+        }
+
+        .tabs-content {
+            position: relative;
+        }
+
+        .tab-pane {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         @media (max-width: 768px) {
@@ -544,6 +612,14 @@
                 width: 100%;
                 justify-content: center;
             }
+
+            .tabs-nav {
+                flex-direction: column;
+            }
+
+            .tab-button {
+                min-width: 100%;
+            }
         }
     </style>
 </head>
@@ -557,49 +633,75 @@
         </div>
     </div>
 
-    <div class="container">
-        <div class="intro-box">
-            <h2>🔍 ΠΕΡΙΣΤΑΤΙΚΟ</h2>
-            <p><strong>ΘΥΜΑ:</strong> ΔΗΜΗΤΡΙΟΥ ΠΕΤΡΟΣ του ΙΩΑΝΝΗ, ΑΦΜ: 074ΧΧΧΧΧΧ</p>
-            <p><strong>ΗΛΙΚΙΑ:</strong> 55 ετών | <strong>ΟΙΚ. ΚΑΤΑΣΤΑΣΗ:</strong> Διαζευγμένος, 2 τέκνα</p>
-            <p><strong>ΕΠΑΓΓΕΛΜΑ:</strong> Εκδότης, Ιδρυτής/CEO «ΛΟΓΟΣ ΕΚΔΟΣΕΙΣ Α.Ε.»</p>
-            <p><strong>ΤΟΠΟΣ ΕΥΡΕΣΗΣ:</strong> Ιδιωτικό γραφείο, Σταδίου 47, 7ος όροφος</p>
-            <p><strong>ΗΜΕΡΑ ΕΥΡΕΣΗΣ:</strong> Παρασκευή 31/10, 07:00 π.μ. | <strong>ΚΛΗΣΗ ΑΣΤΥΝΟΜΙΑΣ:</strong> 07:03</p>
-            <p style="font-style: italic; color: #00008b; margin-top: 15px;">Σημείωση: Ασφάλεια ζωής €1εκ. - ακυρώνεται σε περίπτωση αυτοκτονίας</p>
-        </div>
-
-        <div id="suspectsContainer"></div>
-        <div class="forensic-box">
-            <h2>🥼 ΙΑΤΡΟΔΙΚΑΣΤΙΚΗ ΕΚΘΕΣΗ</h2>
-            <p><strong>ΤΟΠΟΣ ΕΥΡΕΣΗΣ:</strong> Τουαλέτες, 7ος όροφος</p>
-            <p><strong>ΩΡΑ ΘΑΝΑΤΟΥ:</strong> 21:30 - 21:50 (ακρίβεια ±10 λεπτά)</p>
-            <p><strong>ΑΙΤΙΑ:</strong> Οξεία δηλητηρίαση από κυανιούχο κάλιο (75mg εντεροδιαλυτή κάψουλα)</p>
-            <p><strong>ΤΟΞΙΚΟΛΟΓΙΚΗ:</strong> Αλκοόλ 0.12%, αλπραζολάμη 2mg (ενισχύει δράση κυανίου)</p>
-            <p><strong>ΤΡΑΥΜΑΤΑ:</strong> Κανένα αμυντικό τραύμα - το θύμα δεν αντιστάθηκε</p>
-            <p><strong>ΠΑΘΟΛΟΓΙΚΗ:</strong> <span class="red-highlight">Καρκίνος παγκρέατος τελικού σταδίου - προσδόκιμο ζωής 2-3 μήνες</span></p>
-        </div>
-        <div class="timeline-box">
-            <h2>🕐 ΧΡΟΝΟΛΟΓΙΟ ΣΥΜΒΑΝΤΩΝ</h2>
-            <div class="timeline-item"><strong>17:30-18:30</strong> - Οι περισσότεροι υπάλληλοι αποχωρούν από το κτίριο</div>
-            <div class="timeline-item"><strong>19:00</strong> - Παράδοση φαγητού στο γραφείο του θύματος (για 2 άτομα)</div>
-            <div class="timeline-item"><strong>20:00-21:00</strong> - Κρίσιμο χρονικό παράθυρο - πολλαπλές κινήσεις στο κτίριο</div>
-            <div class="timeline-item"><strong>20:45</strong> - SMS στο κινητό του θύματος: «Θα τελειώσει απόψε»</div>
-            <div class="timeline-item"><strong>21:25</strong> - Email «αυτοκτονίας» αποστέλλεται</div>
-            <div class="timeline-item"><strong>21:30-21:50</strong> - <span class="timeline-critical">ΘΑΝΑΤΟΣ ΘΥΜΑΤΟΣ</span></div>
-            <div class="timeline-item"><strong>07:00 (επόμενη μέρα)</strong> - Ανακάλυψη πτώματος από καθαρίστρια</div>
-        </div>
-
-        <div class="progress-bar-container">
-            <div class="progress-title">📊 ΠΡΟΟΔΟΣ ΕΡΕΥΝΑΣ</div>
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressFill">0%</div>
+<div class="container">
+        <!-- Tab Navigation -->
+        <div class="tabs-container">
+            <div class="tabs-nav">
+                <button class="tab-button active" data-tab="intro">🔍 ΠΕΡΙΣΤΑΤΙΚΟ</button>
+                <button class="tab-button" data-tab="suspects">👥 ΚΑΤΑΛΟΓΟΣ ΥΠΟΠΤΩΝ</button>
+                <button class="tab-button" data-tab="forensics">🥼 ΙΑΤΡΟΔΙΚΑΣΤΙΚΗ & ΧΡΟΝΟΛΟΓΙΟ</button>
+                <button class="tab-button" data-tab="evidence">📦 ΤΕΚΜΗΡΙΑ</button>
             </div>
-            <div class="progress-text" id="progressText">ΕΧΕΤΕ ΞΕΚΛΕΙΔΩΣΕΙ 0 ΑΠΟ 11 ΤΕΚΜΗΡΙΑ</div>
-        </div>
 
-        <h2 class="section-title">📦 ΤΕΚΜΗΡΙΑ ΑΠΟ ΤΗ ΣΚΗΝΗ ΤΟΥ ΕΓΚΛΗΜΑΤΟΣ</h2>
+            <!-- Tab Content -->
+            <div class="tabs-content">
+                <!-- Tab 1: Intro -->
+                <div class="tab-pane active" id="tab-intro">
+                    <div class="intro-box">
+                        <h2>🔍 ΠΕΡΙΣΤΑΤΙΚΟ</h2>
+                        <p><strong>ΘΥΜΑ:</strong> ΔΗΜΗΤΡΙΟΥ ΠΕΤΡΟΣ του ΙΩΑΝΝΗ, ΑΦΜ: 074ΧΧΧΧΧΧ</p>
+                        <p><strong>ΗΛΙΚΙΑ:</strong> 55 ετών | <strong>ΟΙΚ. ΚΑΤΑΣΤΑΣΗ:</strong> Διαζευγμένος, 2 τέκνα</p>
+                        <p><strong>ΕΠΑΓΓΕΛΜΑ:</strong> Εκδότης, Ιδρυτής/CEO «ΛΟΓΟΣ ΕΚΔΟΣΕΙΣ Α.Ε.»</p>
+                        <p><strong>ΤΟΠΟΣ ΕΥΡΕΣΗΣ:</strong> Ιδιωτικό γραφείο, Σταδίου 47, 7ος όροφος</p>
+                        <p><strong>ΗΜΕΡΑ ΕΥΡΕΣΗΣ:</strong> Παρασκευή 31/10, 07:00 π.μ. | <strong>ΚΛΗΣΗ ΑΣΤΥΝΟΜΙΑΣ:</strong> 07:03</p>
+                        <p style="font-style: italic; color: #00008b; margin-top: 15px;">Σημείωση: Ασφάλεια ζωής €1εκ. - ακυρώνεται σε περίπτωση αυτοκτονίας</p>
+                    </div>
+                </div>
 
-        <div class="evidence-grid" id="evidenceGrid">
+                <!-- Tab 2: Suspects -->
+                <div class="tab-pane" id="tab-suspects">
+                    <div id="suspectsContainer"></div>
+                </div>
+
+                <!-- Tab 3: Forensics & Timeline -->
+                <div class="tab-pane" id="tab-forensics">
+                    <div class="forensic-box">
+                        <h2>🥼 ΙΑΤΡΟΔΙΚΑΣΤΙΚΗ ΕΚΘΕΣΗ</h2>
+                        <p><strong>ΤΟΠΟΣ ΕΥΡΕΣΗΣ:</strong> Τουαλέτες, 7ος όροφος</p>
+                        <p><strong>ΩΡΑ ΘΑΝΑΤΟΥ:</strong> 21:30 - 21:50 (ακρίβεια ±10 λεπτά)</p>
+                        <p><strong>ΑΙΤΙΑ:</strong> Οξεία δηλητηρίαση από κυανιούχο κάλιο (75mg εντεροδιαλυτή κάψουλα)</p>
+                        <p><strong>ΤΟΞΙΚΟΛΟΓΙΚΗ:</strong> Αλκοόλ 0.12%, αλπραζολάμη 2mg (ενισχύει δράση κυανίου)</p>
+                        <p><strong>ΤΡΑΥΜΑΤΑ:</strong> Κανένα αμυντικό τραύμα - το θύμα δεν αντιστάθηκε</p>
+                        <p><strong>ΠΑΘΟΛΟΓΙΚΗ:</strong> <span class="red-highlight">Καρκίνος παγκρέατος τελικού σταδίου - προσδόκιμο ζωής 2-3 μήνες</span></p>
+                    </div>
+                    <div class="timeline-box">
+                        <h2>🕐 ΧΡΟΝΟΛΟΓΙΟ ΣΥΜΒΑΝΤΩΝ</h2>
+                        <div class="timeline-item"><strong>17:30-18:30</strong> - Οι περισσότεροι υπάλληλοι αποχωρούν από το κτίριο</div>
+                        <div class="timeline-item"><strong>19:00</strong> - Παράδοση φαγητού στο γραφείο του θύματος (για 2 άτομα)</div>
+                        <div class="timeline-item"><strong>20:00-21:00</strong> - Κρίσιμο χρονικό παράθυρο - πολλαπλές κινήσεις στο κτίριο</div>
+                        <div class="timeline-item"><strong>20:45</strong> - SMS στο κινητό του θύματος: «Θα τελειώσει απόψε»</div>
+                        <div class="timeline-item"><strong>21:25</strong> - Email «αυτοκτονίας» αποστέλλεται</div>
+                        <div class="timeline-item"><strong>21:30-21:50</strong> - <span class="timeline-critical">ΘΑΝΑΤΟΣ ΘΥΜΑΤΟΣ</span></div>
+                        <div class="timeline-item"><strong>07:00 (επόμενη μέρα)</strong> - Ανακάλυψη πτώματος από καθαρίστρια</div>
+                    </div>
+                </div>
+
+                <!-- Tab 4: Evidence -->
+                <div class="tab-pane" id="tab-evidence">
+                    <div class="progress-bar-container">
+                        <div class="progress-title">📊 ΠΡΟΟΔΟΣ ΕΡΕΥΝΑΣ</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill">0%</div>
+                        </div>
+                        <div class="progress-text" id="progressText">ΕΧΕΤΕ ΞΕΚΛΕΙΔΩΣΕΙ 0 ΑΠΟ 11 ΤΕΚΜΗΡΙΑ</div>
+                    </div>
+
+                    <h2 class="section-title">📦 ΤΕΚΜΗΡΙΑ ΑΠΟ ΤΗ ΣΚΗΝΗ ΤΟΥ ΕΓΚΛΗΜΑΤΟΣ</h2>
+
+                    <div class="evidence-grid" id="evidenceGrid">
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -802,7 +904,7 @@
             }).join('');
         }
 
-        window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', () => {
             if (typeof SuspectsModule !== 'undefined') {
                 SuspectsModule.renderSuspects('suspectsContainer');
             } else {
@@ -810,7 +912,36 @@
             }
             renderEvidence();
             updateProgress();
+            initTabs();
         });
+
+        window.addEventListener('storage', (e) => {
+            if (e.key === getStorageKey()) {
+                renderEvidence();
+                updateProgress();
+            }
+        });
+
+        // Tab functionality
+        function initTabs() {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabPanes = document.querySelectorAll('.tab-pane');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const targetTab = button.getAttribute('data-tab');
+
+                    // Remove active class from all buttons and panes
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabPanes.forEach(pane => pane.classList.remove('active'));
+
+                    // Add active class to clicked button and corresponding pane
+                    button.classList.add('active');
+                    document.getElementById(`tab-${targetTab}`).classList.add('active');
+                });
+            });
+        }
+    </script>
 
         window.addEventListener('storage', (e) => {
             if (e.key === getStorageKey()) {
