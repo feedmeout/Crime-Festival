@@ -257,7 +257,7 @@
         const urlParams = new URLSearchParams(window.location.search);
         const tekNumber = urlParams.get('tek');
         const teamCode = urlParams.get('team') || 'default';
-        const USE_FIREBASE = typeof window.firebaseReady !== 'undefined';
+        const USE_FIREBASE = typeof window.firebaseReady !== 'undefined' && typeof window.firebaseDoc === 'function';
         async function saveToFirebase(teamName, data) {
             if (!USE_FIREBASE) return;
             try {
