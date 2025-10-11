@@ -1385,12 +1385,6 @@ function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
 });
     }
     
-    if (correctCount < 3) {
-        const missed = 3 - correctCount;
-        
-        breakdown.push(`⚠️ Χάσατε ${missed} σωστό${missed > 1 ? 'ύς δράστες' : ' δράστη'}`);
-    }
-    
     score = Math.max(0, score);
     
     return { score, breakdown, maxScore: 140, correctCount };
