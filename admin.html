@@ -293,13 +293,12 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🔐 TEK Management Admin Panel</h1>
-            <p>Διαχείριση Ομάδων & Παρακολούθηση Προόδου</p>
+            <h1>🔐 Crime Management Admin Panel</h1>
+            <p>ΔΙΑΧΕΙΡΙΣΗ ΟΜΑΔΩΝ & ΠΑΡΑΚΟΛΟΥΘΗΣΗ ΠΡΟΟΔΟΥ</p>
         </div>
-
-        <!-- Add Team Section -->
+	
         <div class="section">
-            <h2>➕ Προσθήκη Ομάδας</h2>
+            <h2>➕ ΠΡΟΣΘΗΚΗ ΟΜΑΔΑΣ</h2>
             <div class="team-input">
                 <input type="text" id="newTeamName" placeholder="Όνομα ομάδας (π.χ. alpha, beta, red, team1...)" />
                 <button class="btn btn-primary" onclick="addTeam()">Προσθήκη Ομάδας</button>
@@ -307,13 +306,12 @@
             <div id="addTeamAlert"></div>
         </div>
 
-        <!-- Teams Overview -->
         <div class="section">
-            <h2>👥 Ενεργές Ομάδες</h2>
+            <h2>👥 ΕΝΕΡΓΕΣ ΟΜΑΔΕΣ</h2>
             <div class="quick-actions">
-                <button class="btn btn-success" onclick="refreshTeams()">🔄 Ανανέωση</button>
-                <button class="btn btn-secondary" onclick="unlockAllForAll()">🔓 Ξεκλείδωμα Όλων (Όλες Ομάδες)</button>
-                <button class="btn btn-danger" onclick="resetAll()">🗑️ Διαγραφή Όλων</button>
+                <button class="btn btn-success" onclick="refreshTeams()">🔄 ΑΝΑΝΕΩΣΗ</button>
+                <button class="btn btn-secondary" onclick="unlockAllForAll()">🔓 ΞΕΚΛΕΙΔΩΜΑ ΟΛΩΝ (ΟΜΑΔΕΣ)</button>
+                <button class="btn btn-danger" onclick="resetAll()">🗑️ ΔΙΑΓΡΑΦΗ ΟΛΩΝ (ΟΜΑΔΕΣ)</button>
             </div>
             <div id="teamsContainer" class="team-list"></div>
             <div id="noTeams" style="display: none; text-align: center; padding: 40px; color: #999;">
@@ -322,9 +320,8 @@
             </div>
         </div>
 
-        <!-- URL Generator -->
         <div class="section">
-            <h2>🔗 Generator URLs για QR Codes</h2>
+            <h2>🔗 URL GENERATOR ΓΙΑ QR CODES</h2>
             <div class="team-input">
                 <input type="text" id="urlTeamName" placeholder="Όνομα ομάδας" />
                 <button class="btn btn-primary" onclick="generateUrls()">Δημιουργία URLs</button>
@@ -341,7 +338,6 @@
         const BASE_URL = window.location.origin + window.location.pathname.replace('admin.html', '');
         const TOTAL_TEKS = 11;
 
-        // Get all teams from localStorage
         function getAllTeams() {
             const teams = [];
             for (let i = 0; i < localStorage.length; i++) {
@@ -355,7 +351,6 @@
             return teams;
         }
 
-        // Add new team
         function addTeam() {
             const teamName = document.getElementById('newTeamName').value.trim().toLowerCase();
             const alertDiv = document.getElementById('addTeamAlert');
@@ -372,7 +367,6 @@
                 return;
             }
 
-            // Create new team with no unlocked TEKs
             localStorage.setItem(key, JSON.stringify([]));
             
             alertDiv.innerHTML = `<div class="alert alert-success">✅ Η ομάδα "${teamName}" δημιουργήθηκε</div>`;
@@ -385,7 +379,6 @@
             refreshTeams();
         }
 
-        // Render teams
         function refreshTeams() {
             const teams = getAllTeams();
             const container = document.getElementById('teamsContainer');
@@ -442,12 +435,10 @@
             }).join('');
         }
 
-        // View team
         function viewTeam(teamName) {
             window.open(`${BASE_URL}index.html?team=${teamName}`, '_blank');
         }
 
-        // Unlock all TEKs for a team
         function unlockAll(teamName) {
             if (confirm(`Ξεκλείδωμα όλων των TEKs για την ομάδα "${teamName}";`)) {
                 const allTeks = Array.from({length: TOTAL_TEKS}, (_, i) => (i + 1).toString());
@@ -456,7 +447,6 @@
             }
         }
 
-        // Reset team progress
         function resetTeam(teamName) {
             if (confirm(`Reset πρόοδο για την ομάδα "${teamName}";`)) {
                 localStorage.setItem(`unlocked_teks_${teamName}`, JSON.stringify([]));
@@ -464,7 +454,6 @@
             }
         }
 
-        // Delete team
         function deleteTeam(teamName) {
             if (confirm(`Διαγραφή ομάδας "${teamName}";`)) {
                 localStorage.removeItem(`unlocked_teks_${teamName}`);
@@ -472,7 +461,6 @@
             }
         }
 
-        // Unlock all for all teams
         function unlockAllForAll() {
             if (confirm('Ξεκλείδωμα ΟΛΩΝ των TEKs για ΟΛΕΣ τις ομάδες;')) {
                 const teams = getAllTeams();
@@ -484,7 +472,6 @@
             }
         }
 
-        // Reset all teams
         function resetAll() {
             if (confirm('ΔΙΑΓΡΑΦΗ ΟΛΩΝ των ομάδων;')) {
                 const teams = getAllTeams();
@@ -495,7 +482,6 @@
             }
         }
 
-        // Generate URLs for QR codes
         function generateUrls() {
             const teamName = document.getElementById('urlTeamName').value.trim().toLowerCase();
             const output = document.getElementById('urlOutput');
@@ -518,7 +504,6 @@
             output.style.display = 'block';
         }
 
-        // Copy all URLs
         function copyAllUrls() {
             const urlList = document.getElementById('urlList');
             const text = urlList.innerText;
@@ -528,12 +513,10 @@
             });
         }
 
-        // Initialize
         window.addEventListener('DOMContentLoaded', () => {
             refreshTeams();
         });
 
-        // Auto-refresh every 10 seconds
         setInterval(refreshTeams, 10000);
     </script>
 </body>

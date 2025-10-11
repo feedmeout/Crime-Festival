@@ -319,41 +319,173 @@
             color: #1a1a2e;
             border-bottom: 3px solid #ff6b00;
             padding-bottom: 15px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 800;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
         @media (max-width: 768px) {
             .evidence-title {
-                font-size: 18px;
+                font-size: 20px;
                 margin: 0 0 20px 0;
+                gap: 10px;
             }
         }
 
-        .info-box {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 25px;
-            font-size: 15px;
-            line-height: 2;
-            border-left: 4px solid #0f3460;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        /* Evidence Metadata Grid */
+        .evidence-metadata {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
         }
 
-        .info-box strong {
-            color: #0f3460;
-            font-weight: 700;
-            display: inline-block;
-            min-width: 120px;
+        .metadata-item {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .metadata-item:hover {
+            border-color: #0f3460;
+            box-shadow: 0 4px 12px rgba(15,52,96,0.1);
+            transform: translateY(-2px);
+        }
+
+        .metadata-icon {
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+
+        .metadata-content {
+            flex: 1;
+        }
+
+        .metadata-label {
+            font-size: 11px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 3px;
+            font-weight: 600;
+        }
+
+        .metadata-value {
+            font-size: 14px;
+            color: #1a1a2e;
+            font-weight: 600;
+            line-height: 1.3;
         }
 
         @media (max-width: 768px) {
-            .info-box {
-                padding: 15px;
+            .evidence-metadata {
+                grid-template-columns: 1fr;
+                gap: 12px;
+                margin-bottom: 25px;
+            }
+            
+            .metadata-item {
+                padding: 12px;
+            }
+            
+            .metadata-icon {
+                font-size: 24px;
+            }
+            
+            .metadata-value {
+                font-size: 13px;
+            }
+        }
+
+        /* Critical Alert Box */
+        .critical-alert {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 6px 20px rgba(220,53,69,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .critical-alert::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(0,0,0,0.05) 10px,
+                rgba(0,0,0,0.05) 20px
+            );
+            pointer-events: none;
+        }
+
+        .alert-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0,0,0,0.3);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            z-index: 1;
+        }
+
+        .alert-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .alert-title {
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .alert-text {
+            color: white;
+            font-size: 15px;
+            line-height: 1.6;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .critical-alert {
+                padding: 18px;
+                margin-bottom: 25px;
+            }
+            
+            .alert-badge {
+                top: 12px;
+                right: 12px;
+                font-size: 10px;
+                padding: 5px 10px;
+            }
+            
+            .alert-title {
+                font-size: 15px;
+            }
+            
+            .alert-text {
                 font-size: 14px;
-                margin-bottom: 20px;
             }
         }
 
@@ -487,30 +619,22 @@
         }
 
         .significance-box {
-            background: linear-gradient(135deg, rgba(255,107,0,0.08) 0%, rgba(255,136,0,0.12) 100%);
-            border: 3px solid #ff6b00;
+            background: linear-gradient(135deg, #fff5f0 0%, #ffe8db 100%);
+            border: 2px solid #ff6b00;
             border-radius: 12px;
             padding: 25px;
             margin-bottom: 25px;
-            position: relative;
-            box-shadow: 0 4px 16px rgba(255,107,0,0.15);
+            box-shadow: 0 4px 12px rgba(255,107,0,0.1);
         }
 
-        .significance-box::before {
-            content: "⚠️";
-            position: absolute;
-            top: -15px;
-            left: 20px;
-            background: #ff6b00;
-            color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
+        .significance-title {
+            font-size: 18px;
+            color: #ff6b00;
+            margin: 0 0 15px 0;
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            box-shadow: 0 4px 12px rgba(255,107,0,0.3);
+            gap: 10px;
+            font-weight: 700;
         }
 
         @media (max-width: 768px) {
@@ -519,35 +643,21 @@
                 margin-bottom: 20px;
             }
             
-            .significance-box::before {
-                width: 35px;
-                height: 35px;
-                font-size: 18px;
-                top: -12px;
+            .significance-title {
+                font-size: 16px;
             }
-        }
-
-        .significance-box .section-title {
-            color: #ff6b00;
-            border-color: #ff6b00;
-            margin-top: 10px;
         }
 
         .significance-text {
             font-size: 15px;
             line-height: 1.8;
             color: #1a1a2e;
-            font-weight: 500;
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            border-left: 4px solid #ff6b00;
+            margin: 0;
         }
 
         @media (max-width: 768px) {
             .significance-text {
                 font-size: 14px;
-                padding: 12px;
             }
         }
 
@@ -642,7 +752,37 @@
                         "></div>
                         <p style="color: #666; font-size: 14px;">Φόρτωση 3D μοντέλου...</p>
                     </div>
+                    
+                    <!-- Error fallback -->
+                    <div slot="error" style="
+                        width: 100%;
+                        height: 100%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        background: #fff3cd;
+                        flex-direction: column;
+                        gap: 15px;
+                        padding: 20px;
+                    ">
+                        <p style="color: #856404; font-size: 16px; font-weight: bold;">⚠️ Σφάλμα Φόρτωσης</p>
+                        <p style="color: #856404; font-size: 13px; text-align: center;">
+                            Το 3D μοντέλο δεν μπορεί να φορτώσει.<br>
+                            Ελέγξτε το αρχείο: jack_daniels_whiskey_no.7_bottle.glb
+                        </p>
+                    </div>
                 </model-viewer>
+                
+                <div id="debugInfo" style="
+                    margin-top: 10px;
+                    padding: 10px;
+                    background: #e7f3ff;
+                    border: 1px solid #2196F3;
+                    border-radius: 5px;
+                    font-size: 12px;
+                    font-family: monospace;
+                    display: none;
+                "></div>
                 
                 <p style="text-align: center; color: #666; font-size: 13px; margin-top: 10px; font-style: italic;">
                     💡 Σύρετε για να περιστρέψετε • Zoom με δύο δάχτυλα
@@ -650,30 +790,23 @@
             </div>
 
             <div class="details">
-                <h2 class="evidence-title">ΜΠΟΥΚΑΛΙ ΟΥΙΣΚΙ - JACK DANIEL'S</h2>
-
-                <div class="info-box">
-                    <strong>📍 Τοποθεσία:</strong> Γραφείο Θύματος, 7ος Όροφος<br>
-                    <strong>🕐 Συλλέχθηκε:</strong> 22/09/2025 - 22:15<br>
-                    <strong>👤 Συλλέχθηκε από:</strong> Ομάδα CSI
-                </div>
+                <h2 class="evidence-title">🍾 Μπουκάλι Ουίσκι Jack Daniel's</h2>
 
                 <div class="section">
-                    <h3 class="section-title">📋 Περιγραφή</h3>
+                    <h3 class="section-title">
+                        <span style="font-size: 24px;">🔬</span>
+                        Εγκληματολογική Ανάλυση
+                    </h3>
                     <p class="section-content">
-                        Μπουκάλι ουίσκι Jack Daniel's βρέθηκε στο γραφείο του θύματος.
+                        Εντοπίστηκε κυανιούχο κάλιο στον πάτο του μπουκαλιού
                     </p>
                 </div>
 
                 <div class="section">
-                    <h3 class="section-title">🔬 Εγκληματολογική Ανάλυση</h3>
-                    <ul class="section-content">
-                        <li><strong style="color: #c00;">ΚΡΙΣΙΜΟ: Εντοπίστηκε κυάνιο στον πάτο του μπουκαλιού</strong></li>
-                    </ul>
-                </div>
-
-                <div class="section">
-                    <h3 class="section-title">👆 Αποτυπώματα που Βρέθηκαν</h3>
+                    <h3 class="section-title">
+                        <span style="font-size: 24px;">👆</span>
+                        Αποτυπώματα που Βρέθηκαν
+                    </h3>
                     <div>
                         <div class="fingerprint-item primary">
                             <div class="fingerprint-name">Θύμα (Δημητρίου Πέτρος)</div>
@@ -695,20 +828,26 @@
                 </div>
 
                 <div class="significance-box">
-                    <h3 class="section-title">⚠️ Σημασία για την Έρευνα</h3>
+                    <h3 class="significance-title">
+                        <span style="font-size: 20px;">💡</span>
+                        Σημασία για την Έρευνα
+                    </h3>
                     <p class="significance-text">
-                        Το κυάνιο στον πάτο του μπουκαλιού είναι η αιτία θανάτου. Τέσσερα άτομα άγγιξαν το μπουκάλι - το θύμα και τρεις ύποπτοι. Ποιος από τους τρεις πρόσθεσε το δηλητήριο και πότε;
+                        Το κυάνιο στον πάτο του μπουκαλιού αποτελεί κρίσιμο στοιχείο. Τέσσερα άτομα άγγιξαν το μπουκάλι - το θύμα και τρεις άλλοι. Πώς και πότε προστέθηκε το δηλητήριο;
                     </p>
                 </div>
 
                 <div class="section">
-                    <h3 class="section-title">❓ Βασικά Ερωτήματα Διερεύνησης</h3>
+                    <h3 class="section-title">
+                        <span style="font-size: 24px;">❓</span>
+                        Βασικά Ερωτήματα Διερεύνησης
+                    </h3>
                     <ul class="section-content">
-                        <li>Ποιος από τους τρεις υπόπτους πρόσθεσε το κυάνιο;</li>
-                        <li>Πότε προστέθηκε το δηλητήριο στο μπουκάλι;</li>
-                        <li>Γιατί υπάρχουν αποτυπώματα τριών διαφορετικών ατόμων πέρα από το θύμα;</li>
+                        <li>Πώς και πότε προστέθηκε το κυάνιο στο μπουκάλι;</li>
+                        <li>Γιατί υπάρχουν αποτυπώματα τεσσάρων διαφορετικών ατόμων;</li>
                         <li>Ποιος είχε πρόσβαση στο γραφείο του θύματος;</li>
-                        <li>Γιατί το κυάνιο ήταν στον πάτο - δεν ανακατεύτηκε το μπουκάλι;</li>
+                        <li>Γιατί το κυάνιο ήταν στον πάτο του μπουκαλιού;</li>
+                        <li>Είναι αυτοκτονία ή δολοφονία;</li>
                     </ul>
                 </div>
             </div>
@@ -789,17 +928,55 @@
         window.onload = function() {
             drawCrimeScene();
             
-            // Simple model viewer status check
+            // Enhanced model viewer debugging
             const modelViewer = document.querySelector('model-viewer');
+            const debugInfo = document.getElementById('debugInfo');
             
             if (modelViewer) {
-                modelViewer.addEventListener('load', () => {
-                    console.log('✅ 3D model loaded successfully');
+                // Show debug info
+                debugInfo.style.display = 'block';
+                debugInfo.innerHTML = '🔍 Προσπάθεια φόρτωσης: jack_daniels_whiskey_no.7_bottle.glb<br>';
+                
+                // Progress tracking
+                modelViewer.addEventListener('progress', (event) => {
+                    const percent = Math.round(event.detail.totalProgress * 100);
+                    debugInfo.innerHTML = `⏳ Φόρτωση: ${percent}%<br>`;
                 });
                 
-                modelViewer.addEventListener('error', (event) => {
-                    console.error('❌ Error loading 3D model:', event);
+                // Success
+                modelViewer.addEventListener('load', () => {
+                    debugInfo.innerHTML = '✅ 3D μοντέλο φορτώθηκε επιτυχώς!<br>';
+                    debugInfo.style.background = '#d4edda';
+                    debugInfo.style.borderColor = '#28a745';
+                    setTimeout(() => {
+                        debugInfo.style.display = 'none';
+                    }, 3000);
                 });
+                
+                // Error handling
+                modelViewer.addEventListener('error', (event) => {
+                    debugInfo.innerHTML = '❌ ΣΦΑΛΜΑ: Το αρχείο δεν μπορεί να φορτώσει<br>';
+                    debugInfo.innerHTML += 'Ελέγξτε:<br>';
+                    debugInfo.innerHTML += '1. Το αρχείο υπάρχει στον ίδιο φάκελο<br>';
+                    debugInfo.innerHTML += '2. Το όνομα είναι σωστό (με κεφαλαία/πεζά)<br>';
+                    debugInfo.innerHTML += '3. Το αρχείο είναι έγκυρο .glb<br>';
+                    debugInfo.innerHTML += '<br>Δοκιμάστε: <a href="https://gltf-viewer.donmccurdy.com/" target="_blank">gltf-viewer.donmccurdy.com</a><br>';
+                    debugInfo.style.background = '#f8d7da';
+                    debugInfo.style.borderColor = '#dc3545';
+                });
+                
+                // Model not found timeout
+                setTimeout(() => {
+                    if (debugInfo.innerHTML.includes('Φόρτωση')) {
+                        debugInfo.innerHTML = '⚠️ Το μοντέλο δεν φορτώνει...<br>';
+                        debugInfo.innerHTML += 'Πιθανές αιτίες:<br>';
+                        debugInfo.innerHTML += '• Το αρχείο δεν βρέθηκε<br>';
+                        debugInfo.innerHTML += '• Λάθος όνομα αρχείου<br>';
+                        debugInfo.innerHTML += '• Το αρχείο δεν είναι στον σωστό φάκελο<br>';
+                        debugInfo.style.background = '#fff3cd';
+                        debugInfo.style.borderColor = '#ffc107';
+                    }
+                }, 10000); // 10 second timeout
             }
         };
     </script>
