@@ -928,7 +928,7 @@ const SuspectsModule = {
 
     const html = `
       <div class="suspects-section">
-        <h2 class="section-title">👥 Κατάλογος Υπόπτων</h2>
+        <h2 class="section-title">👥 ΚΑΤΑΛΟΓΟΣ ΥΠΟΠΤΩΝ</h2>
         <div class="suspects-grid">
           ${this.suspects.map((suspect, index) => `
             <div class="suspect-card">

@@ -101,37 +101,32 @@
 
         .intro-box h2 {
             color: #1a1a2e;
-            font-size: 24px;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            font-size: 18px;
+            text-transform: uppercase;
+            border-bottom: 2px solid #000;
+            padding-bottom: 8px;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
         }
 
         .intro-box p {
             color: #333;
-            line-height: 1.8;
-            font-size: 16px;
+            line-height: 1.65;
+            font-size: 14px;
+            margin: 12px 0;
+            text-align: justify;
         }
 
-        .case-summary {
-            background: linear-gradient(135deg, rgba(220,53,69,0.1) 0%, rgba(220,53,69,0.05) 100%);
-            border-left: 4px solid #dc3545;
-            padding: 20px;
-            margin-top: 20px;
-            border-radius: 8px;
+        .intro-box p strong {
+            color: #000;
         }
 
-        .case-summary h3 {
+        .red-highlight {
             color: #dc3545;
-            margin-bottom: 10px;
-            font-size: 18px;
-        }
-
-        .case-summary ul {
-            margin-left: 20px;
-            line-height: 1.8;
-            color: #333;
+            font-weight: bold;
+            background: rgba(220,53,69,0.1);
+            padding: 2px 6px;
+            border-radius: 3px;
         }
 
         /* SUSPECTS SECTION STYLES */
@@ -217,6 +212,89 @@
             margin-bottom: 3px;
             font-size: 11px;
             letter-spacing: 0.5px;
+        }
+
+        /* FORENSIC REPORT SECTION */
+        .forensic-box {
+            background: rgba(255, 255, 255, 0.95);
+            border: 3px solid #28a745;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .forensic-box h2 {
+            color: #1a1a2e;
+            font-size: 18px;
+            text-transform: uppercase;
+            border-bottom: 2px solid #000;
+            padding-bottom: 8px;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+
+        .forensic-box p {
+            margin: 12px 0;
+            color: #333;
+            font-size: 14px;
+            line-height: 1.65;
+            text-align: justify;
+        }
+
+        .forensic-box p strong {
+            color: #000;
+        }
+
+        /* TIMELINE SECTION */
+        .timeline-box {
+            background: rgba(255, 255, 255, 0.95);
+            border: 3px solid #6c757d;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .timeline-box h2 {
+            color: #1a1a2e;
+            font-size: 18px;
+            text-transform: uppercase;
+            border-bottom: 2px solid #000;
+            padding-bottom: 8px;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+
+        .timeline-item {
+            margin: 8px 0;
+            padding-left: 20px;
+            position: relative;
+            color: #333;
+            font-size: 13px;
+            line-height: 1.5;
+            text-align: justify;
+        }
+
+        .timeline-item::before {
+            content: "◉";
+            position: absolute;
+            left: 0;
+            font-size: 11px;
+            color: #000;
+        }
+
+        .timeline-item strong {
+            color: #1a1a2e;
+            font-weight: 600;
+        }
+
+        .timeline-critical {
+            color: #dc3545;
+            font-weight: bold;
+            background: rgba(220,53,69,0.1);
+            padding: 2px 6px;
+            border-radius: 3px;
         }
 
         .progress-bar-container {
@@ -482,42 +560,53 @@
     <div class="container">
         <div class="intro-box">
             <h2>🔍 ΠΕΡΙΣΤΑΤΙΚΟ</h2>
-            <p>
-                Ο Δημητρίου Πέτρος βρέθηκε νεκρός στο γραφείο του. Αυτοκτονία ή Δολοφονία;
-            </p>
-            <div class="case-summary">
-                <h3> ΣΤΟΙΧΕΙΑ ΥΠΟΘΕΣΗΣ </h3>
-                <ul>
-                    <li><strong>ΘΥΜΑ:</strong> ΔΗΜΗΤΡΙΟΥ ΠΕΤΡΟΣ του ΙΩΑΝΝΗ, ΑΦΜ: 074ΧΧΧΧΧΧ</li>
-                    <li><strong>ΗΛΙΚΙΑ:</strong> 55 ετών | <strong>ΟΙΚ. ΚΑΤΑΣΤΑΣΗ:</strong>  Διαζευγμένος, 2 τέκνα</li>
-                    <li><strong>ΕΠΑΓΓΕΛΜΑ:</strong> Εκδότης, Ιδρυτής/CEO «ΛΟΓΟΣ ΕΚΔΟΣΕΙΣ Α.Ε.»</li>
-                    <li><strong>ΤΟΠΟΣ ΕΥΡΕΣΗΣ:</strong> Ιδιωτικό γραφείο, Σταδίου 47, 7ος όροφος</li>
-                    <li><strong>ΗΜΕΡΑ ΕΥΡΕΣΗΣ:</strong> Παρασκευή 31/10, 07:00 π.μ. | <strong>ΚΛΗΣΗ ΑΣΤΥΝΟΜΙΑΣ:</strong> 07:03</li>
-					<p style="font-style: italic; color: #00008b; margin-top: 11px;">Σημείωση: Ασφάλεια ζωής €1εκ. - ακυρώνεται σε περίπτωση αυτοκτονίας</p>
-                </ul>
-            </div>
+            <p><strong>ΘΥΜΑ:</strong> ΔΗΜΗΤΡΙΟΥ ΠΕΤΡΟΣ του ΙΩΑΝΝΗ, ΑΦΜ: 074ΧΧΧΧΧΧ</p>
+            <p><strong>ΗΛΙΚΙΑ:</strong> 55 ετών | <strong>ΟΙΚ. ΚΑΤΑΣΤΑΣΗ:</strong> Διαζευγμένος, 2 τέκνα</p>
+            <p><strong>ΕΠΑΓΓΕΛΜΑ:</strong> Εκδότης, Ιδρυτής/CEO «ΛΟΓΟΣ ΕΚΔΟΣΕΙΣ Α.Ε.»</p>
+            <p><strong>ΤΟΠΟΣ ΕΥΡΕΣΗΣ:</strong> Ιδιωτικό γραφείο, Σταδίου 47, 7ος όροφος</p>
+            <p><strong>ΗΜΕΡΑ ΕΥΡΕΣΗΣ:</strong> Παρασκευή 31/10, 07:00 π.μ. | <strong>ΚΛΗΣΗ ΑΣΤΥΝΟΜΙΑΣ:</strong> 07:03</p>
+            <p style="font-style: italic; color: #00008b; margin-top: 15px;">Σημείωση: Ασφάλεια ζωής €1εκ. - ακυρώνεται σε περίπτωση αυτοκτονίας</p>
         </div>
 
         <div id="suspectsContainer"></div>
+        <div class="forensic-box">
+            <h2>🥼 ΙΑΤΡΟΔΙΚΑΣΤΙΚΗ ΕΚΘΕΣΗ</h2>
+            <p><strong>ΤΟΠΟΣ ΕΥΡΕΣΗΣ:</strong> Τουαλέτες, 7ος όροφος</p>
+            <p><strong>ΩΡΑ ΘΑΝΑΤΟΥ:</strong> 21:30 - 21:50 (ακρίβεια ±10 λεπτά)</p>
+            <p><strong>ΑΙΤΙΑ:</strong> Οξεία δηλητηρίαση από κυανιούχο κάλιο (75mg εντεροδιαλυτή κάψουλα)</p>
+            <p><strong>ΤΟΞΙΚΟΛΟΓΙΚΗ:</strong> Αλκοόλ 0.12%, αλπραζολάμη 2mg (ενισχύει δράση κυανίου)</p>
+            <p><strong>ΤΡΑΥΜΑΤΑ:</strong> Κανένα αμυντικό τραύμα - το θύμα δεν αντιστάθηκε</p>
+            <p><strong>ΠΑΘΟΛΟΓΙΚΗ:</strong> <span class="red-highlight">Καρκίνος παγκρέατος τελικού σταδίου - προσδόκιμο ζωής 2-3 μήνες</span></p>
+        </div>
+        <div class="timeline-box">
+            <h2>🕐 ΧΡΟΝΟΛΟΓΙΟ ΣΥΜΒΑΝΤΩΝ</h2>
+            <div class="timeline-item"><strong>17:30-18:30</strong> - Οι περισσότεροι υπάλληλοι αποχωρούν από το κτίριο</div>
+            <div class="timeline-item"><strong>19:00</strong> - Παράδοση φαγητού στο γραφείο του θύματος (για 2 άτομα)</div>
+            <div class="timeline-item"><strong>20:00-21:00</strong> - Κρίσιμο χρονικό παράθυρο - πολλαπλές κινήσεις στο κτίριο</div>
+            <div class="timeline-item"><strong>20:45</strong> - SMS στο κινητό του θύματος: «Θα τελειώσει απόψε»</div>
+            <div class="timeline-item"><strong>21:25</strong> - Email «αυτοκτονίας» αποστέλλεται</div>
+            <div class="timeline-item"><strong>21:30-21:50</strong> - <span class="timeline-critical">ΘΑΝΑΤΟΣ ΘΥΜΑΤΟΣ</span></div>
+            <div class="timeline-item"><strong>07:00 (επόμενη μέρα)</strong> - Ανακάλυψη πτώματος από καθαρίστρια</div>
+        </div>
+
         <div class="progress-bar-container">
-            <div class="progress-title">📊 Πρόοδος Έρευνας</div>
+            <div class="progress-title">📊 ΠΡΟΟΔΟΣ ΕΡΕΥΝΑΣ</div>
             <div class="progress-bar">
                 <div class="progress-fill" id="progressFill">0%</div>
             </div>
-            <div class="progress-text" id="progressText">Έχετε ξεκλειδώσει 0 από 11 τεκμήρια</div>
+            <div class="progress-text" id="progressText">ΕΧΕΤΕ ΞΕΚΛΕΙΔΩΣΕΙ 0 ΑΠΟ 11 ΤΕΚΜΗΡΙΑ</div>
         </div>
 
-        <h2 class="section-title">📦 Τεκμήρια από τη Σκηνή (11 Συνολικά)</h2>
+        <h2 class="section-title">📦 ΤΕΚΜΗΡΙΑ ΑΠΟ ΤΗ ΣΚΗΝΗ</h2>
 
         <div class="evidence-grid" id="evidenceGrid">
-            <!-- TEKs will be dynamically generated here -->
         </div>
     </div>
 
     <div class="footer">
-        <p><strong>Φεστιβάλ Αστυνομικής Λογοτεχνίας 2025</strong></p>
+        <p><strong>ΦΕΣΤΙΒΑΛ ΑΣΤΥΝΟΜΙΚΗΣ ΛΟΓΟΤΕΧΝΙΑΣ 2025</strong></p>
         <p style="margin-top: 10px; opacity: 0.7; font-size: 12px;">
-            11 Τεκμήρια | 5 Ύποπτοι | 1 Αλήθεια
+            11 ΤΕΚΜΗΡΙΑ | 5 ΥΠΟΠΤΟΙ | 1 ΑΛΗΘΕΙΑ
         </p>
     </div>
     <script src="suspects.js"></script>
@@ -567,7 +656,7 @@
                 name: 'Ιατρική Γνωμάτευση',
                 subtitle: 'Ιατρική γνωμάτευση (κρυφή)',
                 icon: '🥼',
-                description: '<strong>Διάγνωση:</strong> Καρκίνος παγκρέατος σταδίου IV<br><strong>Ημερομηνία:</strong> Πριν 3 εβδομάδες<br><strong>Πρόγνωση:</strong> 2-3 μήνες ζωής • Διατρός: Δρ. Σταυρίδης',
+                description: '<strong>Διάγνωση:</strong> Καρκίνος παγκρέατος σταδίου IV<br><strong>Ημερομηνία:</strong> Πριν 3 εβδομάδες<br><strong>Πρόγνωση:</strong> 2-3 μήνες ζωής • Γιατρός: Δρ. Σταυρίδης',
                 page: 'TEK5_AR.html',
                 critical: false,
                 secret: true
@@ -632,18 +721,23 @@
                 sabotage: true
             }
         ];
+
         const urlParams = new URLSearchParams(window.location.search);
         const teamCode = urlParams.get('team') || 'default';
+
         if (teamCode !== 'default') {
             document.getElementById('teamInfo').style.display = 'block';
             document.getElementById('teamName').textContent = `Ομάδα: ${teamCode}`;
         }
+
         function getStorageKey() {
             return `unlocked_teks_${teamCode}`;
         }
+
         function getUnlockedTeks() {
             return JSON.parse(localStorage.getItem(getStorageKey()) || '[]');
         }
+
         function updateProgress() {
             const unlockedTeks = getUnlockedTeks();
             const total = teks.length;
@@ -655,9 +749,11 @@
             document.getElementById('progressText').textContent = 
                 `Έχετε ξεκλειδώσει ${unlocked} από ${total} τεκμήρια`;
         }
+
         function buildUrl(page) {
             return teamCode !== 'default' ? `${page}?team=${teamCode}` : page;
         }
+
         function renderEvidence() {
             const unlockedTeks = getUnlockedTeks();
             const grid = document.getElementById('evidenceGrid');
@@ -715,6 +811,7 @@
             renderEvidence();
             updateProgress();
         });
+
         window.addEventListener('storage', (e) => {
             if (e.key === getStorageKey()) {
                 renderEvidence();
