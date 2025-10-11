@@ -218,6 +218,19 @@
             display: inline-block;
         }
 
+        .debug-info {
+            background: #e3f2fd;
+            border: 1px solid #2196f3;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+            font-size: 12px;
+            text-align: left;
+            font-family: monospace;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 30px 20px;
@@ -257,64 +270,110 @@
         const urlParams = new URLSearchParams(window.location.search);
         const tekNumber = urlParams.get('tek');
         const teamCode = urlParams.get('team') || 'default';
-        const USE_FIREBASE = typeof window.firebaseReady !== 'undefined' && typeof window.firebaseDoc === 'function';
+
+        function isFirebaseReady() {
+            return typeof window.firebaseReady !== 'undefined' && window.firebaseReady === true;
+        }
+
         async function saveToFirebase(teamName, data) {
-            if (!USE_FIREBASE) return;
+            if (!isFirebaseReady()) {
+                console.warn('⚠️ Firebase not ready, skipping cloud save');
+                return false;
+            }
+            
             try {
+                console.log(`💾 Saving to Firebase for team: ${teamName}`, data);
+                
                 await window.firebaseSetDoc(
                     window.firebaseDoc(window.firebaseDB, 'teams', teamName),
                     data
                 );
-                console.log('✅ Saved to Firebase with timestamps');
+                
+                console.log('✅ Successfully saved to Firebase');
+                return true;
             } catch (error) {
-                console.error('Firebase save error:', error);
+                console.error('❌ Firebase save error:', error);
+                return false;
             }
         }
 
         async function loadFromFirebase(teamName) {
-            if (!USE_FIREBASE) return null;
+            if (!isFirebaseReady()) {
+                console.warn('⚠️ Firebase not ready, loading from localStorage only');
+                return null;
+            }
+            
             try {
+                console.log(`📥 Loading from Firebase for team: ${teamName}`);
+                
                 const docRef = window.firebaseDoc(window.firebaseDB, 'teams', teamName);
                 const docSnap = await window.firebaseGetDoc(docRef);
+                
                 if (docSnap.exists()) {
-                    console.log('✅ Loaded from Firebase');
+                    console.log('✅ Loaded from Firebase:', docSnap.data());
                     return docSnap.data();
+                } else {
+                    console.log('ℹ️ No Firebase data found for this team');
+                    return null;
                 }
-                return null;
             } catch (error) {
-                console.error('Firebase load error:', error);
+                console.error('❌ Firebase load error:', error);
                 return null;
             }
         }
+
         function getStorageKey() {
             return `unlocked_teks_${teamCode}`;
         }
 
         async function getTeamData() {
+            // Try Firebase first
             const firebaseData = await loadFromFirebase(teamCode);
-            if (firebaseData) return firebaseData;
-            const oldData = localStorage.getItem(getStorageKey());
-            if (oldData) {
-                const unlocked = JSON.parse(oldData);
+            if (firebaseData && firebaseData.unlocked && firebaseData.unlocked.length > 0) {
+                console.log('✅ Using Firebase data');
+                return firebaseData;
+            }
+            
+            // Fallback to localStorage
+            const localData = localStorage.getItem(getStorageKey());
+            if (localData) {
+                const unlocked = JSON.parse(localData);
+                console.log('ℹ️ Using localStorage data (migrating to Firebase structure)');
                 return {
                     unlocked: unlocked,
                     timestamps: {},
                     startTime: null,
-                    completedAt: null
+                    completedAt: null,
+                    totalTimeMs: null
                 };
             }
             
+            // New team
+            console.log('ℹ️ New team, creating fresh data');
             return {
                 unlocked: [],
                 timestamps: {},
                 startTime: null,
-                completedAt: null
+                completedAt: null,
+                totalTimeMs: null
             };
         }
 
         async function saveTeamData(data) {
-            localStorage.setItem(getStorageKey(), JSON.stringify(data.unlocked));
-            await saveToFirebase(teamCode, data);
+            // Save to localStorage for backward compatibility
+            localStorage.setItem(getStorageKey(), JSON.stringify(data.unlocked || []));
+            
+            // Save to Firebase (CRITICAL)
+            const saved = await saveToFirebase(teamCode, {
+                ...data,
+                lastUpdate: new Date().toISOString()
+            });
+            
+            if (!saved) {
+                console.error('⚠️ WARNING: Data not saved to Firebase! Admin panel will not see this update.');
+            }
+            
+            return saved;
         }
 
         function formatTime(ms) {
@@ -334,10 +393,15 @@
                 return `${s}δ`;
             }
         }
+
         window.addEventListener('DOMContentLoaded', () => {
+            // Wait for Firebase to initialize
             setTimeout(() => {
+                if (!isFirebaseReady()) {
+                    console.error('⚠️ Firebase failed to initialize after timeout');
+                }
                 processUnlock();
-            }, 500);
+            }, 800);
         });
 
         async function processUnlock() {
@@ -388,11 +452,17 @@
 
         async function unlockNew(tek, tekNumber, teamData) {
             const now = new Date().toISOString();
+            
+            // Update data structure
             teamData.unlocked.push(tekNumber);
             teamData.timestamps[tekNumber] = now;
+            
+            // Set start time if this is the first TEK
             if (teamData.unlocked.length === 1) {
                 teamData.startTime = now;
             }
+            
+            // Check if completed
             const isCompleted = teamData.unlocked.length === 11;
             if (isCompleted && !teamData.completedAt) {
                 teamData.completedAt = now;
@@ -400,8 +470,11 @@
                 const endMs = new Date(now).getTime();
                 teamData.totalTimeMs = endMs - startMs;
             }
-            teamData.lastUpdate = now;
-            await saveTeamData(teamData);
+            
+            // Save to both localStorage AND Firebase
+            console.log('📝 Saving team data:', teamData);
+            const saved = await saveTeamData(teamData);
+            
             const container = document.getElementById('unlockContainer');
             
             let completionMessage = '';
@@ -414,6 +487,10 @@
                     </div>
                 `;
             }
+            
+            let firebaseStatus = saved ? 
+                '<br>☁️ Αποθηκεύτηκε στο cloud' : 
+                '<br>⚠️ Προειδοποίηση: Αποθήκευση cloud απέτυχε';
             
             container.innerHTML = `
                 <div class="unlock-icon">✅</div>
@@ -430,7 +507,7 @@
                 ${completionMessage}
                 <p class="progress-info">
                     📊 Έχετε ξεκλειδώσει ${teamData.unlocked.length} από 11 τεκμήρια
-                    ${USE_FIREBASE ? '<br>☁️ Αποθηκεύτηκε στο cloud' : ''}
+                    ${firebaseStatus}
                 </p>
                 <a href="${tek.page}${teamCode !== 'default' ? '?team=' + teamCode : ''}" class="btn">Προβολή Τεκμηρίου</a>
                 <a href="index.html${teamCode !== 'default' ? '?team=' + teamCode : ''}" class="btn btn-secondary">Επιστροφή στον Φάκελο</a>
