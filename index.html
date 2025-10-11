@@ -1639,7 +1639,7 @@ function displaySolutionResult(solution) {
         '<div style="color: #666; font-size: 13px; line-height: 1.5;">' +
         '<div style="margin-bottom: 4px;"><strong style="color: #333;">Ρόλος:</strong> Πρώην ερωμένη θύματος • IT δεξιότητες</div>' +
         '<div style="margin-bottom: 4px;"><strong style="color: #333;">Κίνητρο:</strong> Εκβιασμός με ερωτικές φωτογραφίες</div>' +
-        '<div><strong style="color: #333;">Συμβολή:</strong> Έστειλε fake email "αυτοκτονίας" 21:25 • Πλαστό σημείωμα</div>' +
+        '<div><strong style="color: #333;">Συμβολή:</strong> Έστειλε fake email «αυτοκτονίας» 21:25 • Πλαστό σημείωμα</div>' +
         '</div>' +
         '</div>' +
         
@@ -1671,43 +1671,95 @@ function displaySolutionResult(solution) {
         '<div style="font-size: 12px; color: #555;">Φαγητό για 2, θύμα μόνο</div>' +
         '</div>' +
         '</div>' +
+		
+// ALIBIS - Expanded format with analysis
+        '<h5 style="color: #1a1a2e; margin: 20px 0 10px 0; font-size: 15px; display: flex; align-items: center; gap: 8px;">' +
+        '📍 ΑΝΑΛΥΣΗ ΑΛΛΟΘΙ' +
+        '<span style="background: #dc3545; color: white; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-left: 10px;">ΩΡΑ ΔΟΛΟΦΟΝΙΑΣ: 21:30-21:50</span>' +
+        '</h5>' +
         
-        // ACCESS TO CYANIDE - Compact
-        '<h5 style="color: #1a1a2e; margin: 20px 0 10px 0; font-size: 15px; display: flex; align-items: center; gap: 8px;">☠️ ΠΡΟΣΒΑΣΗ ΣΕ ΚΥΑΝΙΟ</h5>' +
-        '<div style="background: #fff9e6; border: 1px solid #ffe066; padding: 12px; border-radius: 6px; margin-bottom: 15px;">' +
-        '<div style="margin-bottom: 6px;"><strong style="color: #dc3545;">Πετρόπουλος:</strong> <span style="color: #666; font-size: 13px;">Αγόρασε 19/09 με άδεια εταιρείας</span></div>' +
-        '<div style="margin-bottom: 6px;"><strong style="color: #dc3545;">Αναγνώστου:</strong> <span style="color: #666; font-size: 13px;">Ως CFO εξέδωσε/ενέκρινε την άδεια</span></div>' +
-        '<div><strong style="color: #28a745;">Άλλοι:</strong> <span style="color: #666; font-size: 13px;">Καμία τεκμηριωμένη πρόσβαση</span></div>' +
-        '</div>' +
+        '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; margin-bottom: 15px;">' +
         
-        // MOTIVES - Colored cards
-        '<h5 style="color: #1a1a2e; margin: 20px 0 10px 0; font-size: 15px; display: flex; align-items: center; gap: 8px;">💰 ΚΙΝΗΤΡΑ</h5>' +
-        '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 8px; margin-bottom: 15px;">' +
-        '<div style="background: linear-gradient(135deg, #fff5f5 0%, #ffe5e5 100%); padding: 10px; border-radius: 6px; border: 1px solid #ffcccc;">' +
-        '<div style="font-weight: bold; color: #c92a2a; font-size: 12px; margin-bottom: 4px;">💼 ΑΝΑΓΝΩΣΤΟΥ</div>' +
-        '<div style="font-size: 11px; color: #666;">Υπεξαίρεση €1.5εκ</div>' +
+        // Παπαδοπούλου - Innocent
+        '<div style="background: #d4edda; padding: 12px; border-radius: 6px; border-left: 4px solid #28a745;">' +
+        '<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">' +
+        '<span style="font-size: 18px;">👩</span>' +
+        '<strong style="color: #155724; font-size: 13px;">Παπαδοπούλου Μαρία</strong>' +
+        '<span style="background: #28a745; color: white; padding: 2px 6px; border-radius: 8px; font-size: 9px; font-weight: bold; margin-left: auto;">✓ ΙΣΧΥΡΟ</span>' +
         '</div>' +
-        '<div style="background: linear-gradient(135deg, #fff5f5 0%, #ffe5e5 100%); padding: 10px; border-radius: 6px; border: 1px solid #ffcccc;">' +
-        '<div style="font-weight: bold; color: #c92a2a; font-size: 12px; margin-bottom: 4px;">👮 ΠΕΤΡΟΠΟΥΛΟΣ</div>' +
-        '<div style="font-size: 11px; color: #666;">Χρέη €60k τοκογλύφων</div>' +
-        '</div>' +
-        '<div style="background: linear-gradient(135deg, #fff5f5 0%, #ffe5e5 100%); padding: 10px; border-radius: 6px; border: 1px solid #ffcccc;">' +
-        '<div style="font-weight: bold; color: #c92a2a; font-size: 12px; margin-bottom: 4px;">👩 ΜΑΥΡΙΔΗ</div>' +
-        '<div style="font-size: 11px; color: #666;">Εκβιασμός (φωτογραφίες)</div>' +
+        '<div style="font-size: 11px; color: #155724; line-height: 1.5;">' +
+        '<div>• Γιατρός 18:30-19:30 (επιβεβαιωμένο)</div>' +
+        '<div>• Δείπνο με αδελφή 19:45-22:30</div>' +
+        '<div style="margin-top: 4px; padding: 4px 6px; background: rgba(40,167,69,0.1); border-radius: 3px;">✓ Κάλυψε όλο το κρίσιμο χρονικό παράθυρο</div>' +
         '</div>' +
         '</div>' +
         
-        // ALIBIS - Collapsed format
-        '<details style="background: #f8f9fa; padding: 12px; border-radius: 6px; margin-top: 15px; cursor: pointer;">' +
-        '<summary style="font-weight: bold; color: #495057; font-size: 14px; cursor: pointer;">📍 Δηλωμένα Άλλοθι (κλικ για λεπτομέρειες)</summary>' +
-        '<div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #dee2e6; font-size: 12px; color: #666; line-height: 1.6;">' +
-        '<div style="margin-bottom: 6px;">👩 <strong>Παπαδοπούλου:</strong> Γιατρός 18:30-19:30 (✓), δείπνο με αδελφή 19:45-22:30</div>' +
-        '<div style="margin-bottom: 6px;">👨‍💼 <strong>Αναγνώστου:</strong> Δείπνο «Διόνυσος» 18:45-20:30 (200m από κτίριο!)</div>' +
-        '<div style="margin-bottom: 6px;">👩‍🦰 <strong>Μαυρίδη:</strong> Παρουσίαση βιβλίου 19:30-20:30, μετά στο κτίριο</div>' +
-        '<div style="margin-bottom: 6px;">👮 <strong>Πετρόπουλος:</strong> Βάρδια όλο βράδυ, περιπολίες κάθε 2h</div>' +
-        '<div>👩‍💻 <strong>Νικολάου:</strong> «Μικρό Καφέ» μέχρι 20:30 (αβέβαιο)</div>' +
+        // Αναγνώστου - Guilty
+        '<div style="background: #f8d7da; padding: 12px; border-radius: 6px; border-left: 4px solid #dc3545;">' +
+        '<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">' +
+        '<span style="font-size: 18px;">👨‍💼</span>' +
+        '<strong style="color: #721c24; font-size: 13px;">Αναγνώστου Κωνσταντίνος</strong>' +
+        '<span style="background: #dc3545; color: white; padding: 2px 6px; border-radius: 8px; font-size: 9px; font-weight: bold; margin-left: auto;">❌ ΑΣΘΕΝΕΣ</span>' +
         '</div>' +
-        '</details>' +
+        '<div style="font-size: 11px; color: #721c24; line-height: 1.5;">' +
+        '<div>• Δείπνο «Διόνυσος» 18:45-20:30</div>' +
+        '<div>• Εστιατόριο 200m από κτίριο!</div>' +
+        '<div style="margin-top: 4px; padding: 4px 6px; background: rgba(220,53,69,0.1); border-radius: 3px;">❌ Χρόνος 20:30-21:50: ΧΩΡΙΣ κάλυψη</div>' +
+        '</div>' +
+        '</div>' +
+        
+        // Μαυρίδη - Guilty
+        '<div style="background: #f8d7da; padding: 12px; border-radius: 6px; border-left: 4px solid #dc3545;">' +
+        '<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">' +
+        '<span style="font-size: 18px;">👩‍🦰</span>' +
+        '<strong style="color: #721c24; font-size: 13px;">Μαυρίδη Ελένη</strong>' +
+        '<span style="background: #dc3545; color: white; padding: 2px 6px; border-radius: 8px; font-size: 9px; font-weight: bold; margin-left: auto;">❌ ΣΠΑΣΜΕΝΟ</span>' +
+        '</div>' +
+        '<div style="font-size: 11px; color: #721c24; line-height: 1.5;">' +
+        '<div>• Παρουσίαση βιβλίου 19:30-20:30</div>' +
+        '<div>• "Μετά στο κτίριο" (αόριστο)</div>' +
+        '<div style="margin-top: 4px; padding: 4px 6px; background: rgba(220,53,69,0.1); border-radius: 3px;">❌ Ομολογεί παρουσία στο κτίριο κατά τη δολοφονία!</div>' +
+        '</div>' +
+        '</div>' +
+        
+        // Πετρόπουλος - Guilty
+        '<div style="background: #f8d7da; padding: 12px; border-radius: 6px; border-left: 4px solid #dc3545;">' +
+        '<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">' +
+        '<span style="font-size: 18px;">👮</span>' +
+        '<strong style="color: #721c24; font-size: 13px;">Πετρόπουλος Γεώργιος</strong>' +
+        '<span style="background: #dc3545; color: white; padding: 2px 6px; border-radius: 8px; font-size: 9px; font-weight: bold; margin-left: auto;">❌ ΨΕΥΔΕΣ</span>' +
+        '</div>' +
+        '<div style="font-size: 11px; color: #721c24; line-height: 1.5;">' +
+        '<div>• Ισχυρίζεται: Βάρδια όλο βράδυ</div>' +
+        '<div>• Ισχυρίζεται: Περιπολίες κάθε 2h</div>' +
+        '<div style="margin-top: 4px; padding: 4px 6px; background: rgba(220,53,69,0.1); border-radius: 3px;">❌ ΑΠΟΔΕΙΞΗ: Απενεργοποίησε κάμερες 20:55 - διέλυσε το άλλοθι του!</div>' +
+        '</div>' +
+        '</div>' +
+        
+        // Νικολάου - Innocent but weak
+        '<div style="background: #fff3cd; padding: 12px; border-radius: 6px; border-left: 4px solid #ffc107;">' +
+        '<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">' +
+        '<span style="font-size: 18px;">👩‍💻</span>' +
+        '<strong style="color: #856404; font-size: 13px;">Νικολάου Αλεξάνδρα</strong>' +
+        '<span style="background: #ffc107; color: #000; padding: 2px 6px; border-radius: 8px; font-size: 9px; font-weight: bold; margin-left: auto;">⚠️ ΑΒΕΒΑΙΟ</span>' +
+        '</div>' +
+        '<div style="font-size: 11px; color: #856404; line-height: 1.5;">' +
+        '<div>• «Μικρό Καφέ» μέχρι 20:30</div>' +
+        '<div>• Δεν επιβεβαιώθηκε από μάρτυρες</div>' +
+        '<div style="margin-top: 4px; padding: 4px 6px; background: rgba(255,193,7,0.1); border-radius: 3px;">⚠️ Αδύναμο αλλά δεν βρέθηκαν άλλα τεκμήρια εναντίον της</div>' +
+        '</div>' +
+        '</div>' +
+        
+        '</div>' +
+        
+        // Summary box
+        '<div style="background: #e7f3ff; border: 2px solid #2196f3; padding: 15px; border-radius: 8px; margin-top: 10px;">' +
+        '<div style="font-weight: bold; color: #0d47a1; margin-bottom: 8px; font-size: 13px;">💡 ΣΥΜΠΕΡΑΣΜΑ</div>' +
+        '<div style="font-size: 12px; color: #1565c0; line-height: 1.6;">' +
+        'Οι <strong>τρεις δράστες</strong> είχαν <strong>ευκαιρία</strong> (21:30-21:50), <strong>κίνητρο</strong> (χρήματα/εκβιασμός), και ' +
+        '<strong>πρόσβαση</strong> στο κυάνιο. Η Παπαδοπούλου είχε σιδερένιο άλλοθι. Η Νικολάου δεν είχε κίνητρο ούτε πρόσβαση σε κυάνιο.' +
+        '</div>' +
+        '</div>' +
         
         '</div>' +
         '</div>' +
