@@ -26,7 +26,6 @@
         
         console.log("✅ Firebase connected!");
         
-        // Auto-load on page load
         setTimeout(refreshLeaderboard, 500);
     </script>
     
@@ -195,6 +194,15 @@
             color: #28a745;
         }
 
+        .grade-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
         .badge {
             display: inline-block;
             padding: 4px 8px;
@@ -233,7 +241,6 @@
             margin: 10px 0;
         }
 
-        /* Modal Styles */
         .modal {
             display: none;
             position: fixed;
@@ -351,6 +358,7 @@
                         <th>Θέση</th>
                         <th>Ομάδα</th>
                         <th>Βαθμολογία</th>
+                        <th>Βαθμός</th>
                         <th>Δράστες</th>
                         <th>Χρόνος</th>
                         <th>Prompts</th>
@@ -359,7 +367,7 @@
                 </thead>
                 <tbody id="leaderboardBody">
                     <tr>
-                        <td colspan="7" style="text-align: center; padding: 40px; color: #666;">
+                        <td colspan="8" style="text-align: center; padding: 40px; color: #666;">
                             Φόρτωση δεδομένων...
                         </td>
                     </tr>
@@ -368,7 +376,6 @@
         </div>
     </div>
 
-    <!-- Modal for solution details -->
     <div id="solutionModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -389,6 +396,16 @@
             'alexandra': 'Νικολάου Αλεξάνδρα',
             'suicide': 'Αυτοκτονία'
         };
+
+        function getGrade(percentage) {
+            if (percentage >= 90) return { name: 'DIAMOND 💎', color: '#00d4ff' };
+            if (percentage >= 80) return { name: 'GOLD MEDAL 🥇', color: '#ffd700' };
+            if (percentage >= 70) return { name: 'SILVER MEDAL 🥈', color: '#c0c0c0' };
+            if (percentage >= 60) return { name: 'BRONZE MEDAL 🥉', color: '#cd7f32' };
+            if (percentage >= 50) return { name: 'STAR ⭐', color: '#ffcc00' };
+            if (percentage >= 40) return { name: 'CHECK ✓', color: '#28a745' };
+            return { name: 'NO TROPHY', color: '#6c757d' };
+        }
 
         function formatTime(ms) {
             if (!ms) return 'N/A';
@@ -426,7 +443,6 @@
                     }
                 });
 
-                // Sort by score (descending)
                 teams.sort((a, b) => b.solution.score - a.solution.score);
 
                 displayLeaderboard(teams);
@@ -436,7 +452,7 @@
                 console.error('Error loading leaderboard:', error);
                 document.getElementById('leaderboardBody').innerHTML = `
                     <tr>
-                        <td colspan="7" style="text-align: center; color: #dc3545; padding: 40px;">
+                        <td colspan="8" style="text-align: center; color: #dc3545; padding: 40px;">
                             ❌ Σφάλμα φόρτωσης δεδομένων
                         </td>
                     </tr>
@@ -476,7 +492,7 @@
             if (teams.length === 0) {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="7" style="text-align: center; padding: 40px; color: #666;">
+                        <td colspan="8" style="text-align: center; padding: 40px; color: #666;">
                             Δεν υπάρχουν υποβολές ακόμα
                         </td>
                     </tr>
@@ -490,19 +506,25 @@
                 const solution = team.solution;
                 const suspects = solution.suspects || [];
                 
-                // Check correctness
                 let correctCount = 0;
                 suspects.forEach(s => {
                     if (CORRECT_SUSPECTS.includes(s)) correctCount++;
                 });
                 
-                const isPerfect = correctCount === 3 && suspects.length === 3;
+                const maxScore = solution.maxScore || 140;
+                const percentage = Math.round((solution.score / maxScore) * 100);
+                const grade = getGrade(percentage);
 
                 return `
                     <tr>
                         <td class="rank ${rankClass}">${rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : rank}</td>
                         <td class="team-name">${team.name.toUpperCase()}</td>
-                        <td class="score">${solution.score}/${solution.maxScore}</td>
+                        <td class="score">${solution.score}/${maxScore}</td>
+                        <td>
+                            <span class="grade-badge" style="background: ${grade.color}; color: ${percentage >= 50 ? '#000' : '#fff'};">
+                                ${grade.name}
+                            </span>
+                        </td>
                         <td>
                             ${suspects.map(s => `
                                 <span class="badge ${CORRECT_SUSPECTS.includes(s) ? 'badge-correct' : 'badge-incorrect'}">
@@ -542,6 +564,9 @@
 
                 const solution = teamData.solution;
                 const suspects = solution.suspects || [];
+                const maxScore = solution.maxScore || 140;
+                const percentage = Math.round((solution.score / maxScore) * 100);
+                const grade = getGrade(percentage);
                 
                 document.getElementById('modalTeamName').textContent = 
                     `Λύση Ομάδας: ${teamName.toUpperCase()}`;
@@ -550,14 +575,20 @@
                     <div class="solution-details">
                         <h3>📊 Βαθμολογία</h3>
                         <div style="font-size: 32px; font-weight: bold; color: #28a745; margin: 15px 0;">
-                            ${solution.score}/${solution.maxScore} πόντοι
+                            ${solution.score}/${maxScore} πόντοι
+                        </div>
+                        <div style="font-size: 20px; font-weight: bold; margin: 10px 0;">
+                            <span style="background: ${grade.color}; color: ${percentage >= 50 ? '#000' : '#fff'}; padding: 8px 16px; border-radius: 8px;">
+                                ${grade.name}
+                            </span>
+                            <span style="color: #666; margin-left: 10px;">(${percentage}%)</span>
                         </div>
                         
                         <h3 style="margin-top: 20px;">👥 Δράστες που επέλεξαν:</h3>
                         <div class="suspect-list">
                             ${suspects.map(s => `
                                 <span class="badge ${CORRECT_SUSPECTS.includes(s) ? 'badge-correct' : 'badge-incorrect'}" style="font-size: 14px; padding: 8px 12px;">
-                                    ${CORRECT_SUSPECTS.includes(s) ? '✓' : '✗'} ${SUSPECT_NAMES[s] || s}
+                                    ${CORRECT_SUSPECTS.includes(s) ? '✔' : '✗'} ${SUSPECT_NAMES[s] || s}
                                 </span>
                             `).join('')}
                         </div>
@@ -587,21 +618,25 @@
 
                         <h3 style="margin-top: 20px;">🎯 Ανάλυση Βαθμολογίας:</h3>
                         <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-top: 10px;">
-                            ${solution.breakdown.map(item => `
-                                <div style="padding: 8px; margin: 5px 0; background: white; border-left: 3px solid #28a745; border-radius: 4px;">
-                                    ${item}
-                                </div>
-                            `).join('')}
+                            ${solution.breakdown.map(item => {
+                                const isNegative = item.includes('-') && (item.includes('✗') || item.includes('❌'));
+                                const color = isNegative ? '#dc3545' : '#28a745';
+                                return `
+                                    <div style="padding: 8px; margin: 5px 0; background: white; border-left: 3px solid ${color}; border-radius: 4px;">
+                                        ${item}
+                                    </div>
+                                `;
+                            }).join('')}
                         </div>
 
-                        <div style="background: #fff3cd; border: 2px solid #ffc107; padding: 15px; border-radius: 8px; margin-top: 20px;">
-                            <h3 style="color: #856404; margin-bottom: 10px;">💡 Σωστή Λύση:</h3>
-                            <p style="color: #856404;"><strong>Συνεργατική Δολοφονία από:</strong></p>
-                            <ul style="color: #856404; margin: 10px 0; padding-left: 20px;">
-                                <li>Αναγνώστου Κωνσταντίνος (CFO)</li>
-                                <li>Πετρόπουλος Γεώργιος (Φύλακας)</li>
-                                <li>Μαυρίδη Ελένη (Πρώην Ερωμένη)</li>
-                            </ul>
+                        <div style="background: #e3f2fd; border: 2px solid #2196f3; padding: 15px; border-radius: 8px; margin-top: 20px;">
+                            <h3 style="color: #0d47a1; margin-bottom: 10px;">ℹ️ Πληροφορίες για Admin:</h3>
+                            <p style="color: #0d47a1; font-size: 13px;">
+                                <strong>Σωστή Λύση:</strong> Συνεργατική δολοφονία από Αναγνώστου (CFO), Πετρόπουλος (Φύλακας), Μαυρίδη (Ερωμένη)
+                            </p>
+                            <p style="color: #0d47a1; font-size: 13px; margin-top: 8px;">
+                                <strong>Σημείωση:</strong> Μην κοινοποιήσετε αυτή τη λύση σε ομάδες που δεν έχουν ολοκληρώσει!
+                            </p>
                         </div>
                     </div>
                 `;
@@ -620,14 +655,12 @@
 
         window.refreshLeaderboard = refreshLeaderboard;
 
-        // Click outside modal to close
         document.getElementById('solutionModal').addEventListener('click', function(e) {
             if (e.target === this) {
                 closeModal();
             }
         });
 
-        // Auto-refresh every 30 seconds
         setInterval(refreshLeaderboard, 30000);
     </script>
 </body>

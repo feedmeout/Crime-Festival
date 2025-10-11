@@ -154,7 +154,6 @@
             border-radius: 3px;
         }
 
-        /* TIMER SECTION */
         .timer-section {
             background: rgba(255, 255, 255, 0.95);
             border: 3px solid #17a2b8;
@@ -194,7 +193,6 @@
             font-family: monospace;
         }
 
-        /* SUSPECTS SECTION STYLES */
         .suspects-section {
             margin-bottom: 40px;
         }
@@ -279,7 +277,6 @@
             letter-spacing: 0.5px;
         }
 
-        /* FORENSIC REPORT SECTION */
         .forensic-box {
             background: rgba(255, 255, 255, 0.95);
             border: 3px solid #28a745;
@@ -311,7 +308,6 @@
             color: #000;
         }
 
-        /* TIMELINE SECTION */
         .timeline-box {
             background: rgba(255, 255, 255, 0.95);
             border: 3px solid #6c757d;
@@ -581,7 +577,6 @@
             opacity: 0.3;
         }
 
-        /* SOLUTION FORM STYLES */
         .solution-form {
             background: white;
             padding: 25px;
@@ -709,7 +704,6 @@
             opacity: 0.9;
         }
 
-        /* TABS STYLES */
         .tabs-container {
             margin-bottom: 40px;
         }
@@ -805,6 +799,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="animated-background"></div>
 
@@ -901,8 +896,7 @@
                     <div class="evidence-grid" id="evidenceGrid">
                     </div>
                 </div>
-
-                <!-- Tab 5: Solution -->
+<!-- Tab 5: Solution -->
                 <div class="tab-pane" id="tab-solution">
                     <div class="intro-box">
                         <h2>✅ ΥΠΟΒΟΛΗ ΛΥΣΗΣ</h2>
@@ -1114,8 +1108,6 @@
             murder_diagnosis: 25,
             cooperation: 20,
             perpetrator: 15,
-            motives: 10,
-            method: 10,
             timeline: 5,
             evidence_use: 5,
             exclusion: 5,
@@ -1253,47 +1245,71 @@
                 }
             }
         }
-
-        function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
+function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
             let score = 0;
             let breakdown = [];
             
-            if (selectedSuspects.length > 0 && !selectedSuspects.includes('suicide')) {
+            // Check for illogical combinations (killer + suicide)
+            const hasSuicide = selectedSuspects.includes('suicide');
+            const hasKiller = selectedSuspects.some(s => s !== 'suicide');
+            
+            if (hasSuicide && hasKiller) {
+                // Penalty for contradictory answer
+                score -= 20;
+                breakdown.push('❌ Ποινή: Αντιφατική επιλογή (δολοφονία ΚΑΙ αυτοκτονία): -20');
+            }
+            
+            // Murder diagnosis (only if NOT suicide)
+            if (selectedSuspects.length > 0 && !hasSuicide) {
                 score += SCORING.murder_diagnosis;
                 breakdown.push('✓ Διάγνωση Δολοφονίας: +25');
+            } else if (hasSuicide && !hasKiller) {
+                // Pure suicide answer - wrong but at least consistent
+                breakdown.push('✗ Λάθος Διάγνωση (Αυτοκτονία): 0');
             }
             
-            if (selectedSuspects.length >= 2) {
-                score += SCORING.cooperation;
-                breakdown.push('✓ Εντοπισμός Συνεργασίας: +20');
-            }
-            
+            // Count correct suspects
             let correctCount = 0;
             CORRECT_SUSPECTS.forEach(suspect => {
                 if (selectedSuspects.includes(suspect)) {
                     correctCount++;
-                    score += SCORING.perpetrator;
                 }
             });
             
+            // Cooperation detection - ONLY if at least 2 CORRECT suspects selected
+            if (correctCount >= 2) {
+                score += SCORING.cooperation;
+                breakdown.push('✓ Εντοπισμός Συνεργασίας: +20');
+            }
+            
+            // Perpetrator scoring - points per correct suspect
             if (correctCount > 0) {
+                score += correctCount * SCORING.perpetrator;
                 breakdown.push(`✓ Σωστοί Δράστες (${correctCount}/3): +${correctCount * 15}`);
             }
             
-            if (selectedSuspects.length > 0) {
-                score += SCORING.motives;
-                score += SCORING.method;
-                score += SCORING.evidence_use;
-                breakdown.push('✓ Βασική Ανάλυση: +25');
+            // Penalties for wrong suspects (excluding suicide)
+            const wrongCount = selectedSuspects.filter(s => !CORRECT_SUSPECTS.includes(s) && s !== 'suicide').length;
+            if (wrongCount > 0 && !hasSuicide) {
+                const penalty = wrongCount * 5;
+                score -= penalty;
+                breakdown.push(`✗ Λάθος Ύποπτοι (${wrongCount}): -${penalty}`);
             }
             
+            // Perfect solution bonus
             if (correctCount === 3 && selectedSuspects.length === 3) {
                 score += SCORING.timeline;
                 score += SCORING.exclusion;
-                breakdown.push('✓ Τέλεια Λύση: +10');
+                score += SCORING.evidence_use;
+                breakdown.push('✓ Τέλεια Λύση (όλα τα στοιχεία): +15');
+            } else if (correctCount >= 2) {
+                // Partial credit for good attempt
+                score += SCORING.evidence_use;
+                breakdown.push('✓ Χρήση Τεκμηρίων: +5');
             }
             
-            if (totalTimeMs) {
+            // Time bonus (only for correct solutions with at least 2 correct)
+            if (totalTimeMs && correctCount >= 2) {
                 const minutes = totalTimeMs / 60000;
                 if (minutes < 30) {
                     score += SCORING.time_under_30;
@@ -1307,7 +1323,8 @@
                 }
             }
             
-            if (promptCount) {
+            // Prompt bonus (only for correct solutions with at least 2 correct)
+            if (promptCount && correctCount >= 2) {
                 if (promptCount <= 5) {
                     score += SCORING.prompts_1_5;
                     breakdown.push('🎯 Bonus Αποδοτικότητας (1-5 prompts): +20');
@@ -1320,7 +1337,10 @@
                 }
             }
             
-            return { score, breakdown, maxScore: 160 };
+            // Ensure score doesn't go negative
+            score = Math.max(0, score);
+            
+            return { score, breakdown, maxScore: 140, correctCount };
         }
 
         async function submitSolution() {
@@ -1329,13 +1349,14 @@
             const justification = document.getElementById('justification').value.trim();
             const promptCount = parseInt(document.getElementById('promptCount').value) || 0;
             
+            // Validation
             if (selectedSuspects.length === 0) {
                 alert('Παρακαλώ επιλέξτε τουλάχιστον έναν ύποπτο ή αυτοκτονία!');
                 return;
             }
             
-            if (!justification) {
-                alert('Παρακαλώ συμπληρώστε την αιτιολόγηση!');
+            if (!justification || justification.length < 50) {
+                alert('Παρακαλώ συμπληρώστε αναλυτική αιτιολόγηση (τουλάχιστον 50 χαρακτήρες)!');
                 return;
             }
             
@@ -1344,7 +1365,18 @@
                 return;
             }
             
+            // Check minimum TEKs unlocked (changed from 11 to 6)
             const teamData = await getTeamData();
+            if (teamData.unlocked.length < 6) {
+                alert(`Πρέπει να ξεκλειδώσετε τουλάχιστον 6 τεκμήρια πριν υποβάλετε λύση! (Έχετε: ${teamData.unlocked.length}/11)`);
+                return;
+            }
+            
+            // Check if already submitted
+            if (teamData.solution) {
+                alert('Έχετε ήδη υποβάλει λύση! Δεν μπορείτε να υποβάλετε ξανά.');
+                return;
+            }
             
             let totalTimeMs = null;
             if (teamData.startTime) {
@@ -1363,7 +1395,8 @@
                 score: scoreResult.score,
                 maxScore: scoreResult.maxScore,
                 breakdown: scoreResult.breakdown,
-                completionTimeMs: totalTimeMs
+                completionTimeMs: totalTimeMs,
+                correctCount: scoreResult.correctCount
             };
             
             try {
@@ -1395,35 +1428,72 @@
             const resultDiv = document.getElementById('solutionResult');
             
             const percentage = Math.round((solution.score / solution.maxScore) * 100);
+            
+            // NEW GRADE SYSTEM
             let grade = '';
-            if (percentage >= 90) grade = 'A+ 🏆';
-            else if (percentage >= 80) grade = 'A 🌟';
-            else if (percentage >= 70) grade = 'B+ ⭐';
-            else if (percentage >= 60) grade = 'B ✓';
-            else grade = 'C';
+            let gradeColor = '';
+            if (percentage >= 90) {
+                grade = 'DIAMOND 💎';
+                gradeColor = '#00d4ff';
+            } else if (percentage >= 80) {
+                grade = 'GOLD MEDAL 🥇';
+                gradeColor = '#ffd700';
+            } else if (percentage >= 70) {
+                grade = 'SILVER MEDAL 🥈';
+                gradeColor = '#c0c0c0';
+            } else if (percentage >= 60) {
+                grade = 'BRONZE MEDAL 🥉';
+                gradeColor = '#cd7f32';
+            } else if (percentage >= 50) {
+                grade = 'STAR ⭐';
+                gradeColor = '#ffcc00';
+            } else if (percentage >= 40) {
+                grade = 'CHECK ✓';
+                gradeColor = '#28a745';
+            } else {
+                grade = 'NO TROPHY';
+                gradeColor = '#6c757d';
+            }
+            
+            // Determine if they got it right
+            const isPerfect = solution.correctCount === 3 && solution.suspects.length === 3;
             
             resultDiv.innerHTML = `
                 <div style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; padding: 30px; border-radius: 15px; margin: 20px 0; text-align: center; box-shadow: 0 10px 40px rgba(40,167,69,0.3);">
                     <h2 style="font-size: 32px; margin-bottom: 15px;">🎉 Λύση Υποβλήθηκε!</h2>
                     <div style="font-size: 64px; font-weight: bold; margin: 20px 0;">${solution.score}/${solution.maxScore}</div>
-                    <div style="font-size: 24px; margin-bottom: 20px;">Βαθμός: ${grade} (${percentage}%)</div>
+                    <div style="font-size: 28px; margin-bottom: 20px; color: ${gradeColor}; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">${grade}</div>
+                    <div style="font-size: 18px; margin-bottom: 10px;">Ποσοστό: ${percentage}%</div>
                     ${solution.completionTimeMs ? `<div style="font-size: 18px; opacity: 0.9;">⏱️ Χρόνος: ${formatElapsedTime(solution.completionTimeMs)}</div>` : ''}
                     <div style="font-size: 18px; opacity: 0.9;">🎯 Prompts: ${solution.promptCount}</div>
                 </div>
                 
                 <div style="background: white; padding: 20px; border-radius: 10px; margin-top: 20px; text-align: left;">
                     <h3 style="color: #1a1a2e; margin-bottom: 15px;">📊 Ανάλυση Βαθμολογίας:</h3>
-                    ${solution.breakdown.map(item => `<div style="padding: 8px; margin: 5px 0; background: #f8f9fa; border-left: 3px solid #28a745; border-radius: 4px;">${item}</div>`).join('')}
+                    ${solution.breakdown.map(item => {
+                        const isNegative = item.includes('-') && (item.includes('✗') || item.includes('❌'));
+                        const color = isNegative ? '#dc3545' : '#28a745';
+                        return `<div style="padding: 8px; margin: 5px 0; background: #f8f9fa; border-left: 3px solid ${color}; border-radius: 4px;">${item}</div>`;
+                    }).join('')}
                 </div>
                 
                 <div style="background: #fff3cd; border: 2px solid #ffc107; padding: 20px; border-radius: 10px; margin-top: 20px;">
-                    <h3 style="color: #856404; margin-bottom: 10px;">💡 Σωστή Λύση:</h3>
-                    <p style="color: #856404;"><strong>Συνεργατική Δολοφονία από:</strong></p>
-                    <ul style="color: #856404; margin: 10px 0; padding-left: 20px;">
-                        <li>Αναγνώστου Κωνσταντίνος (CFO)</li>
-                        <li>Πετρόπουλος Γεώργιος (Φύλακας)</li>
-                        <li>Μαυρίδη Ελένη (Πρώην Ερωμένη)</li>
-                    </ul>
+                    <h3 style="color: #856404; margin-bottom: 15px;">💡 Σωστή Λύση (Προστατευμένη)</h3>
+                    <p style="color: #856404; margin-bottom: 10px;">Για να δείτε τη σωστή λύση, εισάγετε τον κωδικό που σας έδωσε ο οργανωτής:</p>
+                    <div style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
+                        <input type="password" id="solutionPassword" placeholder="Κωδικός πρόσβασης" style="flex: 1; min-width: 200px; padding: 10px; border: 2px solid #ffc107; border-radius: 8px; font-size: 16px;">
+                        <button onclick="revealSolution()" style="padding: 10px 20px; background: #ffc107; color: #000; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">Εμφάνιση</button>
+                    </div>
+                    <div id="correctSolution" style="display: none; margin-top: 15px; padding-top: 15px; border-top: 2px solid #ffc107;">
+                        <p style="color: #856404;"><strong>Συνεργατική Δολοφονία από:</strong></p>
+                        <ul style="color: #856404; margin: 10px 0; padding-left: 20px;">
+                            <li><strong>Αναγνώστου Κωνσταντίνος (CFO)</strong> - Υπεξαίρεση €1.5εκ, κίνητρο οικονομικό</li>
+                            <li><strong>Πετρόπουλος Γεώργιος (Φύλακας)</strong> - Αγόρασε το κυάνιο, χρέη, πρόσβαση στο κτίριο</li>
+                            <li><strong>Μαυρίδη Ελένη (Πρώην ερωμένη)</strong> - Εκβιαστικές φωτογραφίες, συναισθηματικό κίνητρο</li>
+                        </ul>
+                        <p style="color: #856404; margin-top: 15px;"><strong>Μέθοδος:</strong></p>
+                        <p style="color: #856404; font-size: 13px;">Ο Πετρόπουλος αγόρασε κυάνιο και το έβαλε στο μπουκάλι ουίσκι στο γραφείο. Η Ελένη πήρε το δηλητηριασμένο ποτό με το θύμα (~21:30-21:40). Ο Αναγνώστου έκλεισε το χρηματοκιβώτιο με τον εκβιαστικό φάκελο και απενεργοποίησε τις κάμερες. Το fake email "αυτοκτονίας" στάλθηκε από κοινόχρηστο υπολογιστή για να παραπλανήσει την έρευνα.</p>
+                    </div>
                 </div>
             `;
             
@@ -1435,6 +1505,21 @@
             
             stopTimer();
         }
+
+        window.revealSolution = function() {
+            const password = document.getElementById('solutionPassword').value.toUpperCase();
+            const correctPassword = 'MURDER'; // Change this to your desired password
+            
+            if (password === correctPassword) {
+                document.getElementById('correctSolution').style.display = 'block';
+                document.getElementById('solutionPassword').disabled = true;
+                const button = document.getElementById('solutionPassword').parentElement.querySelector('button');
+                if (button) button.disabled = true;
+            } else {
+                alert('❌ Λάθος κωδικός! Ζητήστε τον σωστό κωδικό από τον οργανωτή.');
+                document.getElementById('solutionPassword').value = '';
+            }
+        };
 
         function buildUrl(page) {
             return teamCode !== 'default' ? `${page}?team=${teamCode}` : page;
@@ -1496,25 +1581,25 @@
             }
         }
 
-window.addEventListener('DOMContentLoaded', async () => {
-    initTabs();
-    
-    try {
-        if (typeof SuspectsModule !== 'undefined') {
-            SuspectsModule.renderSuspects('suspectsContainer');
-        } else {
-            console.error('SuspectsModule not loaded! Make sure suspects.js is included before this script.');
-        }
-        
-        renderEvidence();
-        
-        const teamData = await getTeamData();
-        await updateProgress(teamData);
-        await initSolutionTab(teamData);
-    } catch (error) {
-        console.error('Error during initialization:', error);
-    }
-});
+        window.addEventListener('DOMContentLoaded', async () => {
+            initTabs();
+            
+            try {
+                if (typeof SuspectsModule !== 'undefined') {
+                    SuspectsModule.renderSuspects('suspectsContainer');
+                } else {
+                    console.error('SuspectsModule not loaded! Make sure suspects.js is included before this script.');
+                }
+                
+                renderEvidence();
+                
+                const teamData = await getTeamData();
+                await updateProgress(teamData);
+                await initSolutionTab(teamData);
+            } catch (error) {
+                console.error('Error during initialization:', error);
+            }
+        });
 
         window.addEventListener('storage', async (e) => {
             if (e.key === getStorageKey()) {
