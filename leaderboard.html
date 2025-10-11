@@ -326,8 +326,8 @@
         </div>
 
         <div class="action-bar">
-            <button class="btn btn-primary" onclick="refreshLeaderboard()">🔄 Ανανέωση</button>
-            <a href="admin.html" class="btn btn-secondary">⬅️ Admin Panel</a>
+            <button class="btn btn-primary" onclick="refreshLeaderboard()">🔄 ΑΝΑΝΕΩΣΗ</button>
+            <a href="admin.html" class="btn btn-secondary">⬅️ ADMIN PANEL</a>
         </div>
 
         <div class="stats-grid" id="statsGrid">
@@ -350,7 +350,7 @@
         </div>
 
         <div class="leaderboard">
-            <h2>🏆 Κατάταξη Ομάδων</h2>
+            <h2>🏆 ΚΑΤΑΤΑΞΗ ΟΜΑΔΩΝ</h2>
             <table class="leaderboard-table" id="leaderboardTable">
                 <thead>
                     <tr>
@@ -397,13 +397,13 @@
         };
 
 function getGrade(percentage) {
-            if (percentage >= 90) return { name: 'ΑΡΧΙ-ΝΤΕΤΕΚΤΙΒΑΣ 🕵️', color: '#00d4ff' };
+            if (percentage >= 90) return { name: 'ΑΡΧΙ-ΝΤΕΤΕΚΤΙΒΣ 🕵️', color: '#00d4ff' };
             if (percentage >= 80) return { name: 'ΑΝΩΤΕΡΟΙ ΑΝΑΚΡΙΤΕΣ 🎖️', color: '#ffd700' };
-            if (percentage >= 70) return { name: 'ΝΤΕΤΕΚΤΙΒΑΣ 🔎', color: '#c0c0c0' };
+            if (percentage >= 70) return { name: 'ΝΤΕΤΕΚΤΙΒΣ 🔎', color: '#c0c0c0' };
             if (percentage >= 60) return { name: 'ΑΣΤΥΝΟΜΟΙ 👮', color: '#cd7f32' };
-            if (percentage >= 50) return { name: 'ΔΟΚΙΜΟΙ ΕΡΕΥΝΗΤΕΣ 📋', color: '#ffcc00' };
-            if (percentage >= 40) return { name: 'ΚΑΔΕΤΟΙ 🎓', color: '#28a745' };
-            return { name: 'ΑΠΟΤΥΧΗΜΕΝΗ ΕΡΕΥΝΑ ❌', color: '#6c757d' };
+            if (percentage >= 50) return { name: 'ΕΡΕΥΝΗΤΕΣ 📋', color: '#ffcc00' };
+            if (percentage >= 40) return { name: 'ΑΣΚΟΥΜΕΝΟΙ 🎓', color: '#28a745' };
+            return { name: 'ΝΕΟΣΥΛΛΕΚΤΟΙ 🎯', color: '#6c757d' };
         }
 
         function formatTime(ms) {
