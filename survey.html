@@ -18,16 +18,21 @@
             appId: "1:663770004335:web:e42dbd983ab9b5277bc69a"
         };
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        
-        window.firebaseDB = db;
-        window.firebaseDoc = doc;
-        window.firebaseSetDoc = setDoc;
-        window.firebaseGetDoc = getDoc;
-        window.firebaseReady = true;
-        
-        console.log("✅ Firebase connected!");
+        try {
+            const app = initializeApp(firebaseConfig);
+            const db = getFirestore(app);
+            
+            window.firebaseDB = db;
+            window.firebaseDoc = doc;
+            window.firebaseSetDoc = setDoc;
+            window.firebaseGetDoc = getDoc;
+            window.firebaseReady = true;
+            
+            console.log("✅ Firebase connected successfully!");
+        } catch (error) {
+            console.error("Firebase initialization error:", error);
+            window.firebaseReady = false;
+        }
     </script>
     
     <style>
@@ -115,14 +120,14 @@
             font-weight: bold;
         }
         
-        .radio-group {
+        .radio-group, .checkbox-group {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
             gap: 12px;
             margin-top: 12px;
         }
         
-        .radio-option {
+        .radio-option, .checkbox-option {
             display: flex;
             align-items: center;
             padding: 14px 16px;
@@ -133,18 +138,18 @@
             transition: all 0.2s ease;
         }
         
-        .radio-option:hover {
+        .radio-option:hover, .checkbox-option:hover {
             border-color: #ff6b00;
             background: #fff5f0;
             transform: translateY(-1px);
         }
         
-        .radio-option.selected {
+        .radio-option.selected, .checkbox-option.selected {
             border-color: #ff6b00;
             background: linear-gradient(135deg, rgba(255,107,0,0.1), rgba(255,136,0,0.1));
         }
         
-        .radio-option input {
+        .radio-option input, .checkbox-option input[type="checkbox"] {
             margin-right: 10px;
             cursor: pointer;
             width: 18px;
@@ -363,13 +368,27 @@
             line-height: 1.6;
             margin: 8px 0;
         }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .branch-divider {
+            margin: 35px 0;
+            padding: 20px 0;
+            border-top: 2px dashed #dee2e6;
+            text-align: center;
+            color: #666;
+            font-weight: 600;
+            font-size: 14px;
+        }
         
         @media (max-width: 768px) {
             .section-content {
                 padding: 25px 20px;
             }
             
-            .radio-group {
+            .radio-group, .checkbox-group {
                 grid-template-columns: 1fr;
             }
             
@@ -414,7 +433,7 @@
     </div>
 
     <script>
-        // GET OR CREATE DEVICE ID FROM LOCALSTORAGE
+        // GET OR CREATE DEVICE ID
         function getDeviceId() {
             let deviceId = localStorage.getItem('crime_festival_device_id');
             if (!deviceId) {
@@ -435,13 +454,24 @@
 
         console.log('Device ID:', DEVICE_ID);
 
-        setTimeout(async () => {
-            if (!window.firebaseReady) {
-                alert('Σφάλμα σύνδεσης. Ελέγξτε το διαδίκτυο.');
-                return;
+        // Wait for Firebase to initialize
+        let initAttempts = 0;
+        const maxAttempts = 50;
+        
+        function waitForFirebase() {
+            if (window.firebaseReady) {
+                initializeSurvey();
+            } else if (initAttempts < maxAttempts) {
+                initAttempts++;
+                setTimeout(waitForFirebase, 100);
+            } else {
+                alert('Σφάλμα σύνδεσης με Firebase. Παρακαλώ ανανεώστε τη σελίδα.');
             }
-            
-            // Check if this device already has PRE data
+        }
+
+        setTimeout(waitForFirebase, 500);
+
+        async function initializeSurvey() {
             try {
                 const preDocRef = window.firebaseDoc(window.firebaseDB, 'surveys', DEVICE_ID + '_pre');
                 const preSnap = await window.firebaseGetDoc(preDocRef);
@@ -453,7 +483,7 @@
             }
             
             renderCurrentSection();
-        }, 1000);
+        }
 
         function renderCurrentSection() {
             let content = '';
@@ -586,6 +616,11 @@
             return `
                 <div class="section-content">
                     <h2 class="section-title">Δημογραφικά Στοιχεία</h2>
+                    
+                    <div class="form-group">
+                        <label for="team-name" class="required">Όνομα Ομάδας</label>
+                        <input type="text" id="team-name" name="team-name" placeholder="Εισάγετε το όνομα της ομάδας σας..." required>
+                    </div>
                     
                     <div class="form-group">
                         <label class="required">Φύλο</label>
@@ -985,6 +1020,10 @@
             submitBtn.innerHTML = '⏳ Αποθήκευση...';
 
             try {
+                if (!window.firebaseReady || !window.firebaseDB) {
+                    throw new Error('Firebase not initialized');
+                }
+
                 const surveyData = {
                     deviceId: DEVICE_ID,
                     surveyType: surveyType,
@@ -995,12 +1034,14 @@
 
                 const docId = DEVICE_ID + '_' + surveyType;
                 const docRef = window.firebaseDoc(window.firebaseDB, 'surveys', docId);
+                
                 await window.firebaseSetDoc(docRef, surveyData);
 
+                console.log('✅ Survey submitted successfully!', surveyData);
                 showSuccessPage();
             } catch (error) {
-                console.error('Error:', error);
-                showError('Σφάλμα! Δοκιμάστε ξανά.');
+                console.error('Submission error:', error);
+                showError('Σφάλμα αποθήκευσης: ' + error.message + '. Παρακαλώ δοκιμάστε ξανά.');
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = '✅ Υποβολή';
             }
