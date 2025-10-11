@@ -357,7 +357,7 @@
                         <th>Θέση</th>
                         <th>Ομάδα</th>
                         <th>Βαθμολογία</th>
-                        <th>Βαθμός</th>
+                        <th>Τίτλος</th>
                         <th>Δράστες</th>
                         <th>Χρόνος</th>
                         <th>Prompts</th>
@@ -396,14 +396,14 @@
             'suicide': 'Αυτοκτονία'
         };
 
-        function getGrade(percentage) {
-            if (percentage >= 90) return { name: 'DIAMOND 💎', color: '#00d4ff' };
-            if (percentage >= 80) return { name: 'GOLD MEDAL 🥇', color: '#ffd700' };
-            if (percentage >= 70) return { name: 'SILVER MEDAL 🥈', color: '#c0c0c0' };
-            if (percentage >= 60) return { name: 'BRONZE MEDAL 🥉', color: '#cd7f32' };
-            if (percentage >= 50) return { name: 'STAR ⭐', color: '#ffcc00' };
-            if (percentage >= 40) return { name: 'CHECK ✓', color: '#28a745' };
-            return { name: 'NO TROPHY', color: '#6c757d' };
+function getGrade(percentage) {
+            if (percentage >= 90) return { name: 'ΑΡΧΙ-ΝΤΕΤΕΚΤΙΒΑΣ 🕵️', color: '#00d4ff' };
+            if (percentage >= 80) return { name: 'ΑΝΩΤΕΡΟΙ ΑΝΑΚΡΙΤΕΣ 🎖️', color: '#ffd700' };
+            if (percentage >= 70) return { name: 'ΝΤΕΤΕΚΤΙΒΑΣ 🔎', color: '#c0c0c0' };
+            if (percentage >= 60) return { name: 'ΑΣΤΥΝΟΜΟΙ 👮', color: '#cd7f32' };
+            if (percentage >= 50) return { name: 'ΔΟΚΙΜΟΙ ΕΡΕΥΝΗΤΕΣ 📋', color: '#ffcc00' };
+            if (percentage >= 40) return { name: 'ΚΑΔΕΤΟΙ 🎓', color: '#28a745' };
+            return { name: 'ΑΠΟΤΥΧΗΜΕΝΗ ΕΡΕΥΝΑ ❌', color: '#6c757d' };
         }
 
         function formatTime(ms) {
@@ -629,65 +629,66 @@ window.viewSolution = async function(teamName) {
 
                 <h3 style="margin-top: 25px; margin-bottom: 15px;">🎯 Αναλυτική Βαθμολογία:</h3>
                 <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: 13px; line-height: 1.7; max-height: 400px; overflow-y: auto;">
-                    ${solution.breakdown.map(item => {
+${solution.breakdown.map(item => {
+                        // Empty lines
+                        if (item.trim() === '') {
+                            return '<div style="height: 5px;"></div>';
+                        }
+                        
+                        // Box/frame characters - ignore them
+                        if (item.includes('╔') || item.includes('═') || item.includes('─')) {
+                            return '';
+                        }
+                        
                         // Styling based on content
-                        let bgColor = 'transparent';
-                        let borderColor = 'transparent';
+                        let bgColor = '#f8f9fa';
+                        let borderColor = '#dee2e6';
                         let textColor = '#333';
-                        let padding = '5px 10px';
                         let fontWeight = 'normal';
                         
+                        // Critical errors - red box
                         if (item.includes('ΛΟΓΙΚΗ ΑΝΤΙΦΑΣΗ') || item.includes('ΛΑΘΟΣ ΔΙΑΓΝΩΣΗ')) {
                             bgColor = '#f8d7da';
                             borderColor = '#dc3545';
                             textColor = '#721c24';
                             fontWeight = 'bold';
-                            padding = '10px 15px';
-                        } else if (item.includes('✓') && item.includes('+')) {
+                        } 
+                        // Positive points - green box
+                        else if (item.includes('✓') || item.includes('+')) {
                             bgColor = '#d4edda';
                             borderColor = '#28a745';
                             textColor = '#155724';
-                            padding = '8px 12px';
-                        } else if ((item.includes('✗') && item.includes('-')) || item.includes('❌')) {
+                        } 
+                        // Negative points - yellow/orange box
+                        else if (item.includes('✗') || item.includes('-') || item.includes('❌')) {
                             bgColor = '#fff3cd';
                             borderColor = '#ffc107';
                             textColor = '#856404';
-                            padding = '8px 12px';
-                        } else if (item.includes('⚠️')) {
+                        } 
+                        // Warnings
+                        else if (item.includes('⚠️')) {
                             bgColor = '#fff3cd';
                             borderColor = '#ffc107';
                             textColor = '#856404';
-                            padding = '8px 12px';
-                        } else if (item.includes('💡')) {
+                        } 
+                        // Info - blue box
+                        else if (item.includes('💡')) {
                             bgColor = '#e7f3ff';
                             borderColor = '#2196f3';
                             textColor = '#0d47a1';
-                            padding = '8px 12px';
-                        } else if (item.includes('ΤΕΛΙΚΗ ΒΑΘΜΟΛΟΓΙΑ')) {
-                            bgColor = '#e3f2fd';
-                            borderColor = '#2196f3';
-                            textColor = '#0d47a1';
-                            fontWeight = 'bold';
-                            padding = '12px 15px';
-                        } else if (item.includes('═') || item.includes('─')) {
-                            return `<div style="color: #999; margin: 5px 0; text-align: center;">${item}</div>`;
-                        } else if (item.trim() === '') {
-                            return '<div style="height: 8px;"></div>';
-                        } else if (item.includes('ΘΕΤΙΚΑ') || item.includes('ΑΡΝΗΤΙΚΑ')) {
-                            textColor = '#0f3460';
-                            fontWeight = 'bold';
-                            padding = '8px 0';
+                        }
+                        // Section headers (ΘΕΤΙΚΑ ΣΤΟΙΧΕΙΑ, ΑΡΝΗΤΙΚΑ ΣΤΟΙΧΕΙΑ)
+                        else if (item.includes('ΘΕΤΙΚΑ ΣΤΟΙΧΕΙΑ') || item.includes('ΑΡΝΗΤΙΚΑ ΣΤΟΙΧΕΙΑ')) {
+                            return `<div style="color: #0f3460; font-weight: bold; margin: 15px 0 8px 0; font-size: 14px;">${item}</div>`;
                         }
                         
-                        // Indented lines
+                        // Indented lines (sub-items with arrows)
                         if (item.startsWith('   ')) {
-                            return `<div style="padding: 3px 3px 3px 30px; color: ${textColor}; font-size: 12px;">${item}</div>`;
+                            return `<div style="padding: 4px 4px 4px 30px; margin: 2px 0; color: ${textColor}; font-size: 13px;">${item}</div>`;
                         }
                         
-                        const borderStyle = borderColor !== 'transparent' ? `border-left: 4px solid ${borderColor};` : '';
-                        const backgroundStyle = bgColor !== 'transparent' ? `background: ${bgColor};` : '';
-                        
-                        return `<div style="${backgroundStyle} ${borderStyle} padding: ${padding}; margin: 4px 0; border-radius: 4px; color: ${textColor}; font-weight: ${fontWeight};">${item}</div>`;
+                        // Main items with colored boxes
+                        return `<div style="padding: 10px 15px; margin: 5px 0; background: ${bgColor}; border-left: 4px solid ${borderColor}; border-radius: 4px; color: ${textColor}; font-weight: ${fontWeight};">${item}</div>`;
                     }).join('')}
                 </div>
             </div>
