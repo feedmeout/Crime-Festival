@@ -901,7 +901,6 @@
                     <div class="intro-box">
                         <h2>✅ ΥΠΟΒΟΛΗ ΛΥΣΗΣ</h2>
                         <p>Έχετε μελετήσει όλα τα τεκμήρια και είστε έτοιμοι να υποβάλετε τη λύση σας;</p>
-                        <p><strong>Επιλέξτε τον/τους δράστη/ες ή αυτοκτονία και παράθεστε την αιτιολόγησή σας.</strong></p>
                     </div>
 
                     <div class="solution-form" id="solutionForm">
@@ -1381,12 +1380,7 @@ function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
         
         breakdown.push(`⚠️ Χάσατε ${missed} σωστό${missed > 1 ? 'ύς' : ''} δράστη: ${missedNames}`);
     }
-    score = Math.max(0, score);
-    breakdown.push('');
-    breakdown.push('═════════════════════════════');
-    breakdown.push(`📊 ΤΕΛΙΚΗ ΒΑΘΜΟΛΟΓΙΑ: ${score}/${140}`);
-    breakdown.push('═════════════════════════════');
-    
+    score = Math.max(0, score);    
     return { score, breakdown, maxScore: 140, correctCount };
 }
 
@@ -1475,25 +1469,25 @@ function displaySolutionResult(solution) {
     let grade = '';
     let gradeColor = '';
     if (percentage >= 90) {
-        grade = 'DIAMOND 💎';
+        grade = 'ΑΡΧΙ-ΝΤΕΤΕΚΤΙΒΣ 🕵️';
         gradeColor = '#00d4ff';
     } else if (percentage >= 80) {
-        grade = 'GOLD MEDAL 🥇';
+        grade = 'ΑΝΩΤΕΡΟΙ ΑΝΑΚΡΙΤΕΣ 🎖️';
         gradeColor = '#ffd700';
     } else if (percentage >= 70) {
-        grade = 'SILVER MEDAL 🥈';
+        grade = 'ΝΤΕΤΕΚΤΙΒΣ 🔎';
         gradeColor = '#c0c0c0';
     } else if (percentage >= 60) {
-        grade = 'BRONZE MEDAL 🥉';
+        grade = 'ΑΣΤΥΝΟΜΟΙ 👮';
         gradeColor = '#cd7f32';
     } else if (percentage >= 50) {
-        grade = 'STAR ⭐';
+        grade = 'ΔΟΚΙΜΟΙ ΕΡΕΥΝΗΤΕΣ 📝';
         gradeColor = '#ffcc00';
     } else if (percentage >= 40) {
-        grade = 'CHECK ✔';
+        grade = 'ΚΑΔΕΤΟΙ 🎓';
         gradeColor = '#28a745';
     } else {
-        grade = 'NO TROPHY';
+        grade = 'ΑΠΟΤΥΧΗΜΕΝΗ ΕΡΕΥΝΑ ❌';
         gradeColor = '#6c757d';
     }
 
@@ -1598,74 +1592,116 @@ function displaySolutionResult(solution) {
         '<button onclick="revealSolution()" style="padding: 10px 20px; background: #ffc107; color: #000; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">Εμφάνιση</button>' +
         '</div>' +
         '<div id="correctSolution" style="display: none; margin-top: 20px; padding-top: 20px; border-top: 2px solid #ffc107;">' +
+        
+        // BREAKDOWN SECTION
         '<div style="background: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; border: 2px solid #28a745;">' +
         '<h4 style="color: #1a1a2e; margin-bottom: 15px; font-size: 18px; border-bottom: 2px solid #ff6b00; padding-bottom: 8px;">📊 ΑΝΑΛΥΣΗ ΒΑΘΜΟΛΟΓΙΑΣ ΣΑΣ</h4>' +
         '<div style="font-family: \'Courier New\', monospace; line-height: 1.8; font-size: 14px;">' +
         breakdownHTML +
         '</div>' +
         '</div>' +
+        
+        // SOLUTION SECTION - NEW VISUAL VERSION
         '<div style="background: white; padding: 20px; border-radius: 10px; border: 2px solid #dc3545;">' +
         '<h4 style="color: #dc3545; margin-bottom: 15px; font-size: 18px; border-bottom: 2px solid #dc3545; padding-bottom: 8px;">🎯 ΛΥΣΗ: ΣΥΝΕΡΓΑΤΙΚΗ ΔΟΛΟΦΟΝΙΑ</h4>' +
         
-        '<h5 style="color: #1a1a2e; margin: 15px 0 10px 0; font-size: 15px;">ΔΡΑΣΤΕΣ:</h5>' +
-        '<ul style="color: #333; margin: 0 0 15px 0; padding-left: 25px; line-height: 1.8;">' +
-        '<li><strong>Αναγνώστου Κωνσταντίνος</strong> - CFO με υπεξαίρεση €1.5εκ</li>' +
-        '<li><strong>Πετρόπουλος Γεώργιος</strong> - Φύλακας με χρέη €60k που αγόρασε κυάνιο</li>' +
-        '<li><strong>Μαυρίδη Ελένη</strong> - Πρώην ερωμένη με εκβιαστικές φωτογραφίες</li>' +
-        '</ul>' +
+        // PERPETRATORS - Red highlight boxes
+        '<h5 style="color: #1a1a2e; margin: 15px 0 10px 0; font-size: 15px; display: flex; align-items: center; gap: 8px;">⚠️ ΔΡΑΣΤΕΣ</h5>' +
+        '<div style="background: #fff5f5; border-left: 4px solid #dc3545; padding: 12px; margin-bottom: 8px; border-radius: 4px;">' +
+        '<strong style="color: #dc3545;">👨‍💼 Αναγνώστου Κωνσταντίνος</strong><br>' +
+        '<span style="color: #666; font-size: 13px;">CFO με υπεξαίρεση €1.5εκ • Χειριστής του σχεδίου</span>' +
+        '</div>' +
+        '<div style="background: #fff5f5; border-left: 4px solid #dc3545; padding: 12px; margin-bottom: 8px; border-radius: 4px;">' +
+        '<strong style="color: #dc3545;">👮 Πετρόπουλος Γεώργιος</strong><br>' +
+        '<span style="color: #666; font-size: 13px;">Φύλακας με χρέη €60k • Προμηθευτής του κυανίου</span>' +
+        '</div>' +
+        '<div style="background: #fff5f5; border-left: 4px solid #dc3545; padding: 12px; margin-bottom: 15px; border-radius: 4px;">' +
+        '<strong style="color: #dc3545;">👩‍🦰 Μαυρίδη Ελένη</strong><br>' +
+        '<span style="color: #666; font-size: 13px;">Πρώην ερωμένη • Συγκάλυψη με ψευδές email αυτοκτονίας</span>' +
+        '</div>' +
         
-        '<h5 style="color: #1a1a2e; margin: 15px 0 10px 0; font-size: 15px;">ΜΕΘΟΔΟΣ ΕΚΤΕΛΕΣΗΣ:</h5>' +
-        '<ul style="color: #333; margin: 0 0 15px 0; padding-left: 25px; line-height: 1.8;">' +
-        '<li>Συνεργασία μετά από οικονομικές υποσχέσεις/εκδίκηση</li>' +
-        '<li><strong>Αναγνώστου:</strong> Έριξε κυάνιο στο ουίσκι (20:50-21:20)</li>' +
-        '<li><strong>Πετρόπουλος:</strong> Απενεργοποίησε κάμερες (20:55)</li>' +
-        '<li><strong>Μαυρίδη:</strong> Έγραψε/έστειλε email «αυτοκτονίας» (21:25)</li>' +
-        '</ul>' +
+        // METHOD - Timeline style
+        '<h5 style="color: #1a1a2e; margin: 20px 0 10px 0; font-size: 15px; display: flex; align-items: center; gap: 8px;">⏱️ ΧΡΟΝΟΛΟΓΙΟ ΕΚΤΕΛΕΣΗΣ</h5>' +
+        '<div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 15px;">' +
+        '<div style="display: flex; align-items: start; margin-bottom: 10px; padding: 8px; background: white; border-radius: 4px; border-left: 3px solid #ff6b00;">' +
+        '<span style="background: #ff6b00; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; margin-right: 10px;">20:50-21:20</span>' +
+        '<span style="flex: 1; color: #333; font-size: 13px;">💊 <strong>Αναγνώστου:</strong> Έριξε κυάνιο στο ουίσκι του θύματος</span>' +
+        '</div>' +
+        '<div style="display: flex; align-items: start; margin-bottom: 10px; padding: 8px; background: white; border-radius: 4px; border-left: 3px solid #ff6b00;">' +
+        '<span style="background: #ff6b00; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; margin-right: 10px;">20:55</span>' +
+        '<span style="flex: 1; color: #333; font-size: 13px;">📹 <strong>Πετρόπουλος:</strong> Απενεργοποίησε κάμερες ασφαλείας</span>' +
+        '</div>' +
+        '<div style="display: flex; align-items: start; padding: 8px; background: white; border-radius: 4px; border-left: 3px solid #ff6b00;">' +
+        '<span style="background: #ff6b00; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; margin-right: 10px;">21:25</span>' +
+        '<span style="flex: 1; color: #333; font-size: 13px;">💻 <strong>Μαυρίδη:</strong> Έστειλε fake email «αυτοκτονίας»</span>' +
+        '</div>' +
+        '</div>' +
         
-        '<h5 style="color: #1a1a2e; margin: 20px 0 10px 0; font-size: 15px;">ΑΠΟΔΕΙΚΤΙΚΑ ΣΤΟΙΧΕΙΑ & ΠΑΡΑΤΗΡΗΣΕΙΣ</h5>' +
-        '<p style="color: #333; margin: 10px 0 5px 0; font-weight: bold; font-size: 14px;">Ενδείξεις Δολοφονίας vs Αυτοκτονίας:</p>' +
-        '<ul style="color: #333; margin: 0 0 15px 0; padding-left: 25px; line-height: 1.7; font-size: 13px;">' +
-        '<li>SMS «Θα τελειώσει απόψε» - τόνος απειλητικός</li>' +
-        '<li>Απενεργοποίηση κάμερών 20:55 - 30 λεπτά πριν το email «αυτοκτονίας»</li>' +
-        '<li>Δυο ποτήρια με ίχνη ουίσκι - ένα με κυάνιο, ένα χωρίς</li>' +
-        '<li>Παραγγελία φαγητού για 2 άτομα αλλά το θύμα ήταν μόνο</li>' +
-        '<li>Αλπραζολάμη 2mg στο αίμα του θύματος</li>' +
-        '<li>Σημείωμα «Συγχώρεσέ με Μ.» - μίμηση γραφής 65% ταύτιση</li>' +
-        '</ul>' +
+        // KEY EVIDENCE - Icon boxes
+        '<h5 style="color: #1a1a2e; margin: 20px 0 10px 0; font-size: 15px; display: flex; align-items: center; gap: 8px;">🔍 ΚΡΙΣΙΜΑ ΣΤΟΙΧΕΙΑ</h5>' +
+        '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; margin-bottom: 15px;">' +
+        '<div style="background: #e3f2fd; padding: 10px; border-radius: 6px; border-left: 3px solid #2196f3;">' +
+        '<div style="font-weight: bold; color: #0d47a1; margin-bottom: 4px;">📱 SMS Απειλής</div>' +
+        '<div style="font-size: 12px; color: #555;">«Θα τελειώσει απόψε»</div>' +
+        '</div>' +
+        '<div style="background: #fff3cd; padding: 10px; border-radius: 6px; border-left: 3px solid #ffc107;">' +
+        '<div style="font-weight: bold; color: #856404; margin-bottom: 4px;">🥃 Δύο Ποτήρια</div>' +
+        '<div style="font-size: 12px; color: #555;">Ένα με κυάνιο, ένα καθαρό</div>' +
+        '</div>' +
+        '<div style="background: #f8d7da; padding: 10px; border-radius: 6px; border-left: 3px solid #dc3545;">' +
+        '<div style="font-weight: bold; color: #721c24; margin-bottom: 4px;">✍️ Πλαστό Σημείωμα</div>' +
+        '<div style="font-size: 12px; color: #555;">Μίμηση γραφής 65%</div>' +
+        '</div>' +
+        '<div style="background: #d4edda; padding: 10px; border-radius: 6px; border-left: 3px solid #28a745;">' +
+        '<div style="font-weight: bold; color: #155724; margin-bottom: 4px;">🧪 Αλπραζολάμη</div>' +
+        '<div style="font-size: 12px; color: #555;">2mg στο αίμα (κατευναστικό)</div>' +
+        '</div>' +
+        '<div style="background: #e0e0e0; padding: 10px; border-radius: 6px; border-left: 3px solid #6c757d;">' +
+        '<div style="font-weight: bold; color: #495057; margin-bottom: 4px;">📹 Κάμερες OFF</div>' +
+        '<div style="font-size: 12px; color: #555;">Απενεργοποίηση 20:55</div>' +
+        '</div>' +
+        '<div style="background: #ffe0e0; padding: 10px; border-radius: 6px; border-left: 3px solid #ff6b6b;">' +
+        '<div style="font-weight: bold; color: #c92a2a; margin-bottom: 4px;">🍽️ Παραγγελία x2</div>' +
+        '<div style="font-size: 12px; color: #555;">Φαγητό για 2, θύμα μόνο</div>' +
+        '</div>' +
+        '</div>' +
         
-        '<p style="color: #333; margin: 10px 0 5px 0; font-weight: bold; font-size: 14px;">Πρόσβαση σε Κυάνιο:</p>' +
-        '<ul style="color: #333; margin: 0 0 15px 0; padding-left: 25px; line-height: 1.7; font-size: 13px;">' +
-        '<li><strong>Πετρόπουλος:</strong> Αγόρασε κυάνιο 19/09 με άδεια εταιρείας</li>' +
-        '<li><strong>Αναγνώστου:</strong> Ως CFO μπορούσε να εγκρίνει/εκδώσει άδεια</li>' +
-        '<li>Άλλοι ύποπτοι: Καμία τεκμηριωμένη πρόσβαση σε κυάνιο</li>' +
-        '</ul>' +
+        // ACCESS TO CYANIDE - Compact
+        '<h5 style="color: #1a1a2e; margin: 20px 0 10px 0; font-size: 15px; display: flex; align-items: center; gap: 8px;">☠️ ΠΡΟΣΒΑΣΗ ΣΕ ΚΥΑΝΙΟ</h5>' +
+        '<div style="background: #fff9e6; border: 1px solid #ffe066; padding: 12px; border-radius: 6px; margin-bottom: 15px;">' +
+        '<div style="margin-bottom: 6px;"><strong style="color: #dc3545;">⚗️ Πετρόπουλος:</strong> <span style="color: #666; font-size: 13px;">Αγόρασε 19/09 με άδεια εταιρείας</span></div>' +
+        '<div style="margin-bottom: 6px;"><strong style="color: #dc3545;">📋 Αναγνώστου:</strong> <span style="color: #666; font-size: 13px;">Ως CFO εξέδωσε/ενέκρινε την άδεια</span></div>' +
+        '<div><strong style="color: #28a745;">✓ Άλλοι:</strong> <span style="color: #666; font-size: 13px;">Καμία τεκμηριωμένη πρόσβαση</span></div>' +
+        '</div>' +
         
-        '<p style="color: #333; margin: 10px 0 5px 0; font-weight: bold; font-size: 14px;">Πρόσβαση σε Χώρους & Συστήματα:</p>' +
-        '<ul style="color: #333; margin: 0 0 15px 0; padding-left: 25px; line-height: 1.7; font-size: 13px;">' +
-        '<li><strong>Αναγνώστου:</strong> Πλήρης πρόσβαση ως CFO, γνωρίζει κωδικούς διοίκησης</li>' +
-        '<li><strong>Πετρόπουλος:</strong> Πρόσβαση σε όλους τους ορόφους, δικαιώματα διαχειριστή στο σύστημα ασφαλείας</li>' +
-        '<li><strong>Μαυρίδη:</strong> Πρώην σχέση 2 χρόνια, γνωρίζει το κτίριο</li>' +
-        '<li><strong>Νικολάου:</strong> Νέα υπάλληλος 3 μήνες, περιορισμένη πρόσβαση</li>' +
-        '<li><strong>Παπαδοπούλου:</strong> Γραμματέας 8 χρόνια, κλειδιά γραφείου</li>' +
-        '</ul>' +
+        // MOTIVES - Colored cards
+        '<h5 style="color: #1a1a2e; margin: 20px 0 10px 0; font-size: 15px; display: flex; align-items: center; gap: 8px;">💰 ΚΙΝΗΤΡΑ</h5>' +
+        '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 8px; margin-bottom: 15px;">' +
+        '<div style="background: linear-gradient(135deg, #fff5f5 0%, #ffe5e5 100%); padding: 10px; border-radius: 6px; border: 1px solid #ffcccc;">' +
+        '<div style="font-weight: bold; color: #c92a2a; font-size: 12px; margin-bottom: 4px;">💼 ΑΝΑΓΝΩΣΤΟΥ</div>' +
+        '<div style="font-size: 11px; color: #666;">Υπεξαίρεση €1.5εκ</div>' +
+        '</div>' +
+        '<div style="background: linear-gradient(135deg, #fff5f5 0%, #ffe5e5 100%); padding: 10px; border-radius: 6px; border: 1px solid #ffcccc;">' +
+        '<div style="font-weight: bold; color: #c92a2a; font-size: 12px; margin-bottom: 4px;">👮 ΠΕΤΡΟΠΟΥΛΟΣ</div>' +
+        '<div style="font-size: 11px; color: #666;">Χρέη €60k τοκογλύφων</div>' +
+        '</div>' +
+        '<div style="background: linear-gradient(135deg, #fff5f5 0%, #ffe5e5 100%); padding: 10px; border-radius: 6px; border: 1px solid #ffcccc;">' +
+        '<div style="font-weight: bold; color: #c92a2a; font-size: 12px; margin-bottom: 4px;">👩 ΜΑΥΡΙΔΗ</div>' +
+        '<div style="font-size: 11px; color: #666;">Εκβιασμός (φωτογραφίες)</div>' +
+        '</div>' +
+        '</div>' +
         
-        '<p style="color: #333; margin: 10px 0 5px 0; font-weight: bold; font-size: 14px;">Κίνητρα Υπόπτων:</p>' +
-        '<ul style="color: #333; margin: 0 0 15px 0; padding-left: 25px; line-height: 1.7; font-size: 13px;">' +
-        '<li><strong>Αναγνώστου:</strong> Υπεξαίρεση €1.5εκ, κρυφοί λογαριασμοί Ελβετίας</li>' +
-        '<li><strong>Πετρόπουλος:</strong> Χρέη €60k σε τοκογλύφους</li>' +
-        '<li><strong>Μαυρίδη:</strong> Εκβιασμός για ερωτικές φωτογραφίες</li>' +
-        '<li><strong>Νικολάου:</strong> Κλοπή χειρόγραφων ανταγωνιστικού εκδοτικού</li>' +
-        '<li><strong>Παπαδοπούλου:</strong> Χρωστούσε 3 μισθούς το θύμα, ήξερε για καρκίνο</li>' +
-        '</ul>' +
-        
-        '<p style="color: #333; margin: 10px 0 5px 0; font-weight: bold; font-size: 14px;">Δηλωμένα Άλλοθι:</p>' +
-        '<ul style="color: #333; margin: 0; padding-left: 25px; line-height: 1.7; font-size: 13px;">' +
-        '<li><strong>Παπαδοπούλου:</strong> Ραντεβού με γιατρό 18:30-19:30 (επιβεβαιωμένο), δείπνο με αδελφή 19:45-22:30</li>' +
-        '<li><strong>Αναγνώστου:</strong> Δείπνο με πελάτες 18:45-20:30 στο «Διόνυσος» (200m από κτίριο)</li>' +
-        '<li><strong>Μαυρίδη:</strong> Παρουσίαση βιβλίου 19:30-20:30, μετά στο κτίριο για αντίτυπα</li>' +
-        '<li><strong>Πετρόπουλος:</strong> Βάρδια όλο το βράδυ, περιπολίες κάθε 2 ώρες</li>' +
-        '<li><strong>Νικολάου:</strong> Ισχυρίζεται ήταν στο «Μικρό Καφέ» μέχρι 20:30</li>' +
-        '</ul>' +
+        // ALIBIS - Collapsed format
+        '<details style="background: #f8f9fa; padding: 12px; border-radius: 6px; margin-top: 15px; cursor: pointer;">' +
+        '<summary style="font-weight: bold; color: #495057; font-size: 14px; cursor: pointer;">📍 Δηλωμένα Άλλοθι (κλικ για λεπτομέρειες)</summary>' +
+        '<div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #dee2e6; font-size: 12px; color: #666; line-height: 1.6;">' +
+        '<div style="margin-bottom: 6px;">👩 <strong>Παπαδοπούλου:</strong> Γιατρός 18:30-19:30 (✓), δείπνο με αδελφή 19:45-22:30</div>' +
+        '<div style="margin-bottom: 6px;">👨‍💼 <strong>Αναγνώστου:</strong> Δείπνο «Διόνυσος» 18:45-20:30 (200m από κτίριο!)</div>' +
+        '<div style="margin-bottom: 6px;">👩‍🦰 <strong>Μαυρίδη:</strong> Παρουσίαση βιβλίου 19:30-20:30, μετά στο κτίριο</div>' +
+        '<div style="margin-bottom: 6px;">👮 <strong>Πετρόπουλος:</strong> Βάρδια όλο βράδυ, περιπολίες κάθε 2h</div>' +
+        '<div>👩‍💻 <strong>Νικολάου:</strong> «Μικρό Καφέ» μέχρι 20:30 (αβέβαιο)</div>' +
+        '</div>' +
+        '</details>' +
         
         '</div>' +
         '</div>' +
@@ -1679,126 +1715,126 @@ function displaySolutionResult(solution) {
     stopTimer();
 }
 
-        window.revealSolution = function() {
-            const password = document.getElementById('solutionPassword').value.toUpperCase();
-            const correctPassword = 'MURDER';
-            
-            if (password === correctPassword) {
-                document.getElementById('correctSolution').style.display = 'block';
-                document.getElementById('solutionPassword').disabled = true;
-                const button = document.getElementById('solutionPassword').parentElement.querySelector('button');
-                if (button) button.disabled = true;
-            } else {
-                alert('❌ Λάθος κωδικός! Ζητήστε τον σωστό κωδικό από τον οργανωτή.');
-                document.getElementById('solutionPassword').value = '';
-            }
-        };
+window.revealSolution = function() {
+    const password = document.getElementById('solutionPassword').value.toUpperCase();
+    const correctPassword = 'MURDER';
+    
+    if (password === correctPassword) {
+        document.getElementById('correctSolution').style.display = 'block';
+        document.getElementById('solutionPassword').disabled = true;
+        const button = document.getElementById('solutionPassword').parentElement.querySelector('button');
+        if (button) button.disabled = true;
+    } else {
+        alert('❌ Λάθος κωδικός! Ζητήστε τον σωστό κωδικό από τον οργανωτή.');
+        document.getElementById('solutionPassword').value = '';
+    }
+};
 
-        function buildUrl(page) {
-            return teamCode !== 'default' ? `${page}?team=${teamCode}` : page;
-        }
+function buildUrl(page) {
+    return teamCode !== 'default' ? `${page}?team=${teamCode}` : page;
+}
 
-        function renderEvidence() {
-            const unlockedTeks = getUnlockedTeks();
-            const grid = document.getElementById('evidenceGrid');
-            
-            grid.innerHTML = teks.map(tek => {
-                const isUnlocked = unlockedTeks.includes(tek.id);
-                const cardClass = isUnlocked ? 'unlocked' : 'locked';
-                
-                let criticalTag = '';
-                if (tek.critical) criticalTag = '<span class="critical-tag">ΚΡΙΣΙΜΟ</span>';
-                else if (tek.secret) criticalTag = '<span class="critical-tag">ΑΠΟΡΡΗΤΟ</span>';
-                else if (tek.blackmail) criticalTag = '<span class="critical-tag">ΕΚΒΙΑΣΜΟΣ</span>';
-                else if (tek.sabotage) criticalTag = '<span class="critical-tag">ΣΑΜΠΟΤΑΖ</span>';
-                else if (tek.threat) criticalTag = '<span class="critical-tag">ΑΠΕΙΛΗ</span>';
-                else if (tek.forgery) criticalTag = '<span class="critical-tag">ΠΛΑΣΤΟΓΡΑΦΙΑ</span>';
-                else if (tek.clue) criticalTag = '<span class="critical-tag">ΕΝΔΕΙΞΗ</span>';
-                else if (tek.financial) criticalTag = '<span class="critical-tag">ΟΙΚΟΝΟΜΙΚΟ</span>';
-                
-                return `
-                    <div class="evidence-card ${cardClass}">
-                        ${criticalTag}
-                        ${!isUnlocked ? '<div class="lock-overlay">🔒</div>' : ''}
-                        <div class="evidence-header">
-                            <div class="evidence-icon">${tek.icon}</div>
-                            <div class="evidence-info">
-                                <h3>ΤΕΚ #${tek.id.padStart(3, '0')}</h3>
-                                <p>${tek.subtitle}</p>
-                            </div>
-                        </div>
-                        <p class="evidence-description">
-                            ${isUnlocked ? tek.description : '🔒 Ξεκλειδώστε αυτό το τεκμήριο για να δείτε λεπτομέρειες'}
-                        </p>
-                        <div class="evidence-actions">
-                            ${isUnlocked ? 
-                                `<a href="${buildUrl(tek.page)}" class="btn btn-ar">
-                                    👁️ Προβολή Τεκμηρίου
-                                </a>` :
-                                `<button class="btn btn-ar" disabled>🔒 Κλειδωμένο</button>`
-                            }
-                        </div>
-                        <span class="status-badge ${isUnlocked ? 'status-unlocked' : 'status-locked'}">
-                            ${isUnlocked ? '✅ ΔΙΑΘΕΣΙΜΟ' : '🔒 ΚΛΕΙΔΩΜΕΝΟ'}
-                        </span>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        async function initSolutionTab(teamData) {
-            const existingSolution = teamData.solution;
-            
-            if (existingSolution) {
-                displaySolutionResult(existingSolution);
-            }
-        }
-
-        window.addEventListener('DOMContentLoaded', async () => {
-            initTabs();
-            
-            try {
-                if (typeof SuspectsModule !== 'undefined') {
-                    SuspectsModule.renderSuspects('suspectsContainer');
-                } else {
-                    console.error('SuspectsModule not loaded! Make sure suspects.js is included before this script.');
-                }
-                
-                renderEvidence();
-                
-                const teamData = await getTeamData();
-                await updateProgress(teamData);
-                await initSolutionTab(teamData);
-            } catch (error) {
-                console.error('Error during initialization:', error);
-            }
-        });
-
-        window.addEventListener('storage', async (e) => {
-            if (e.key === getStorageKey()) {
-                renderEvidence();
-                const teamData = await getTeamData();
-                await updateProgress(teamData);
-            }
-        });
+function renderEvidence() {
+    const unlockedTeks = getUnlockedTeks();
+    const grid = document.getElementById('evidenceGrid');
+    
+    grid.innerHTML = teks.map(tek => {
+        const isUnlocked = unlockedTeks.includes(tek.id);
+        const cardClass = isUnlocked ? 'unlocked' : 'locked';
         
-        function initTabs() {
-            const tabButtons = document.querySelectorAll('.tab-button');
-            const tabPanes = document.querySelectorAll('.tab-pane');
+        let criticalTag = '';
+        if (tek.critical) criticalTag = '<span class="critical-tag">ΚΡΙΣΙΜΟ</span>';
+        else if (tek.secret) criticalTag = '<span class="critical-tag">ΑΠΟΡΡΗΤΟ</span>';
+        else if (tek.blackmail) criticalTag = '<span class="critical-tag">ΕΚΒΙΑΣΜΟΣ</span>';
+        else if (tek.sabotage) criticalTag = '<span class="critical-tag">ΣΑΜΠΟΤΑΖ</span>';
+        else if (tek.threat) criticalTag = '<span class="critical-tag">ΑΠΕΙΛΗ</span>';
+        else if (tek.forgery) criticalTag = '<span class="critical-tag">ΠΛΑΣΤΟΓΡΑΦΙΑ</span>';
+        else if (tek.clue) criticalTag = '<span class="critical-tag">ΕΝΔΕΙΞΗ</span>';
+        else if (tek.financial) criticalTag = '<span class="critical-tag">ΟΙΚΟΝΟΜΙΚΟ</span>';
+        
+        return `
+            <div class="evidence-card ${cardClass}">
+                ${criticalTag}
+                ${!isUnlocked ? '<div class="lock-overlay">🔒</div>' : ''}
+                <div class="evidence-header">
+                    <div class="evidence-icon">${tek.icon}</div>
+                    <div class="evidence-info">
+                        <h3>ΤΕΚ #${tek.id.padStart(3, '0')}</h3>
+                        <p>${tek.subtitle}</p>
+                    </div>
+                </div>
+                <p class="evidence-description">
+                    ${isUnlocked ? tek.description : '🔒 Ξεκλειδώστε αυτό το τεκμήριο για να δείτε λεπτομέρειες'}
+                </p>
+                <div class="evidence-actions">
+                    ${isUnlocked ? 
+                        `<a href="${buildUrl(tek.page)}" class="btn btn-ar">
+                            👁️ Προβολή Τεκμηρίου
+                        </a>` :
+                        `<button class="btn btn-ar" disabled>🔒 Κλειδωμένο</button>`
+                    }
+                </div>
+                <span class="status-badge ${isUnlocked ? 'status-unlocked' : 'status-locked'}">
+                    ${isUnlocked ? '✅ ΔΙΑΘΕΣΙΜΟ' : '🔒 ΚΛΕΙΔΩΜΕΝΟ'}
+                </span>
+            </div>
+        `;
+    }).join('');
+}
 
-            tabButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const targetTab = button.getAttribute('data-tab');
+async function initSolutionTab(teamData) {
+    const existingSolution = teamData.solution;
+    
+    if (existingSolution) {
+        displaySolutionResult(existingSolution);
+    }
+}
 
-                    tabButtons.forEach(btn => btn.classList.remove('active'));
-                    tabPanes.forEach(pane => pane.classList.remove('active'));
-                    button.classList.add('active');
-                    document.getElementById(`tab-${targetTab}`).classList.add('active');
-                });
-            });
+window.addEventListener('DOMContentLoaded', async () => {
+    initTabs();
+    
+    try {
+        if (typeof SuspectsModule !== 'undefined') {
+            SuspectsModule.renderSuspects('suspectsContainer');
+        } else {
+            console.error('SuspectsModule not loaded! Make sure suspects.js is included before this script.');
         }
+        
+        renderEvidence();
+        
+        const teamData = await getTeamData();
+        await updateProgress(teamData);
+        await initSolutionTab(teamData);
+    } catch (error) {
+        console.error('Error during initialization:', error);
+    }
+});
 
-        window.submitSolution = submitSolution;
-    </script>
+window.addEventListener('storage', async (e) => {
+    if (e.key === getStorageKey()) {
+        renderEvidence();
+        const teamData = await getTeamData();
+        await updateProgress(teamData);
+    }
+});
+
+function initTabs() {
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabPanes = document.querySelectorAll('.tab-pane');
+
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const targetTab = button.getAttribute('data-tab');
+
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabPanes.forEach(pane => pane.classList.remove('active'));
+            button.classList.add('active');
+            document.getElementById(`tab-${targetTab}`).classList.add('active');
+        });
+    });
+}
+
+window.submitSolution = submitSolution;
+</script>
 </body>
 </html>
