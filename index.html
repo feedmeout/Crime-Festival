@@ -134,6 +134,91 @@
             color: #333;
         }
 
+        /* SUSPECTS SECTION STYLES */
+        .suspects-section {
+            margin-bottom: 40px;
+        }
+
+        .suspects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .suspect-card {
+            background: rgba(255, 255, 255, 0.95);
+            border: 3px solid #dc3545;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 40px rgba(220, 53, 69, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .suspect-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(220, 53, 69, 0.5);
+        }
+
+        .suspect-photo-container {
+            position: relative;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .suspect-canvas {
+            border: 3px solid #333;
+            box-shadow: 3px 3px 8px rgba(0,0,0,0.4);
+            transform: rotate(-1deg);
+            background: #f5f5f5;
+        }
+
+        .suspect-number {
+            position: absolute;
+            top: -10px;
+            right: 10px;
+            background: #dc3545;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: bold;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+        }
+
+        .suspect-details {
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .suspect-details h3 {
+            color: #1a1a2e;
+            font-size: 16px;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #dc3545;
+            font-family: monospace;
+            letter-spacing: 0.5px;
+        }
+
+        .suspect-field {
+            margin-bottom: 10px;
+            padding: 8px;
+            background: rgba(0,0,0,0.02);
+            border-radius: 4px;
+            text-align: justify;
+        }
+
+        .suspect-field strong {
+            color: #dc3545;
+            display: block;
+            margin-bottom: 3px;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+        }
+
         .progress-bar-container {
             background: rgba(255, 255, 255, 0.95);
             border: 3px solid #ff6b00;
@@ -369,7 +454,7 @@
         }
 
         @media (max-width: 768px) {
-            .evidence-grid {
+            .evidence-grid, .suspects-grid {
                 grid-template-columns: 1fr;
             }
 
@@ -414,6 +499,9 @@
             </div>
         </div>
 
+        <!-- SUSPECTS SECTION - This div will be populated by the suspects module -->
+        <div id="suspectsContainer"></div>
+
         <!-- Progress Bar -->
         <div class="progress-bar-container">
             <div class="progress-title">📊 Πρόοδος Έρευνας</div>
@@ -437,6 +525,9 @@
             11 Τεκμήρια • 5 Ύποπτοι • 1 Αλήθεια
         </p>
     </div>
+
+    <!-- IMPORTANT: Include the suspects module BEFORE the main script -->
+    <script src="suspects.js"></script>
 
     <script>
         // TEK definitions
@@ -639,6 +730,14 @@
 
         // Initialize
         window.addEventListener('DOMContentLoaded', () => {
+            // Render suspects using the module
+            if (typeof SuspectsModule !== 'undefined') {
+                SuspectsModule.renderSuspects('suspectsContainer');
+            } else {
+                console.error('SuspectsModule not loaded! Make sure suspects.js is included before this script.');
+            }
+            
+            // Render evidence
             renderEvidence();
             updateProgress();
         });
