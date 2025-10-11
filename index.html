@@ -1527,62 +1527,8 @@ function displaySolutionResult(solution) {
         <div style="font-size: 24px; font-weight: bold;">${solution.promptCount}</div>
     </div>
 </div>
-        </div>
-        
-        <div style="background: white; padding: 25px; border-radius: 10px; margin-top: 20px;">
-            <h3 style="color: #1a1a2e; margin-bottom: 20px; font-size: 20px; border-bottom: 2px solid #ff6b00; padding-bottom: 10px;">
-                📊 ΑΝΑΛΥΣΗ ΒΑΘΜΟΛΟΓΙΑΣ
-            </h3>
-            <div style="font-family: 'Courier New', monospace; line-height: 1.8; font-size: 14px;">
-                ${solution.breakdown.map(item => {
-                    let bgColor = '#f8f9fa';
-                    let borderColor = '#dee2e6';
-                    let textColor = '#333';
-                    let fontWeight = 'normal';
-                    
-                    if (item.includes('ΛΟΓΙΚΗ ΑΝΤΙΦΑΣΗ') || item.includes('ΛΑΘΟΣ ΔΙΑΓΝΩΣΗ')) {
-                        bgColor = '#f8d7da';
-                        borderColor = '#dc3545';
-                        textColor = '#721c24';
-                        fontWeight = 'bold';
-                    } else if (item.includes('✓') || item.includes('+')) {
-                        bgColor = '#d4edda';
-                        borderColor = '#28a745';
-                        textColor = '#155724';
-                    } else if (item.includes('✗') || item.includes('-') || item.includes('❌')) {
-                        bgColor = '#fff3cd';
-                        borderColor = '#ffc107';
-                        textColor = '#856404';
-                    } else if (item.includes('⚠️')) {
-                        bgColor = '#fff3cd';
-                        borderColor = '#ffc107';
-                        textColor = '#856404';
-                    } else if (item.includes('💡')) {
-                        bgColor = '#e7f3ff';
-                        borderColor = '#2196f3';
-                        textColor = '#0d47a1';
-                    } else if (item.includes('ΤΕΛΙΚΗ ΒΑΘΜΟΛΟΓΙΑ')) {
-                        bgColor = '#e3f2fd';
-                        borderColor = '#2196f3';
-                        textColor = '#0d47a1';
-                        fontWeight = 'bold';
-                        fontSize = '16px';
-                    } else if (item.includes('═') || item.includes('─')) {
-                        return `<div style="color: #999; margin: 5px 0;">${item}</div>`;
-                    } else if (item.trim() === '') {
-                        return '<div style="height: 5px;"></div>';
-                    }
-					
-                    if (item.startsWith('   ')) {
-                        return `<div style="padding: 4px 4px 4px 30px; margin: 2px 0; color: ${textColor}; font-size: 13px;">${item}</div>`;
-                    }
-                    
-                    return `<div style="padding: 10px 15px; margin: 5px 0; background: ${bgColor}; border-left: 4px solid ${borderColor}; border-radius: 4px; color: ${textColor}; font-weight: ${fontWeight};">${item}</div>`;
-                }).join('')}
-            </div>
-        </div>
-        
-        <div style="background: #fff3cd; border: 2px solid #ffc107; padding: 20px; border-radius: 10px; margin-top: 20px;">
+        </div>   
+<div style="background: #fff3cd; border: 2px solid #ffc107; padding: 20px; border-radius: 10px; margin-top: 20px;">
             <h3 style="color: #856404; margin-bottom: 15px;">💡 ΣΩΣΤΗ ΛΥΣΗ</h3>
             <p style="color: #856404; margin-bottom: 10px;">Για να δείτε τη σωστή λύση, εισάγετε τον κωδικό που σας έδωσε ο οργανωτής:</p>
             <div style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
@@ -1598,6 +1544,130 @@ function displaySolutionResult(solution) {
                 </ul>
                 <p style="color: #856404; margin-top: 15px;"><strong>ΜΕΘΟΔΟΣ:</strong></p>
                 <p style="color: #856404; font-size: 13px;">Ο Πετρόπουλος αγόρασε κυάνιο και το έβαλε στο μπουκάλι ουίσκι στο γραφείο. Η Ελένη πήρε το δηλητηριασμένο ποτό με το θύμα (~21:30-21:40). Ο Αναγνώστου έκλεισε το χρηματοκιβώτιο με τον εκβιαστικό φάκελο και απενεργοποίησε τις κάμερες. Το fake email "αυτοκτονίας" στάλθηκε από κοινόχρηστο υπολογιστή για να παραπλανήσει την έρευνα.</p>
+            </div>
+        </div>
+
+<div style="background: #fff3cd; border: 2px solid #ffc107; padding: 20px; border-radius: 10px; margin-top: 20px;">
+            <h3 style="color: #856404; margin-bottom: 15px;">💡 ΑΝΑΛΥΣΗ ΒΑΘΜΟΛΟΓΙΑΣ & ΣΩΣΤΗ ΛΥΣΗ</h3>
+            <p style="color: #856404; margin-bottom: 10px;">Για να δείτε την αναλυτική βαθμολογία και τη σωστή λύση, εισάγετε τον κωδικό που σας έδωσε ο οργανωτής:</p>
+            <div style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
+                <input type="password" id="solutionPassword" placeholder="Κωδικός πρόσβασης" style="flex: 1; min-width: 200px; padding: 10px; border: 2px solid #ffc107; border-radius: 8px; font-size: 16px;">
+                <button onclick="revealSolution()" style="padding: 10px 20px; background: #ffc107; color: #000; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">Εμφάνιση</button>
+            </div>
+            <div id="correctSolution" style="display: none; margin-top: 20px; padding-top: 20px; border-top: 2px solid #ffc107;">
+                
+                <!-- BREAKDOWN SECTION -->
+                <div style="background: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; border: 2px solid #28a745;">
+                    <h4 style="color: #1a1a2e; margin-bottom: 15px; font-size: 18px; border-bottom: 2px solid #ff6b00; padding-bottom: 8px;">
+                        📊 ΑΝΑΛΥΣΗ ΒΑΘΜΟΛΟΓΙΑΣ ΣΑΣ
+                    </h4>
+                    <div style="font-family: 'Courier New', monospace; line-height: 1.8; font-size: 14px;">
+                        ${solution.breakdown.map(item => {
+                            let bgColor = '#f8f9fa';
+                            let borderColor = '#dee2e6';
+                            let textColor = '#333';
+                            let fontWeight = 'normal';
+                            
+                            if (item.includes('ΛΟΓΙΚΗ ΑΝΤΙΦΑΣΗ') || item.includes('ΛΑΘΟΣ ΔΙΑΓΝΩΣΗ')) {
+                                bgColor = '#f8d7da';
+                                borderColor = '#dc3545';
+                                textColor = '#721c24';
+                                fontWeight = 'bold';
+                            } else if (item.includes('✓') || item.includes('+')) {
+                                bgColor = '#d4edda';
+                                borderColor = '#28a745';
+                                textColor = '#155724';
+                            } else if (item.includes('✗') || item.includes('-') || item.includes('❌')) {
+                                bgColor = '#fff3cd';
+                                borderColor = '#ffc107';
+                                textColor = '#856404';
+                            } else if (item.includes('⚠️')) {
+                                bgColor = '#fff3cd';
+                                borderColor = '#ffc107';
+                                textColor = '#856404';
+                            } else if (item.includes('═') || item.includes('─')) {
+                                return \`<div style="color: #999; margin: 5px 0;">\${item}</div>\`;
+                            } else if (item.trim() === '') {
+                                return '<div style="height: 5px;"></div>';
+                            }
+                            
+                            if (item.startsWith('   ')) {
+                                return \`<div style="padding: 4px 4px 4px 30px; margin: 2px 0; color: \${textColor}; font-size: 13px;">\${item}</div>\`;
+                            }
+                            
+                            return \`<div style="padding: 10px 15px; margin: 5px 0; background: \${bgColor}; border-left: 4px solid \${borderColor}; border-radius: 4px; color: \${textColor}; font-weight: \${fontWeight};">\${item}</div>\`;
+                        }).join('')}
+                    </div>
+                </div>
+
+                <!-- SOLUTION SECTION -->
+                <div style="background: white; padding: 20px; border-radius: 10px; border: 2px solid #dc3545;">
+                    <h4 style="color: #dc3545; margin-bottom: 15px; font-size: 18px; border-bottom: 2px solid #dc3545; padding-bottom: 8px;">
+                        🎯 ΛΥΣΗ: ΣΥΝΕΡΓΑΤΙΚΗ ΔΟΛΟΦΟΝΙΑ
+                    </h4>
+                    
+                    <h5 style="color: #1a1a2e; margin: 15px 0 10px 0; font-size: 15px;">ΔΡΑΣΤΕΣ:</h5>
+                    <ul style="color: #333; margin: 0 0 15px 0; padding-left: 25px; line-height: 1.8;">
+                        <li><strong>Αναγνώστου Κωνσταντίνος</strong> - CFO με υπεξαίρεση €1.5εκ</li>
+                        <li><strong>Πετρόπουλος Γεώργιος</strong> - Φύλακας με χρέη €60k που αγόρασε κυάνιο</li>
+                        <li><strong>Μαυρίδη Ελένη</strong> - Πρώην ερωμένη με εκβιαστικές φωτογραφίες</li>
+                    </ul>
+
+                    <h5 style="color: #1a1a2e; margin: 15px 0 10px 0; font-size: 15px;">ΜΕΘΟΔΟΣ ΕΚΤΕΛΕΣΗΣ:</h5>
+                    <ul style="color: #333; margin: 0 0 15px 0; padding-left: 25px; line-height: 1.8;">
+                        <li>Συνεργασία μετά από οικονομικές υποσχέσεις/εκδίκηση</li>
+                        <li><strong>Αναγνώστου:</strong> Έριξε κυάνιο στο ουίσκι (20:50-21:20)</li>
+                        <li><strong>Πετρόπουλος:</strong> Απενεργοποίησε κάμερες (20:55)</li>
+                        <li><strong>Μαυρίδη:</strong> Έγραψε/έστειλε email «αυτοκτονίας» (21:25)</li>
+                    </ul>
+
+                    <h5 style="color: #1a1a2e; margin: 20px 0 10px 0; font-size: 15px;">ΑΠΟΔΕΙΚΤΙΚΑ ΣΤΟΙΧΕΙΑ & ΠΑΡΑΤΗΡΗΣΕΙΣ</h5>
+                    
+                    <p style="color: #333; margin: 10px 0 5px 0; font-weight: bold; font-size: 14px;">Ενδείξεις Δολοφονίας vs Αυτοκτονίας:</p>
+                    <ul style="color: #333; margin: 0 0 15px 0; padding-left: 25px; line-height: 1.7; font-size: 13px;">
+                        <li>SMS «Θα τελειώσει απόψε» - τόνος απειλητικός</li>
+                        <li>Απενεργοποίηση καμερών 20:55 - 30 λεπτά πριν το email «αυτοκτονίας»</li>
+                        <li>Δύο ποτήρια με ίχνη ουίσκι - ένα με κυάνιο, ένα χωρίς</li>
+                        <li>Παραγγελία φαγητού για 2 άτομα αλλά το θύμα ήταν μόνο</li>
+                        <li>Αλπραζολάμη 2mg στο αίμα του θύματος</li>
+                        <li>Σημείωμα «Συγχώρεσέ με Μ.» - μίμηση γραφής 65% ταύτιση</li>
+                    </ul>
+
+                    <p style="color: #333; margin: 10px 0 5px 0; font-weight: bold; font-size: 14px;">Πρόσβαση σε Κυάνιο:</p>
+                    <ul style="color: #333; margin: 0 0 15px 0; padding-left: 25px; line-height: 1.7; font-size: 13px;">
+                        <li><strong>Πετρόπουλος:</strong> Αγόρασε κυάνιο 19/09 με άδεια εταιρείας</li>
+                        <li><strong>Αναγνώστου:</strong> Ως CFO μπορούσε να εγκρίνει/εκδώσει άδεια</li>
+                        <li>Άλλοι ύποπτοι: Καμία τεκμηριωμένη πρόσβαση σε κυάνιο</li>
+                    </ul>
+
+                    <p style="color: #333; margin: 10px 0 5px 0; font-weight: bold; font-size: 14px;">Πρόσβαση σε Χώρους & Συστήματα:</p>
+                    <ul style="color: #333; margin: 0 0 15px 0; padding-left: 25px; line-height: 1.7; font-size: 13px;">
+                        <li><strong>Αναγνώστου:</strong> Πλήρης πρόσβαση ως CFO, γνωρίζει κωδικούς διοίκησης</li>
+                        <li><strong>Πετρόπουλος:</strong> Πρόσβαση σε όλους τους ορόφους, δικαιώματα διαχειριστή στο σύστημα ασφαλείας</li>
+                        <li><strong>Μαυρίδη:</strong> Πρώην σχέση 2 χρόνια, γνωρίζει το κτίριο</li>
+                        <li><strong>Νικολάου:</strong> Νέα υπάλληλος 3 μήνες, περιορισμένη πρόσβαση</li>
+                        <li><strong>Παπαδοπούλου:</strong> Γραμματέας 8 χρόνια, κλειδιά γραφείου</li>
+                    </ul>
+
+                    <p style="color: #333; margin: 10px 0 5px 0; font-weight: bold; font-size: 14px;">Κίνητρα Υπόπτων:</p>
+                    <ul style="color: #333; margin: 0 0 15px 0; padding-left: 25px; line-height: 1.7; font-size: 13px;">
+                        <li><strong>Αναγνώστου:</strong> Υπεξαίρεση €1.5εκ, κρυφοί λογαριασμοί Ελβετίας</li>
+                        <li><strong>Πετρόπουλος:</strong> Χρέη €60k σε τοκογλύφους</li>
+                        <li><strong>Μαυρίδη:</strong> Εκβιασμός για ερωτικές φωτογραφίες</li>
+                        <li><strong>Νικολάου:</strong> Κλοπή χειρογράφων ανταγωνιστικού εκδοτικού</li>
+                        <li><strong>Παπαδοπούλου:</strong> Χρωστούσε 3 μισθούς το θύμα, ήξερε για καρκίνο</li>
+                    </ul>
+
+                    <p style="color: #333; margin: 10px 0 5px 0; font-weight: bold; font-size: 14px;">Δηλωμένα Αλλοθι:</p>
+                    <ul style="color: #333; margin: 0; padding-left: 25px; line-height: 1.7; font-size: 13px;">
+                        <li><strong>Παπαδοπούλου:</strong> Ραντεβού με γιατρό 18:30-19:30 (επιβεβαιωμένο), δείπνο με αδελφή 19:45-22:30</li>
+                        <li><strong>Αναγνώστου:</strong> Δείπνο με πελάτες 18:45-20:30 στο «Διόνυσος» (200m από κτίριο)</li>
+                        <li><strong>Μαυρίδη:</strong> Παρουσίαση βιβλίου 19:30-20:30, μετά στο κτίριο για αντίτυπα</li>
+                        <li><strong>Πετρόπουλος:</strong> Βάρδια όλο το βράδυ, περιπολίες κάθε 2 ώρες</li>
+                        <li><strong>Νικολάου:</strong> Ισχυρίζεται ήταν στο «Μικρό Καφέ» μέχρι 20:30</li>
+                    </ul>
+                </div>
+
             </div>
         </div>
     `;
