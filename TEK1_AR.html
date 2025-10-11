@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Τεκμήριο Ξεκλειδώθηκε</title>
-    
-    <!-- Google Model Viewer for AR -->
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
     
     <style>
@@ -926,23 +924,18 @@
 
         window.onload = function() {
             drawCrimeScene();
-            
-            // Enhanced model viewer debugging
+
             const modelViewer = document.querySelector('model-viewer');
             const debugInfo = document.getElementById('debugInfo');
             
             if (modelViewer) {
-                // Show debug info
                 debugInfo.style.display = 'block';
                 debugInfo.innerHTML = '🔍 Προσπάθεια φόρτωσης: jack_daniels_whiskey_no.7_bottle.glb<br>';
-                
-                // Progress tracking
                 modelViewer.addEventListener('progress', (event) => {
                     const percent = Math.round(event.detail.totalProgress * 100);
                     debugInfo.innerHTML = `⏳ Φόρτωση: ${percent}%<br>`;
                 });
-                
-                // Success
+
                 modelViewer.addEventListener('load', () => {
                     debugInfo.innerHTML = '✅ 3D μοντέλο φορτώθηκε επιτυχώς!<br>';
                     debugInfo.style.background = '#d4edda';
@@ -951,8 +944,7 @@
                         debugInfo.style.display = 'none';
                     }, 3000);
                 });
-                
-                // Error handling
+				
                 modelViewer.addEventListener('error', (event) => {
                     debugInfo.innerHTML = '❌ ΣΦΑΛΜΑ: Το αρχείο δεν μπορεί να φορτώσει<br>';
                     debugInfo.innerHTML += 'Ελέγξτε:<br>';
@@ -963,8 +955,7 @@
                     debugInfo.style.background = '#f8d7da';
                     debugInfo.style.borderColor = '#dc3545';
                 });
-                
-                // Model not found timeout
+
                 setTimeout(() => {
                     if (debugInfo.innerHTML.includes('Φόρτωση')) {
                         debugInfo.innerHTML = '⚠️ Το μοντέλο δεν φορτώνει...<br>';
@@ -975,7 +966,7 @@
                         debugInfo.style.background = '#fff3cd';
                         debugInfo.style.borderColor = '#ffc107';
                     }
-                }, 10000); // 10 second timeout
+                }, 10000);
             }
         };
     </script>

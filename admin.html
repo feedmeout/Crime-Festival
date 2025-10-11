@@ -340,8 +340,8 @@
         <div class="section">
             <h2>➕ ΠΡΟΣΘΗΚΗ ΟΜΑΔΑΣ</h2>
             <div class="team-input">
-                <input type="text" id="newTeamName" placeholder="Όνομα ομάδας (π.χ. alpha, beta, red, team1...)" />
-                <button class="btn btn-primary" onclick="addTeam()">Προσθήκη Ομάδας</button>
+                <input type="text" id="newTeamName" placeholder="Όνομα ομάδας (π.χ. alpha, beta, ...)" />
+                <button class="btn btn-primary" onclick="addTeam()">ΠΡΟΣΘΗΚΗ ΟΜΑΔΑΣ</button>
             </div>
             <div id="addTeamAlert"></div>
         </div>
@@ -552,7 +552,7 @@ async function getAllTeams() {
                     <div class="progress-bar">
                         <div class="progress-fill" style="width: ${progress}%;">${progress}%</div>
                     </div>
-                    <div class="team-stats">📊 Ξεκλειδωμένα: ${team.unlocked.length} / ${TOTAL_TEKS} TEKs</div>
+                    <div class="team-stats">📊 ΞΕΚΛΕΙΔΩΜΕΝΑ: ${team.unlocked.length} / ${TOTAL_TEKS} ΣΤΟΙΧΕΙΑ</div>
                     <div class="tek-grid">
                         ${Array.from({length: TOTAL_TEKS}, (_, i) => {
                             const tekNum = (i + 1).toString();
@@ -561,10 +561,10 @@ async function getAllTeams() {
                         }).join('')}
                     </div>
                     <div class="team-actions">
-                        <button class="btn btn-primary" onclick="viewTeam('${team.name}')">👁️ Προβολή</button>
-                        <button class="btn btn-success" onclick="unlockAll('${team.name}')">🔓 Όλα</button>
-                        <button class="btn btn-secondary" onclick="resetTeam('${team.name}')">🔄 Reset</button>
-                        <button class="btn btn-danger" onclick="deleteTeam('${team.name}')">🗑️ Διαγραφή</button>
+                        <button class="btn btn-primary" onclick="viewTeam('${team.name}')">👁️ ΠΡΟΒΟΛΗ</button>
+                        <button class="btn btn-success" onclick="unlockAll('${team.name}')">🔓 ΟΛΑ</button>
+                        <button class="btn btn-secondary" onclick="resetTeam('${team.name}')">🔄 RESET</button>
+                        <button class="btn btn-danger" onclick="deleteTeam('${team.name}')">🗑️ DELETE</button>
                     </div>
                 </div>
             `;
