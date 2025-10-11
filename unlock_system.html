@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ξεκλείδωμα Τεκμηρίου</title>
-    
-    <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
         import { getFirestore, doc, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
@@ -260,8 +258,6 @@
         const tekNumber = urlParams.get('tek');
         const teamCode = urlParams.get('team') || 'default';
         const USE_FIREBASE = typeof window.firebaseReady !== 'undefined';
-
-        // === FIREBASE FUNCTIONS WITH TIMESTAMPS ===
         async function saveToFirebase(teamName, data) {
             if (!USE_FIREBASE) return;
             try {
@@ -290,18 +286,13 @@
                 return null;
             }
         }
-
-        // === HYBRID STORAGE WITH TIMESTAMPS ===
         function getStorageKey() {
             return `unlocked_teks_${teamCode}`;
         }
 
         async function getTeamData() {
-            // Try Firebase first
             const firebaseData = await loadFromFirebase(teamCode);
             if (firebaseData) return firebaseData;
-            
-            // Fallback to localStorage (old format compatibility)
             const oldData = localStorage.getItem(getStorageKey());
             if (oldData) {
                 const unlocked = JSON.parse(oldData);
@@ -322,7 +313,6 @@
         }
 
         async function saveTeamData(data) {
-            // Save to both localStorage and Firebase
             localStorage.setItem(getStorageKey(), JSON.stringify(data.unlocked));
             await saveToFirebase(teamCode, data);
         }
@@ -344,8 +334,6 @@
                 return `${s}δ`;
             }
         }
-
-        // === UNLOCK LOGIC WITH TIMESTAMPS ===
         window.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 processUnlock();
@@ -400,36 +388,20 @@
 
         async function unlockNew(tek, tekNumber, teamData) {
             const now = new Date().toISOString();
-            
-            // Add to unlocked array
             teamData.unlocked.push(tekNumber);
-            
-            // Record timestamp
             teamData.timestamps[tekNumber] = now;
-            
-            // Set start time if this is the first TEK
             if (teamData.unlocked.length === 1) {
                 teamData.startTime = now;
             }
-            
-            // Set completion time if this is the last TEK
             const isCompleted = teamData.unlocked.length === 11;
             if (isCompleted && !teamData.completedAt) {
                 teamData.completedAt = now;
-                
-                // Calculate total time
                 const startMs = new Date(teamData.startTime).getTime();
                 const endMs = new Date(now).getTime();
                 teamData.totalTimeMs = endMs - startMs;
             }
-            
-            // Update last modified
             teamData.lastUpdate = now;
-            
-            // Save to Firebase and localStorage
             await saveTeamData(teamData);
-
-            // Display success message
             const container = document.getElementById('unlockContainer');
             
             let completionMessage = '';
