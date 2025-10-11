@@ -1,0 +1,1463 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ΕΜΠΙΣΤΕΥΤΙΚΟ - Υπόθεση #2025/ΑΘ/7854</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap');
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    @page {
+      size: A4;
+      margin: 0;
+    }
+    
+    body {
+      font-family: 'Courier Prime', monospace;
+      background: #888;
+      margin: 0;
+      padding: 0;
+    }
+    
+    .page {
+      width: 210mm;
+      height: 297mm;
+      margin: 0 auto;
+      background: linear-gradient(to bottom, #fdfcf8 0%, #f9f6f0 100%);
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+      position: relative;
+      padding: 17mm 13mm 13mm 13mm;
+      display: flex;
+      flex-direction: column;
+      page-break-after: always;
+      overflow: hidden;
+    }
+
+    .page::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        radial-gradient(ellipse at 20% 30%, rgba(139, 69, 19, 0.05) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 70%, rgba(139, 69, 19, 0.03) 0%, transparent 50%),
+        radial-gradient(ellipse at 10% 80%, rgba(139, 69, 19, 0.04) 0%, transparent 40%),
+        radial-gradient(ellipse at 95% 20%, rgba(139, 69, 19, 0.06) 0%, transparent 30%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    
+    .coffee-stain {
+      position: absolute;
+      width: 75px;
+      height: 75px;
+      border-radius: 50%;
+      background: radial-gradient(ellipse at center, transparent 30%, rgba(139, 69, 19, 0.1) 30%, rgba(139, 69, 19, 0.05) 60%, transparent 70%);
+      top: 170px;
+      right: 70px;
+      transform: rotate(45deg);
+      z-index: 1;
+    }
+    
+    .coffee-stain2 {
+      position: absolute;
+      width: 58px;
+      height: 58px;
+      border-radius: 40% 60% 50% 40%;
+      background: radial-gradient(ellipse at center, transparent 40%, rgba(165, 42, 42, 0.08) 40%, transparent 70%);
+      bottom: 220px;
+      left: 120px;
+      transform: rotate(-20deg);
+      z-index: 1;
+    }
+    
+    .header {
+      text-align: center;
+      border: 3px double #000;
+      padding: 14px;
+      margin-bottom: 20px;
+      background: rgba(255, 255, 255, 0.7);
+      position: relative;
+      z-index: 2;
+    }
+    
+    .header h1 {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      margin-bottom: 8px;
+    }
+    
+    .header h2 {
+      font-size: 16px;
+      letter-spacing: 1px;
+      margin-bottom: 5px;
+    }
+    
+    .header h3 {
+      font-size: 14px;
+      margin-bottom: 3px;
+    }
+    
+    .case-info {
+      display: flex;
+      justify-content: space-between;
+      margin: 14px 0;
+      padding: 11px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 1px solid #888;
+      font-size: 12px;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .stamp {
+      position: absolute;
+      color: #c00;
+      border: 3px solid #c00;
+      padding: 8px 15px;
+      font-weight: 700;
+      font-size: 18px;
+      transform: rotate(-12deg);
+      top: 20px;
+      right: -10px;
+      background: rgba(255, 255, 255, 0.8);
+      box-shadow: 0 0 10px rgba(200, 0, 0, 0.3);
+      z-index: 10;
+    }
+    
+    .classified {
+      position: absolute;
+      top: 42px;
+      left: 28px;
+      color: #c00;
+      font-size: 12px;
+      font-weight: 700;
+      transform: rotate(-5deg);
+      border: 2px solid #c00;
+      padding: 4px 8px;
+      background: rgba(255, 255, 255, 0.9);
+      z-index: 10;
+    }
+    
+    .section {
+      margin: 17px 0;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .section h3 {
+      font-size: 14px;
+      text-transform: uppercase;
+      border-bottom: 2px solid #000;
+      padding-bottom: 4px;
+      margin-bottom: 11px;
+      letter-spacing: 1px;
+    }
+    
+    .section p, .section li {
+      font-size: 12px;
+      line-height: 1.65;
+      text-align: justify;
+    }
+    
+    .suspect {
+      margin: 14px 0;
+      padding: 11px;
+      border: 1px dashed #666;
+      background: rgba(255, 255, 255, 0.5);
+      position: relative;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      z-index: 2;
+    }
+    
+    .suspect::before {
+      content: "🔎";
+      position: absolute;
+      top: -8px;
+      right: 14px;
+      font-size: 19px;
+    }
+    
+    .suspect h4 {
+      font-weight: 700;
+      margin-bottom: 8px;
+      text-decoration: underline;
+      font-size: 12px;
+    }
+    
+    .suspect p {
+      margin: 3px 0;
+      font-size: 11px;
+      text-align: justify;
+      line-height: 1.5;
+    }
+    
+    .suspect-photo {
+      width: 75px;
+      height: 94px;
+      border: 2px solid #333;
+      background: #f5f5f5;
+      flex-shrink: 0;
+      position: relative;
+      box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+      transform: rotate(-2deg);
+      overflow: hidden;
+    }
+    
+    .suspect-photo canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    
+    .suspect-photo::after {
+      content: attr(data-label);
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      font-size: 9px;
+      text-align: center;
+      background: white;
+      padding: 2px;
+      font-weight: normal;
+      font-family: 'Courier Prime', monospace;
+      z-index: 10;
+    }
+    
+    .suspect-info {
+      flex-grow: 1;
+    }
+    
+    .evidence-tag {
+      display: inline-block;
+      background: #ffeb3b;
+      padding: 3px 7px;
+      margin: 2px;
+      border: 1px solid #333;
+      transform: rotate(-1deg);
+      box-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+      font-size: 10px;
+    }
+    
+    .red-ink {
+      color: #c00;
+      font-weight: 700;
+    }
+    
+    .timeline {
+      border-left: 3px solid #000;
+      padding-left: 14px;
+      margin: 14px 0;
+    }
+    
+    .timeline-item {
+      margin: 7px 0;
+      position: relative;
+      font-size: 11px;
+      text-align: justify;
+      line-height: 1.45;
+    }
+    
+    .timeline-item::before {
+      content: "◉";
+      position: absolute;
+      left: -21px;
+      font-size: 10px;
+    }
+    
+		.footer {
+			margin-top: auto;
+			display: flex;
+			justify-content: space-between;
+			padding-top: 9px;
+			border-top: 1px solid #000;
+			font-size: 11px;
+			position: relative;
+			z-index: 2;
+		}
+				
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 11px 0;
+      position: relative;
+      z-index: 2;
+    }
+    
+    th, td {
+      border: 1px solid #666;
+      padding: 6px;
+      text-align: left;
+      font-size: 11px;
+    }
+    
+    td {
+      text-align: justify;
+      line-height: 1.4;
+    }
+    
+    th {
+      background: rgba(0, 0, 0, 0.1);
+      font-weight: 700;
+      text-align: center;
+    }
+    
+    .highlight {
+      background: rgba(255, 255, 0, 0.3);
+      padding: 2px 4px;
+    }
+    
+    .contradiction {
+      background: rgba(255, 100, 100, 0.2);
+      padding: 2px 4px;
+      border: 1px dotted #c00;
+    }
+    
+    @media print {
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      .page {
+        box-shadow: none;
+        margin: 0 auto;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page">
+    <div class="coffee-stain"></div>
+    <div class="coffee-stain2"></div>
+    <div class="stamp">ΕΜΠΙΣΤΕΥΤΙΚΟ</div>
+    <div class="classified">ΑΠΟΡΡΗΤΟ</div>
+    
+    <div class="header">
+      <h1>ΕΛΛΗΝΙΚΗ ΔΗΜΟΚΡΑΤΙΑ</h1>
+      <h2>ΕΛΛΗΝΙΚΗ ΑΣΤΥΝΟΜΙΑ</h2>
+      <h3>ΔΙΕΥΘΥΝΣΗ ΑΣΦΑΛΕΙΑΣ ΑΤΤΙΚΗΣ</h3>
+      <h3>ΤΜΗΜΑ ΑΝΘΡΩΠΟΚΤΟΝΙΩΝ</h3>
+    </div>
+    
+    <div class="case-info">
+      <div>
+        <strong>ΑΡ. ΥΠΟΘΕΣΗΣ:</strong> 2025/ΑΘ/7854<br>
+        <strong>ΗΜΕΡΟΜΗΝΙΑ:</strong> 22/09/2025<br>
+        <strong>ΑΝΑΚΡΙΤΗΣ:</strong> ΜΙΧΑΗΛΙΔΗΣ ΙΩΑΝΝΗΣ
+      </div>
+      <div>
+        <strong>ΒΑΘΜΟΣ ΕΜΠΙΣΤΕΥΤΙΚΟΤΗΤΑΣ:</strong> ΑΠΟΡΡΗΤΟ<br>
+        <strong>ΚΑΤΗΓΟΡΙΑ:</strong> ΑΝΘΡΩΠΟΚΤΟΝΙΑ/ΑΥΤΟΚΤΟΝΙΑ<br>
+        <strong>ΚΑΤΑΣΤΑΣΗ:</strong> ΥΠΟ ΔΙΕΡΕΥΝΗΣΗ
+      </div>
+    </div>
+    
+    <div class="section">
+      <h3>1. ΠΕΡΙΣΤΑΤΙΚΟ</h3>
+      <p><strong>ΘΥΜΑ:</strong> ΔΗΜΗΤΡΙΟΥ ΠΕΤΡΟΣ του ΙΩΑΝΝΗ, ΑΦΜ: 074ΧΧΧΧΧΧ</p>
+      <p><strong>ΗΛΙΚΙΑ:</strong> 55 ετών | <strong>ΟΙΚ. ΚΑΤΑΣΤΑΣΗ:</strong> Διαζευγμένος, 2 τέκνα</p>
+      <p><strong>ΕΠΑΓΓΕΛΜΑ:</strong> Εκδότης, Ιδρυτής/CEO «ΛΟΓΟΣ ΕΚΔΟΣΕΙΣ Α.Ε.»</p>
+      <p><strong>ΤΟΠΟΣ ΕΥΡΕΣΗΣ:</strong> Ιδιωτικό γραφείο, Σταδίου 47, 7ος όροφος</p>
+      <p><strong>ΗΜΕΡΑ ΕΥΡΕΣΗΣ:</strong> Τρίτη 22/09, 07:00 π.μ. | <strong>ΚΛΗΣΗ ΑΣΤΥΝΟΜΙΑΣ:</strong> 07:03</p>
+      <p style="font-style: italic; color: #00008b; margin-top: 11px;">Σημείωση: Ασφάλεια ζωής €1εκ. - ακυρώνεται σε περίπτωση αυτοκτονίας</p>
+    </div>
+    
+    <div class="section" style="margin-top: 10px;">
+      <h3>2. ΣΚΗΝΗ ΕΓΚΛΗΜΑΤΟΣ - ΤΕΚΜΗΡΙΑ</h3>
+      <table>
+        <tr>
+          <th width="14%">ΤΕΚΜΗΡΙΟ</th>
+          <th width="33%">ΠΕΡΙΓΡΑΦΗ</th>
+          <th width="53%">ΣΗΜΕΙΩΣΕΙΣ ΕΓΚΛΗΜΑΤΟΛΟΓΙΚΗΣ</th>
+        </tr>
+        <tr>
+          <td><span class="evidence-tag">ΤΕΚ #001</span></td>
+          <td>Μπουκάλι Johnnie Walker Black (γραφείο θύματος)</td>
+          <td>Κυάνιο στον πάτο + αποτυπώματα: θύμα, Παπαδοπούλου, Αναγνώστου, Πετρόπουλου</td>
+        </tr>
+        <tr>
+          <td><span class="evidence-tag">ΤΕΚ #002</span></td>
+          <td>Δυο κρυστάλλινα ποτήρια</td>
+          <td>Ποτήρι Α: DNA θύματος + κυάνιο + αποτυπώματα θύματος Ποτήρι Β: Μερικό DNA (υπό ανάλυση) + ίχνη ουίσκι + αποτυπώματα μερικώς σβησμένα (υπό ανάλυση)</td>
+        </tr>
+        <tr>
+          <td><span class="evidence-tag">ΤΕΚ #003</span></td>
+          <td>Κινητό θύματος</td>
+          <td>SMS 20:45: «Θα τελειώσει απόψε» - προπληρωμένη κάρτα, αποστολή από κινητό εντοπισμένο σε μικρή απόσταση (ακτίνα 250m από το κτίριο)</td>
+        </tr>
+        <tr>
+          <td><span class="evidence-tag">ΤΕΚ #004</span></td>
+          <td>Email «αυτοκτονίας»</td>
+          <td>IP: 192.168.1.23 - 7ος όροφος (κοινόχρηστος υπολογιστής αίθουσας συσκέψεων - δεν απαιτεί κωδικό)</td>
+        </tr>
+        <tr>
+          <td><span class="evidence-tag">ΤΕΚ #005</span></td>
+          <td>Ιατρική γνωμάτευση (κρυφή)</td>
+          <td>Καρκίνος παγκρέατος σταδίου IV - διάγνωση πριν 3 εβδομάδες, πρόγνωση 2-3 μήνες. Γιατρός: Δρ. Σταυρίδης</td>
+        </tr>
+        <tr>
+          <td><span class="evidence-tag">ΤΕΚ #006</span></td>
+          <td>Ίχνη λάτεξ στο πόμολο -  γάντια ιατρικού τύπου</td>
+          <td>Μέγεθος M - διαθέσιμα στο κουτί πρώτων βοηθειών κάθε ορόφου (πρόσβαση: όλο το προσωπικό)</td>
+        </tr>
+        <tr>
+          <td><span class="evidence-tag">ΤΕΚ #007</span></td>
+          <td>Χειρόγραφο σημείωμα</td>
+          <td>«Συγχώρεσέ με Μ.» - μίμηση γραφικού χαρακτήρα (65% ταύτιση, πίεση ασυνεπής)</td>
+        </tr>
+        <tr>
+          <td><span class="evidence-tag">ΤΕΚ #008</span></td>
+          <td>Φάκελος «ΕΜΠΙΣΤΕΥΤΙΚΟ»</td>
+          <td>Ενδείξεις υπεξαίρεσης €1,5εκ (Αναγνώστου), Ερωτικές φωτογραφίες (Μαυρίδη), Κλοπή χειρογράφων (Νικολάου)</td>
+        </tr>
+        <tr>
+          <td><span class="evidence-tag">ΤΕΚ #009</span></td>
+          <td>Απόδειξη χημικών</td>
+          <td>19/09 14:30 - Αγορά κυανιούχου καλίου από «ΧημικάPlus». Άδεια απεντόμωσης εταιρείας - υπογραφή Γ. Πετρόπουλος (γραφολογική εξέταση σε εξέλιξη)
+        </tr>
+        <tr>
+          <td><span class="evidence-tag">ΤΕΚ #010</span></td>
+          <td>Κλειδί χρηματοκιβωτίου</td>
+          <td>Αποτυπώματα:Δημητρίου, Αναγνώστου, ίχνη σκόνης ταλκ (από latex γάντια)</td>
+        </tr>
+        <tr>
+          <td><span class="evidence-tag">ΤΕΚ #011</span></td>
+          <td>Κάμερες ασφαλείας</td>
+          <td>Απενεργοποίηση καμερών 20:55 - Τετράδιο Συμβάντων: «20.58 - Τεχνική βλάβη CCTV» υπογραφή ΠΕΤΡΟΠΟΥΛΟΣ Γ. (γνησιότητα υπό εξέταση)</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="section" style="margin-top:0;">
+      <h3>3. ΚΑΤΑΛΟΓΟΣ ΥΠΟΠΤΩΝ</h3>
+      
+      <div class="suspect">
+        <div class="suspect-photo" data-label="ΥΠΟΠΤΟΣ #1">
+          <canvas id="maria-portrait"></canvas>
+        </div>
+        <div class="suspect-info">
+          <h4>ΠΑΠΑΔΟΠΟΥΛΟΥ ΜΑΡΙΑ του ΝΙΚΟΛΑΟΥ</h4>
+          <p><strong>ΙΔΙΟΤΗΤΑ:</strong> Προσωπική Γραμματέας (8 έτη)</p>
+          <p><strong>ΑΛΛΟΘΙ:</strong> Έφυγε 18:00 για ραντεβού με γιατρό (Δρ. Κωστόπουλος, 18:30-19:30 επιβεβαιωμένο). Δείπνο με αδελφή μετά (19:45-22:30, μάρτυρας υπό εξέταση)</p>
+          <p><strong>ΚΙΝΗΤΡΟ:</strong> Το θύμα της χρωστούσε 3 μισθούς. Γνώριζε για τον καρκίνο - έκλεινε ραντεβού με ογκολόγους για λογαριασμό του</p>
+          <p><strong>ΠΑΡΑΤΗΡΗΣΕΙΣ:</strong> Σκεφτόταν να παραιτηθεί αλλά δεν ήθελε να αφήσει τον προϊστάμενό της λόγω των προβλημάτων υγείας του</p>
+          <p><strong>ΣΧΕΣΗ ΜΕ ΘΥΜΑ:</strong> «Πατρική φιγούρα» - έκλαιγε στην ανάκριση</p>
+          <p><strong>ΑΛΛΟ:</strong> Συνταγή για αλπραζολάμη (άγχος) - φυλάσσει φάρμακα στο συρτάρι γραφείου 7ου ορόφου</p>
+        </div>
+      </div>
+      
+      <div class="suspect">
+        <div class="suspect-photo" data-label="ΥΠΟΠΤΟΣ #2">
+          <canvas id="konstantinos-portrait"></canvas>
+        </div>
+        <div class="suspect-info">
+          <h4>ΑΝΑΓΝΩΣΤΟΥ ΚΩΝΣΤΑΝΤΙΝΟΣ του ΣΠΥΡΟΥ</h4>
+          <p><strong>ΙΔΙΟΤΗΤΑ:</strong> Συνεταίρος (40% μετοχές), CFO εταιρείας</p>
+          <p><strong>ΑΛΛΟΘΙ:</strong> Δείπνο με πελάτες 18:45-20:30 στο «Διόνυσος» (200μ από κτίριο), επέστρεψε 20:50 για ολοκλήρωση εργασιών</p>
+          <p><strong>ΚΙΝΗΤΡΟ:</strong> Φάκελος αποκάλυπτε ενδείξεις για υπεξαίρεση €1,5εκ</p>
+          <p><strong>ΠΑΡΑΤΗΡΗΣΕΙΣ:</strong> Προσπάθησε να αγοράσει μετοχές του θύματος πριν 1 μήνα</p>
+          <p><strong>ΟΙΚΟΝΟΜΙΚΑ:</strong> Απόκρυψη εσόδων €500.000 σε Ελβετία</p>
+          <p><strong>ΑΛΛΟ:</strong> Πρόσβαση σε όλους τους ορόρφους. Γνωρίζει συνδυασμούς χρηματοκιβωτίων</p>
+        </div>
+      </div>
+      
+      <div class="suspect">
+        <div class="suspect-photo" data-label="ΥΠΟΠΤΟΣ #3">
+          <canvas id="eleni-portrait"></canvas>
+        </div>
+        <div class="suspect-info">
+          <h4>ΜΑΥΡΙΔΗ ΕΛΕΝΗ του ΜΙΧΑΗΛ</h4>
+          <p><strong>ΙΔΙΟΤΗΤΑ:</strong> Συγγραφέας, Πρώην ερωμένη</p>
+          <p><strong>ΑΛΛΟΘΙ:</strong> Παρουσίαση βιβλίου 19:30-20:30. Επέστρεψε 20:40 για να αφήσει αντίτυπα</p>
+          <p><strong>ΚΙΝΗΤΡΟ:</strong> Ερωτικές φωτογραφίες στον φάκελο - Εκβιασμός €100.000</p>
+          <p><strong>ΠΑΡΑΤΗΡΗΣΕΙΣ:</strong> Αναφέρει ότι συναντήθηκε σύντομα με το θύμα για να συζητήσουν εκδοτικά θέματα</p>
+          <p><strong>ΣΧΕΣΗ:</strong> Διήρκεσε 2 χρόνια, τερματίστηκε άσχημα πριν 6 μήνες</p>
+          <p><strong>ΑΛΛΟ:</strong> Το βιβλίο της αφιερωμένο «Σε αυτόν που με πρόδωσε». Παράτησε την φαρμακευτική μετά το 2ο έτος</p>
+        </div>
+      </div>
+      
+      <div class="suspect">
+        <div class="suspect-photo" data-label="ΥΠΟΠΤΟΣ #4">
+          <canvas id="georgios-portrait"></canvas>
+        </div>
+        <div class="suspect-info">
+          <h4>ΠΕΤΡΟΠΟΥΛΟΣ ΓΕΩΡΓΙΟΣ του ΑΝΤΩΝΙΟΥ</h4>
+          <p><strong>ΙΔΙΟΤΗΤΑ:</strong> Νυχτοφύλακας (προϊστάμενος βάρδιας)</p>
+          <p><strong>ΑΛΛΟΘΙ:</strong> Περιπολία κάθε 2 ώρες - καταγραφή αρχείου σε όλα τα σημεία ελέγχου</p>
+          <p><strong>ΚΙΝΗΤΡΟ:</strong> Χρέη €60.000 σε τοκογλύφους. Αγόρασε το κυάνιο για «μυοκτονία»</p>
+          <p><strong>ΠΑΡΑΤΗΡΗΣΕΙΣ:</strong> Έλεγχος βάρδιας δείχνει ότι έκανε έλεγχο 7ου ορόφου 20.22</p>
+          <p><strong>ΙΣΤΟΡΙΚΟ:</strong> Απολύθηκε για κλοπή από χημικό εργοστάσιο (αθωώθηκε - έλλειψη αποδείξεων)</p>
+          <p><strong>ΑΛΛΟ:</strong> Πρόσβαση σε όλους τους ορόφους. Δικαιώματα διαχειριστή στο σύστημα ασφαλείας</p>
+        </div>
+      </div>
+      
+      <div class="suspect">
+        <div class="suspect-photo" data-label="ΥΠΟΠΤΟΣ #5">
+          <canvas id="alexandra-portrait"></canvas>
+        </div>
+        <div class="suspect-info">
+          <h4>ΝΙΚΟΛΑΟΥ ΑΛΕΞΑΝΔΡΑ του ΓΕΩΡΓΙΟΥ</h4>
+          <p><strong>ΙΔΙΟΤΗΤΑ:</strong> Προϊσταμένη Λογιστηρίου (3 μήνες)</p>
+          <p><strong>ΑΛΛΟΘΙ:</strong> Στο κτίριο από 09:00. Έφυγε 18:30 (κάμερες). Ισχυρίζεται πως ήταν στο «Μικρό Καφέ» (150m από κτίριο) μέχρι της 20.30. Στη πορεία επέστρεψε σπίτι της. Πλήρωσε με μετρητά, δεν κράτησε την απόδειξη πληρωμής</p>
+          <p><strong>ΚΙΝΗΤΡΟ:</strong> Έκλεβε χειρόγραφα συγγραφέων για ανταγωνιστικό εκδοτικό οίκο - θύμα την ανακάλυψε</p>
+          <p><strong>ΠΑΡΑΤΗΡΗΣΕΙΣ:</strong> Πρόσβαση σε εταιρική πιστωτική για αγορές. Συγγενής γιατρού σε νοσοκομείο</p>
+          <p><strong>ΕΚΠΑΙΔΕΥΣΗ:</strong> Οικονομικά (πτυχίο), σεμινάριο πρώτων βοηθειών</p>
+          <p><strong>ΑΛΛΟ:</strong> Ζήτησε άδεια για 24/09 πριν 1 εβδομάδα</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="page">
+    <div class="section" style="margin-top: 0; margin-bottom: 10px;">
+      <h3>4. ΙΑΤΡΟΔΙΚΑΣΤΙΚΗ ΕΚΘΕΣΗ</h3>
+	  <p><strong>ΤΟΠΟΣ ΕΥΡΕΣΗΣ:</strong> Τουαλέτες, 7ος όροφος</p>
+      <p><strong>ΩΡΑ ΘΑΝΑΤΟΥ:</strong> 21:30 - 21:50 (ακρίβεια ±10 λεπτά)</p>
+      <p><strong>ΑΙΤΙΑ:</strong> Οξεία δηλητηρίαση από κυανιούχο κάλιο (75mg εντεροδιαλυτή κάψουλα)</p>
+      <p><strong>ΤΟΞΙΚΟΛΟΓΙΚΗ:</strong> Αλκοόλ 0.12%, αλπραζολάμη 2mg (ενισχύει δράση κυανίου)</p>
+      <p><strong>ΤΡΑΥΜΑΤΑ:</strong> Κανένα αμυντικό τραύμα - το θύμα δεν αντιστάθηκε</p>
+      <p><strong>ΠΑΘΟΛΟΓΙΚΗ:</strong> <span class="red-ink">Καρκίνος παγκρέατος τελικού σταδίου - προσδόκιμο ζωής 2-3 μήνες</span></p>
+    </div>
+    
+		<div class="section" style="margin-top: 10px; margin-bottom: 10px;">
+			<h3>5. ΧΡΟΝΟΛΟΓΙΟ ΣΥΜΒΑΝΤΩΝ</h3>
+			<div class="timeline" style="margin: 12px 0;">
+				<div class="timeline-item"><strong>17:30</strong> - Θύμα σε τηλεδιάσκεψη με Λονδίνο</div>
+				<div class="timeline-item"><strong>18:00</strong> - Παπαδοπούλου φεύγει (κάμερα εξόδου)</div>
+				<div class="timeline-item"><strong>18:30</strong> - Νικολάου φεύγει (κάμερα εξόδου)</div>
+				<div class="timeline-item"><strong>18:35</strong> - Αναγνώστου φεύγει για δείπνο (κάμερα εξόδου)</div>
+				<div class="timeline-item"><strong>19:00</strong> - Παράδοση φαγητού (για 2 άτομα)</div>
+				<div class="timeline-item"><strong>19:30</strong> - Μαυρίδη ξεκινά παρουσίαση βιβλίου (μάρτυρες)</div>
+				<div class="timeline-item"><strong>20:00</strong> - Πετρόπουλος αναλαμβάνει βάρδια. Έλεγχος 7ου 20.22 (κάρτα ελέγχου)</div>
+				<div class="timeline-item"><strong>20:30</strong> - Μαυρίδη τελειώνει παρουσίαση (μάρτυρες)</div>
+				<div class="timeline-item"><strong>20:37</strong> - Αναγνώστου στάση σε περίπτερο για τσιγάρα (πληρωμή με κάρτα)</div>
+				<div class="timeline-item"><strong>20:40</strong> - Μαυρίδη εισέρχεται στο κτίριο (κάρτα εισόδου) να αφήσει αντίτυπα</div>
+				<div class="timeline-item"><strong>20:45</strong> - SMS στο κινητό θύματος: «Θα τελειώσει απόψε»</div>
+				<div class="timeline-item"><strong>20:49</strong> - Αναγνώστου εισέρχεται στο κτίριο (κάρτα εισόδου)</div>
+				<div class="timeline-item"><strong>20:55</strong> - Κάμερες απενεργοποιούνται - κωδικός διοίκησης</div>
+				<div class="timeline-item"><strong>21:25</strong> - Email «αυτοκτονίας» αποστέλλεται</div>
+				<div class="timeline-item"><strong>21:27</strong> - Μαυρίδη φεύγει (κάρτα parking) - ισχυρίζεται πήγε σε afterparty με συγγραφείς</div>
+				<div class="timeline-item"><strong>21:30-21:50</strong> - <span class="red-ink">ΘΑΝΑΤΟΣ ΘΥΜΑΤΟΣ</span></div>
+				<div class="timeline-item"><strong>21:55</strong> - Αναγνώστου φεύγει (κάρτα εξόδου)</div>
+				<div class="timeline-item"><strong>22:45</strong> - Παπαδοπούλου εισέρχεται (κάρτα εισόδου) - παίρνει φάρμακα από συρτάρι</div>
+				<div class="timeline-item"><strong>22:55</strong> - Παπαδοπούλου φεύγει (κάρτα εξόδου)</div>
+				<div class="timeline-item"><strong>23:00</strong> - Επαναλειτουργία καμερών</div>
+				<div class="timeline-item"><strong>07:00</strong> - Ανακάλυψη πτώματος (καθαρίστρια)</div>
+			</div>
+		</div>
+    
+    <div class="section" style="margin-top: 10px;">
+      <h3>6. ΚΡΙΣΙΜΑ ΕΡΩΤΗΜΑΤΑ</h3>
+      <ul style="list-style: none; padding: 0; margin: 10px 0;">
+        <li style="font-size: 11px; margin: 4px 0;">• Γιατί το θύμα παράγγειλε φαγητό για δύο άτομα;</li>
+        <li style="font-size: 11px; margin: 4px 0;">• Ποιος έστειλε το SMS;</li>
+        <li style="font-size: 11px; margin: 4px 0;">• Ο Πετρόπουλος αγόρασε το κυάνιο για τη δολοφονία;</li>
+        <li style="font-size: 11px; margin: 4px 0;">• Γιατί η Νικολάου ζήτησε άδεια για την επόμενη;</li>
+        <li style="font-size: 11px; margin: 4px 0;">• Το αλπραζολάμη της Παπαδοπούλου χρησιμοποιήθηκε;</li>
+        <li style="font-size: 11px; margin: 4px 0;">• Υπήρχε συνεργασία μεταξύ υπόπτων;</li>
+      </ul>
+    </div>
+    
+		<div class="footer">
+			<div style="text-align: center;">
+				<p style="margin: 0;"><strong>ΥΠΕΥΘΥΝΟΣ ΑΝΑΚΡΙΤΗΣ:</strong></p>
+				<p style="margin: 0;">Υπαστυνόμος Α'</p>
+				<p style="margin: 0;">Μιχαηλίδης Ιωάννης</p>
+			</div>
+			<div style="text-align: center;">
+				<p style="margin: 0;"><strong>ΗΜΕΡΟΜΗΝΙΑ ΣΥΝΤΑΞΗΣ:</strong></p>
+				<p style="margin: 0;">22/09/2025</p>
+				<p style="margin: 0;"><strong>ΩΡΑ:</strong> 16:45</p>
+			</div>
+			<div style="text-align: center;">
+				<p style="margin: 0;"><strong>ΘΕΩΡΗΘΗΚΕ:</strong></p>
+				<p style="margin: 0;">Αστυνομικός Διευθυντής</p>
+				<p style="margin: 0;">Σταυρόπουλος Δημήτριος</p>
+			</div>
+		</div>
+  </div>
+
+  <script>
+    function drawMaria() {
+      const canvas = document.getElementById('maria-portrait');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      canvas.width = 75;
+      canvas.height = 94;
+      
+      const bgGradient = ctx.createLinearGradient(0, 0, 0, 94);
+      bgGradient.addColorStop(0, '#f8f0e8');
+      bgGradient.addColorStop(1, '#e8d8c8');
+      ctx.fillStyle = bgGradient;
+      ctx.fillRect(0, 0, 75, 94);
+      
+      ctx.shadowColor = 'rgba(0,0,0,0.2)';
+      ctx.shadowBlur = 2.7;
+      
+      const hairGradient = ctx.createLinearGradient(19, 10, 19, 56);
+      hairGradient.addColorStop(0, '#3d2817');
+      hairGradient.addColorStop(0.5, '#4a3426');
+      hairGradient.addColorStop(1, '#2d1810');
+      
+      ctx.fillStyle = hairGradient;
+      ctx.beginPath();
+      ctx.moveTo(14, 33);
+      ctx.quadraticCurveTo(10, 19, 23, 12);
+      ctx.quadraticCurveTo(37, 8, 52, 12);
+      ctx.quadraticCurveTo(65, 19, 61, 33);
+      ctx.quadraticCurveTo(64, 47, 58, 54);
+      ctx.lineTo(54, 42);
+      ctx.quadraticCurveTo(51, 28, 37, 26);
+      ctx.quadraticCurveTo(24, 28, 21, 42);
+      ctx.lineTo(17, 54);
+      ctx.quadraticCurveTo(11, 47, 14, 33);
+      ctx.fill();
+      
+      ctx.shadowBlur = 0;
+      
+      ctx.fillStyle = '#e8c8b5';
+      ctx.beginPath();
+      ctx.ellipse(21, 39, 3.7, 5.8, -0.2, 0, Math.PI * 2);
+      ctx.ellipse(54, 39, 3.7, 5.8, 0.2, 0, Math.PI * 2);
+      ctx.fill();
+      
+      const skinGradient = ctx.createRadialGradient(37, 37, 9.5, 37, 37, 23);
+      skinGradient.addColorStop(0, '#f5d5c5');
+      skinGradient.addColorStop(1, '#e8c8b5');
+      
+      ctx.fillStyle = skinGradient;
+      ctx.beginPath();
+      ctx.moveTo(37, 21);
+      ctx.quadraticCurveTo(52, 24, 50, 39);
+      ctx.quadraticCurveTo(49, 50, 37, 54);
+      ctx.quadraticCurveTo(26, 50, 24, 39);
+      ctx.quadraticCurveTo(22, 24, 37, 21);
+      ctx.fill();
+      
+      ctx.strokeStyle = 'rgba(200, 150, 130, 0.3)';
+      ctx.lineWidth = 0.5;
+      ctx.stroke();
+
+      ctx.fillStyle = '#fafafa';
+      ctx.beginPath();
+      ctx.ellipse(30, 33, 4.7, 3.7, -0.1, 0, Math.PI * 2);
+      ctx.ellipse(45, 33, 4.7, 3.7, 0.1, 0, Math.PI * 2);
+      ctx.fill();
+      
+      const irisGradient = ctx.createRadialGradient(30, 33, 1, 30, 33, 3);
+      irisGradient.addColorStop(0, '#2c5f2d');
+      irisGradient.addColorStop(1, '#4a7c59');
+      
+      ctx.fillStyle = irisGradient;
+      ctx.beginPath();
+      ctx.ellipse(30, 33, 2.8, 3.2, -0.1, 0, Math.PI * 2);
+      ctx.ellipse(45, 33, 2.8, 3.2, 0.1, 0, Math.PI * 2);
+      ctx.fill();
+      
+      ctx.fillStyle = '#000';
+      ctx.beginPath();
+      ctx.ellipse(30, 33, 1.1, 1.4, 0, 0, Math.PI * 2);
+      ctx.ellipse(45, 33, 1.1, 1.4, 0, 0, Math.PI * 2);
+      ctx.fill();
+      
+      ctx.fillStyle = 'rgba(255,255,255,0.7)';
+      ctx.beginPath();
+      ctx.arc(29, 32, 0.7, 0, Math.PI * 2);
+      ctx.arc(44, 32, 0.7, 0, Math.PI * 2);
+      ctx.fill();
+      
+      ctx.strokeStyle = '#2a1810';
+      ctx.lineWidth = 0.5;
+      for(let i = 0; i < 5; i++) {
+        ctx.beginPath();
+        ctx.moveTo(26 + i*1.9, 33);
+        ctx.lineTo(25 + i*1.9, 31);
+        ctx.moveTo(40 + i*1.9, 33);
+        ctx.lineTo(39 + i*1.9, 31);
+        ctx.stroke();
+      }
+      
+      ctx.strokeStyle = '#3a2416';
+      ctx.lineWidth = 1.4;
+      ctx.beginPath();
+      ctx.moveTo(25, 27);
+      ctx.quadraticCurveTo(30, 25, 34, 27);
+      ctx.moveTo(40, 27);
+      ctx.quadraticCurveTo(45, 25, 50, 27);
+      ctx.stroke();
+      
+      ctx.strokeStyle = '#d4a590';
+      ctx.lineWidth = 0.9;
+      ctx.beginPath();
+      ctx.moveTo(37, 34);
+      ctx.quadraticCurveTo(35, 39, 35, 41);
+      ctx.moveTo(37, 34);
+      ctx.quadraticCurveTo(39, 39, 39, 41);
+      ctx.stroke();
+      
+      ctx.fillStyle = 'rgba(150, 100, 80, 0.3)';
+      ctx.beginPath();
+      ctx.ellipse(35, 42, 1.4, 0.9, 0, 0, Math.PI);
+      ctx.ellipse(39, 42, 1.4, 0.9, 0, 0, Math.PI);
+      ctx.fill();
+      
+      const lipGradient = ctx.createLinearGradient(33, 48, 42, 48);
+      lipGradient.addColorStop(0, '#d08080');
+      lipGradient.addColorStop(0.5, '#cc6666');
+      lipGradient.addColorStop(1, '#d08080');
+      
+      ctx.fillStyle = lipGradient;
+      ctx.beginPath();
+      ctx.moveTo(33, 48);
+      ctx.quadraticCurveTo(37, 46, 42, 48);
+      ctx.quadraticCurveTo(40, 50, 37, 49);
+      ctx.quadraticCurveTo(35, 50, 33, 48);
+      ctx.fill();
+      
+      ctx.fillStyle = '#f8f8f0';
+      ctx.beginPath();
+      ctx.arc(21, 42, 2.3, 0, Math.PI * 2);
+      ctx.arc(54, 42, 2.3, 0, Math.PI * 2);
+      ctx.fill();
+      
+      ctx.strokeStyle = '#d4d4d4';
+      ctx.lineWidth = 0.5;
+      ctx.beginPath();
+      ctx.arc(21, 42, 2.3, 0, Math.PI * 2);
+      ctx.arc(54, 42, 2.3, 0, Math.PI * 2);
+      ctx.stroke();
+      
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+      ctx.beginPath();
+      ctx.arc(20, 41, 0.8, 0, Math.PI * 2);
+      ctx.arc(53, 41, 0.8, 0, Math.PI * 2);
+      ctx.fill();
+      
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(23, 64, 28, 30);
+      ctx.strokeStyle = '#e0e0e0';
+      ctx.strokeRect(23, 64, 28, 30);
+
+      ctx.beginPath();
+      ctx.moveTo(23, 64);
+      ctx.lineTo(33, 70);
+      ctx.lineTo(37, 65);
+      ctx.lineTo(42, 70);
+      ctx.lineTo(51, 64);
+      ctx.stroke();
+    }
+    
+    function drawKonstantinos() {
+      const canvas = document.getElementById('konstantinos-portrait');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      canvas.width = 75;
+      canvas.height = 94;
+      
+      const bgGradient = ctx.createLinearGradient(0, 0, 0, 94);
+      bgGradient.addColorStop(0, '#f0e8e0');
+      bgGradient.addColorStop(1, '#d8c8b8');
+      ctx.fillStyle = bgGradient;
+      ctx.fillRect(0, 0, 75, 94);
+      
+      const hairGradient = ctx.createLinearGradient(19, 10, 19, 33);
+      hairGradient.addColorStop(0, '#5a5a5a');
+      hairGradient.addColorStop(0.3, '#4a4a4a');
+      hairGradient.addColorStop(0.7, '#6a6a6a');
+      hairGradient.addColorStop(1, '#4a4a4a');
+      
+      ctx.fillStyle = hairGradient;
+      ctx.beginPath();
+      ctx.moveTo(23, 30);
+      ctx.quadraticCurveTo(19, 17, 33, 12);
+      ctx.quadraticCurveTo(47, 10, 56, 14);
+      ctx.quadraticCurveTo(61, 19, 56, 30);
+      ctx.lineTo(54, 26);
+      ctx.quadraticCurveTo(47, 19, 37, 21);
+      ctx.quadraticCurveTo(28, 19, 23, 26);
+      ctx.closePath();
+      ctx.fill();
+      
+      ctx.fillStyle = '#5a5a5a';
+      ctx.fillRect(17, 33, 3.7, 14);
+      ctx.fillRect(54, 33, 3.7, 14);
+      
+      const skinGradient = ctx.createRadialGradient(37, 39, 14, 37, 39, 26);
+      skinGradient.addColorStop(0, '#e8c8b5');
+      skinGradient.addColorStop(1, '#d8b8a5');
+      
+      ctx.fillStyle = skinGradient;
+      ctx.beginPath();
+      ctx.ellipse(37, 39, 20, 23, 0, 0, Math.PI * 2);
+      ctx.fill();
+      
+      ctx.strokeStyle = '#333';
+      ctx.lineWidth = 1.9;
+      ctx.beginPath();
+      ctx.roundRect(21, 30, 14, 12, 2);
+      ctx.roundRect(40, 30, 14, 12, 2);
+      ctx.stroke();
+      
+      ctx.beginPath();
+      ctx.moveTo(35, 35);
+      ctx.lineTo(40, 35);
+      ctx.stroke();
+      
+      ctx.fillStyle = 'rgba(200, 200, 255, 0.1)';
+      ctx.fillRect(22, 31, 12, 10);
+      ctx.fillRect(41, 31, 12, 10);
+      
+      ctx.fillStyle = '#4a3a2a';
+      ctx.beginPath();
+      ctx.ellipse(27, 35, 2.4, 2.8, 0, 0, Math.PI * 2);
+      ctx.ellipse(48, 35, 2.4, 2.8, 0, 0, Math.PI * 2);
+      ctx.fill();
+      
+      ctx.fillStyle = '#000';
+      ctx.beginPath();
+      ctx.arc(27, 35, 0.9, 0, Math.PI * 2);
+      ctx.arc(48, 35, 0.9, 0, Math.PI * 2);
+      ctx.fill();
+      
+      ctx.strokeStyle = '#4a4a4a';
+      ctx.lineWidth = 1.9;
+      ctx.beginPath();
+      ctx.moveTo(22, 26);
+      ctx.lineTo(32, 26);
+      ctx.moveTo(43, 26);
+      ctx.lineTo(53, 26);
+      ctx.stroke();
+
+      ctx.strokeStyle = '#c8a895';
+      ctx.lineWidth = 1.4;
+      ctx.beginPath();
+      ctx.moveTo(37, 37);
+      ctx.lineTo(35, 43);
+      ctx.quadraticCurveTo(37, 45, 39, 43);
+      ctx.lineTo(37, 37);
+      ctx.stroke();
+      
+      ctx.fillStyle = '#4a4a4a';
+      ctx.beginPath();
+      ctx.moveTo(30, 46);
+      ctx.quadraticCurveTo(33, 45, 37, 46);
+      ctx.quadraticCurveTo(42, 45, 45, 46);
+      ctx.quadraticCurveTo(43, 49, 41, 49);
+      ctx.lineTo(34, 49);
+      ctx.quadraticCurveTo(31, 49, 30, 46);
+      ctx.fill();
+      
+      ctx.strokeStyle = '#a66';
+      ctx.lineWidth = 0.9;
+      ctx.beginPath();
+      ctx.moveTo(34, 52);
+      ctx.quadraticCurveTo(37, 53, 41, 52);
+      ctx.stroke();
+      
+      ctx.strokeStyle = 'rgba(150, 100, 80, 0.3)';
+      ctx.lineWidth = 0.9;
+      ctx.beginPath();
+      ctx.moveTo(37, 56);
+      ctx.lineTo(37, 59);
+      ctx.stroke();
+      
+      ctx.fillStyle = '#1a1a2e';
+      ctx.fillRect(14, 67, 47, 27);
+      
+      ctx.fillStyle = '#fff';
+      ctx.beginPath();
+      ctx.moveTo(33, 64);
+      ctx.lineTo(42, 64);
+      ctx.lineTo(39, 80);
+      ctx.lineTo(36, 80);
+      ctx.closePath();
+      ctx.fill();
+      
+      ctx.fillStyle = '#8b0000';
+      ctx.beginPath();
+      ctx.moveTo(36, 64);
+      ctx.lineTo(39, 64);
+      ctx.lineTo(38, 82);
+      ctx.lineTo(37, 82);
+      ctx.closePath();
+      ctx.fill();
+      
+      ctx.strokeStyle = '#6b0000';
+      ctx.lineWidth = 0.5;
+      for(let i = 0; i < 4; i++) {
+        ctx.beginPath();
+        ctx.moveTo(36, 67 + i*3.7);
+        ctx.lineTo(39, 67 + i*3.7);
+        ctx.stroke();
+      }
+      
+      ctx.strokeStyle = '#0a0a1e';
+      ctx.lineWidth = 1.9;
+      ctx.beginPath();
+      ctx.moveTo(19, 67);
+      ctx.lineTo(33, 64);
+      ctx.moveTo(56, 67);
+      ctx.lineTo(42, 64);
+      ctx.stroke();
+    }
+    
+    function drawEleni() {
+      const canvas = document.getElementById('eleni-portrait');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      canvas.width = 75;
+      canvas.height = 94;
+      
+      const bgGradient = ctx.createRadialGradient(37, 47, 19, 37, 47, 47);
+      bgGradient.addColorStop(0, '#f5e8e0');
+      bgGradient.addColorStop(1, '#d8c0b0');
+      ctx.fillStyle = bgGradient;
+      ctx.fillRect(0, 0, 75, 94);
+      
+      const hairGradient = ctx.createLinearGradient(10, 10, 65, 61);
+      hairGradient.addColorStop(0, '#1a0a05');
+      hairGradient.addColorStop(0.5, '#2a1510');
+      hairGradient.addColorStop(1, '#0a0502');
+      
+      ctx.fillStyle = hairGradient;
+      ctx.beginPath();
+      ctx.moveTo(8, 42);
+      ctx.quadraticCurveTo(5, 23, 19, 14);
+      ctx.quadraticCurveTo(28, 8, 37, 10);
+      ctx.quadraticCurveTo(47, 8, 56, 14);
+      ctx.quadraticCurveTo(70, 23, 67, 42);
+      ctx.quadraticCurveTo(70, 56, 64, 64);
+      ctx.quadraticCurveTo(61, 51, 56, 47);
+      ctx.quadraticCurveTo(54, 33, 51, 28);
+      ctx.quadraticCurveTo(47, 21, 37, 19);
+      ctx.quadraticCurveTo(28, 21, 23, 28);
+      ctx.quadraticCurveTo(21, 33, 19, 47);
+      ctx.quadraticCurveTo(14, 51, 11, 64);
+      ctx.quadraticCurveTo(5, 56, 8, 42);
+      ctx.fill();
+      
+      const skinGradient = ctx.createRadialGradient(37, 37, 11, 37, 37, 21);
+      skinGradient.addColorStop(0, '#f5d5c5');
+      skinGradient.addColorStop(0.7, '#f0d0c0');
+      skinGradient.addColorStop(1, '#e8c8b8');
+      
+      ctx.fillStyle = skinGradient;
+      ctx.beginPath();
+      ctx.moveTo(37, 19);
+      ctx.quadraticCurveTo(52, 22, 51, 35);
+      ctx.quadraticCurveTo(50, 45, 45, 50);
+      ctx.quadraticCurveTo(41, 54, 37, 54);
+      ctx.quadraticCurveTo(33, 54, 30, 50);
+      ctx.quadraticCurveTo(25, 45, 24, 35);
+      ctx.quadraticCurveTo(23, 22, 37, 19);
+      ctx.fill();
+      
+      ctx.fillStyle = 'rgba(255, 220, 200, 0.3)';
+      ctx.beginPath();
+      ctx.ellipse(26, 37, 3.7, 1.9, -0.3, 0, Math.PI * 2);
+      ctx.ellipse(49, 37, 3.7, 1.9, 0.3, 0, Math.PI * 2);
+      ctx.fill();
+      
+      ctx.fillStyle = 'rgba(80, 40, 60, 0.2)';
+      ctx.beginPath();
+      ctx.ellipse(30, 31, 6.5, 4.7, -0.1, 0, Math.PI);
+      ctx.ellipse(45, 31, 6.5, 4.7, 0.1, 0, Math.PI);
+      ctx.fill();
+      
+      ctx.fillStyle = '#fafafa';
+      ctx.beginPath();
+      ctx.ellipse(30, 33, 5.2, 3.2, -0.15, 0, Math.PI * 2);
+      ctx.ellipse(45, 33, 5.2, 3.2, 0.15, 0, Math.PI * 2);
+      ctx.fill();
+      
+      const eyeGradient = ctx.createRadialGradient(30, 33, 0.9, 30, 33, 2.8);
+      eyeGradient.addColorStop(0, '#2a5434');
+      eyeGradient.addColorStop(0.5, '#3a6a44');
+      eyeGradient.addColorStop(1, '#2a4d3a');
+      
+      ctx.fillStyle = eyeGradient;
+      ctx.beginPath();
+      ctx.ellipse(30, 33, 2.8, 2.8, -0.15, 0, Math.PI * 2);
+      ctx.fill();
+      
+      const eyeGradient2 = ctx.createRadialGradient(45, 33, 0.9, 45, 33, 2.8);
+      eyeGradient2.addColorStop(0, '#2a5434');
+      eyeGradient2.addColorStop(0.5, '#3a6a44');
+      eyeGradient2.addColorStop(1, '#2a4d3a');
+      
+      ctx.fillStyle = eyeGradient2;
+      ctx.beginPath();
+      ctx.ellipse(45, 33, 2.8, 2.8, 0.15, 0, Math.PI * 2);
+      ctx.fill();
+      
+      ctx.fillStyle = '#000';
+      ctx.beginPath();
+      ctx.ellipse(30, 33, 1.2, 1.4, 0, 0, Math.PI * 2);
+      ctx.ellipse(45, 33, 1.2, 1.4, 0, 0, Math.PI * 2);
+      ctx.fill();
+      
+      ctx.fillStyle = 'rgba(255,255,255,0.8)';
+      ctx.beginPath();
+      ctx.arc(29, 32, 0.6, 0, Math.PI * 2);
+      ctx.arc(44, 32, 0.6, 0, Math.PI * 2);
+      ctx.fill();
+      
+      ctx.strokeStyle = '#000';
+      ctx.lineWidth = 1.4;
+      ctx.beginPath();
+      ctx.moveTo(24, 33);
+      ctx.quadraticCurveTo(30, 30, 35, 33);
+      ctx.moveTo(35, 33);
+      ctx.lineTo(37, 32);
+      ctx.moveTo(40, 33);
+      ctx.quadraticCurveTo(45, 30, 51, 33);
+      ctx.moveTo(51, 33);
+      ctx.lineTo(53, 32);
+      ctx.stroke();
+      
+      ctx.lineWidth = 0.8;
+      ctx.beginPath();
+      ctx.moveTo(26, 35);
+      ctx.quadraticCurveTo(30, 36, 33, 35);
+      ctx.moveTo(42, 35);
+      ctx.quadraticCurveTo(45, 36, 49, 35);
+      ctx.stroke();
+      
+      ctx.strokeStyle = '#0a0502';
+      ctx.lineWidth = 1.9;
+      ctx.beginPath();
+      ctx.moveTo(24, 26);
+      ctx.quadraticCurveTo(30, 24, 35, 26);
+      ctx.moveTo(40, 26);
+      ctx.quadraticCurveTo(45, 24, 51, 26);
+      ctx.stroke();
+      
+      ctx.strokeStyle = '#d4a590';
+      ctx.lineWidth = 0.9;
+      ctx.beginPath();
+      ctx.moveTo(37, 34);
+      ctx.lineTo(35, 40);
+      ctx.quadraticCurveTo(37, 42, 39, 40);
+      ctx.lineTo(37, 34);
+      ctx.stroke();
+      
+      ctx.strokeStyle = 'rgba(255, 220, 200, 0.5)';
+      ctx.lineWidth = 0.9;
+      ctx.beginPath();
+      ctx.moveTo(37, 35);
+      ctx.lineTo(37, 39);
+      ctx.stroke();
+      
+      const lipGradient = ctx.createLinearGradient(33, 46, 42, 46);
+      lipGradient.addColorStop(0, '#a41e3a');
+      lipGradient.addColorStop(0.5, '#c41e3a');
+      lipGradient.addColorStop(1, '#a41e3a');
+      
+      ctx.fillStyle = lipGradient;
+      ctx.beginPath();
+      ctx.moveTo(33, 47);
+      ctx.quadraticCurveTo(35, 45, 37, 46);
+      ctx.quadraticCurveTo(40, 45, 42, 47);
+      ctx.quadraticCurveTo(40, 50, 37, 49);
+      ctx.quadraticCurveTo(35, 50, 33, 47);
+      ctx.fill();
+      
+      ctx.fillStyle = 'rgba(255, 200, 200, 0.3)';
+      ctx.beginPath();
+      ctx.ellipse(37, 47, 2.8, 0.9, 0, 0, Math.PI);
+      ctx.fill();
+      
+      ctx.fillStyle = '#2a1510';
+      ctx.beginPath();
+      ctx.arc(47, 43, 0.7, 0, Math.PI * 2);
+      ctx.fill();
+      
+      ctx.fillStyle = '#000';
+      ctx.beginPath();
+      ctx.moveTo(17, 67);
+      ctx.quadraticCurveTo(28, 64, 37, 65);
+      ctx.quadraticCurveTo(47, 64, 58, 67);
+      ctx.lineTo(58, 94);
+      ctx.lineTo(17, 94);
+      ctx.closePath();
+      ctx.fill();
+      
+      ctx.strokeStyle = '#silver';
+      ctx.lineWidth = 0.9;
+      ctx.beginPath();
+      ctx.moveTo(26, 61);
+      ctx.quadraticCurveTo(37, 65, 49, 61);
+      ctx.stroke();
+      
+      ctx.fillStyle = '#e0e0f0';
+      ctx.beginPath();
+      ctx.moveTo(37, 66);
+      ctx.lineTo(35, 69);
+      ctx.lineTo(37, 72);
+      ctx.lineTo(40, 69);
+      ctx.closePath();
+      ctx.fill();
+      
+      ctx.strokeStyle = '#c0c0d0';
+      ctx.lineWidth = 0.5;
+      ctx.stroke();
+    }
+    
+    function drawGeorgios() {
+      const canvas = document.getElementById('georgios-portrait');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      canvas.width = 75;
+      canvas.height = 94;
+      
+      const bgGradient = ctx.createLinearGradient(0, 0, 0, 94);
+      bgGradient.addColorStop(0, '#e8e0d8');
+      bgGradient.addColorStop(1, '#d0c0b0');
+      ctx.fillStyle = bgGradient;
+      ctx.fillRect(0, 0, 75, 94);
+      
+      ctx.fillStyle = '#3a3a3a';
+      ctx.beginPath();
+      ctx.moveTo(21, 28);
+      ctx.quadraticCurveTo(19, 17, 28, 12);
+      ctx.quadraticCurveTo(37, 10, 47, 12);
+      ctx.quadraticCurveTo(56, 17, 54, 28);
+      ctx.lineTo(51, 24);
+      ctx.quadraticCurveTo(47, 19, 37, 18);
+      ctx.quadraticCurveTo(28, 19, 24, 24);
+      ctx.closePath();
+      ctx.fill();
+      
+      ctx.fillStyle = 'rgba(120, 120, 120, 0.7)'; 
+      for(let i = 0; i < 56; i++) { 
+        const x = 24 + Math.random() * 28;
+        const y = 13 + Math.random() * 11;
+        if (y < ( -0.05 * (x-37)*(x-37) + 24) ) { 
+           ctx.fillRect(x, y, 0.9, 0.9); 
+        }
+      }
+      
+      const skinGradient = ctx.createRadialGradient(37, 39, 14, 37, 39, 24);
+      skinGradient.addColorStop(0, '#ddbba0');
+      skinGradient.addColorStop(0.7, '#d0aa90');
+      skinGradient.addColorStop(1, '#c8a085');
+      
+      ctx.fillStyle = skinGradient;
+      ctx.beginPath();
+      ctx.ellipse(37, 39, 19, 22, 0, 0, Math.PI * 2);
+      ctx.fill();
+      
+      ctx.strokeStyle = 'rgba(150, 100, 70, 0.4)';
+      ctx.lineWidth = 0.8;
+      ctx.beginPath();
+      ctx.moveTo(26, 25);
+      ctx.quadraticCurveTo(37, 24, 49, 25);
+      ctx.moveTo(28, 28);
+      ctx.quadraticCurveTo(37, 27, 47, 28);
+      ctx.moveTo(30, 31);
+      ctx.quadraticCurveTo(37, 30, 45, 31);
+      ctx.stroke();
+      
+      ctx.fillStyle = '#f8f8f8';
+      ctx.beginPath();
+      ctx.ellipse(30, 35, 3.7, 2.8, 0, 0, Math.PI * 2);
+      ctx.ellipse(45, 35, 3.7, 2.8, 0, 0, Math.PI * 2);
+      ctx.fill();
+      
+      ctx.strokeStyle = 'rgba(200, 100, 100, 0.2)';
+      ctx.lineWidth = 0.3;
+      ctx.beginPath();
+      ctx.moveTo(27, 35);
+      ctx.lineTo(29, 33);
+      ctx.moveTo(28, 36);
+      ctx.lineTo(30, 35);
+      ctx.moveTo(47, 35);
+      ctx.lineTo(46, 33);
+      ctx.moveTo(47, 36);
+      ctx.lineTo(45, 35);
+      ctx.stroke();
+      
+      ctx.fillStyle = '#5a4030';
+      ctx.beginPath();
+      ctx.ellipse(30, 35, 2.3, 2.3, 0, 0, Math.PI * 2);
+      ctx.ellipse(45, 35, 2.3, 2.3, 0, 0, Math.PI * 2);
+      ctx.fill();
+      
+      ctx.fillStyle = '#000';
+      ctx.beginPath();
+      ctx.arc(30, 35, 0.9, 0, Math.PI * 2);
+      ctx.arc(45, 35, 0.9, 0, Math.PI * 2);
+      ctx.fill();
+      
+      ctx.strokeStyle = 'rgba(100, 70, 50, 0.5)';
+      ctx.lineWidth = 1.4;
+      ctx.beginPath();
+      ctx.moveTo(26, 37);
+      ctx.quadraticCurveTo(30, 39, 33, 37);
+      ctx.moveTo(42, 37);
+      ctx.quadraticCurveTo(45, 39, 49, 37);
+      ctx.stroke();
+      
+      ctx.fillStyle = '#2a2a2a';
+      ctx.fillRect(25, 30, 9, 1.9);
+      ctx.fillRect(40, 30, 9, 1.9);
+      
+      ctx.strokeStyle = '#c09580';
+      ctx.lineWidth = 1.4;
+      ctx.beginPath();
+      ctx.moveTo(37, 35);
+      ctx.lineTo(35, 42);
+      ctx.quadraticCurveTo(37, 44, 40, 42);
+      ctx.lineTo(37, 35);
+      ctx.stroke();
+      
+      ctx.fillStyle = 'rgba(100, 70, 50, 0.4)';
+      ctx.beginPath();
+      ctx.ellipse(35, 43, 1.9, 0.9, 0, 0, Math.PI);
+      ctx.ellipse(40, 43, 1.9, 0.9, 0, 0, Math.PI);
+      ctx.fill();
+      
+      ctx.fillStyle = 'rgba(50, 50, 50, 0.2)';
+      for(let i = 0; i < 75; i++) {
+        const x = 22 + Math.random() * 30;
+        const y = 45 + Math.random() * 17;
+        ctx.fillRect(x, y, 0.5, 0.7);
+      }
+      
+      ctx.strokeStyle = '#966';
+      ctx.lineWidth = 1.4;
+      ctx.beginPath();
+      ctx.moveTo(32, 52);
+      ctx.quadraticCurveTo(37, 54, 42, 52);
+      ctx.stroke();
+      
+      ctx.strokeStyle = 'rgba(100, 70, 50, 0.3)';
+      ctx.lineWidth = 0.5;
+      ctx.beginPath();
+      ctx.moveTo(23, 33);
+      ctx.lineTo(21, 31);
+      ctx.moveTo(23, 35);
+      ctx.lineTo(21, 33);
+      ctx.moveTo(23, 36);
+      ctx.lineTo(21, 36);
+      ctx.moveTo(51, 33);
+      ctx.lineTo(53, 31);
+      ctx.moveTo(51, 35);
+      ctx.lineTo(53, 33);
+      ctx.moveTo(51, 36);
+      ctx.lineTo(53, 36);
+      ctx.stroke();
+      
+      ctx.fillStyle = '#2c3e50';
+      ctx.fillRect(14, 67, 47, 27);
+      
+      ctx.fillStyle = '#34495e';
+      ctx.fillRect(14, 67, 47, 2.7);
+      ctx.fillRect(14, 80, 47, 2.7);
+      
+      const badgeGradient = ctx.createLinearGradient(19, 71, 24, 77);
+      badgeGradient.addColorStop(0, '#ffd700');
+      badgeGradient.addColorStop(1, '#ffed4e');
+      
+      ctx.fillStyle = badgeGradient;
+      ctx.beginPath();
+      ctx.moveTo(19, 72);
+      ctx.lineTo(24, 72);
+      ctx.lineTo(25, 75);
+      ctx.lineTo(21, 77);
+      ctx.lineTo(18, 75);
+      ctx.closePath();
+      ctx.fill();
+      
+      ctx.strokeStyle = '#b8860b';
+      ctx.lineWidth = 0.5;
+      ctx.stroke();
+      
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(33, 71, 23, 7);
+      ctx.strokeStyle = '#000';
+      ctx.strokeRect(33, 71, 23, 7);
+      
+      ctx.strokeStyle = '#1c2e40';
+      ctx.lineWidth = 1.9;
+      ctx.beginPath();
+      ctx.moveTo(24, 67);
+      ctx.lineTo(33, 64);
+      ctx.lineTo(42, 64);
+      ctx.lineTo(51, 67);
+      ctx.stroke();
+    }
+    
+    function drawAlexandra() {
+      const canvas = document.getElementById('alexandra-portrait');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      canvas.width = 75;
+      canvas.height = 94;
+      
+      const bgGradient = ctx.createLinearGradient(0, 0, 0, 94);
+      bgGradient.addColorStop(0, '#f5ede5');
+      bgGradient.addColorStop(1, '#e5d5c5');
+      ctx.fillStyle = bgGradient;
+      ctx.fillRect(0, 0, 75, 94);
+      
+      const hairGradient = ctx.createLinearGradient(14, 10, 61, 51);
+      hairGradient.addColorStop(0, '#d4a574');
+      hairGradient.addColorStop(0.3, '#e5c29f');
+      hairGradient.addColorStop(0.7, '#c4956a');
+      hairGradient.addColorStop(1, '#b8865a');
+      
+      ctx.fillStyle = hairGradient;
+      ctx.beginPath();
+      ctx.moveTo(17, 33);
+      ctx.quadraticCurveTo(14, 19, 28, 12);
+      ctx.quadraticCurveTo(42, 8, 56, 14);
+      ctx.quadraticCurveTo(64, 21, 61, 33);
+      ctx.quadraticCurveTo(62, 42, 58, 47);
+      ctx.lineTo(54, 39);
+      ctx.quadraticCurveTo(51, 30, 47, 26);
+      ctx.quadraticCurveTo(37, 23, 28, 26);
+      ctx.quadraticCurveTo(23, 30, 21, 39);
+      ctx.lineTo(17, 47);
+      ctx.quadraticCurveTo(14, 42, 17, 33);
+      ctx.fill();
+      
+      ctx.strokeStyle = '#f5d5a5';
+      ctx.lineWidth = 0.9;
+      ctx.beginPath();
+      ctx.moveTo(23, 19);
+      ctx.quadraticCurveTo(26, 28, 24, 37);
+      ctx.moveTo(51, 19);
+      ctx.quadraticCurveTo(49, 28, 51, 37);
+      ctx.stroke();
+      
+      const skinGradient = ctx.createRadialGradient(37, 37, 11, 37, 37, 21);
+      skinGradient.addColorStop(0, '#f5d5c5');
+      skinGradient.addColorStop(1, '#e8c8b8');
+      
+      ctx.fillStyle = skinGradient;
+      ctx.beginPath();
+      ctx.moveTo(37, 21);
+      ctx.quadraticCurveTo(50, 24, 49, 37);
+      ctx.quadraticCurveTo(48, 47, 42, 52);
+      ctx.quadraticCurveTo(37, 54, 32, 52);
+      ctx.quadraticCurveTo(26, 47, 25, 37);
+      ctx.quadraticCurveTo(24, 24, 37, 21);
+      ctx.fill();
+      
+      ctx.fillStyle = '#fff';
+      ctx.beginPath();
+      ctx.ellipse(31, 33, 4.2, 2.8, -0.1, 0, Math.PI * 2);
+      ctx.ellipse(44, 33, 4.2, 2.8, 0.1, 0, Math.PI * 2);
+      ctx.fill();
+      
+      const blueGradient = ctx.createRadialGradient(31, 33, 0.9, 31, 33, 2.3);
+      blueGradient.addColorStop(0, '#4a7c9e');
+      blueGradient.addColorStop(1, '#6a9cc4');
+      
+      ctx.fillStyle = blueGradient;
+      ctx.beginPath();
+      ctx.ellipse(31, 33, 2.3, 2.3, 0, 0, Math.PI * 2);
+      ctx.ellipse(44, 33, 2.3, 2.3, 0, 0, Math.PI * 2);
+      ctx.fill();
+      
+      ctx.fillStyle = '#000';
+      ctx.beginPath();
+      ctx.arc(31, 33, 0.9, 0, Math.PI * 2);
+      ctx.arc(44, 33, 0.9, 0, Math.PI * 2);
+      ctx.fill();
+      
+      ctx.fillStyle = 'rgba(255,255,255,0.7)';
+      ctx.beginPath();
+      ctx.arc(30, 32, 0.6, 0, Math.PI * 2);
+      ctx.arc(43, 32, 0.6, 0, Math.PI * 2);
+      ctx.fill();
+      
+      ctx.strokeStyle = '#b8865a';
+      ctx.lineWidth = 0.9;
+      ctx.beginPath();
+      ctx.moveTo(26, 28);
+      ctx.quadraticCurveTo(31, 26, 35, 28);
+      ctx.moveTo(40, 28);
+      ctx.quadraticCurveTo(44, 26, 49, 28);
+      ctx.stroke();
+      
+      ctx.strokeStyle = '#666';
+      ctx.lineWidth = 0.9;
+      ctx.beginPath();
+      ctx.ellipse(31, 33, 6, 6, 0, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.ellipse(44, 33, 6, 6, 0, 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.strokeStyle = '#d4a590';
+      ctx.lineWidth = 0.9;
+      ctx.beginPath();
+      ctx.moveTo(37, 34);
+      ctx.lineTo(35, 40);
+      ctx.moveTo(37, 34);
+      ctx.lineTo(39, 40);
+      ctx.moveTo(35, 41);
+      ctx.quadraticCurveTo(37, 42, 39, 41);
+      ctx.stroke();
+
+      ctx.fillStyle = '#d08080';
+      ctx.beginPath();
+      ctx.moveTo(33, 47);
+      ctx.quadraticCurveTo(37, 46, 42, 47);
+      ctx.quadraticCurveTo(40, 49, 37, 48);
+      ctx.quadraticCurveTo(35, 49, 33, 47);
+      ctx.fill();
+      
+      ctx.fillStyle = '#404040';
+      ctx.fillRect(19, 65, 37, 29);
+      
+      ctx.fillStyle = '#fff';
+      ctx.beginPath();
+      ctx.moveTo(28, 63);
+      ctx.lineTo(47, 63);
+      ctx.lineTo(42, 70);
+      ctx.lineTo(37, 65);
+      ctx.lineTo(33, 70);
+      ctx.closePath();
+      ctx.fill();
+      
+      ctx.fillStyle = '#f8f8f0';
+      for(let i = 0; i < 7; i++) {
+        ctx.beginPath();
+        ctx.arc(24 + i*3.7, 61, 1.4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#e0e0e0';
+        ctx.lineWidth = 0.3;
+        ctx.stroke();
+      }
+    }
+    
+    window.onload = function() {
+      drawMaria();
+      drawKonstantinos();
+      drawEleni();
+      drawGeorgios();
+      drawAlexandra();
+    }
+  </script>
+</body>
+</html>
