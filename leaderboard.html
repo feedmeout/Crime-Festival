@@ -544,100 +544,163 @@
             }).join('');
         }
 
-        window.viewSolution = async function(teamName) {
-            try {
-                const querySnapshot = await window.firebaseGetDocs(
-                    window.firebaseCollection(window.firebaseDB, 'teams')
-                );
-                
-                let teamData = null;
-                querySnapshot.forEach((doc) => {
-                    if (doc.id === teamName) {
-                        teamData = doc.data();
-                    }
-                });
-
-                if (!teamData || !teamData.solution) {
-                    alert('Δεν βρέθηκαν δεδομένα για αυτή την ομάδα');
-                    return;
-                }
-
-                const solution = teamData.solution;
-                const suspects = solution.suspects || [];
-                const maxScore = solution.maxScore || 140;
-                const percentage = Math.round((solution.score / maxScore) * 100);
-                const grade = getGrade(percentage);
-                
-                document.getElementById('modalTeamName').textContent = 
-                    `Λύση Ομάδας: ${teamName.toUpperCase()}`;
-                
-                document.getElementById('modalContent').innerHTML = `
-                    <div class="solution-details">
-                        <h3>📊 Βαθμολογία</h3>
-                        <div style="font-size: 32px; font-weight: bold; color: #28a745; margin: 15px 0;">
-                            ${solution.score}/${maxScore} πόντοι
-                        </div>
-                        <div style="font-size: 20px; font-weight: bold; margin: 10px 0;">
-                            <span style="background: ${grade.color}; color: ${percentage >= 50 ? '#000' : '#fff'}; padding: 8px 16px; border-radius: 8px;">
-                                ${grade.name}
-                            </span>
-                            <span style="color: #666; margin-left: 10px;">(${percentage}%)</span>
-                        </div>
-                        
-                        <h3 style="margin-top: 20px;">👥 Δράστες που επέλεξαν:</h3>
-                        <div class="suspect-list">
-                            ${suspects.map(s => `
-                                <span class="badge ${CORRECT_SUSPECTS.includes(s) ? 'badge-correct' : 'badge-incorrect'}" style="font-size: 14px; padding: 8px 12px;">
-                                    ${CORRECT_SUSPECTS.includes(s) ? '✔' : '✗'} ${SUSPECT_NAMES[s] || s}
-                                </span>
-                            `).join('')}
-                        </div>
-
-                        <h3 style="margin-top: 20px;">📝 Αιτιολόγηση:</h3>
-                        <div style="background: white; padding: 15px; border-radius: 8px; border: 1px solid #ddd; white-space: pre-wrap; line-height: 1.6;">
-                            ${solution.justification || 'Δεν παρασχέθηκε αιτιολόγηση'}
-                        </div>
-
-                        <h3 style="margin-top: 20px;">⏱️ Στατιστικά:</h3>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-top: 10px;">
-                            <div style="background: #e3f2fd; padding: 10px; border-radius: 8px;">
-                                <strong>Χρόνος:</strong><br>${formatTime(solution.completionTimeMs)}
-                            </div>
-                            <div style="background: #e3f2fd; padding: 10px; border-radius: 8px;">
-                                <strong>Prompts:</strong><br>${solution.promptCount || 0}
-                            </div>
-                            <div style="background: #e3f2fd; padding: 10px; border-radius: 8px;">
-                                <strong>Υποβολή:</strong><br>${new Date(solution.submittedAt).toLocaleString('el-GR', {
-                                    day: '2-digit',
-                                    month: '2-digit',
-                                    hour: '2-digit',
-                                    minute: '2-digit'
-                                })}
-                            </div>
-                        </div>
-
-                        <h3 style="margin-top: 20px;">🎯 Ανάλυση Βαθμολογίας:</h3>
-                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-top: 10px;">
-                            ${solution.breakdown.map(item => {
-                                const isNegative = item.includes('-') && (item.includes('✗') || item.includes('❌'));
-                                const color = isNegative ? '#dc3545' : '#28a745';
-                                return `
-                                    <div style="padding: 8px; margin: 5px 0; background: white; border-left: 3px solid ${color}; border-radius: 4px;">
-                                        ${item}
-                                    </div>
-                                `;
-                            }).join('')}
-                        </div>
-                    </div>
-                `;
-
-                document.getElementById('solutionModal').classList.add('active');
-
-            } catch (error) {
-                console.error('Error loading solution:', error);
-                alert('Σφάλμα φόρτωσης λύσης');
+window.viewSolution = async function(teamName) {
+    try {
+        const querySnapshot = await window.firebaseGetDocs(
+            window.firebaseCollection(window.firebaseDB, 'teams')
+        );
+        
+        let teamData = null;
+        querySnapshot.forEach((doc) => {
+            if (doc.id === teamName) {
+                teamData = doc.data();
             }
-        };
+        });
+
+        if (!teamData || !teamData.solution) {
+            alert('Δεν βρέθηκαν δεδομένα για αυτή την ομάδα');
+            return;
+        }
+
+        const solution = teamData.solution;
+        const suspects = solution.suspects || [];
+        const maxScore = solution.maxScore || 140;
+        const percentage = Math.round((solution.score / maxScore) * 100);
+        const grade = getGrade(percentage);
+        
+        // Check if contradiction
+        const hasSuicide = suspects.includes('suicide');
+        const hasKiller = suspects.some(s => s !== 'suicide');
+        const isContradiction = hasSuicide && hasKiller;
+        
+        document.getElementById('modalTeamName').textContent = 
+            `Λύση Ομάδας: ${teamName.toUpperCase()}`;
+        
+        document.getElementById('modalContent').innerHTML = `
+            <div class="solution-details">
+                <h3>📊 Βαθμολογία</h3>
+                <div style="font-size: 32px; font-weight: bold; color: ${solution.score === 0 ? '#dc3545' : '#28a745'}; margin: 15px 0;">
+                    ${solution.score}/${maxScore} πόντοι
+                </div>
+                <div style="font-size: 20px; font-weight: bold; margin: 10px 0;">
+                    <span style="background: ${grade.color}; color: ${percentage >= 50 ? '#000' : '#fff'}; padding: 8px 16px; border-radius: 8px;">
+                        ${grade.name}
+                    </span>
+                    <span style="color: #666; margin-left: 10px;">(${percentage}%)</span>
+                </div>
+                
+                ${isContradiction ? `
+                    <div style="background: #f8d7da; border: 2px solid #dc3545; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                        <strong style="color: #721c24;">⚠️ ΛΟΓΙΚΗ ΑΝΤΙΦΑΣΗ:</strong>
+                        <p style="color: #721c24; margin: 5px 0;">Η ομάδα επέλεξε ταυτόχρονα δολοφονία ΚΑΙ αυτοκτονία</p>
+                    </div>
+                ` : ''}
+                
+                <h3 style="margin-top: 20px;">👥 Δράστες που επέλεξαν:</h3>
+                <div class="suspect-list">
+                    ${suspects.map(s => `
+                        <span class="badge ${CORRECT_SUSPECTS.includes(s) ? 'badge-correct' : 'badge-incorrect'}" style="font-size: 14px; padding: 8px 12px;">
+                            ${CORRECT_SUSPECTS.includes(s) ? '✔' : '✗'} ${SUSPECT_NAMES[s] || s}
+                        </span>
+                    `).join('')}
+                </div>
+
+                <h3 style="margin-top: 20px;">📝 Αιτιολόγηση:</h3>
+                <div style="background: white; padding: 15px; border-radius: 8px; border: 1px solid #ddd; white-space: pre-wrap; line-height: 1.6; max-height: 300px; overflow-y: auto;">
+                    ${solution.justification || 'Δεν παρασχέθηκε αιτιολόγηση'}
+                </div>
+
+                <h3 style="margin-top: 20px;">⏱️ Στατιστικά:</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-top: 10px;">
+                    <div style="background: #e3f2fd; padding: 10px; border-radius: 8px;">
+                        <strong>Χρόνος:</strong><br>${formatTime(solution.completionTimeMs)}
+                    </div>
+                    <div style="background: #e3f2fd; padding: 10px; border-radius: 8px;">
+                        <strong>Prompts:</strong><br>${solution.promptCount || 0}
+                    </div>
+                    <div style="background: #e3f2fd; padding: 10px; border-radius: 8px;">
+                        <strong>Υποβολή:</strong><br>${new Date(solution.submittedAt).toLocaleString('el-GR', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        })}
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 25px; margin-bottom: 15px;">🎯 Αναλυτική Βαθμολογία:</h3>
+                <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: 13px; line-height: 1.7; max-height: 400px; overflow-y: auto;">
+                    ${solution.breakdown.map(item => {
+                        // Styling based on content
+                        let bgColor = 'transparent';
+                        let borderColor = 'transparent';
+                        let textColor = '#333';
+                        let padding = '5px 10px';
+                        let fontWeight = 'normal';
+                        
+                        if (item.includes('ΛΟΓΙΚΗ ΑΝΤΙΦΑΣΗ') || item.includes('ΛΑΘΟΣ ΔΙΑΓΝΩΣΗ')) {
+                            bgColor = '#f8d7da';
+                            borderColor = '#dc3545';
+                            textColor = '#721c24';
+                            fontWeight = 'bold';
+                            padding = '10px 15px';
+                        } else if (item.includes('✓') && item.includes('+')) {
+                            bgColor = '#d4edda';
+                            borderColor = '#28a745';
+                            textColor = '#155724';
+                            padding = '8px 12px';
+                        } else if ((item.includes('✗') && item.includes('-')) || item.includes('❌')) {
+                            bgColor = '#fff3cd';
+                            borderColor = '#ffc107';
+                            textColor = '#856404';
+                            padding = '8px 12px';
+                        } else if (item.includes('⚠️')) {
+                            bgColor = '#fff3cd';
+                            borderColor = '#ffc107';
+                            textColor = '#856404';
+                            padding = '8px 12px';
+                        } else if (item.includes('💡')) {
+                            bgColor = '#e7f3ff';
+                            borderColor = '#2196f3';
+                            textColor = '#0d47a1';
+                            padding = '8px 12px';
+                        } else if (item.includes('ΤΕΛΙΚΗ ΒΑΘΜΟΛΟΓΙΑ')) {
+                            bgColor = '#e3f2fd';
+                            borderColor = '#2196f3';
+                            textColor = '#0d47a1';
+                            fontWeight = 'bold';
+                            padding = '12px 15px';
+                        } else if (item.includes('═') || item.includes('─')) {
+                            return `<div style="color: #999; margin: 5px 0; text-align: center;">${item}</div>`;
+                        } else if (item.trim() === '') {
+                            return '<div style="height: 8px;"></div>';
+                        } else if (item.includes('ΘΕΤΙΚΑ') || item.includes('ΑΡΝΗΤΙΚΑ')) {
+                            textColor = '#0f3460';
+                            fontWeight = 'bold';
+                            padding = '8px 0';
+                        }
+                        
+                        // Indented lines
+                        if (item.startsWith('   ')) {
+                            return `<div style="padding: 3px 3px 3px 30px; color: ${textColor}; font-size: 12px;">${item}</div>`;
+                        }
+                        
+                        const borderStyle = borderColor !== 'transparent' ? `border-left: 4px solid ${borderColor};` : '';
+                        const backgroundStyle = bgColor !== 'transparent' ? `background: ${bgColor};` : '';
+                        
+                        return `<div style="${backgroundStyle} ${borderStyle} padding: ${padding}; margin: 4px 0; border-radius: 4px; color: ${textColor}; font-weight: ${fontWeight};">${item}</div>`;
+                    }).join('')}
+                </div>
+            </div>
+        `;
+
+        document.getElementById('solutionModal').classList.add('active');
+
+    } catch (error) {
+        console.error('Error loading solution:', error);
+        alert('Σφάλμα φόρτωσης λύσης');
+    }
+};
 
         window.closeModal = function() {
             document.getElementById('solutionModal').classList.remove('active');
