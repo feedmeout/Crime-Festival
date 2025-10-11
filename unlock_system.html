@@ -5,29 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ξεκλείδωμα Τεκμηρίου</title>
     
-    <!-- ADD FIREBASE (same config as admin.html) -->
+    <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
         import { getFirestore, doc, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
-        // 🔥 SAME CONFIG AS admin.html
+        // Your web app's Firebase configuration
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY_HERE",
-            authDomain: "YOUR_PROJECT.firebaseapp.com",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_PROJECT.appspot.com",
-            messagingSenderId: "YOUR_SENDER_ID",
-            appId: "YOUR_APP_ID"
+          apiKey: "AIzaSyA_9_40aa_wO_19g-1bIrSB6742aMOPwjo",
+          authDomain: "crime-festival-2025.firebaseapp.com",
+          projectId: "crime-festival-2025",
+          storageBucket: "crime-festival-2025.firebasestorage.app",
+          messagingSenderId: "663770004335",
+          appId: "1:663770004335:web:e42dbd983ab9b5277bc69a"
         };
 
+        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        // Make available globally
         window.firebaseDB = db;
         window.firebaseDoc = doc;
         window.firebaseSetDoc = setDoc;
         window.firebaseGetDoc = getDoc;
         window.firebaseReady = true;
+        
+        console.log("✅ Firebase connected in unlock_system!");
     </script>
     
     <style>

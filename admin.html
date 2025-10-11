@@ -4,32 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel - TEK Management</title>
-    
-    <!-- Firebase SDK -->
+
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
         import { getFirestore, doc, setDoc, getDoc, getDocs, collection, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
-
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyA_9_40aa_wO_19g-1bIrSB6742aMOPwjo",
-  authDomain: "crime-festival-2025.firebaseapp.com",
-  projectId: "crime-festival-2025",
-  storageBucket: "crime-festival-2025.firebasestorage.app",
-  messagingSenderId: "663770004335",
-  appId: "1:663770004335:web:e42dbd983ab9b5277bc69a"
-};
-
-        // Initialize Firebase
+        const firebaseConfig = {
+          apiKey: "AIzaSyA_9_40aa_wO_19g-1bIrSB6742aMOPwjo",
+          authDomain: "crime-festival-2025.firebaseapp.com",
+          projectId: "crime-festival-2025",
+          storageBucket: "crime-festival-2025.firebasestorage.app",
+          messagingSenderId: "663770004335",
+          appId: "1:663770004335:web:e42dbd983ab9b5277bc69a"
+        };
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-
-        // Make available globally
         window.firebaseDB = db;
         window.firebaseDoc = doc;
         window.firebaseSetDoc = setDoc;
@@ -440,8 +428,6 @@ const firebaseConfig = {
                 return [];
             }
         }
-
-        // === HYBRID STORAGE ===
         async function getAllTeams() {
             if (USE_FIREBASE) {
                 const firebaseTeams = await getAllTeamsFromFirebase();
@@ -464,8 +450,6 @@ const firebaseConfig = {
             localStorage.setItem(`unlocked_teks_${teamName}`, JSON.stringify(unlockedTeks));
             await saveTeamToFirebase(teamName, unlockedTeks);
         }
-
-        // === EXPORT / IMPORT ===
         async function exportAllData() {
             const teams = await getAllTeams();
             
@@ -484,7 +468,6 @@ const firebaseConfig = {
             
             alert(`✅ Exported ${teams.length} teams to JSON file!`);
         }
-
         function importData() {
             const input = document.createElement('input');
             input.type = 'file';
@@ -507,8 +490,6 @@ const firebaseConfig = {
             
             input.click();
         }
-
-        // === UI FUNCTIONS ===
         async function addTeam() {
             const teamName = document.getElementById('newTeamName').value.trim().toLowerCase();
             const alertDiv = document.getElementById('addTeamAlert');
