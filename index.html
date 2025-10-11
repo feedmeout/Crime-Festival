@@ -1022,70 +1022,6 @@
         </p>
     </div>
 
-<!-- Post-Game Survey Modal -->
-    <div id="surveyModal" class="modal" style="display: none;">
-        <div class="modal-content" style="max-width: 600px;">
-            <div class="modal-header">
-                <h2>📋 Σύντομη Έρευνα (Προαιρετική)</h2>
-                <button class="close-modal" onclick="closeSurveyModal()">&times;</button>
-            </div>
-            <div style="padding: 20px;">
-                <p style="margin-bottom: 20px; color: #666;">
-                    Για ερευνητικούς σκοπούς, θα θέλαμε να μάθουμε περισσότερα για τη στρατηγική σας:
-                </p>
-                
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; font-weight: bold; margin-bottom: 8px;">
-                        Πώς χρησιμοποιήσατε το AI;
-                    </label>
-                    <select id="surveyAIUsage" style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px;">
-                        <option value="">Επιλέξτε...</option>
-                        <option value="not_used">Δεν το χρησιμοποίησα καθόλου</option>
-                        <option value="minimal">Ελάχιστα (1-3 ερωτήσεις)</option>
-                        <option value="moderate">Μέτρια (4-10 ερωτήσεις)</option>
-                        <option value="heavy">Εντατικά (>10 ερωτήσεις)</option>
-                        <option value="constant">Συνεχώς καθ' όλη τη διάρκεια</option>
-                    </select>
-                </div>
-                
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; font-weight: bold; margin-bottom: 8px;">
-                        Ποια ήταν η στρατηγική σας;
-                    </label>
-                    <textarea id="surveyStrategy" placeholder="π.χ. Ξεκλειδώσαμε όλα τα τεκμήρια πρώτα, μετά συζητήσαμε..." 
-                        style="width: 100%; min-height: 80px; padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-family: inherit;"></textarea>
-                </div>
-                
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; font-weight: bold; margin-bottom: 8px;">
-                        Δυσκολία (1=Πολύ εύκολο, 10=Πολύ δύσκολο):
-                    </label>
-                    <input type="range" id="surveyDifficulty" min="1" max="10" value="5" 
-                        style="width: 100%;" oninput="document.getElementById('difficultyValue').textContent = this.value">
-                    <div style="text-align: center; font-size: 20px; font-weight: bold; color: #ff6b00;" id="difficultyValue">5</div>
-                </div>
-                
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; font-weight: bold; margin-bottom: 8px;">
-                        Πόσο σίγουροι είστε για την απάντησή σας; (1=Καθόλου, 10=Απόλυτα):
-                    </label>
-                    <input type="range" id="surveyConfidence" min="1" max="10" value="5" 
-                        style="width: 100%;" oninput="document.getElementById('confidenceValue').textContent = this.value">
-                    <div style="text-align: center; font-size: 20px; font-weight: bold; color: #28a745;" id="confidenceValue">5</div>
-                </div>
-                
-                <div style="display: flex; gap: 10px; margin-top: 30px;">
-                    <button onclick="submitSurvey()" style="flex: 1; padding: 15px; background: #28a745; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">
-                        ✅ Υποβολή Έρευνας
-                    </button>
-                    <button onclick="skipSurvey()" style="flex: 1; padding: 15px; background: #6c757d; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">
-                        ⏭️ Παράλειψη
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script src="suspects.js"></script>
 
     <script>
@@ -1935,10 +1871,6 @@ function displaySolutionResult(solution) {
     resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     document.getElementById('solutionForm').style.opacity = '0.6';
     document.getElementById('solutionForm').style.pointerEvents = 'none';
-    setTimeout(() => {
-        showSurveyModal();
-    }, 2000);
-	
     stopTimer();
 }
 
@@ -2060,52 +1992,6 @@ function initTabs() {
         });
     });
 }
-function showSurveyModal() {
-            document.getElementById('surveyModal').style.display = 'flex';
-        }
-        
-        function closeSurveyModal() {
-            document.getElementById('surveyModal').style.display = 'none';
-        }
-        
-        async function submitSurvey() {
-            const surveyData = {
-                aiUsage: document.getElementById('surveyAIUsage').value,
-                strategy: document.getElementById('surveyStrategy').value,
-                difficulty: parseInt(document.getElementById('surveyDifficulty').value),
-                confidence: parseInt(document.getElementById('surveyConfidence').value),
-                submittedAt: new Date().toISOString()
-            };
-            
-            try {
-                const teamData = await getTeamData();
-                const updatedData = {
-                    ...teamData,
-                    survey: surveyData
-                };
-                
-                if (window.firebaseDB) {
-                    const docRef = window.firebaseDoc(window.firebaseDB, 'teams', teamCode);
-                    await window.firebaseSetDoc(docRef, updatedData);
-                }
-                
-                closeSurveyModal();
-                alert('Ευχαριστούμε για τη συμμετοχή σας! 🎉');
-            } catch (error) {
-                console.error('Error saving survey:', error);
-                alert('Σφάλμα αποθήκευσης. Η λύση σας έχει ήδη καταγραφεί!');
-                closeSurveyModal();
-            }
-        }
-        
-        function skipSurvey() {
-            closeSurveyModal();
-        }
-        
-        window.showSurveyModal = showSurveyModal;
-        window.closeSurveyModal = closeSurveyModal;
-        window.submitSurvey = submitSurvey;
-        window.skipSurvey = skipSurvey;
 window.submitSolution = submitSolution;
 </script>
 </body>
