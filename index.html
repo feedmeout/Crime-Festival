@@ -1328,9 +1328,9 @@ function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
     if (correctCount > 0) {
         const points = correctCount * SCORING.perpetrator;
         score += points;
-        breakdown.push(`✓ Σωστοί Δράστες (${correctCount}/3): +${points}`);
+        breakdown.push(`✓ Σωστοί Δράστες: ${correctCount} × ${SCORING.perpetrator}πόντοι = +${points}`);
     } else {
-        breakdown.push(`✗ Σωστοί Δράστες (0/3): +0`);
+        breakdown.push(`✗ Σωστοί Δράστες: 0 (+0)`);
     }
     if (correctCount >= 2) {
         score += SCORING.cooperation;
