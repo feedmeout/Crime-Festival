@@ -446,11 +446,13 @@
             right: 20px;
             background: #28a745;
             color: white;
-            padding: 10px 20px;
+            padding: 12px 20px;
             border-radius: 8px;
-            font-size: 12px;
+            font-size: 11px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
             display: none;
+            max-width: 250px;
+            line-height: 1.4;
         }
 
         @media (max-width: 768px) {
@@ -495,13 +497,14 @@
             </div>
             
             <div class="sort-controls">
-                <label>ΤΑΞΙΝΟΜΗΣΗ:</label>
+                <label>Ταξινόμηση:</label>
                 <select id="sortOrder" onchange="refreshTeams()">
-                    <option value="name">ΟΝΟΜΑ</option>
-                    <option value="progress">ΠΡΟΟΔΟΣ</option>
-                    <option value="completion">ΧΡΟΝΟΣ ΟΛΟΚΛΗΡΩΣΗΣ (ΤΑΧΥΤΕΡΟ)</option>
-                    <option value="recent">ΠΙΟ ΠΡΟΣΦΑΤΟ</option>
+                    <option value="name">Όνομα</option>
+                    <option value="progress">Πρόοδος</option>
+                    <option value="completion">Χρόνος Ολοκλήρωσης (Ταχύτερο)</option>
+                    <option value="recent">Πιο Πρόσφατο</option>
                 </select>
+                <span id="lastRefresh" style="margin-left: auto; color: #666; font-size: 12px;"></span>
             </div>
             
             <div id="teamsContainer" class="team-list"></div>
@@ -578,7 +581,8 @@
             second: '2-digit'
         });
     }
-	
+
+    // === FIREBASE FUNCTIONS ===
     async function saveTeamToFirebase(teamName, data) {
         if (!isFirebaseReady()) return;
         try {
@@ -624,34 +628,49 @@
 
     async function getAllTeams() {
         const allTeams = new Map();
-
+        
+        // Prioritize Firebase (cloud data from all devices)
+        if (isFirebaseReady()) {
+            const firebaseTeams = await getAllTeamsFromFirebase();
+            firebaseTeams.forEach(team => {
+                // Ensure proper structure
+                allTeams.set(team.name, {
+                    name: team.name,
+                    unlocked: team.unlocked || [],
+                    timestamps: team.timestamps || {},
+                    startTime: team.startTime || null,
+                    completedAt: team.completedAt || null,
+                    totalTimeMs: team.totalTimeMs || null,
+                    lastUpdate: team.lastUpdate || null
+                });
+            });
+        }
+        
+        // Then check localStorage (only for local admin changes)
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
             if (key.startsWith('unlocked_teks_')) {
                 const teamName = key.replace('unlocked_teks_', '');
-                const unlocked = JSON.parse(localStorage.getItem(key));
-                allTeams.set(teamName, { 
-                    name: teamName, 
-                    unlocked: unlocked,
-                    timestamps: {},
-                    startTime: null,
-                    completedAt: null,
-                    totalTimeMs: null
-                });
+                // Only add from localStorage if not already in Firebase
+                if (!allTeams.has(teamName)) {
+                    const unlocked = JSON.parse(localStorage.getItem(key));
+                    allTeams.set(teamName, { 
+                        name: teamName, 
+                        unlocked: unlocked,
+                        timestamps: {},
+                        startTime: null,
+                        completedAt: null,
+                        totalTimeMs: null
+                    });
+                }
             }
-        }
-        
-        if (isFirebaseReady()) {
-            const firebaseTeams = await getAllTeamsFromFirebase();
-            firebaseTeams.forEach(team => {
-                allTeams.set(team.name, team);
-            });
         }
         
         return Array.from(allTeams.values());
     }
 
     async function saveTeam(teamName, data) {
+        // Save unlocked array to localStorage for backward compatibility
         localStorage.setItem(`unlocked_teks_${teamName}`, JSON.stringify(data.unlocked || []));
         await saveTeamToFirebase(teamName, data);
     }
@@ -697,7 +716,8 @@
         
         input.click();
     }
-	
+
+    // === UI FUNCTIONS ===
     async function addTeam() {
         const teamName = document.getElementById('newTeamName').value.trim().toLowerCase();
         const alertDiv = document.getElementById('addTeamAlert');
@@ -734,12 +754,16 @@
         const noTeams = document.getElementById('noTeams');
         const sortOrder = document.getElementById('sortOrder').value;
 
+        console.log(`📊 Loaded ${teams.length} teams from Firebase/localStorage`);
+        teams.forEach(t => console.log(`  - ${t.name}: ${t.unlocked.length} TEKs unlocked`));
+
         if (teams.length === 0) {
             container.innerHTML = '';
             noTeams.style.display = 'block';
             return;
         }
-		
+
+        // Sort teams
         teams = sortTeams(teams, sortOrder);
 
         noTeams.style.display = 'none';
@@ -806,6 +830,14 @@
                 </div>
             `;
         }).join('');
+        
+        // Show last refresh time
+        const now = new Date().toLocaleTimeString('el-GR');
+        const lastRefreshEl = document.getElementById('lastRefresh');
+        if (lastRefreshEl) {
+            lastRefreshEl.textContent = `Τελευταία ενημέρωση: ${now}`;
+        }
+        console.log(`✅ Teams refreshed at ${now}`);
     }
 
     function sortTeams(teams, order) {
@@ -817,6 +849,7 @@
                 return teams.sort((a, b) => b.unlocked.length - a.unlocked.length);
             
             case 'completion':
+                // Completed teams first, sorted by time, then incomplete teams
                 const completed = teams.filter(t => t.completedAt).sort((a, b) => a.totalTimeMs - b.totalTimeMs);
                 const incomplete = teams.filter(t => !t.completedAt).sort((a, b) => b.unlocked.length - a.unlocked.length);
                 return [...completed, ...incomplete];
@@ -867,6 +900,8 @@
         if (team.timestamps && Object.keys(team.timestamps).length > 0) {
             html += '<h3 style="margin: 20px 0 10px 0;">Ξεκλειδώματα ΤΕΚ:</h3>';
             html += '<ul class="timestamp-list">';
+            
+            // Sort by timestamp
             const sortedTeks = Object.entries(team.timestamps)
                 .sort((a, b) => new Date(a[1]) - new Date(b[1]));
             
@@ -892,7 +927,8 @@
         const modal = document.getElementById('timestampModal');
         modal.classList.remove('active');
     }
-	
+
+    // Close modal when clicking outside
     window.onclick = function(event) {
         const modal = document.getElementById('timestampModal');
         if (event.target === modal) {
@@ -910,7 +946,7 @@
             const now = new Date().toISOString();
             const timestamps = {};
             allTeks.forEach((tek, i) => {
-                timestamps[tek] = new Date(Date.now() + i * 1000).toISOString();
+                timestamps[tek] = new Date(Date.now() + i * 1000).toISOString(); // Stagger by 1 second
             });
             
             await saveTeam(teamName, {
@@ -1026,13 +1062,15 @@
             alert('✅ URLs αντιγράφηκαν στο clipboard!');
         });
     }
-	
+
+    // === INITIALIZATION ===
     window.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             const status = document.getElementById('firebaseStatus');
             if (isFirebaseReady()) {
                 console.log('✅ Firebase is ACTIVE - data is cloud-synced');
                 status.style.display = 'block';
+                status.innerHTML = '✅ Firebase Connected - Auto-refreshing every 5s';
             } else {
                 console.warn('⚠️ Firebase not loaded - using localStorage only');
             }
@@ -1041,7 +1079,8 @@
         }, 300);
     });
 
-    setInterval(refreshTeams, 10000);
+    // Auto-refresh every 5 seconds to show real-time updates
+    setInterval(refreshTeams, 5000);
 </script>
 </body>
 </html>
