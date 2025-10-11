@@ -1382,18 +1382,16 @@ function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
         breakdown.push(`✗ Λάθος Ύποπτοι (${wrongSuspects.length}): -${penalty}`);
         wrongSuspects.forEach(name => {
             breakdown.push(`   → ${name}`);
-        });
+});
     }
-if (correctCount < 3) {
-    const missed = 3 - correctCount;
     
-    breakdown.push(`⚠️ Χάσατε ${missed} σωστό${missed > 1 ? 'ύς δράστες' : ' δράστη'}`);
-}
+    if (correctCount < 3) {
+        const missed = 3 - correctCount;
+        
+        breakdown.push(`⚠️ Χάσατε ${missed} σωστό${missed > 1 ? 'ύς δράστες' : ' δράστη'}`);
+    }
+    
     score = Math.max(0, score);
-    breakdown.push('');
-    breakdown.push('═════════════════════════════');
-    breakdown.push(`📊 ΤΕΛΙΚΗ ΒΑΘΜΟΛΟΓΙΑ: ${score}/${140}`);
-    breakdown.push('═════════════════════════════');
     
     return { score, breakdown, maxScore: 140, correctCount };
 }
@@ -1528,13 +1526,33 @@ function displaySolutionResult(solution) {
     resultDiv.innerHTML = `
         <div style="background: ${headerGradient}; color: white; padding: 30px; border-radius: 15px; margin: 20px 0; text-align: center; box-shadow: 0 10px 40px ${headerShadow};">
             <h2 style="font-size: 32px; margin-bottom: 15px;">
-                ${isPerfect ? '🎉 ΤΕΛΕΙΑ ΛΥΣΗ!' : isContradiction ? '❌ ΛΟΓΙΚΗ ΑΝΤΙΦΑΣΗ' : solution.score === 0 ? '❌ Λάθος Απάντηση' : '✓ Λύση Υποβλήθηκε'}
+                ${isPerfect ? '🎉 ΤΕΛΕΙΑ ΛΥΣΗ!' : isContradiction ? '❌ ΛΟΓΙΚΗ ΑΝΤΙΦΑΣΗ' : solution.score === 0 ? '❌ ΛΑΘΟΣ ΑΠΑΝΤΗΣΗ' : '✓ ΛΥΣΗ ΥΠΟΒΛΗΘΗΚΕ'}
             </h2>
             <div style="font-size: 64px; font-weight: bold; margin: 20px 0;">${solution.score}/${solution.maxScore}</div>
-            <div style="font-size: 28px; margin-bottom: 20px; color: ${gradeColor}; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">${grade}</div>
-            <div style="font-size: 18px; margin-bottom: 10px;">ΠΟΣΟΣΤΟ: ${percentage}%</div>
-            ${solution.completionTimeMs ? `<div style="font-size: 18px; opacity: 0.9;">⏱️ ΧΡΟΝΟΣ: ${formatElapsedTime(solution.completionTimeMs)}</div>` : ''}
-            <div style="font-size: 18px; opacity: 0.9;">🎯 PROMPTS: ${solution.promptCount}</div>
+            <div style="font-size: 28px; margin-bottom: 25px; color: ${gradeColor}; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">${grade}</div>
+            
+<!-- Stats Grid -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-top: 20px; max-width: 600px; margin-left: auto; margin-right: auto;">
+    <!-- Percentage Card -->
+    <div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: 10px; border: 2px solid rgba(255,255,255,0.3);">
+        <div style="font-size: 14px; opacity: 0.8; margin-bottom: 5px;">ΠΟΣΟΣΤΟ</div>
+        <div style="font-size: 24px; font-weight: bold;">${percentage}%</div>
+    </div>
+    
+    ${solution.completionTimeMs ? `
+    <!-- Time Card -->
+    <div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: 10px; border: 2px solid rgba(255,255,255,0.3);">
+        <div style="font-size: 14px; opacity: 0.8; margin-bottom: 5px;">⏱️ ΧΡΟΝΟΣ</div>
+        <div style="font-size: 24px; font-weight: bold;">${formatElapsedTime(solution.completionTimeMs)}</div>
+    </div>
+    ` : ''}
+    
+    <!-- Prompts Card -->
+    <div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: 10px; border: 2px solid rgba(255,255,255,0.3);">
+        <div style="font-size: 14px; opacity: 0.8; margin-bottom: 5px;">🎯 PROMPTS</div>
+        <div style="font-size: 24px; font-weight: bold;">${solution.promptCount}</div>
+    </div>
+</div>
         </div>
         
         <div style="background: white; padding: 25px; border-radius: 10px; margin-top: 20px;">
