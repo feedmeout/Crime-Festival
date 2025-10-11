@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Τεκμήριο Ξεκλειδώθηκε</title>
-    
-    <!-- Google Model Viewer for AR -->
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
     
     <style>
@@ -610,7 +608,7 @@
             </div>
 
             <div class="details">
-                <h2 class="evidence-title">🥃 Δύο Κρυστάλλινα Ποτήρια</h2>
+                <h2 class="evidence-title">🥃 ΚΡΥΣΤΑΛΛΙΝΑ ΠΟΤΗΡΙΑ</h2>
 
                 <div class="section">
                     <h3 class="section-title">
@@ -643,7 +641,7 @@
                         Σημασία για την Έρευνα
                     </h3>
                     <p class="significance-text">
-                        Ποιος ήταν ο δεύτερος άνθρωπος που έπινε με το θύμα; Γιατί τα αποτυπώματα είναι σβησμένα;
+                        Δύο ποτήρια - ένα με κυάνιο, ένα με σβησμένα αποτυπώματα. Το θύμα δεν ήταν μόνο του. Ποιος ήταν μαζί του;
                     </p>
                 </div>
 
@@ -653,8 +651,9 @@
                         Βασικά Ερωτήματα Διερεύνησης
                     </h3>
                     <ul class="section-content">
-                        <li>Ποιος ήπιε από το Ποτήρι Β;</li>
-                        <li>Γιατί κάποιος σβήνει τα αποτυπώματα;</li>
+                        <li>Γιατί μόνο το Ποτήρι Α έχει κυάνιο;</li>
+                        <li>Πότε και γιατί σβήστηκαν τα αποτυπώματα από το Ποτήρι Β;</li>
+						<li>Το δεύτερο άτομο είναι θύμα, μάρτυρας ή δράστης;</li>
                     </ul>
                 </div>
             </div>
@@ -668,15 +667,11 @@
             
             canvas.width = 800;
             canvas.height = 400;
-
-            // SAME background as TEK1 - wooden floor
             const floorGradient = ctx.createLinearGradient(0, 0, 0, 400);
             floorGradient.addColorStop(0, '#8b7355');
             floorGradient.addColorStop(1, '#6b5345');
             ctx.fillStyle = floorGradient;
             ctx.fillRect(0, 0, 800, 400);
-
-            // Wood grain texture (same as TEK1)
             ctx.strokeStyle = 'rgba(101, 67, 33, 0.3)';
             ctx.lineWidth = 2;
             for (let i = 0; i < 400; i += 40) {
@@ -686,24 +681,17 @@
                 ctx.stroke();
             }
 
-            // Shadow for glass 1 (upright whiskey glass)
             ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
             ctx.beginPath();
             ctx.ellipse(280, 320, 35, 15, 0, 0, Math.PI * 2);
             ctx.fill();
-
-            // Shadow for glass 2 (tipped whiskey glass)
             ctx.beginPath();
             ctx.ellipse(520, 330, 40, 15, -0.3, 0, Math.PI * 2);
             ctx.fill();
-
-            // Glass 1 (upright) - SHORT WHISKEY GLASS (tumbler/rocks glass)
             const glass1Gradient = ctx.createLinearGradient(240, 260, 320, 260);
             glass1Gradient.addColorStop(0, 'rgba(200, 220, 255, 0.3)');
             glass1Gradient.addColorStop(0.5, 'rgba(220, 235, 255, 0.5)');
             glass1Gradient.addColorStop(1, 'rgba(200, 220, 255, 0.3)');
-
-            // Glass 1 body - wider and shorter
             ctx.fillStyle = glass1Gradient;
             ctx.beginPath();
             ctx.moveTo(245, 320);
@@ -712,21 +700,15 @@
             ctx.lineTo(315, 320);
             ctx.closePath();
             ctx.fill();
-
-            // Glass 1 rim (wider)
             ctx.strokeStyle = 'rgba(180, 200, 230, 0.8)';
             ctx.lineWidth = 3;
             ctx.beginPath();
             ctx.ellipse(280, 260, 32, 8, 0, 0, Math.PI * 2);
             ctx.stroke();
-
-            // Glass 1 base (wider)
             ctx.fillStyle = 'rgba(180, 200, 230, 0.4)';
             ctx.beginPath();
             ctx.ellipse(280, 320, 35, 12, 0, 0, Math.PI * 2);
             ctx.fill();
-
-            // Liquid in Glass 1 (whiskey with cyanide)
             ctx.fillStyle = 'rgba(200, 150, 80, 0.5)';
             ctx.beginPath();
             ctx.moveTo(252, 305);
@@ -735,16 +717,12 @@
             ctx.lineTo(308, 305);
             ctx.closePath();
             ctx.fill();
-
-            // Highlights on Glass 1
             ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
             ctx.lineWidth = 2;
             ctx.beginPath();
             ctx.moveTo(253, 270);
             ctx.lineTo(250, 310);
             ctx.stroke();
-
-            // Glass 2 (tipped) - SHORT WHISKEY GLASS
             ctx.save();
             ctx.translate(520, 300);
             ctx.rotate(-0.4);
@@ -753,8 +731,6 @@
             glass2Gradient.addColorStop(0, 'rgba(200, 220, 255, 0.3)');
             glass2Gradient.addColorStop(0.5, 'rgba(220, 235, 255, 0.5)');
             glass2Gradient.addColorStop(1, 'rgba(200, 220, 255, 0.3)');
-
-            // Glass 2 body - wider and shorter (on its side)
             ctx.fillStyle = glass2Gradient;
             ctx.beginPath();
             ctx.moveTo(-35, 0);
@@ -763,29 +739,21 @@
             ctx.lineTo(35, 0);
             ctx.closePath();
             ctx.fill();
-
-            // Glass 2 rim (on its side)
             ctx.strokeStyle = 'rgba(180, 200, 230, 0.8)';
             ctx.lineWidth = 3;
             ctx.beginPath();
             ctx.ellipse(0, -60, 32, 8, 0, 0, Math.PI * 2);
             ctx.stroke();
-
-            // Glass 2 base (on its side)
             ctx.fillStyle = 'rgba(180, 200, 230, 0.4)';
             ctx.beginPath();
             ctx.ellipse(0, 0, 35, 12, 0, 0, Math.PI * 2);
             ctx.fill();
-
-            // Smudged fingerprints on Glass 2
             ctx.fillStyle = 'rgba(100, 80, 60, 0.2)';
             for (let i = 0; i < 4; i++) {
                 ctx.beginPath();
                 ctx.ellipse(-10 + i * 8, -35 + i * 8, 8, 12, 0.5, 0, Math.PI * 2);
                 ctx.fill();
             }
-
-            // Highlights on Glass 2
             ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
             ctx.lineWidth = 2;
             ctx.beginPath();
@@ -794,15 +762,11 @@
             ctx.stroke();
 
             ctx.restore();
-
-            // Evidence markers
             ctx.fillStyle = 'rgba(220, 53, 69, 0.8)';
             ctx.font = 'bold 16px monospace';
             ctx.textAlign = 'center';
             ctx.fillText('A', 280, 345);
             ctx.fillText('B', 500, 345);
-
-            // Crime scene tape/border (same as TEK1)
             ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
             ctx.fillRect(0, 0, 800, 40);
             
@@ -820,8 +784,6 @@
 
         window.onload = function() {
             drawCrimeScene();
-            
-            // Enhanced model viewer debugging
             const modelViewer = document.querySelector('model-viewer');
             const debugInfo = document.getElementById('debugInfo');
             
