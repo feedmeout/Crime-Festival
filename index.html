@@ -4,6 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Φάκελος Υπόθεσης - Φεστιβάλ Αστυνομικής Λογοτεχνίας 2025</title>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, doc, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyA_9_40aa_wO_19g-1bIrSB6742aMOPwjo",
+            authDomain: "crime-festival-2025.firebaseapp.com",
+            projectId: "crime-festival-2025",
+            storageBucket: "crime-festival-2025.firebasestorage.app",
+            messagingSenderId: "663770004335",
+            appId: "1:663770004335:web:e42dbd983ab9b5277bc69a"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        window.firebaseDB = db;
+        window.firebaseDoc = doc;
+        window.firebaseSetDoc = setDoc;
+        window.firebaseGetDoc = getDoc;
+        
+        console.log("✅ Firebase connected in index.html!");
+    </script>
+    
     <style>
         * {
             margin: 0;
@@ -127,6 +152,46 @@
             background: rgba(220,53,69,0.1);
             padding: 2px 6px;
             border-radius: 3px;
+        }
+
+        /* TIMER SECTION */
+        .timer-section {
+            background: rgba(255, 255, 255, 0.95);
+            border: 3px solid #17a2b8;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            display: none;
+        }
+
+        .timer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .timer-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #17a2b8;
+        }
+
+        .timer-box strong {
+            display: block;
+            color: #0f3460;
+            font-size: 12px;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .timer-box .value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #17a2b8;
+            font-family: monospace;
         }
 
         /* SUSPECTS SECTION STYLES */
@@ -516,6 +581,119 @@
             opacity: 0.3;
         }
 
+        /* SOLUTION FORM STYLES */
+        .solution-form {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .suspect-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .suspect-option {
+            background: #f8f9fa;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .suspect-option:hover {
+            border-color: #ff6b00;
+            background: #fff5f0;
+            transform: translateY(-2px);
+        }
+
+        .suspect-option input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .suspect-option label {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+            color: #1a1a2e;
+        }
+
+        .suspect-option input[type="checkbox"]:checked + label {
+            color: #ff6b00;
+        }
+
+        .form-group {
+            margin: 20px 0;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            color: #1a1a2e;
+            margin-bottom: 10px;
+        }
+
+        .form-group textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        .form-group input[type="number"] {
+            width: 150px;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .form-group textarea:focus,
+        .form-group input:focus {
+            outline: none;
+            border-color: #ff6b00;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(40,167,69,0.3);
+            transition: all 0.2s ease;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(40,167,69,0.5);
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-size: 13px;
+            color: #0d47a1;
+        }
+
         .footer {
             background: rgba(255, 255, 255, 0.1);
             padding: 20px;
@@ -548,7 +726,7 @@
 
         .tab-button {
             flex: 1;
-            min-width: 180px;
+            min-width: 150px;
             padding: 15px 20px;
             background: rgba(255, 255, 255, 0.1);
             border: 2px solid rgba(255, 107, 0, 0.3);
@@ -620,6 +798,10 @@
             .tab-button {
                 min-width: 100%;
             }
+            
+            .timer-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -634,6 +816,23 @@
     </div>
 
     <div class="container">
+        <!-- Timer Section -->
+        <div class="timer-section" id="timerSection">
+            <h2 style="color: #1a1a2e; font-size: 20px; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                ⏱️ Χρονομέτρηση Ομάδας
+            </h2>
+            <div class="timer-grid">
+                <div class="timer-box">
+                    <strong>Έναρξη</strong>
+                    <div class="value" id="startTime">--:--</div>
+                </div>
+                <div class="timer-box">
+                    <strong id="liveTimerLabel">Χρόνος</strong>
+                    <div class="value" id="liveTimer">0λ 0δ</div>
+                </div>
+            </div>
+        </div>
+
         <!-- Tab Navigation -->
         <div class="tabs-container">
             <div class="tabs-nav">
@@ -641,6 +840,7 @@
                 <button class="tab-button" data-tab="suspects">👥 ΚΑΤΑΛΟΓΟΣ ΥΠΟΠΤΩΝ</button>
                 <button class="tab-button" data-tab="forensics">🥼 ΙΑΤΡΟΔΙΚΑΣΤΙΚΗ & ΧΡΟΝΟΛΟΓΙΟ</button>
                 <button class="tab-button" data-tab="evidence">📦 ΤΕΚΜΗΡΙΑ</button>
+                <button class="tab-button" data-tab="solution">✅ ΛΥΣΗ</button>
             </div>
 
             <!-- Tab Content -->
@@ -700,6 +900,81 @@
 
                     <div class="evidence-grid" id="evidenceGrid">
                     </div>
+                </div>
+
+                <!-- Tab 5: Solution -->
+                <div class="tab-pane" id="tab-solution">
+                    <div class="intro-box">
+                        <h2>✅ ΥΠΟΒΟΛΗ ΛΥΣΗΣ</h2>
+                        <p>Έχετε μελετήσει όλα τα τεκμήρια και είστε έτοιμοι να υποβάλετε τη λύση σας;</p>
+                        <p><strong>Επιλέξτε τον/τους δράστη/ες ή αυτοκτονία και παράθεστε την αιτιολόγησή σας.</strong></p>
+                    </div>
+
+                    <div class="solution-form" id="solutionForm">
+                        <h3 style="color: #1a1a2e; margin-bottom: 20px;">Επιλογή Δράστη/ων</h3>
+                        
+                        <div class="suspect-options">
+                            <div class="suspect-option">
+                                <input type="checkbox" id="suspect_maria" name="suspect" value="maria">
+                                <label for="suspect_maria">👩 Παπαδοπούλου Μαρία</label>
+                            </div>
+                            
+                            <div class="suspect-option">
+                                <input type="checkbox" id="suspect_konstantinos" name="suspect" value="konstantinos">
+                                <label for="suspect_konstantinos">👨‍💼 Αναγνώστου Κωνσταντίνος</label>
+                            </div>
+                            
+                            <div class="suspect-option">
+                                <input type="checkbox" id="suspect_eleni" name="suspect" value="eleni">
+                                <label for="suspect_eleni">👩‍🦰 Μαυρίδη Ελένη</label>
+                            </div>
+                            
+                            <div class="suspect-option">
+                                <input type="checkbox" id="suspect_georgios" name="suspect" value="georgios">
+                                <label for="suspect_georgios">👮 Πετρόπουλος Γεώργιος</label>
+                            </div>
+                            
+                            <div class="suspect-option">
+                                <input type="checkbox" id="suspect_alexandra" name="suspect" value="alexandra">
+                                <label for="suspect_alexandra">👩‍💻 Νικολάου Αλεξάνδρα</label>
+                            </div>
+                            
+                            <div class="suspect-option">
+                                <input type="checkbox" id="suspect_suicide" name="suspect" value="suicide">
+                                <label for="suspect_suicide">💀 Αυτοκτονία</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="justification">Αιτιολόγηση Λύσης: *</label>
+                            <textarea 
+                                id="justification" 
+                                placeholder="Προσθέστε την ανάλυσή / αιτιολόγησή σας..."
+                                required
+                            ></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="promptCount">Αριθμός Prompts που χρησιμοποιήσατε: *</label>
+                            <input 
+                                type="number" 
+                                id="promptCount" 
+                                min="0" 
+                                step="1" 
+                                placeholder="π.χ. 5"
+                                required
+                            >
+                            <p style="font-size: 12px; color: #666; margin-top: 5px;">
+                                Συμπληρώστε πόσα prompts χρησιμοποιήσατε για να λύσετε την υπόθεση.
+                            </p>
+                        </div>
+
+                        <button type="button" class="submit-btn" onclick="submitSolution()">
+                            ✅ Υποβολή Λύσης
+                        </button>
+                    </div>
+
+                    <div id="solutionResult" style="display: none;"></div>
                 </div>
             </div>
         </div>
@@ -825,6 +1100,33 @@
             }
         ];
 
+        const CORRECT_SUSPECTS = ['konstantinos', 'georgios', 'eleni'];
+        const SUSPECT_NAMES = {
+            'maria': 'Παπαδοπούλου Μαρία',
+            'konstantinos': 'Αναγνώστου Κωνσταντίνος',
+            'eleni': 'Μαυρίδη Ελένη',
+            'georgios': 'Πετρόπουλος Γεώργιος',
+            'alexandra': 'Νικολάου Αλεξάνδρα',
+            'suicide': 'Αυτοκτονία'
+        };
+
+        const SCORING = {
+            murder_diagnosis: 25,
+            cooperation: 20,
+            perpetrator: 15,
+            motives: 10,
+            method: 10,
+            timeline: 5,
+            evidence_use: 5,
+            exclusion: 5,
+            prompts_1_5: 20,
+            prompts_6_10: 10,
+            prompts_11_15: 5,
+            time_under_30: 15,
+            time_30_45: 10,
+            time_45_60: 5
+        };
+
         const urlParams = new URLSearchParams(window.location.search);
         const teamCode = urlParams.get('team') || 'default';
 
@@ -832,6 +1134,8 @@
             document.getElementById('teamInfo').style.display = 'block';
             document.getElementById('teamName').textContent = `Ομάδα: ${teamCode}`;
         }
+
+        let timerInterval = null;
 
         function getStorageKey() {
             return `unlocked_teks_${teamCode}`;
@@ -841,8 +1145,83 @@
             return JSON.parse(localStorage.getItem(getStorageKey()) || '[]');
         }
 
-        function updateProgress() {
-            const unlockedTeks = getUnlockedTeks();
+        function formatElapsedTime(ms) {
+            const seconds = Math.floor(ms / 1000);
+            const minutes = Math.floor(seconds / 60);
+            const hours = Math.floor(minutes / 60);
+            
+            const h = hours;
+            const m = minutes % 60;
+            const s = seconds % 60;
+            
+            if (h > 0) {
+                return `${h}ω ${m}λ ${s}δ`;
+            } else if (m > 0) {
+                return `${m}λ ${s}δ`;
+            } else {
+                return `${s}δ`;
+            }
+        }
+
+        function startLiveTimer(startTime) {
+            if (timerInterval) clearInterval(timerInterval);
+            
+            const timerElement = document.getElementById('liveTimer');
+            if (!timerElement) return;
+            
+            timerInterval = setInterval(() => {
+                const now = new Date();
+                const start = new Date(startTime);
+                const elapsed = now - start;
+                timerElement.textContent = formatElapsedTime(elapsed);
+            }, 1000);
+        }
+
+        function stopTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+        }
+
+        async function getTeamData() {
+            if (window.firebaseDB) {
+                try {
+                    const docRef = window.firebaseDoc(window.firebaseDB, 'teams', teamCode);
+                    const docSnap = await window.firebaseGetDoc(docRef);
+                    
+                    if (docSnap.exists()) {
+                        return docSnap.data();
+                    }
+                } catch (error) {
+                    console.error('Firebase load error:', error);
+                }
+            }
+            
+            const localData = localStorage.getItem(getStorageKey());
+            if (localData) {
+                return {
+                    unlocked: JSON.parse(localData),
+                    timestamps: {},
+                    startTime: null,
+                    completedAt: null,
+                    totalTimeMs: null,
+                    solution: null
+                };
+            }
+            
+            return {
+                unlocked: [],
+                timestamps: {},
+                startTime: null,
+                completedAt: null,
+                totalTimeMs: null,
+                solution: null
+            };
+        }
+
+        async function updateProgress(teamData) {
+            const unlockedTeks = teamData.unlocked || [];
             const total = teks.length;
             const unlocked = unlockedTeks.length;
             const percentage = Math.round((unlocked / total) * 100);
@@ -851,6 +1230,210 @@
             document.getElementById('progressFill').textContent = percentage + '%';
             document.getElementById('progressText').textContent = 
                 `Έχετε ξεκλειδώσει ${unlocked} από ${total} τεκμήρια`;
+            
+            const timerSection = document.getElementById('timerSection');
+            if (teamData.startTime && unlocked > 0) {
+                timerSection.style.display = 'block';
+                document.getElementById('startTime').textContent = 
+                    new Date(teamData.startTime).toLocaleString('el-GR', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                
+                if (teamData.completedAt || teamData.solution) {
+                    document.getElementById('liveTimerLabel').textContent = 'Συνολικός Χρόνος:';
+                    document.getElementById('liveTimer').textContent = formatElapsedTime(teamData.totalTimeMs || 0);
+                    stopTimer();
+                } else {
+                    document.getElementById('liveTimerLabel').textContent = 'Χρόνος σε Εξέλιξη:';
+                    startLiveTimer(teamData.startTime);
+                }
+            }
+        }
+
+        function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
+            let score = 0;
+            let breakdown = [];
+            
+            if (selectedSuspects.length > 0 && !selectedSuspects.includes('suicide')) {
+                score += SCORING.murder_diagnosis;
+                breakdown.push('✓ Διάγνωση Δολοφονίας: +25');
+            }
+            
+            if (selectedSuspects.length >= 2) {
+                score += SCORING.cooperation;
+                breakdown.push('✓ Εντοπισμός Συνεργασίας: +20');
+            }
+            
+            let correctCount = 0;
+            CORRECT_SUSPECTS.forEach(suspect => {
+                if (selectedSuspects.includes(suspect)) {
+                    correctCount++;
+                    score += SCORING.perpetrator;
+                }
+            });
+            
+            if (correctCount > 0) {
+                breakdown.push(`✓ Σωστοί Δράστες (${correctCount}/3): +${correctCount * 15}`);
+            }
+            
+            if (selectedSuspects.length > 0) {
+                score += SCORING.motives;
+                score += SCORING.method;
+                score += SCORING.evidence_use;
+                breakdown.push('✓ Βασική Ανάλυση: +25');
+            }
+            
+            if (correctCount === 3 && selectedSuspects.length === 3) {
+                score += SCORING.timeline;
+                score += SCORING.exclusion;
+                breakdown.push('✓ Τέλεια Λύση: +10');
+            }
+            
+            if (totalTimeMs) {
+                const minutes = totalTimeMs / 60000;
+                if (minutes < 30) {
+                    score += SCORING.time_under_30;
+                    breakdown.push('⏱️ Bonus Χρόνου (<30λ): +15');
+                } else if (minutes < 45) {
+                    score += SCORING.time_30_45;
+                    breakdown.push('⏱️ Bonus Χρόνου (30-45λ): +10');
+                } else if (minutes < 60) {
+                    score += SCORING.time_45_60;
+                    breakdown.push('⏱️ Bonus Χρόνου (45-60λ): +5');
+                }
+            }
+            
+            if (promptCount) {
+                if (promptCount <= 5) {
+                    score += SCORING.prompts_1_5;
+                    breakdown.push('🎯 Bonus Αποδοτικότητας (1-5 prompts): +20');
+                } else if (promptCount <= 10) {
+                    score += SCORING.prompts_6_10;
+                    breakdown.push('🎯 Bonus Αποδοτικότητας (6-10 prompts): +10');
+                } else if (promptCount <= 15) {
+                    score += SCORING.prompts_11_15;
+                    breakdown.push('🎯 Bonus Αποδοτικότητας (11-15 prompts): +5');
+                }
+            }
+            
+            return { score, breakdown, maxScore: 160 };
+        }
+
+        async function submitSolution() {
+            const checkboxes = document.querySelectorAll('input[name="suspect"]:checked');
+            const selectedSuspects = Array.from(checkboxes).map(cb => cb.value);
+            const justification = document.getElementById('justification').value.trim();
+            const promptCount = parseInt(document.getElementById('promptCount').value) || 0;
+            
+            if (selectedSuspects.length === 0) {
+                alert('Παρακαλώ επιλέξτε τουλάχιστον έναν ύποπτο ή αυτοκτονία!');
+                return;
+            }
+            
+            if (!justification) {
+                alert('Παρακαλώ συμπληρώστε την αιτιολόγηση!');
+                return;
+            }
+            
+            if (!promptCount || promptCount < 0) {
+                alert('Παρακαλώ εισάγετε έγκυρο αριθμό prompts!');
+                return;
+            }
+            
+            const teamData = await getTeamData();
+            
+            let totalTimeMs = null;
+            if (teamData.startTime) {
+                const start = new Date(teamData.startTime);
+                const now = new Date();
+                totalTimeMs = now - start;
+            }
+            
+            const scoreResult = calculateScore(selectedSuspects, totalTimeMs, promptCount);
+            
+            const solution = {
+                suspects: selectedSuspects,
+                justification: justification,
+                promptCount: promptCount,
+                submittedAt: new Date().toISOString(),
+                score: scoreResult.score,
+                maxScore: scoreResult.maxScore,
+                breakdown: scoreResult.breakdown,
+                completionTimeMs: totalTimeMs
+            };
+            
+            try {
+                const updatedData = {
+                    ...teamData,
+                    solution: solution,
+                    completedAt: solution.submittedAt,
+                    totalTimeMs: totalTimeMs
+                };
+                
+                if (window.firebaseDB) {
+                    await window.firebaseSetDoc(
+                        window.firebaseDoc(window.firebaseDB, 'teams', teamCode),
+                        updatedData
+                    );
+                }
+                
+                localStorage.setItem(`solution_${teamCode}`, JSON.stringify(solution));
+                
+                displaySolutionResult(solution);
+                
+            } catch (error) {
+                console.error('Error saving solution:', error);
+                alert('Σφάλμα αποθήκευσης! Δοκιμάστε ξανά.');
+            }
+        }
+
+        function displaySolutionResult(solution) {
+            const resultDiv = document.getElementById('solutionResult');
+            
+            const percentage = Math.round((solution.score / solution.maxScore) * 100);
+            let grade = '';
+            if (percentage >= 90) grade = 'A+ 🏆';
+            else if (percentage >= 80) grade = 'A 🌟';
+            else if (percentage >= 70) grade = 'B+ ⭐';
+            else if (percentage >= 60) grade = 'B ✓';
+            else grade = 'C';
+            
+            resultDiv.innerHTML = `
+                <div style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; padding: 30px; border-radius: 15px; margin: 20px 0; text-align: center; box-shadow: 0 10px 40px rgba(40,167,69,0.3);">
+                    <h2 style="font-size: 32px; margin-bottom: 15px;">🎉 Λύση Υποβλήθηκε!</h2>
+                    <div style="font-size: 64px; font-weight: bold; margin: 20px 0;">${solution.score}/${solution.maxScore}</div>
+                    <div style="font-size: 24px; margin-bottom: 20px;">Βαθμός: ${grade} (${percentage}%)</div>
+                    ${solution.completionTimeMs ? `<div style="font-size: 18px; opacity: 0.9;">⏱️ Χρόνος: ${formatElapsedTime(solution.completionTimeMs)}</div>` : ''}
+                    <div style="font-size: 18px; opacity: 0.9;">🎯 Prompts: ${solution.promptCount}</div>
+                </div>
+                
+                <div style="background: white; padding: 20px; border-radius: 10px; margin-top: 20px; text-align: left;">
+                    <h3 style="color: #1a1a2e; margin-bottom: 15px;">📊 Ανάλυση Βαθμολογίας:</h3>
+                    ${solution.breakdown.map(item => `<div style="padding: 8px; margin: 5px 0; background: #f8f9fa; border-left: 3px solid #28a745; border-radius: 4px;">${item}</div>`).join('')}
+                </div>
+                
+                <div style="background: #fff3cd; border: 2px solid #ffc107; padding: 20px; border-radius: 10px; margin-top: 20px;">
+                    <h3 style="color: #856404; margin-bottom: 10px;">💡 Σωστή Λύση:</h3>
+                    <p style="color: #856404;"><strong>Συνεργατική Δολοφονία από:</strong></p>
+                    <ul style="color: #856404; margin: 10px 0; padding-left: 20px;">
+                        <li>Αναγνώστου Κωνσταντίνος (CFO)</li>
+                        <li>Πετρόπουλος Γεώργιος (Φύλακας)</li>
+                        <li>Μαυρίδη Ελένη (Πρώην Ερωμένη)</li>
+                    </ul>
+                </div>
+            `;
+            
+            resultDiv.style.display = 'block';
+            resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            
+            document.getElementById('solutionForm').style.opacity = '0.6';
+            document.getElementById('solutionForm').style.pointerEvents = 'none';
+            
+            stopTimer();
         }
 
         function buildUrl(page) {
@@ -905,24 +1488,42 @@
             }).join('');
         }
 
-        window.addEventListener('DOMContentLoaded', () => {
-            if (typeof SuspectsModule !== 'undefined') {
-                SuspectsModule.renderSuspects('suspectsContainer');
-            } else {
-                console.error('SuspectsModule not loaded! Make sure suspects.js is included before this script.');
+        async function initSolutionTab(teamData) {
+            const existingSolution = teamData.solution;
+            
+            if (existingSolution) {
+                displaySolutionResult(existingSolution);
             }
-            renderEvidence();
-            updateProgress();
-            initTabs();
-        });
+        }
 
-        window.addEventListener('storage', (e) => {
+window.addEventListener('DOMContentLoaded', async () => {
+    initTabs();
+    
+    try {
+        if (typeof SuspectsModule !== 'undefined') {
+            SuspectsModule.renderSuspects('suspectsContainer');
+        } else {
+            console.error('SuspectsModule not loaded! Make sure suspects.js is included before this script.');
+        }
+        
+        renderEvidence();
+        
+        const teamData = await getTeamData();
+        await updateProgress(teamData);
+        await initSolutionTab(teamData);
+    } catch (error) {
+        console.error('Error during initialization:', error);
+    }
+});
+
+        window.addEventListener('storage', async (e) => {
             if (e.key === getStorageKey()) {
                 renderEvidence();
-                updateProgress();
+                const teamData = await getTeamData();
+                await updateProgress(teamData);
             }
         });
-		
+        
         function initTabs() {
             const tabButtons = document.querySelectorAll('.tab-button');
             const tabPanes = document.querySelectorAll('.tab-pane');
@@ -938,6 +1539,8 @@
                 });
             });
         }
+
+        window.submitSolution = submitSolution;
     </script>
 </body>
 </html>
