@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Τεκμήριο Ξεκλειδώθηκε</title>
+    
+    <!-- Google Model Viewer for AR -->
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .animated-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0.1;
+            background-image: repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,107,0,0.5) 35px, rgba(255,107,0,0.5) 70px);
+            animation: slide 20s linear infinite;
+        }
+
+        @keyframes slide {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(70px); }
+        }
+
+        @keyframes unlock {
+            0% { transform: scale(0) rotate(-180deg); opacity: 0; }
+            50% { transform: scale(1.2) rotate(10deg); }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            position: relative;
+            z-index: 10;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .check-icon {
+            width: 32px;
+            height: 32px;
+            color: #fff;
+            animation: unlock 0.6s ease-out;
+        }
+
+        .header h1 {
+            color: #fff;
+            font-size: 24px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            color: #fff;
+            text-align: center;
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 18px;
+            }
+            .check-icon {
+                width: 24px;
+                height: 24px;
+            }
+            .header {
+                padding: 15px 10px;
+            }
+            .header p {
+                font-size: 12px;
+            }
+        }
+
+        .container {
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+        }
+
+        .evidence-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+            border: 3px solid #ff6b00;
+        }
+
+        @media (max-width: 768px) {
+            .evidence-card {
+                border-radius: 10px;
+                border: 2px solid #ff6b00;
+            }
+        }
+
+        .badge-bar {
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .badge-bar {
+                padding: 12px 15px;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        .badge-info {
+            flex: 1;
+        }
+
+        .evidence-id {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ff6b00;
+            font-family: monospace;
+            letter-spacing: 2px;
+        }
+
+        @media (max-width: 768px) {
+            .evidence-id {
+                font-size: 22px;
+                letter-spacing: 1px;
+            }
+        }
+
+        .category {
+            font-size: 12px;
+            color: #aaa;
+            margin-top: 2px;
+        }
+
+        @media (max-width: 768px) {
+            .category {
+                font-size: 10px;
+            }
+        }
+
+        .official-badge {
+            background: rgba(255,107,0,0.2);
+            border: 2px solid #ff6b00;
+            border-radius: 8px;
+            padding: 8px 15px;
+            font-size: 11px;
+            color: #ff6b00;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .official-badge {
+                font-size: 9px;
+                padding: 6px 10px;
+                align-self: flex-start;
+            }
+        }
+
+        .crime-scene-photo {
+            background: #000;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-top: 2px solid #333;
+            border-bottom: 2px solid #333;
+            overflow: hidden;
+        }
+
+        #crimeSceneCanvas {
+            width: 100%;
+            max-width: 800px;
+            height: auto;
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .crime-scene-photo {
+                border-top: 1px solid #333;
+                border-bottom: 1px solid #333;
+            }
+        }
+
+        .confidential-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255,0,0,0.9);
+            color: white;
+            padding: 5px 10px;
+            font-size: 11px;
+            font-weight: bold;
+            border-radius: 5px;
+            border: 1px solid #fff;
+        }
+
+        @media (max-width: 768px) {
+            .confidential-badge {
+                font-size: 9px;
+                padding: 4px 8px;
+                top: 5px;
+                right: 5px;
+            }
+        }
+
+        /* AR Viewer Styles */
+        .ar-container {
+            margin: 20px 0;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(255,107,0,0.05) 0%, rgba(255,136,0,0.05) 100%);
+            border: 2px solid #ff6b00;
+            border-radius: 10px;
+        }
+
+        .ar-title {
+            font-size: 18px;
+            color: #ff6b00;
+            font-weight: bold;
+            margin: 0 0 15px 0;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        model-viewer {
+            width: 100%;
+            height: 450px;
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+        }
+
+        @media (max-width: 768px) {
+            model-viewer {
+                height: 350px;
+            }
+            .ar-title {
+                font-size: 16px;
+            }
+            .ar-container {
+                padding: 15px;
+                margin: 15px 0;
+            }
+        }
+
+        .details {
+            padding: 30px;
+            background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
+        }
+
+        @media (max-width: 768px) {
+            .details {
+                padding: 20px;
+            }
+        }
+
+        .evidence-title {
+            margin: 0 0 25px 0;
+            font-size: 24px;
+            color: #1a1a2e;
+            border-bottom: 3px solid #ff6b00;
+            padding-bottom: 15px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .evidence-title {
+                font-size: 20px;
+                margin: 0 0 20px 0;
+                gap: 10px;
+            }
+        }
+
+        .section {
+            margin-bottom: 25px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        .section-title {
+            font-size: 18px;
+            color: #0f3460;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .section-title {
+                font-size: 16px;
+                gap: 8px;
+            }
+        }
+
+        .section-content {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #333;
+            margin: 0;
+        }
+
+        .section-content p {
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .section-content {
+                font-size: 14px;
+            }
+        }
+
+        ul {
+            padding-left: 25px;
+            line-height: 2;
+        }
+
+        ul li {
+            margin-bottom: 8px;
+        }
+
+        @media (max-width: 768px) {
+            ul {
+                padding-left: 20px;
+                line-height: 1.8;
+            }
+        }
+
+        .glass-item {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 12px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .glass-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .glass-item.critical {
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe5e5 100%);
+            border-color: #dc3545;
+            border-width: 3px;
+            box-shadow: 0 4px 12px rgba(220,53,69,0.15);
+        }
+
+        .glass-item.critical:hover {
+            box-shadow: 0 6px 16px rgba(220,53,69,0.25);
+        }
+
+        .glass-name {
+            font-weight: 700;
+            font-size: 15px;
+            color: #1a1a2e;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .glass-name::before {
+            content: "🥃";
+            font-size: 20px;
+        }
+
+        .glass-item.critical .glass-name {
+            color: #dc3545;
+            font-size: 16px;
+        }
+
+        .glass-details {
+            font-size: 13px;
+            color: #666;
+            padding-left: 28px;
+            line-height: 1.6;
+        }
+
+        .glass-details div {
+            margin-bottom: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .glass-item {
+                padding: 12px;
+                margin-bottom: 10px;
+            }
+            
+            .glass-name {
+                font-size: 14px;
+            }
+            
+            .glass-details {
+                font-size: 12px;
+            }
+        }
+
+        .significance-box {
+            background: linear-gradient(135deg, #fff5f0 0%, #ffe8db 100%);
+            border: 2px solid #ff6b00;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 12px rgba(255,107,0,0.1);
+        }
+
+        .significance-title {
+            font-size: 18px;
+            color: #ff6b00;
+            margin: 0 0 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+        }
+
+        @media (max-width: 768px) {
+            .significance-box {
+                padding: 20px;
+                margin-bottom: 20px;
+            }
+            
+            .significance-title {
+                font-size: 16px;
+            }
+        }
+
+        .significance-text {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #1a1a2e;
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .significance-text {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-background"></div>
+
+    <div class="header">
+        <div class="header-content">
+            <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+            <h1>ΤΕΚΜΗΡΙΟ ΞΕΚΛΕΙΔΩΘΗΚΕ!</h1>
+        </div>
+        <p>Προστέθηκε στον φάκελο υπόθεσης</p>
+    </div>
+
+    <div class="container">
+        <div class="evidence-card">
+            <div class="badge-bar">
+                <div class="badge-info">
+                    <div class="evidence-id">ΤΕΚ #002</div>
+                </div>
+                <div class="official-badge">ΕΠΙΣΗΜΟ ΤΕΚΜΗΡΙΟ</div>
+            </div>
+
+            <div class="crime-scene-photo">
+                <canvas id="crimeSceneCanvas"></canvas>
+                <div class="confidential-badge">ΑΠΟΡΡΗΤΟ</div>
+            </div>
+
+            <!-- AR 3D VIEWER SECTION -->
+            <div class="ar-container">
+                <h3 class="ar-title">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M2 16.1A5 5 0 0 1 5.9 20M2 12.05A9 9 0 0 1 9.95 20M2 8V6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-6"></path>
+                        <line x1="2" y1="20" x2="2.01" y2="20"></line>
+                    </svg>
+                    ΠΡΟΒΟΛΗ ΣΕ 3D
+                </h3>
+                
+                <model-viewer
+                    src="glass_dirt.glb"
+                    alt="Crystal Glasses 3D Model - Evidence"
+                    ar
+                    ar-modes="webxr scene-viewer quick-look"
+                    camera-controls
+                    touch-action="pan-y"
+                    auto-rotate
+                    auto-rotate-delay="1000"
+                    rotation-per-second="30deg"
+                    shadow-intensity="1"
+                    exposure="0.8"
+                    camera-orbit="0deg 75deg 2.5m"
+                    min-camera-orbit="auto 0deg auto"
+                    max-camera-orbit="auto 180deg auto"
+                    loading="eager"
+                    reveal="auto"
+                    ar-scale="fixed">
+                    
+                    <!-- Loading indicator -->
+                    <div slot="poster" style="
+                        width: 100%;
+                        height: 100%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        background: #f5f5f5;
+                        flex-direction: column;
+                        gap: 10px;
+                    ">
+                        <div style="
+                            border: 4px solid #f3f3f3;
+                            border-top: 4px solid #ff6b00;
+                            border-radius: 50%;
+                            width: 40px;
+                            height: 40px;
+                            animation: spin 1s linear infinite;
+                        "></div>
+                        <p style="color: #666; font-size: 14px;">Φόρτωση 3D μοντέλου...</p>
+                    </div>
+                    
+                    <!-- Error fallback -->
+                    <div slot="error" style="
+                        width: 100%;
+                        height: 100%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        background: #fff3cd;
+                        flex-direction: column;
+                        gap: 15px;
+                        padding: 20px;
+                    ">
+                        <p style="color: #856404; font-size: 16px; font-weight: bold;">⚠️ Σφάλμα Φόρτωσης</p>
+                        <p style="color: #856404; font-size: 13px; text-align: center;">
+                            Το 3D μοντέλο δεν μπορεί να φορτώσει.<br>
+                            Ελέγξτε το αρχείο: glass_dirt.glb
+                        </p>
+                    </div>
+                </model-viewer>
+                
+                <div id="debugInfo" style="
+                    margin-top: 10px;
+                    padding: 10px;
+                    background: #e7f3ff;
+                    border: 1px solid #2196F3;
+                    border-radius: 5px;
+                    font-size: 12px;
+                    font-family: monospace;
+                    display: none;
+                "></div>
+            </div>
+
+            <div class="details">
+                <h2 class="evidence-title">🥃 Δύο Κρυστάλλινα Ποτήρια</h2>
+
+                <div class="section">
+                    <h3 class="section-title">
+                        <span style="font-size: 24px;">🔬</span>
+                        Εγκληματολογική Ανάλυση
+                    </h3>
+                    <div>
+                        <div class="glass-item critical">
+                            <div class="glass-name">Ποτήρι Α</div>
+                            <div class="glass-details">
+                                <div>• DNA θύματος</div>
+                                <div>• Κυάνιο εντοπίστηκε</div>
+                                <div>• Αποτυπώματα θύματος</div>
+                            </div>
+                        </div>
+                        <div class="glass-item">
+                            <div class="glass-name">Ποτήρι Β</div>
+                            <div class="glass-details">
+                                <div>• Μερικό DNA (υπό ανάλυση)</div>
+                                <div>• Ίχνη ουίσκι</div>
+                                <div>• Αποτυπώματα μερικώς σβησμένα</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="significance-box">
+                    <h3 class="significance-title">
+                        <span style="font-size: 20px;">💡</span>
+                        Σημασία για την Έρευνα
+                    </h3>
+                    <p class="significance-text">
+                        Ποιος ήταν ο δεύτερος άνθρωπος που έπινε με το θύμα; Γιατί τα αποτυπώματα είναι σβησμένα;
+                    </p>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">
+                        <span style="font-size: 24px;">❓</span>
+                        Βασικά Ερωτήματα Διερεύνησης
+                    </h3>
+                    <ul class="section-content">
+                        <li>Ποιος ήπιε από το Ποτήρι Β;</li>
+                        <li>Γιατί κάποιος σβήνει τα αποτυπώματα;</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function drawCrimeScene() {
+            const canvas = document.getElementById('crimeSceneCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = 800;
+            canvas.height = 400;
+
+            // SAME background as TEK1 - wooden floor
+            const floorGradient = ctx.createLinearGradient(0, 0, 0, 400);
+            floorGradient.addColorStop(0, '#8b7355');
+            floorGradient.addColorStop(1, '#6b5345');
+            ctx.fillStyle = floorGradient;
+            ctx.fillRect(0, 0, 800, 400);
+
+            // Wood grain texture (same as TEK1)
+            ctx.strokeStyle = 'rgba(101, 67, 33, 0.3)';
+            ctx.lineWidth = 2;
+            for (let i = 0; i < 400; i += 40) {
+                ctx.beginPath();
+                ctx.moveTo(0, i);
+                ctx.lineTo(800, i + Math.random() * 10);
+                ctx.stroke();
+            }
+
+            // Shadow for glass 1 (upright whiskey glass)
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+            ctx.beginPath();
+            ctx.ellipse(280, 320, 35, 15, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Shadow for glass 2 (tipped whiskey glass)
+            ctx.beginPath();
+            ctx.ellipse(520, 330, 40, 15, -0.3, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Glass 1 (upright) - SHORT WHISKEY GLASS (tumbler/rocks glass)
+            const glass1Gradient = ctx.createLinearGradient(240, 260, 320, 260);
+            glass1Gradient.addColorStop(0, 'rgba(200, 220, 255, 0.3)');
+            glass1Gradient.addColorStop(0.5, 'rgba(220, 235, 255, 0.5)');
+            glass1Gradient.addColorStop(1, 'rgba(200, 220, 255, 0.3)');
+
+            // Glass 1 body - wider and shorter
+            ctx.fillStyle = glass1Gradient;
+            ctx.beginPath();
+            ctx.moveTo(245, 320);
+            ctx.lineTo(250, 260);
+            ctx.lineTo(310, 260);
+            ctx.lineTo(315, 320);
+            ctx.closePath();
+            ctx.fill();
+
+            // Glass 1 rim (wider)
+            ctx.strokeStyle = 'rgba(180, 200, 230, 0.8)';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.ellipse(280, 260, 32, 8, 0, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // Glass 1 base (wider)
+            ctx.fillStyle = 'rgba(180, 200, 230, 0.4)';
+            ctx.beginPath();
+            ctx.ellipse(280, 320, 35, 12, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Liquid in Glass 1 (whiskey with cyanide)
+            ctx.fillStyle = 'rgba(200, 150, 80, 0.5)';
+            ctx.beginPath();
+            ctx.moveTo(252, 305);
+            ctx.lineTo(255, 285);
+            ctx.lineTo(305, 285);
+            ctx.lineTo(308, 305);
+            ctx.closePath();
+            ctx.fill();
+
+            // Highlights on Glass 1
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(253, 270);
+            ctx.lineTo(250, 310);
+            ctx.stroke();
+
+            // Glass 2 (tipped) - SHORT WHISKEY GLASS
+            ctx.save();
+            ctx.translate(520, 300);
+            ctx.rotate(-0.4);
+
+            const glass2Gradient = ctx.createLinearGradient(-40, -30, 40, -30);
+            glass2Gradient.addColorStop(0, 'rgba(200, 220, 255, 0.3)');
+            glass2Gradient.addColorStop(0.5, 'rgba(220, 235, 255, 0.5)');
+            glass2Gradient.addColorStop(1, 'rgba(200, 220, 255, 0.3)');
+
+            // Glass 2 body - wider and shorter (on its side)
+            ctx.fillStyle = glass2Gradient;
+            ctx.beginPath();
+            ctx.moveTo(-35, 0);
+            ctx.lineTo(-30, -60);
+            ctx.lineTo(30, -60);
+            ctx.lineTo(35, 0);
+            ctx.closePath();
+            ctx.fill();
+
+            // Glass 2 rim (on its side)
+            ctx.strokeStyle = 'rgba(180, 200, 230, 0.8)';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.ellipse(0, -60, 32, 8, 0, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // Glass 2 base (on its side)
+            ctx.fillStyle = 'rgba(180, 200, 230, 0.4)';
+            ctx.beginPath();
+            ctx.ellipse(0, 0, 35, 12, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Smudged fingerprints on Glass 2
+            ctx.fillStyle = 'rgba(100, 80, 60, 0.2)';
+            for (let i = 0; i < 4; i++) {
+                ctx.beginPath();
+                ctx.ellipse(-10 + i * 8, -35 + i * 8, 8, 12, 0.5, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // Highlights on Glass 2
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(-25, -45);
+            ctx.lineTo(-22, -10);
+            ctx.stroke();
+
+            ctx.restore();
+
+            // Evidence markers
+            ctx.fillStyle = 'rgba(220, 53, 69, 0.8)';
+            ctx.font = 'bold 16px monospace';
+            ctx.textAlign = 'center';
+            ctx.fillText('A', 280, 345);
+            ctx.fillText('B', 500, 345);
+
+            // Crime scene tape/border (same as TEK1)
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+            ctx.fillRect(0, 0, 800, 40);
+            
+            ctx.fillStyle = '#ff0000';
+            ctx.font = 'bold 14px monospace';
+            ctx.textAlign = 'left';
+            ctx.fillText('● REC', 10, 25);
+            
+            ctx.fillStyle = '#fff';
+            ctx.fillText('22/09/2025  22:20:15  |  ΣΚΗΝΗ ΕΓΚΛΗΜΑΤΟΣ - ΓΡΑΦΕΙΟ', 80, 25);
+            
+            ctx.textAlign = 'right';
+            ctx.fillText('ΤΕΚ #002', 790, 25);
+        }
+
+        window.onload = function() {
+            drawCrimeScene();
+            
+            // Enhanced model viewer debugging
+            const modelViewer = document.querySelector('model-viewer');
+            const debugInfo = document.getElementById('debugInfo');
+            
+            if (modelViewer) {
+                debugInfo.style.display = 'block';
+                debugInfo.innerHTML = '🔍 Προσπάθεια φόρτωσης: glass_dirt.glb<br>';
+                
+                modelViewer.addEventListener('progress', (event) => {
+                    const percent = Math.round(event.detail.totalProgress * 100);
+                    debugInfo.innerHTML = `⏳ Φόρτωση: ${percent}%<br>`;
+                });
+                
+                modelViewer.addEventListener('load', () => {
+                    debugInfo.innerHTML = '✅ 3D μοντέλο φορτώθηκε επιτυχώς!<br>';
+                    debugInfo.style.background = '#d4edda';
+                    debugInfo.style.borderColor = '#28a745';
+                    setTimeout(() => {
+                        debugInfo.style.display = 'none';
+                    }, 3000);
+                });
+                
+                modelViewer.addEventListener('error', (event) => {
+                    debugInfo.innerHTML = '❌ ΣΦΑΛΜΑ: Το αρχείο δεν μπορεί να φορτώσει<br>';
+                    debugInfo.innerHTML += 'Ελέγξτε:<br>';
+                    debugInfo.innerHTML += '1. Το αρχείο υπάρχει στον ίδιο φάκελο<br>';
+                    debugInfo.innerHTML += '2. Το όνομα είναι: glass_dirt.glb<br>';
+                    debugInfo.innerHTML += '3. Το αρχείο είναι έγκυρο .glb<br>';
+                    debugInfo.style.background = '#f8d7da';
+                    debugInfo.style.borderColor = '#dc3545';
+                });
+                
+                setTimeout(() => {
+                    if (debugInfo.innerHTML.includes('Φόρτωση')) {
+                        debugInfo.innerHTML = '⚠️ Το μοντέλο δεν φορτώνει...<br>';
+                        debugInfo.innerHTML += 'Πιθανές αιτίες:<br>';
+                        debugInfo.innerHTML += '• Το αρχείο δεν βρέθηκε<br>';
+                        debugInfo.innerHTML += '• Λάθος όνομα: glass_dirt.glb<br>';
+                        debugInfo.style.background = '#fff3cd';
+                        debugInfo.style.borderColor = '#ffc107';
+                    }
+                }, 10000);
+            }
+        };
+    </script>
+</body>
+</html>
