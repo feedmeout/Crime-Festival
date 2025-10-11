@@ -433,31 +433,37 @@
         }
     }
 
-    // === HYBRID STORAGE ===
-    async function getAllTeams() {
-        if (isFirebaseReady()) {
-            const firebaseTeams = await getAllTeamsFromFirebase();
-            if (firebaseTeams.length > 0) return firebaseTeams;
+async function getAllTeams() {
+    const allTeams = new Map();
+    
+    // Get from localStorage first
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key.startsWith('unlocked_teks_')) {
+            const teamName = key.replace('unlocked_teks_', '');
+            const unlockedTeks = JSON.parse(localStorage.getItem(key));
+            allTeams.set(teamName, { name: teamName, unlocked: unlockedTeks });
         }
-        
-        const teams = [];
-        for (let i = 0; i < localStorage.length; i++) {
-            const key = localStorage.key(i);
-            if (key.startsWith('unlocked_teks_')) {
-                const teamName = key.replace('unlocked_teks_', '');
-                const unlockedTeks = JSON.parse(localStorage.getItem(key));
-                teams.push({ name: teamName, unlocked: unlockedTeks });
-            }
-        }
-        return teams;
     }
+    
+    // Merge with Firebase (Firebase takes priority if it has data)
+    if (isFirebaseReady()) {
+        const firebaseTeams = await getAllTeamsFromFirebase();
+        firebaseTeams.forEach(team => {
+            if (team.unlocked && team.unlocked.length > 0) {
+                allTeams.set(team.name, team);
+            }
+        });
+    }
+    
+    return Array.from(allTeams.values());
+}
 
     async function saveTeam(teamName, unlockedTeks) {
         localStorage.setItem(`unlocked_teks_${teamName}`, JSON.stringify(unlockedTeks));
         await saveTeamToFirebase(teamName, unlockedTeks);
     }
 
-    // === EXPORT / IMPORT ===
     async function exportAllData() {
         const teams = await getAllTeams();
         
