@@ -1234,6 +1234,46 @@ function getUnlockedTeks() {
         return [];
     }
 }
+
+function formatElapsedTime(ms) {
+    const seconds = Math.floor(ms / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    
+    const h = hours;
+    const m = minutes % 60;
+    const s = seconds % 60;
+    
+    if (h > 0) {
+        return `${h}ω ${m}λ ${s}δ`;
+    } else if (m > 0) {
+        return `${m}λ ${s}δ`;
+    } else {
+        return `${s}δ`;
+    }
+}
+
+function startLiveTimer(startTime) {
+    if (timerInterval) clearInterval(timerInterval);
+    
+    const timerElement = document.getElementById('liveTimer');
+    if (!timerElement) return;
+    
+    timerInterval = setInterval(() => {
+        const now = new Date();
+        const start = new Date(startTime);
+        const elapsed = now - start;
+        timerElement.textContent = formatElapsedTime(elapsed);
+    }, 1000);
+}
+
+function stopTimer() {
+    if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+    }
+}
+
 async function getTeamData() {
     if (window.firebaseDB) {
         try {
