@@ -630,8 +630,6 @@
 function renderWelcome() {
     const hasPreData = existingPreData !== null;
     const hasPostData = existingPostData !== null;
-    
-    // If both surveys completed, show completion screen
     if (hasPreData && hasPostData) {
         document.getElementById('app').innerHTML = `
             <div class="header">
@@ -674,8 +672,7 @@ function renderWelcome() {
         `;
         return;
     }
-    
-    // If POST is completed but not PRE (shouldn't happen but handle it)
+
     if (hasPostData && !hasPreData) {
         document.getElementById('app').innerHTML = `
             <div class="header">
@@ -694,8 +691,7 @@ function renderWelcome() {
         `;
         return;
     }
-    
-    // Original welcome screen - DIFFERENT content if PRE is completed
+
     document.getElementById('app').innerHTML = `
         <div class="header">
             <h1>ΕΡΕΥΝΗΤΙΚΟ ΕΡΩΤΗΜΑΤΟΛΟΓΙΟ</h1>
@@ -1185,7 +1181,6 @@ async function submitSurvey() {
         const docRef = window.firebaseDoc(window.firebaseDB, 'surveys', docId);
         await window.firebaseSetDoc(docRef, data);
 
-        // Different success screens based on survey type
         if (surveyType === 'pre') {
             document.getElementById('app').innerHTML = `
                 <div class="form-section active" style="text-align: center; padding: 80px 40px;">
@@ -1204,7 +1199,7 @@ async function submitSurvey() {
                 </div>
             `;
         } else {
-            // POST survey completion - existing success screen
+
             document.getElementById('app').innerHTML = `
                 <div class="form-section active" style="text-align: center; padding: 80px 40px;">
                     <div style="font-size: 100px; margin-bottom: 30px;">✅</div>
