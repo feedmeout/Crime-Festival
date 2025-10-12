@@ -1211,114 +1211,90 @@ const SCORING = {
             return `unlocked_teks_${teamCode}`;
         }
 
-        function getUnlockedTeks() {
-            return JSON.parse(localStorage.getItem(getStorageKey()) || '[]');
-        }
-
-        function formatElapsedTime(ms) {
-            const seconds = Math.floor(ms / 1000);
-            const minutes = Math.floor(seconds / 60);
-            const hours = Math.floor(minutes / 60);
-            
-            const h = hours;
-            const m = minutes % 60;
-            const s = seconds % 60;
-            
-            if (h > 0) {
-                return `${h}ω ${m}λ ${s}δ`;
-            } else if (m > 0) {
-                return `${m}λ ${s}δ`;
-            } else {
-                return `${s}δ`;
-            }
-        }
-
-        function startLiveTimer(startTime) {
-            if (timerInterval) clearInterval(timerInterval);
-            
-            const timerElement = document.getElementById('liveTimer');
-            if (!timerElement) return;
-            
-            timerInterval = setInterval(() => {
-                const now = new Date();
-                const start = new Date(startTime);
-                const elapsed = now - start;
-                timerElement.textContent = formatElapsedTime(elapsed);
-            }, 1000);
-        }
-
-        function stopTimer() {
-            if (timerInterval) {
-                clearInterval(timerInterval);
-                timerInterval = null;
-            }
-        }
-
-        async function getTeamData() {
-            if (window.firebaseDB) {
-                try {
-                    const docRef = window.firebaseDoc(window.firebaseDB, 'teams', teamCode);
-                    const docSnap = await window.firebaseGetDoc(docRef);
-                    
-                    if (docSnap.exists()) {
-                        return docSnap.data();
-                    }
-                } catch (error) {
-                    console.error('Firebase load error:', error);
-                }
-            }
-async function logEvidenceUnlock(tekId) {
-            if (!window.firebaseDB) return;
-            
-            try {
-                const teamData = await getTeamData();
-                const now = new Date().toISOString();
-                const evidenceTimestamps = teamData.evidenceTimestamps || {};
-                const startTime = teamData.startTime || now;
-
-                if (!evidenceTimestamps[tekId]) {
-                    evidenceTimestamps[tekId] = now;
-                    
-                    const updatedData = {
-                        ...teamData,
-                        startTime: startTime,
-                        evidenceTimestamps: evidenceTimestamps,
-                        unlocked: teamData.unlocked || []
-                    };
-                    
-                    const docRef = window.firebaseDoc(window.firebaseDB, 'teams', teamCode);
-                    await window.firebaseSetDoc(docRef, updatedData);
-                    
-                    console.log(`📊 Logged unlock: ${tekId} at ${now}`);
-                }
-            } catch (error) {
-                console.error('Error logging evidence unlock:', error);
-            }
+function getUnlockedTeks() {
+    const stored = localStorage.getItem(getStorageKey());
+    if (!stored) return [];
+    
+    try {
+        const data = JSON.parse(stored);
+        
+        // New format: object with 'unlocked' property
+        if (data && typeof data === 'object' && !Array.isArray(data) && data.unlocked) {
+            return Array.isArray(data.unlocked) ? data.unlocked : [];
         }
         
-        window.logEvidenceUnlock = logEvidenceUnlock;
-		
-            const localData = localStorage.getItem(getStorageKey());
-            if (localData) {
+        // Old format: just an array
+        if (Array.isArray(data)) {
+            return data;
+        }
+        
+        return [];
+    } catch (e) {
+        console.error('Error loading unlocked TEKs:', e);
+        return [];
+    }
+}
+async function getTeamData() {
+    if (window.firebaseDB) {
+        try {
+            const docRef = window.firebaseDoc(window.firebaseDB, 'teams', teamCode);
+            const docSnap = await window.firebaseGetDoc(docRef);
+            
+            if (docSnap.exists()) {
+                return docSnap.data();
+            }
+        } catch (error) {
+            console.error('Firebase load error:', error);
+        }
+    }
+    
+    // Fallback to localStorage
+    const localData = localStorage.getItem(getStorageKey());
+    if (localData) {
+        try {
+            const parsed = JSON.parse(localData);
+            
+            // New format: already an object with unlocked, timestamps, etc.
+            if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
                 return {
-                    unlocked: JSON.parse(localData),
+                    unlocked: parsed.unlocked || [],
+                    timestamps: parsed.timestamps || {},
+                    startTime: parsed.startTime || null,
+                    completedAt: parsed.completedAt || null,
+                    totalTimeMs: parsed.totalTimeMs || null,
+                    solution: parsed.solution || null,
+                    evidenceTimestamps: parsed.evidenceTimestamps || {}
+                };
+            }
+            
+            // Old format: just an array
+            if (Array.isArray(parsed)) {
+                return {
+                    unlocked: parsed,
                     timestamps: {},
                     startTime: null,
                     completedAt: null,
                     totalTimeMs: null,
-                    solution: null
+                    solution: null,
+                    evidenceTimestamps: {}
                 };
             }
-            
-            return {
-                unlocked: [],
-                timestamps: {},
-                startTime: null,
-                completedAt: null,
-                totalTimeMs: null,
-                solution: null
-            };
+        } catch (e) {
+            console.error('Error parsing localStorage data:', e);
         }
+    }
+    
+    // Default empty state
+    return {
+        unlocked: [],
+        timestamps: {},
+        startTime: null,
+        completedAt: null,
+        totalTimeMs: null,
+        solution: null,
+        evidenceTimestamps: {}
+    };
+}
 
 async function updateProgress(teamData) {
     const unlockedTeks = teamData.unlocked || [];
@@ -1979,7 +1955,6 @@ async function initSolutionTab(teamData) {
     const existingSolution = teamData.solution;
     
     if (existingSolution) {
-        // Replace the intro box content when solution exists
         if (solutionIntroBox) {
             solutionIntroBox.innerHTML = `
                 <h2 style="color: #856404;">🔒 Η ΛΥΣΗ ΥΠΟΒΛΗΘΗΚΕ</h2>
@@ -2003,18 +1978,14 @@ async function initSolutionTab(teamData) {
 }
 
 window.addEventListener('DOMContentLoaded', async () => {
-    // 1. CHECK IF TEAM NAME IS PROVIDED
     if (teamCode === 'default') {
         console.warn('⚠️ No team specified, redirecting to team entry...');
         window.location.href = 'team_entry.html';
         return;
     }
-    
-    // 2. ✅ AUTO-CREATE TEAM IF DOESN'T EXIST
+	
     try {
         const teamData = await getTeamData();
-        
-        // If team doesn't exist in Firebase, create it
         if (!teamData.unlocked || teamData.unlocked.length === 0) {
             console.log(`📝 Creating new team: ${teamCode}`);
             const newTeamData = {
@@ -2025,8 +1996,7 @@ window.addEventListener('DOMContentLoaded', async () => {
                 totalTimeMs: null,
                 createdAt: new Date().toISOString()
             };
-            
-            // Save to Firebase
+			
             if (window.firebaseDB) {
                 await window.firebaseSetDoc(
                     window.firebaseDoc(window.firebaseDB, 'teams', teamCode),
@@ -2034,35 +2004,25 @@ window.addEventListener('DOMContentLoaded', async () => {
                 );
                 console.log(`✅ Team ${teamCode} created in Firebase`);
             }
-            
-            // Also save to localStorage
+
             localStorage.setItem(`unlocked_teks_${teamCode}`, JSON.stringify([]));
         }
     } catch (error) {
         console.error('Error checking/creating team:', error);
     }
     
-    // 3. INITIALIZE TABS
     initTabs();
     
     try {
-        // 4. RENDER SUSPECTS
         if (typeof SuspectsModule !== 'undefined') {
             SuspectsModule.renderSuspects('suspectsContainer');
         } else {
             console.error('SuspectsModule not loaded! Make sure suspects.js is included before this script.');
         }
-        
-        // 5. RENDER EVIDENCE CARDS
+		
         renderEvidence();
-        
-        // 6. LOAD TEAM DATA (reload after potential creation)
         const teamData = await getTeamData();
-        
-        // 7. UPDATE PROGRESS BAR AND TIMER
         await updateProgress(teamData);
-        
-        // 8. INITIALIZE SOLUTION TAB
         await initSolutionTab(teamData);
         
     } catch (error) {
