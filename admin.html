@@ -1135,7 +1135,7 @@ async function toggleTek(teamName, tekNumber) {
 }
 
 async function unlockAll(teamName) {
-    if (confirm(`Ξεκλείδωμα όλων των TEKs για την ομάδα "${teamName}";`)) {
+    if (confirm(`ΞΕΚΛΕΙΔΩΜΑ ΟΛΩΝ ΤΩΝ ΤΕΚΜΗΡΙΩΝ ΓΙΑ ΤΗΝ ΟΜΑΔΑ"${teamName}";`)) {
         console.log(`🔓 Unlocking all TEKs for team ${teamName}`);
         const teams = await getAllTeams();
         const team = teams.find(t => t.name === teamName);
@@ -1191,7 +1191,7 @@ async function unlockAll(teamName) {
     }
 
     async function deleteTeam(teamName) {
-        if (confirm(`Διαγραφή ομάδας "${teamName}";`)) {
+        if (confirm(`ΔΙΑΓΡΑΦΗ ΟΜΑΔΑΣ "${teamName}";`)) {
             localStorage.removeItem(`unlocked_teks_${teamName}`);
             if (isFirebaseReady()) {
                 try {
@@ -1207,7 +1207,7 @@ async function unlockAll(teamName) {
     }
 
 async function unlockAllForAll() {
-    if (confirm('Ξεκλείδωμα ΟΛΩΝ των TEKs για ΟΛΕΣ τις ομάδες;')) {
+    if (confirm('ΞΕΚΛΕΙΔΩΜΑ ΟΛΩΝ ΤΩΝ ΤΕΚΜΗΡΙΩΝ ΓΙΑ ΟΛΕΣ ΤΙΣ ΟΜΑΔΕΣ;')) {
         const teams = await getAllTeams();
         const allTeks = Array.from({length: TOTAL_TEKS}, (_, i) => (i + 1).toString());
         
@@ -1243,7 +1243,7 @@ async function unlockAllForAll() {
 }
 
     async function resetAll() {
-        if (confirm('ΔΙΑΓΡΑΦΗ ΟΛΩΝ των ομάδων;')) {
+        if (confirm('ΔΙΑΓΡΑΦΗ ΟΛΩΝ ΤΩΝ ΟΜΑΔΩΝ;')) {
             const teams = await getAllTeams();
             for (const team of teams) {
                 localStorage.removeItem(`unlocked_teks_${team.name}`);
