@@ -571,7 +571,7 @@
     </div>
 
     <script>
-        // Device ID Management
+	
         function getDeviceId() {
             let deviceId = localStorage.getItem('crime_festival_device_id');
             if (!deviceId) {
@@ -590,8 +590,7 @@
         let existingPostData = null;
         
         console.log('Device ID:', DEVICE_ID);
-        
-        // Initialize
+
         let initAttempts = 0;
         const maxAttempts = 50;
         
@@ -628,98 +627,177 @@
             renderWelcome();
         }
 
-        function renderWelcome() {
-            const hasPreData = existingPreData !== null;
-            const hasPostData = existingPostData !== null;
+function renderWelcome() {
+    const hasPreData = existingPreData !== null;
+    const hasPostData = existingPostData !== null;
+    
+    // If both surveys completed, show completion screen
+    if (hasPreData && hasPostData) {
+        document.getElementById('app').innerHTML = `
+            <div class="header">
+                <h1>ΕΡΕΥΝΗΤΙΚΟ ΕΡΩΤΗΜΑΤΟΛΟΓΙΟ</h1>
+                <p>ΜΕΛΕΤΗ ΧΡΗΣΗΣ (ΓΕΝΕΤΙΚΗΣ) ΤΕΧΝΗΤΗΣ ΝΟΗΜΟΣΥΝΗΣ</p>
+            </div>
             
-            document.getElementById('app').innerHTML = `
-                <div class="header">
-                    <h1>ΕΡΕΥΝΗΤΙΚΟ ΕΡΩΤΗΜΑΤΟΛΟΓΙΟ</h1>
-                    <p>Μελέτη Χρήσης Γενετικής Τεχνητής Νοημοσύνης</p>
+            <div class="form-section active" style="text-align: center; padding: 60px 40px;">
+                <div style="font-size: 100px; margin-bottom: 30px;">🎉</div>
+                <h1 style="color: var(--success); margin-bottom: 40px; font-size: 28px; line-height: 1.4;">
+                    ΣΑΣ ΕΥΧΑΡΙΣΤΟΥΜΕ ΘΕΡΜΑ<br>ΓΙΑ ΤΗ ΣΥΜΜΕΤΟΧΗ ΣΑΣ!
+                </h1>
+                
+                <div style="background: var(--gray-50); border: 2px solid var(--gray-300); padding: 25px; border-radius: 12px; margin: 30px 0;">
+                    <div style="display: grid; gap: 12px;">
+                        <div style="background: white; padding: 15px; border-radius: 8px; display: flex; align-items: center; gap: 12px;">
+                            <span style="font-size: 24px;">📋</span>
+                            <div style="text-align: left;">
+                                <strong style="color: var(--gray-800);">Προκαταρκτική Έρευνα</strong><br>
+                                <small style="color: var(--gray-600);">Ημερομηνία: ${new Date(existingPreData.submittedAt).toLocaleString('el-GR')}</small>
+                            </div>
+                        </div>
+                        <div style="background: white; padding: 15px; border-radius: 8px; display: flex; align-items: center; gap: 12px;">
+                            <span style="font-size: 24px;">📊</span>
+                            <div style="text-align: left;">
+                                <strong style="color: var(--gray-800);">Τελική Έρευνα</strong><br>
+                                <small style="color: var(--gray-600);">Ημερομηνία: ${new Date(existingPostData.submittedAt).toLocaleString('el-GR')}</small>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 
-                <div class="form-section active">
-                    <div style="text-align: center; margin-bottom: 40px;">
-                        <div style="font-size: 80px; margin-bottom: 20px;">🎯</div>
-                        <h1 style="color: var(--gray-900); font-size: 32px; margin-bottom: 15px;">
-                            Καλώς ήρθατε
-                        </h1>
-                        <p style="color: var(--gray-600); font-size: 16px;">
-                            Crime Festival 2025
-                        </p>
-                    </div>
-                    
-                    ${hasPreData ? `
-                        <div style="background: #d4edda; border: 2px solid #28a745; padding: 20px; border-radius: 12px; margin: 20px 0;">
-                            <p style="color: #155724; font-weight: 600; margin-bottom: 8px;">✅ Έχετε συμπληρώσει την έρευνα ΠΡΟ-παρέμβασης</p>
-                            <p style="color: #155724; font-size: 14px;">Ημερομηνία: ${new Date(existingPreData.submittedAt).toLocaleString('el-GR')}</p>
-                        </div>
-                    ` : ''}
-                    
-                    ${hasPostData ? `
-                        <div style="background: #d4edda; border: 2px solid #28a745; padding: 20px; border-radius: 12px; margin: 20px 0;">
-                            <p style="color: #155724; font-weight: 600; margin-bottom: 8px;">✅ Έχετε συμπληρώσει την έρευνα ΜΕΤΑ-παρέμβασης</p>
-                            <p style="color: #155724; font-size: 14px;">Ημερομηνία: ${new Date(existingPostData.submittedAt).toLocaleString('el-GR')}</p>
-                        </div>
-                    ` : ''}
-                    
-                    ${hasPreData && hasPostData ? `
-                        <div style="background: #fff3cd; border: 2px solid #ffc107; padding: 20px; border-radius: 12px; margin: 20px 0;">
-                            <p style="color: #856404; font-weight: 600; text-align: center;">🎉 Έχετε ολοκληρώσει και τις δύο έρευνες!</p>
-                        </div>
-                    ` : ''}
-                    
-                    <div style="background: #e7f3ff; border: 2px solid #2196f3; padding: 20px; border-radius: 12px; margin: 30px 0;">
-                        <p style="color: #0d47a1; line-height: 1.8; margin: 0;"><strong>📌 Σημαντικό:</strong></p>
-                        <p style="color: #0d47a1; line-height: 1.8; margin: 8px 0;">• Η έρευνα είναι ανώνυμη</p>
-                        <p style="color: #0d47a1; line-height: 1.8; margin: 8px 0;">• Διάρκεια: 5-10 λεπτά</p>
-                        <p style="color: #0d47a1; line-height: 1.8; margin: 8px 0;">• Οι απαντήσεις συνδέονται με τη συσκευή σας</p>
-                        <p style="color: #0d47a1; line-height: 1.8; margin: 8px 0;"><strong>⚠️ ΜΗΝ κλείσετε το παράθυρο μεταξύ PRE και POST έρευνας!</strong></p>
-                    </div>
-                    
-                    <div class="form-group" style="margin-top: 40px;">
-                        <label class="required" style="font-size: 18px; text-align: center; display: block;">
-                            Επιλέξτε τύπο έρευνας:
-                        </label>
-                        <div class="radio-group">
-                            <label class="radio-option" style="padding: 25px; ${hasPreData ? 'opacity: 0.5;' : ''}">
-                                <input type="radio" name="survey-type" value="pre" required ${hasPreData ? 'disabled' : ''}>
-                                <div>
-                                    <div style="font-size: 24px; margin-bottom: 8px;">📋</div>
-                                    <strong style="display: block; margin-bottom: 5px;">ΠΡΟ-Παρέμβασης</strong>
-                                    <small style="color: var(--gray-600);">${hasPreData ? '✓ Συμπληρωμένη' : 'ΠΡΙΝ τη δραστηριότητα'}</small>
-                                </div>
-                            </label>
-                            <label class="radio-option" style="padding: 25px; ${hasPostData ? 'opacity: 0.5;' : ''}">
-                                <input type="radio" name="survey-type" value="post" required ${hasPostData ? 'disabled' : ''}>
-                                <div>
-                                    <div style="font-size: 24px; margin-bottom: 8px;">📊</div>
-                                    <strong style="display: block; margin-bottom: 5px;">ΜΕΤΑ-Παρέμβασης</strong>
-                                    <small style="color: var(--gray-600);">${hasPostData ? '✓ Συμπληρωμένη' : 'ΜΕΤΑ τη δραστηριότητα'}</small>
-                                </div>
-                            </label>
-                        </div>
-                    </div>
-                    
-                    <div style="text-align: center; margin-top: 40px;">
-                        <button class="btn btn-primary" onclick="startSurvey()" style="font-size: 18px; padding: 20px 50px;" ${hasPreData && hasPostData ? 'disabled' : ''}>
-                            ${hasPreData && hasPostData ? '✅ ΟΛΟΚΛΗΡΩΜΕΝΟ' : 'ΕΝΑΡΞΗ →'}
-                        </button>
-                    </div>
+                <div style="background: #e7f3ff; border: 2px solid #2196f3; padding: 20px; border-radius: 12px; margin: 20px 0;">
+                    <p style="color: #0d47a1; line-height: 1.8; margin: 0;">
+                        <strong>✅ Οι απαντήσεις σας έχουν αποθηκευτεί.</strong>
+                    </p>
                 </div>
-            `;
+                
+                <button class="btn btn-primary" onclick="window.close()" style="margin-top: 20px;">
+                    Κλείσιμο
+                </button>
+            </div>
+        `;
+        return;
+    }
+    
+    // If POST is completed but not PRE (shouldn't happen but handle it)
+    if (hasPostData && !hasPreData) {
+        document.getElementById('app').innerHTML = `
+            <div class="header">
+                <h1>ΕΡΕΥΝΗΤΙΚΟ ΕΡΩΤΗΜΑΤΟΛΟΓΙΟ</h1>
+                <p>ΜΕΛΕΤΗ ΧΡΗΣΗΣ (ΓΕΝΕΤΙΚΗΣ) ΤΕΧΝΗΤΗΣ ΝΟΗΜΟΣΥΝΗΣ</p>
+            </div>
             
-            document.querySelectorAll('input[type="radio"]').forEach(radio => {
-                radio.addEventListener('change', function() {
-                    document.querySelectorAll(`input[name="${this.name}"]`).forEach(r => {
-                        const parent = r.closest('.radio-option');
-                        if (parent) parent.classList.remove('selected');
-                    });
-                    const parent = this.closest('.radio-option');
-                    if (parent) parent.classList.add('selected');
-                });
+            <div class="form-section active" style="text-align: center; padding: 60px 40px;">
+                <div style="font-size: 80px; margin-bottom: 20px;">⚠️</div>
+                <h1 style="color: var(--warning); margin-bottom: 20px;">Σφάλμα</h1>
+                <p style="font-size: 16px; color: var(--gray-700); margin-bottom: 30px;">
+                    Έχετε ολοκληρώσει την τελική έρευνα αλλά όχι την προκαταρκτική.
+                    Παρακαλώ επικοινωνήστε με τον ερευνητή.
+                </p>
+            </div>
+        `;
+        return;
+    }
+    
+    // Original welcome screen - DIFFERENT content if PRE is completed
+    document.getElementById('app').innerHTML = `
+        <div class="header">
+            <h1>ΕΡΕΥΝΗΤΙΚΟ ΕΡΩΤΗΜΑΤΟΛΟΓΙΟ</h1>
+            <p>ΜΕΛΕΤΗ ΧΡΗΣΗΣ (ΓΕΝΕΤΙΚΗΣ) ΤΕΧΝΗΤΗΣ ΝΟΗΜΟΣΥΝΗΣ</p>
+        </div>
+        
+        <div class="form-section active">
+            <div style="text-align: center; margin-bottom: 40px;">
+                <div style="font-size: 80px; margin-bottom: 20px;">🎯</div>
+                <h1 style="color: var(--gray-900); font-size: 32px; margin-bottom: 15px;">
+                    ΕΡΓΑΣΤΗΡΙΟ ΓΝΩΣΗΣ & ΕΥΦΥΟΥΣ ΠΛΗΡΟΦΟΡΙΚΗΣ
+                </h1>
+                <p style="color: var(--gray-600); font-size: 16px;">
+                    ΦΕΣΤΙΒΑΛ ΑΣΤΥΝΟΜΙΚΗΣ ΛΟΓΟΤΕΧΝΙΑΣ 2025
+                </p>
+            </div>
+            
+            ${hasPreData ? `
+                <div style="background: #d4edda; border: 2px solid #28a745; padding: 20px; border-radius: 12px; margin: 20px 0;">
+                    <p style="color: #155724; font-weight: 600; margin-bottom: 8px;">✅ Έχετε συμπληρώσει την προκαταρκτική έρευνα</p>
+                    <p style="color: #155724; font-size: 14px;">Ημερομηνία: ${new Date(existingPreData.submittedAt).toLocaleString('el-GR')}</p>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%); border: 2px solid var(--primary); padding: 25px; border-radius: 12px; margin: 30px 0; text-align: center;">
+                    <p style="color: var(--primary-dark); font-weight: 700; font-size: 20px; margin-bottom: 12px;">🎮 ΕΤΟΙΜΟΙ ΓΙΑ ΤΗΝ ΤΕΛΙΚΗ ΕΡΕΥΝΑ;</p>
+                </div>
+            ` : `
+                <div style="background: #fff3cd; border: 2px solid #ffc107; padding: 25px; border-radius: 12px; margin: 30px 0;">
+                    <p style="color: #856404; font-weight: 600; margin-bottom: 12px;">📋 ΣΗΜΑΝΤΙΚΟ - ΔΙΑΔΙΚΑΣΙΑ:</p>
+                    <ol style="color: #856404; text-align: left; line-height: 1.8; margin: 0; padding-left: 20px;">
+                        <li><strong>ΠΡΩΤΑ:</strong> Συμπληρώστε την Προκαταρκτική Έρευνα</li>
+                        <li>Συμμετέχετε στη δραστηριότητα/παιχνίδι</li>
+                        <li><strong>ΜΕΤΑ:</strong> Επιστρέψτε και συμπληρώστε την Τελική Έρευνα</li>
+                    </ol>
+                </div>
+                
+                <div style="background: #e7f3ff; border: 2px solid #2196f3; padding: 20px; border-radius: 12px; margin: 30px 0;">
+                    <p style="color: #0d47a1; line-height: 1.8; margin: 0;"><strong>📌 Σημαντικό:</strong></p>
+                    <p style="color: #0d47a1; line-height: 1.8; margin: 8px 0;">• Η έρευνα είναι ανώνυμη</p>
+                    <p style="color: #0d47a1; line-height: 1.8; margin: 8px 0;">• Διάρκεια: 5-10 λεπτά</p>
+                    <p style="color: #d32f2f; line-height: 1.8; margin: 8px 0; font-weight: 600;">• Παρακαλούμε απαντήστε ειλικρινά - δεν υπάρχουν σωστές ή λάθος απαντήσεις!</p>
+                </div>
+            `}
+            
+            <div class="form-group" style="margin-top: 40px;">
+                <label class="required" style="font-size: 18px; text-align: center; display: block;">
+                    ΕΠΙΛΟΓΗ ΕΡΕΥΝΑΣ:
+                </label>
+                <div class="radio-group">
+                    <label class="radio-option" style="padding: 25px; ${hasPreData ? 'opacity: 0.5;' : ''}">
+                        <input type="radio" name="survey-type" value="pre" required ${hasPreData ? 'disabled' : ''}>
+                        <div>
+                            <div style="font-size: 24px; margin-bottom: 8px;">📋</div>
+                            <strong style="display: block; margin-bottom: 5px;">ΠΡΟΚΑΤΑΡΚΤΙΚΗ</strong>
+                            <small style="color: var(--gray-600);">${hasPreData ? '✓ Συμπληρωμένη' : 'ΠΡΙΝ τη δραστηριότητα'}</small>
+                        </div>
+                    </label>
+                    <label class="radio-option" style="padding: 25px; ${!hasPreData || hasPostData ? 'opacity: 0.5;' : ''}">
+                        <input type="radio" name="survey-type" value="post" required ${!hasPreData || hasPostData ? 'disabled' : ''}>
+                        <div>
+                            <div style="font-size: 24px; margin-bottom: 8px;">📊</div>
+                            <strong style="display: block; margin-bottom: 5px;">ΤΕΛΙΚΗ</strong>
+                            <small style="color: var(--gray-600);">
+                                ${hasPostData ? '✓ Συμπληρωμένη' : 
+                                  !hasPreData ? '🔒 Κλειδωμένη - Πρώτα συμπληρώστε την ΠΡΟΚΑΤΑΡΚΤΙΚΗ' : 
+                                  'ΜΕΤΑ τη δραστηριότητα'}
+                            </small>
+                        </div>
+                    </label>
+                </div>
+            </div>
+            
+            ${!hasPreData ? `
+                <div style="background: #f8d7da; border: 2px solid #dc3545; padding: 15px; border-radius: 12px; margin: 20px 0; text-align: center;">
+                    <p style="color: #721c24; font-weight: 600; margin: 0;">
+                        ⚠️ Πρέπει να συμπληρώσετε την ΠΡΟΚΑΤΑΡΚΤΙΚΗ έρευνα πρώτα
+                    </p>
+                </div>
+            ` : ''}
+            
+            <div style="text-align: center; margin-top: 40px;">
+                <button class="btn btn-primary" onclick="startSurvey()" style="font-size: 18px; padding: 20px 50px;">
+                    ΕΝΑΡΞΗ →
+                </button>
+            </div>
+        </div>
+    `;
+    
+    document.querySelectorAll('input[type="radio"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            document.querySelectorAll(`input[name="${this.name}"]`).forEach(r => {
+                const parent = r.closest('.radio-option');
+                if (parent) parent.classList.remove('selected');
             });
-        }
+            const parent = this.closest('.radio-option');
+            if (parent) parent.classList.add('selected');
+        });
+    });
+}
 
         function startSurvey() {
             const selected = document.querySelector('input[name="survey-type"]:checked');
@@ -731,12 +809,12 @@
             surveyType = selected.value;
             
             if (surveyType === 'pre' && existingPreData) {
-                alert('Έχετε ήδη συμπληρώσει την έρευνα ΠΡΟ-παρέμβασης!');
+                alert('Έχετε συμπληρώσει την προκαταρκτική έρευνα!');
                 return;
             }
             
             if (surveyType === 'post' && existingPostData) {
-                alert('Έχετε ήδη συμπληρώσει την έρευνα ΜΕΤΑ-παρέμβασης!');
+                alert('Έχετε συμπληρώσει την τελική έρευνα!');
                 return;
             }
             
@@ -765,12 +843,12 @@
             
             document.getElementById('app').innerHTML = `
                 <div class="header">
-                    <h1>${surveyType === 'pre' ? '📋 ΕΡΕΥΝΑ ΠΡΟ-ΠΑΡΕΜΒΑΣΗΣ' : '📊 ΕΡΕΥΝΑ ΜΕΤΑ-ΠΑΡΕΜΒΑΣΗΣ'}</h1>
-                    <p>Μελέτη Χρήσης Γενετικής Τεχνητής Νοημοσύνης</p>
+                    <h1>${surveyType === 'pre' ? '📋 ΠΡΟΚΑΤΑΡΚΤΙΚΗ ΕΡΕΥΝΑ' : '📊 ΤΕΛΙΚΗ ΕΡΕΥΝΑ'}</h1>
+                    <p>ΜΕΛΕΤΗ ΧΡΗΣΗΣ (ΓΕΝΕΤΙΚΗΣ) ΤΕΧΝΗΤΗΣ ΝΟΗΜΟΣΥΝΗΣ</p>
                     <div class="progress-container">
                         <div class="progress-info">
                             <span>${surveyType === 'pre' ? 'ΠΡΙΝ ΤΗΝ ΔΡΑΣΤΗΡΙΟΤΗΤΑ' : 'ΜΕΤΑ ΤΗ ΔΡΑΣΤΗΡΙΟΤΗΤΑ'}</span>
-                            <span>Βήμα ${currentSection} από ${totalSections}</span>
+                            <span>Μέρος ${currentSection} από ${totalSections}</span>
                         </div>
                         <div class="progress-bar">
                             <div class="progress-fill" style="width: ${(currentSection / totalSections) * 100}%"></div>
@@ -786,7 +864,7 @@
                     <button class="btn btn-secondary" onclick="prevSection()" ${currentSection === 1 ? 'disabled' : ''}>
                         ← Προηγούμενο
                     </button>
-                    <span class="step-indicator">Βήμα ${currentSection} από ${totalSections}</span>
+                    <span class="step-indicator">Μέρος ${currentSection} από ${totalSections}</span>
                     ${currentSection < totalSections ? 
                         `<button class="btn btn-primary" onclick="nextSection()">Επόμενο →</button>` :
                         `<button class="btn btn-primary" onclick="submitSurvey()" id="submitBtn">✓ Υποβολή</button>`
@@ -799,7 +877,6 @@
         }
 
         function attachEventListeners() {
-            // Radio buttons
             document.querySelectorAll('input[type="radio"]').forEach(radio => {
                 radio.addEventListener('change', function() {
                     surveyData[this.name] = this.value;
@@ -821,8 +898,7 @@
                     if (parent) parent.classList.add('selected');
                 }
             });
-            
-            // Text inputs
+
             document.querySelectorAll('input[type="text"], input[type="number"], textarea').forEach(input => {
                 input.addEventListener('input', function() {
                     surveyData[this.name || this.id] = this.value;
@@ -831,13 +907,11 @@
                     input.value = surveyData[input.name || input.id];
                 }
             });
-            
-            // Checkboxes
+
             document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
                 checkbox.addEventListener('change', function() {
                     if (!surveyData[this.name]) surveyData[this.name] = [];
                     
-                    // Initialize if not array
                     if (!Array.isArray(surveyData[this.name])) {
                         surveyData[this.name] = [];
                     }
@@ -851,14 +925,12 @@
                     }
                 });
 
-                // Restore checked state
                 if (surveyData[checkbox.name] && Array.isArray(surveyData[checkbox.name]) && surveyData[checkbox.name].includes(checkbox.value)) {
                     checkbox.checked = true;
                     checkbox.closest('.checkbox-option').classList.add('selected');
                 }
             });
 
-            // Restore branching state
             if(document.getElementById('branching-question')) {
                 handleBranching();
             }
@@ -870,8 +942,7 @@
             const branchB = document.getElementById('branch-b');
             const branchC = document.getElementById('branch-c');
             const commonQuestions = document.getElementById('common-questions');
-            
-            // Hide all branches initially
+
             if(branchA) branchA.classList.add('hidden');
             if(branchB) branchB.classList.add('hidden');
             if(branchC) branchC.classList.add('hidden');
@@ -898,7 +969,75 @@
                 }
             }
         }
+function handleServicesSelection() {
+    const servicesUsed = document.querySelectorAll('input[name="services-used"]:checked');
+    const branchA = document.getElementById('branch-a');
+    
+    let hasAIService = false;
+    servicesUsed.forEach(service => {
+        if (service.value !== 'none' && service.value !== 'dont-know') {
+            hasAIService = true;
+        }
+    });
+    
+    if (hasAIService) {
+        if (branchA) {
+            branchA.classList.remove('hidden');
+            setRequired(branchA, true);
+        }
 
+        const noneBox = document.querySelector('input[name="services-used"][value="none"]');
+        const dontKnowBox = document.querySelector('input[name="services-used"][value="dont-know"]');
+        if (noneBox) {
+            noneBox.checked = false;
+            noneBox.closest('.checkbox-option').classList.remove('selected');
+        }
+        if (dontKnowBox) {
+            dontKnowBox.checked = false;
+            dontKnowBox.closest('.checkbox-option').classList.remove('selected');
+        }
+    } else {
+
+        if (branchA) {
+            branchA.classList.add('hidden');
+            setRequired(branchA, false);
+        }
+    }
+}
+
+function handleNoneSelected(checkbox) {
+    if (checkbox.checked) {
+        document.querySelectorAll('input[name="services-used"]').forEach(cb => {
+            if (cb !== checkbox && cb.value !== 'dont-know') {
+                cb.checked = false;
+                cb.closest('.checkbox-option').classList.remove('selected');
+            }
+        });
+
+        const branchA = document.getElementById('branch-a');
+        if (branchA) {
+            branchA.classList.add('hidden');
+            setRequired(branchA, false);
+        }
+    }
+}
+
+function handleDontKnow(checkbox) {
+    if (checkbox.checked) {
+        document.querySelectorAll('input[name="services-used"]').forEach(cb => {
+            if (cb !== checkbox && cb.value !== 'none') {
+                cb.checked = false;
+                cb.closest('.checkbox-option').classList.remove('selected');
+            }
+        });
+
+        const branchA = document.getElementById('branch-a');
+        if (branchA) {
+            branchA.classList.add('hidden');
+            setRequired(branchA, false);
+        }
+    }
+}
         function setRequired(branchElement, isRequired) {
             if (!branchElement) return;
             branchElement.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(input => {
@@ -930,7 +1069,7 @@
             } else {
                  input.value = '';
                  input.required = false;
-                 // Remove from surveyData if it exists
+
                  if (surveyData[inputId]) {
                     delete surveyData[inputId];
                  }
@@ -954,8 +1093,6 @@
         function validateSection() {
             let isValid = true;
             const activeSection = document.querySelector('.form-section.active');
-            
-            // Validate required text/number inputs
             activeSection.querySelectorAll('input[required]:not([type="radio"]):not([type="checkbox"]), textarea[required]').forEach(input => {
                 if (!input.disabled && !input.value.trim()) {
                     input.style.borderColor = 'var(--danger)';
@@ -965,7 +1102,6 @@
                 }
             });
 
-            // Validate required radio groups
             const radioGroups = {};
             activeSection.querySelectorAll('input[type="radio"][required]').forEach(radio => {
                 if (!radio.closest('.hidden')) {
@@ -997,7 +1133,6 @@
                 }
             }
 
-             // Validate required checkbox groups (e.g., at least one must be checked)
             const checkboxGroups = {};
             activeSection.querySelectorAll('input[type="checkbox"][required]').forEach(cb => {
                  if (!cb.closest('.hidden')) {
@@ -1031,59 +1166,93 @@
             return isValid;
         }
 
-        async function submitSurvey() {
-            if (!validateSection()) {
-                alert('Παρακαλώ συμπληρώστε όλα τα υποχρεωτικά πεδία!');
-                return;
-            }
+async function submitSurvey() {
+    if (!validateSection()) {
+        alert('Παρακαλώ συμπληρώστε όλα τα υποχρεωτικά πεδία!');
+        return;
+    }
 
-            const submitBtn = document.getElementById('submitBtn');
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '⏳ Αποθήκευση...';
+    const submitBtn = document.getElementById('submitBtn');
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '⏳ Αποθήκευση...';
 
-            try {
-                const data = {
-                    deviceId: DEVICE_ID,
-                    surveyType: surveyType,
-                    submittedAt: new Date().toISOString(),
-                    responses: surveyData
-                };
+    try {
+        const data = {
+            deviceId: DEVICE_ID,
+            surveyType: surveyType,
+            submittedAt: new Date().toISOString(),
+            responses: surveyData
+        };
 
-                const docId = DEVICE_ID + '_' + surveyType;
-                const docRef = window.firebaseDoc(window.firebaseDB, 'surveys', docId);
-                await window.firebaseSetDoc(docRef, data);
+        const docId = DEVICE_ID + '_' + surveyType;
+        const docRef = window.firebaseDoc(window.firebaseDB, 'surveys', docId);
+        await window.firebaseSetDoc(docRef, data);
 
-                document.getElementById('app').innerHTML = `
-                    <div class="form-section active" style="text-align: center; padding: 80px 40px;">
-                        <div style="font-size: 100px; margin-bottom: 30px;">✅</div>
-                        <h1 style="color: var(--success); margin-bottom: 20px; font-size: 32px;">ΕΠΙΤΥΧΗΣ ΥΠΟΒΟΛΗ!</h1>
-                        <p style="font-size: 18px; color: var(--gray-700); margin-bottom: 30px;">
-                            Ευχαριστούμε για τη συμμετοχή σας!
-                        </p>
-                        <button class="btn btn-primary" onclick="window.location.reload()">
-                            🔄 Νέα Υποβολή
+        // Different success screens based on survey type
+        if (surveyType === 'pre') {
+            document.getElementById('app').innerHTML = `
+                <div class="form-section active" style="text-align: center; padding: 80px 40px;">
+                    <div style="font-size: 100px; margin-bottom: 30px;">✅</div>
+                    <h1 style="color: var(--success); margin-bottom: 20px; font-size: 32px;">ΕΠΙΤΥΧΗΣ ΥΠΟΒΟΛΗ!</h1>
+                    <p style="font-size: 18px; color: var(--gray-700); margin-bottom: 30px;">
+                        Η ΠΡΟΚΑΤΑΡΚΤΙΚΗ έρευνα ολοκληρώθηκε!
+                    </p>
+                    
+                    <div style="background: linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 152, 0, 0.1) 100%); border: 2px solid #ff9800; padding: 30px; border-radius: 16px; margin: 30px 0;">
+                        <p style="color: #e65100; font-weight: 600; font-size: 20px; margin-bottom: 20px;">🎮 ΕΠΟΜΕΝΟ ΒΗΜΑ:</p>
+                        <ol style="color: #e65100; text-align: left; line-height: 2; margin: 0 auto; padding-left: 20px; max-width: 500px; font-size: 16px;">
+                            <li><strong>Συμμετέχετε στη δραστηριότητα/παιχνίδι</strong></li>
+                            <li><strong>Μετά το τέλος της δραστηριότητας</strong></li>
+                            <li><strong>Επιστρέψτε σε αυτή τη σελίδα</strong></li>
+                            <li><strong>Συμπληρώστε την ΤΕΛΙΚΗ έρευνα</strong></li>
+                        </ol>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 30px;">
+                        <button class="btn btn-primary" onclick="window.location.reload()" style="font-size: 16px;">
+                            📊 Συνέχεια στην ΤΕΛΙΚΗ Έρευνα
                         </button>
                     </div>
-                `;
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Σφάλμα αποθήκευσης: ' + error.message);
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = '✓ Υποβολή';
-            }
+                </div>
+            `;
+        } else {
+            // POST survey completion - existing success screen
+            document.getElementById('app').innerHTML = `
+                <div class="form-section active" style="text-align: center; padding: 80px 40px;">
+                    <div style="font-size: 100px; margin-bottom: 30px;">✅</div>
+                    <h1 style="color: var(--success); margin-bottom: 20px; font-size: 32px;">ΕΠΙΤΥΧΗΣ ΥΠΟΒΟΛΗ!</h1>
+                    <p style="font-size: 18px; color: var(--gray-700); margin-bottom: 30px;">
+                        ΕΥΧΑΡΙΣΤΟΥΜΕ ΓΙΑ ΤΗ ΣΥΜΜΕΤΟΧΗ ΣΑΣ!
+                    </p>
+                    <button class="btn btn-primary" onclick="window.close()">
+                        Κλείσιμο
+                    </button>
+                </div>
+            `;
         }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Σφάλμα αποθήκευσης: ' + error.message);
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '✓ Υποβολή';
+    }
+}
+
+function renderDemographics() {
+    return `
+        <h2 class="section-title">ΜΕΡΟΣ 1: ΔΗΜΟΓΡΑΦΙΚΑ ΣΤΟΙΧΕΙΑ</h2>
+        <p class="section-subtitle">Παρακαλούμε συμπληρώστε τις παρακάτω πληροφορίες</p>
         
-        function renderDemographics() {
-            return `
-                <h2 class="section-title">ΜΕΡΟΣ 1: ΔΗΜΟΓΡΑΦΙΚΑ ΣΤΟΙΧΕΙΑ</h2>
-                <p class="section-subtitle">Παρακαλούμε συμπληρώστε τις παρακάτω πληροφορίες</p>
-                
-                <div class="form-group">
+        <div class="post-activity-notice" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%); border-color: var(--primary);">
+            ΠΡΙΝ ΤΗ ΔΡΑΣΤΗΡΙΟΤΗΤΑ
+        </div>
+        
+        <div class="form-group">				
                     <label for="group" class="required">
                         <span class="question-number">1.1</span>
                         Ομάδα
                     </label>
-                    <input type="text" id="group" name="group" placeholder="Εισάγετε την ομάδα σας..." required>
+                    <input type="text" id="group" name="group" placeholder="Αναφέρετε το όνομα της ομάδας σας..." required>
                 </div>
                 
                 <div class="form-group">
@@ -1116,7 +1285,7 @@
                         <span class="question-number">1.3</span>
                         Ηλικία
                     </label>
-                    <input type="number" id="age" name="age" min="16" max="100" placeholder="Ηλικία σε έτη" required>
+                    <input type="number" id="age" name="age" min="16" max="100" placeholder="Σε έτη" required>
                 </div>
                 
                 <div class="form-group">
@@ -1149,7 +1318,11 @@
 function renderGenAIExperience() {
     return `
         <h2 class="section-title">ΜΕΡΟΣ 2: ΕΜΠΕΙΡΙΑ ΜΕ ΓΕΝΕΤΙΚΗ ΤΕΧΝΗΤΗ ΝΟΗΜΟΣΥΝΗ (ΓΤΝ)</h2>
-        <p class="section-subtitle">Εξερευνήστε την εμπειρία σας με εργαλεία ΓΤΝ</p>
+        <p class="section-subtitle">Εμπειρία με εργαλεία ΓΤΝ</p>
+        
+        <div class="post-activity-notice" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%); border-color: var(--primary);">
+            ΠΡΙΝ ΤΗ ΔΡΑΣΤΗΡΙΟΤΗΤΑ
+        </div>
         
         <div class="form-group" id="branching-question">
             <label class="required">
@@ -1172,41 +1345,41 @@ function renderGenAIExperience() {
             </div>
         </div>
         
-        <div id="branch-c" class="hidden">
-            <div class="form-group">
-                <label class="required">
-                    <span class="question-number">2.1γ</span>
-                    Έχετε χρησιμοποιήσει ή αλληλεπιδράσει με κάποια από τις παρακάτω υπηρεσίες τους τελευταίους 6 μήνες;
-                </label>
-                <div class="checkbox-group">
-                    <label class="checkbox-option">
-                        <input type="checkbox" name="services-used" value="chatgpt">
-                        ChatGPT / Gemini / Claude / Perplexity
-                    </label>
-                    <label class="checkbox-option">
-                        <input type="checkbox" name="services-used" value="copilot">
-                        Microsoft Copilot/Bing Chat
-                    </label>
-                    <label class="checkbox-option">
-                        <input type="checkbox" name="services-used" value="translation">
-                        DeepL ή Google Translate
-                    </label>
-                    <label class="checkbox-option">
-                        <input type="checkbox" name="services-used" value="none">
-                        Κανένα από τα παραπάνω
-                    </label>
-                    <label class="checkbox-option">
-                        <input type="checkbox" name="services-used" value="dont-know">
-                        Δεν είμαι σίγουρος/η
-                    </label>
-                </div>
-            </div>
+<div id="branch-c" class="hidden">
+    <div class="form-group">
+        <label class="required">
+            <span class="question-number">2.Γ1</span>
+            Έχετε χρησιμοποιήσει ή αλληλεπιδράσει με κάποια από τις παρακάτω υπηρεσίες τους τελευταίους 6 μήνες;
+        </label>
+        <div class="checkbox-group">
+            <label class="checkbox-option">
+                <input type="checkbox" name="services-used" value="chatgpt" onchange="handleServicesSelection()">
+                ChatGPT / Gemini / Claude / Perplexity
+            </label>
+            <label class="checkbox-option">
+                <input type="checkbox" name="services-used" value="copilot" onchange="handleServicesSelection()">
+                Microsoft Copilot/Bing Chat
+            </label>
+            <label class="checkbox-option">
+                <input type="checkbox" name="services-used" value="translation" onchange="handleServicesSelection()">
+                DeepL ή Google Translate
+            </label>
+            <label class="checkbox-option">
+                <input type="checkbox" name="services-used" value="none" onchange="handleNoneSelected(this)">
+                Κανένα από τα παραπάνω
+            </label>
+            <label class="checkbox-option">
+                <input type="checkbox" name="services-used" value="dont-know" onchange="handleDontKnow(this)">
+                Δεν είμαι σίγουρος/η
+            </label>
         </div>
+    </div>
+</div>
         
         <div id="branch-a" class="hidden">
             <div class="form-group">
                 <label class="required">
-                    <span class="question-number">2.1</span>
+                    <span class="question-number">2.A1</span>
                     Πόσο καιρό χρησιμοποιείτε εργαλεία ΓΤΝ;
                 </label>
                 <div class="radio-group">
@@ -1235,7 +1408,7 @@ function renderGenAIExperience() {
             
             <div class="form-group">
                 <label class="required">
-                    <span class="question-number">2.2</span>
+                    <span class="question-number">2.A2</span>
                     Τον τελευταίο μήνα, πόσο συχνά χρησιμοποιήσατε εργαλεία ΓΤΝ;
                 </label>
                 <div class="radio-group">
@@ -1264,7 +1437,7 @@ function renderGenAIExperience() {
             
             <div class="form-group">
                 <label>
-                    <span class="question-number">2.3</span>
+                    <span class="question-number">2.A3</span>
                     Ποια εργαλεία ΓΤΝ έχετε χρησιμοποιήσει; (Επιλέξτε όλα όσα ισχύουν)
                 </label>
                 <div class="checkbox-group">
@@ -1302,7 +1475,7 @@ function renderGenAIExperience() {
             
             <div class="form-group">
                 <label class="required">
-                    <span class="question-number">2.4</span>
+                    <span class="question-number">2.A4</span>
                     Για ποιους σκοπούς χρησιμοποιείτε κυρίως εργαλεία ΓΤΝ; (Επιλέξτε έως 3)
                 </label>
                 <div class="checkbox-group">
@@ -1348,7 +1521,7 @@ function renderGenAIExperience() {
             
             <div class="form-group">
                 <label class="required">
-                    <span class="question-number">2.5</span>
+                    <span class="question-number">2.A5</span>
                     Πόσο ικανός/ή αισθάνεστε στη διατύπωση αποτελεσματικών εντολών (prompts) σε εργαλεία ΓΤΝ;
                 </label>
                 <div class="radio-group">
@@ -1377,7 +1550,7 @@ function renderGenAIExperience() {
             
             <div class="form-group">
                 <label class="required">
-                    <span class="question-number">2.6</span>
+                    <span class="question-number">2.A6</span>
                     Πόσο εμπιστεύεστε τις απαντήσεις που λαμβάνετε από εργαλεία ΓΤΝ;
                 </label>
                 <div class="radio-group">
@@ -1406,7 +1579,7 @@ function renderGenAIExperience() {
             
             <div class="form-group">
                 <label class="required">
-                    <span class="question-number">2.7</span>
+                    <span class="question-number">2.A7</span>
                     Πόσο συχνά επαληθεύετε τις πληροφορίες που λαμβάνετε από ΓΤΝ;
                 </label>
                 <div class="radio-group">
@@ -1435,7 +1608,7 @@ function renderGenAIExperience() {
             
             <div class="form-group">
                 <label class="required">
-                    <span class="question-number">2.8</span>
+                    <span class="question-number">2.A8</span>
                     Ποια είναι η μεγαλύτερη πρόκληση που αντιμετωπίζετε με τα εργαλεία ΓΤΝ;
                 </label>
                 <div class="radio-group">
@@ -1470,7 +1643,7 @@ function renderGenAIExperience() {
         <div id="branch-b" class="hidden">
             <div class="form-group">
                 <label class="required">
-                    <span class="question-number">2.1β</span>
+                    <span class="question-number">2.B1</span>
                     Ποιος είναι ο κύριος λόγος που δεν έχετε χρησιμοποιήσει εργαλεία ΓΤΝ;
                 </label>
                 <div class="radio-group">
@@ -1512,7 +1685,7 @@ function renderGenAIExperience() {
             
             <div class="form-group">
                 <label class="required">
-                    <span class="question-number">2.2β</span>
+                    <span class="question-number">2.B2</span>
                     Πόσο ενημερωμένος/η αισθάνεστε για τις δυνατότητες των εργαλείων ΓΤΝ;
                 </label>
                 <div class="radio-group">
@@ -1541,7 +1714,7 @@ function renderGenAIExperience() {
             
             <div class="form-group">
                 <label>
-                    <span class="question-number">2.3β</span>
+                    <span class="question-number">2.B3</span>
                     Ποιες ανησυχίες έχετε σχετικά με τη χρήση ΓΤΝ; (Επιλέξτε όλες που ισχύουν)
                 </label>
                 <div class="checkbox-group">
@@ -1578,7 +1751,7 @@ function renderGenAIExperience() {
             
             <div class="form-group">
                 <label class="required">
-                    <span class="question-number">2.4β</span>
+                    <span class="question-number">2.B4</span>
                     Πόσο πιθανό είναι να χρησιμοποιήσετε εργαλεία ΓΤΝ στο μέλλον;
                 </label>
                 <div class="radio-group">
@@ -1607,7 +1780,7 @@ function renderGenAIExperience() {
             
             <div class="form-group">
                 <label class="required">
-                    <span class="question-number">2.5β</span>
+                    <span class="question-number">2.B5</span>
                     Τι θα σας έκανε να εξετάσετε τη χρήση εργαλείων ΓΤΝ; (Επιλέξτε έως 2)
                 </label>
                 <div class="checkbox-group">
@@ -1648,7 +1821,7 @@ function renderGenAIExperience() {
             
             <div class="form-group">
                 <label class="required">
-                    <span class="question-number">2.01</span>
+                    <span class="question-number">2.O1</span>
                     Πιστεύετε ότι τα εργαλεία ΓΤΝ θα είναι σημαντικά για το μελλοντικό σας επάγγελμα;
                 </label>
                 <div class="radio-group">
@@ -1677,7 +1850,7 @@ function renderGenAIExperience() {
             
             <div class="form-group">
                 <label class="required">
-                    <span class="question-number">2.02</span>
+                    <span class="question-number">2.O2</span>
                     Πόσο επαρκής είναι η εκπαίδευση που λαμβάνετε σχετικά με τη χρήση ΓΤΝ;
                 </label>
                 <div class="radio-group">
@@ -1709,8 +1882,12 @@ function renderGenAIExperience() {
 function renderAIAttitudes() {
     return `
         <h2 class="section-title">ΜΕΡΟΣ 3: GENERAL ATTITUDES TOWARDS ARTIFICIAL INTELLIGENCE SCALE</h2>
-        <p class="section-subtitle">Αξιολογήστε τις στάσεις σας απέναντι στην Τεχνητή Νοημοσύνη</p>
-        
+        <p class="section-subtitle">Στάσεις απέναντι στην Τεχνητή Νοημοσύνη</p>
+
+        <div class="post-activity-notice" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%); border-color: var(--primary);">
+            ΠΡΙΝ ΤΗ ΔΡΑΣΤΗΡΙΟΤΗΤΑ
+        </div>
+		
         <div class="scale-instructions">
             <p><strong>Οδηγίες:</strong> Παρακαλώ αξιολογήστε τις παρακάτω δηλώσεις σε μια κλίμακα από 1 έως 5:</p>
             <div class="scale-legend">
@@ -1721,7 +1898,6 @@ function renderAIAttitudes() {
                 <span><strong>5</strong> = Συμφωνώ Απόλυτα</span>
             </div>
         </div>
-        
         <div class="subscale-header">ΘΕΤΙΚΕΣ ΣΤΑΣΕΙΣ ΑΠΕΝΑΝΤΙ ΣΤΗΝ ΤΝ</div>
         
         <div class="likert-group">
@@ -1961,7 +2137,7 @@ function renderAIAttitudes() {
 }
 function renderTAM() {
     return `
-        <h2 class="section-title">ΜΕΡΟΣ 5: ΑΞΙΟΛΟΓΗΣΗ ΕΜΠΕΙΡΙΑΣ ΧΡΗΣΗΣ ΓΝΤ</h2>
+        <h2 class="section-title">ΜΕΡΟΣ 4: ΑΞΙΟΛΟΓΗΣΗ ΕΜΠΕΙΡΙΑΣ ΧΡΗΣΗΣ ΓΝΤ</h2>
         <p class="section-subtitle">Αξιολογήστε την εμπειρία σας με το εργαλείο ΓΝΤ στη δραστηριότητα</p>
         <div class="post-activity-notice">ΜΕΤΑ ΤΗ ΔΡΑΣΤΗΡΙΟΤΗΤΑ</div>
         
@@ -2429,13 +2605,13 @@ function renderTAM() {
 }
 function renderOpenEnded() {
     return `
-        <h2 class="section-title">ΜΕΡΟΣ 7: ΕΡΩΤΗΣΕΙΣ ΑΝΟΙΧΤΟΥ ΤΥΠΟΥ</h2>
+        <h2 class="section-title">ΜΕΡΟΣ 6: ΕΡΩΤΗΣΕΙΣ ΑΝΟΙΧΤΟΥ ΤΥΠΟΥ</h2>
         <p class="section-subtitle">Μοιραστείτε τις σκέψεις και εμπειρίες σας</p>
         <div class="post-activity-notice">ΜΕΤΑ ΤΗ ΔΡΑΣΤΗΡΙΟΤΗΤΑ</div>
         
         <div class="form-group">
             <label for="open-strategy">
-                <span class="question-number">7.1</span>
+                <span class="question-number">6.1</span>
                 Περιγράψτε τη στρατηγική που ακολουθήσατε για να λύσετε το μυστήριο με τη βοήθεια της ΓΝΤ:
                 <span style="color: var(--gray-500); font-size: 13px; font-weight: normal;"> (Προαιρετικό)</span>
             </label>
@@ -2445,7 +2621,7 @@ function renderOpenEnded() {
         
         <div class="form-group">
             <label for="open-difficulties">
-                <span class="question-number">7.2</span>
+                <span class="question-number">6.2</span>
                 Ποιες δυσκολίες αντιμετωπίσατε στη χρήση της ΓΝΤ και πώς τις ξεπεράσατε;
                 <span style="color: var(--gray-500); font-size: 13px; font-weight: normal;"> (Προαιρετικό)</span>
             </label>
@@ -2455,7 +2631,7 @@ function renderOpenEnded() {
         
         <div class="form-group">
             <label for="open-learning">
-                <span class="question-number">7.3</span>
+                <span class="question-number">6.3</span>
                 Τι μάθατε από αυτή την εμπειρία σχετικά με τη χρήση ΓΝΤ για επίλυση προβλημάτων;
                 <span style="color: var(--gray-500); font-size: 13px; font-weight: normal;"> (Προαιρετικό)</span>
             </label>
@@ -2464,13 +2640,17 @@ function renderOpenEnded() {
         </div>
     `;
 }
-        window.startSurvey = startSurvey;
-        window.nextSection = nextSection;
-        window.prevSection = prevSection;
-        window.submitSurvey = submitSurvey;
-        window.handleBranching = handleBranching;
-        window.limitCheckboxes = limitCheckboxes;
-        window.toggleOtherInput = toggleOtherInput;
+window.startSurvey = startSurvey;
+window.nextSection = nextSection;
+window.prevSection = prevSection;
+window.submitSurvey = submitSurvey;
+window.handleBranching = handleBranching;
+window.limitCheckboxes = limitCheckboxes;
+window.toggleOtherInput = toggleOtherInput;
+window.handleServicesSelection = handleServicesSelection;
+window.handleNoneSelected = handleNoneSelected;
+window.handleDontKnow = handleDontKnow;
+
     </script>
 </body>
 </html>
