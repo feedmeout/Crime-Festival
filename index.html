@@ -1217,13 +1217,10 @@ function getUnlockedTeks() {
     
     try {
         const data = JSON.parse(stored);
-        
-        // New format: object with 'unlocked' property
         if (data && typeof data === 'object' && !Array.isArray(data) && data.unlocked) {
             return Array.isArray(data.unlocked) ? data.unlocked : [];
         }
-        
-        // Old format: just an array
+		
         if (Array.isArray(data)) {
             return data;
         }
@@ -1287,14 +1284,11 @@ async function getTeamData() {
             console.error('Firebase load error:', error);
         }
     }
-    
-    // Fallback to localStorage
+
     const localData = localStorage.getItem(getStorageKey());
     if (localData) {
         try {
             const parsed = JSON.parse(localData);
-            
-            // New format: already an object with unlocked, timestamps, etc.
             if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
                 return {
                     unlocked: parsed.unlocked || [],
@@ -1306,8 +1300,7 @@ async function getTeamData() {
                     evidenceTimestamps: parsed.evidenceTimestamps || {}
                 };
             }
-            
-            // Old format: just an array
+			
             if (Array.isArray(parsed)) {
                 return {
                     unlocked: parsed,
@@ -1323,8 +1316,7 @@ async function getTeamData() {
             console.error('Error parsing localStorage data:', e);
         }
     }
-    
-    // Default empty state
+
     return {
         unlocked: [],
         timestamps: {},
@@ -1751,10 +1743,7 @@ function displaySolutionResult(solution) {
     statsHTML += '</div>';
     
     statsHTML += '</div>';
-
-    // Add submission info header
     const submissionHeader = '<div style="background: #e3f2fd; border: 2px solid #2196f3; padding: 15px; border-radius: 10px; margin-bottom: 20px; text-align: center;">' +
-        '<div style="font-size: 18px; color: #0d47a1; font-weight: bold; margin-bottom: 8px;">🔒 ΛΥΣΗ ΥΠΟΒΛΗΘΗΚΕ</div>' +
         '<div style="font-size: 14px; color: #1565c0;">Επιτυχής υποβολή: ' + new Date(solution.submittedAt).toLocaleString('el-GR', {
             day: '2-digit',
             month: '2-digit',
@@ -1938,8 +1927,6 @@ function displaySolutionResult(solution) {
     
 resultDiv.style.display = 'block';
     resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    
-    // Hide the form completely instead of just graying it out
     const solutionForm = document.getElementById('solutionForm');
     if (solutionForm) {
         solutionForm.style.display = 'none';
@@ -2021,12 +2008,9 @@ async function initSolutionTab(teamData) {
     const existingSolution = teamData.solution;
     
     if (existingSolution) {
-        // Hide the intro box completely - we'll show everything in the result
         if (solutionIntroBox) {
             solutionIntroBox.style.display = 'none';
         }
-        
-        // Hide the form completely
         if (solutionForm) {
             solutionForm.style.display = 'none';
         }
@@ -2087,15 +2071,11 @@ renderEvidence();
         console.error('Error during initialization:', error);
         alert('Σφάλμα φόρτωσης! Παρακαλώ ανανεώστε τη σελίδα.');
     }
-    
-    // Poll for solution updates every 5 seconds when on solution tab
     setInterval(async () => {
         const solutionTab = document.getElementById('tab-solution');
         if (solutionTab && solutionTab.classList.contains('active')) {
             const teamData = await getTeamData();
             const solutionForm = document.getElementById('solutionForm');
-            
-            // If solution exists but form is still visible, reload to show result
             if (teamData.solution && solutionForm && solutionForm.style.display !== 'none') {
                 console.log('Solution detected from another source, refreshing display...');
                 await initSolutionTab(teamData);
@@ -2109,8 +2089,6 @@ window.addEventListener('storage', async (e) => {
         renderEvidence();
         const teamData = await getTeamData();
         await updateProgress(teamData);
-        
-        // Check if solution was just submitted and update the solution tab
         const solutionTab = document.getElementById('tab-solution');
         if (solutionTab && solutionTab.classList.contains('active')) {
             await initSolutionTab(teamData);
