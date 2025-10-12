@@ -656,7 +656,6 @@
         });
     }
 
-    // === FIREBASE FUNCTIONS ===
     async function saveTeamToFirebase(teamName, data) {
         if (!isFirebaseReady()) return;
         try {
@@ -704,14 +703,10 @@
 
 async function getAllTeams() {
     const allTeams = new Map();
-    
-    // Prioritize Firebase (cloud data from all devices)
     if (isFirebaseReady()) {
         const firebaseTeams = await getAllTeamsFromFirebase();
         firebaseTeams.forEach(team => {
-            console.log(`📦 Loading team ${team.name}:`, team); // ✅ DEBUG
-            
-            // Ensure proper structure - include ALL fields
+            console.log(`📦 Loading team ${team.name}:`, team);
             allTeams.set(team.name, {
                 name: team.name,
                 unlocked: team.unlocked || [],
@@ -739,7 +734,7 @@ async function getAllTeams() {
                     startTime: null,
                     completedAt: null,
                     totalTimeMs: null,
-                    solution: null  // ✅ ADD HERE TOO
+                    solution: null
                 });
             }
         }
@@ -795,7 +790,6 @@ async function getAllTeams() {
         input.click();
     }
 
-    // === UI FUNCTIONS ===
     async function addTeam() {
         const teamName = document.getElementById('newTeamName').value.trim().toLowerCase();
         const alertDiv = document.getElementById('addTeamAlert');
@@ -840,8 +834,7 @@ async function refreshTeams() {
         noTeams.style.display = 'block';
         return;
     }
-
-    // Sort teams
+	
     teams = sortTeams(teams, sortOrder);
 
     noTeams.style.display = 'none';
@@ -899,7 +892,7 @@ return `
     ${Array.from({length: TOTAL_TEKS}, (_, i) => {
         const tekNum = (i + 1).toString();
         const isUnlocked = team.unlocked.includes(tekNum);
-        const isLocked = !!team.solution; // Can't modify after solution submitted
+        const isLocked = !!team.solution;
         return `<div class="tek-box ${isUnlocked ? 'unlocked' : ''} ${isLocked ? 'disabled' : 'clickable'}" 
                      onclick="${isLocked ? '' : `toggleTek('${team.name}', ${i + 1})`}" 
                      title="${isLocked ? 'Κλειδωμένο (λύση υποβλήθηκε)' : (isUnlocked ? 'Κλικ για κλείδωμα' : 'Κλικ για ξεκλείδωμα')}">${i + 1}</div>`;
@@ -935,7 +928,6 @@ return `
                 return teams.sort((a, b) => b.unlocked.length - a.unlocked.length);
             
             case 'completion':
-                // Completed teams first, sorted by time, then incomplete teams
                 const completed = teams.filter(t => t.completedAt).sort((a, b) => a.totalTimeMs - b.totalTimeMs);
                 const incomplete = teams.filter(t => !t.completedAt).sort((a, b) => b.unlocked.length - a.unlocked.length);
                 return [...completed, ...incomplete];
@@ -986,8 +978,6 @@ return `
         if (team.timestamps && Object.keys(team.timestamps).length > 0) {
             html += '<h3 style="margin: 20px 0 10px 0;">Ξεκλειδώματα ΤΕΚ:</h3>';
             html += '<ul class="timestamp-list">';
-            
-            // Sort by timestamp
             const sortedTeks = Object.entries(team.timestamps)
                 .sort((a, b) => new Date(a[1]) - new Date(b[1]));
             
@@ -1013,8 +1003,7 @@ return `
         const modal = document.getElementById('timestampModal');
         modal.classList.remove('active');
     }
-
-    // Close modal when clicking outside
+	
     window.onclick = function(event) {
         const modal = document.getElementById('timestampModal');
         if (event.target === modal) {
@@ -1032,7 +1021,7 @@ return `
             const now = new Date().toISOString();
             const timestamps = {};
             allTeks.forEach((tek, i) => {
-                timestamps[tek] = new Date(Date.now() + i * 1000).toISOString(); // Stagger by 1 second
+                timestamps[tek] = new Date(Date.now() + i * 1000).toISOString();
             });
             
             await saveTeam(teamName, {
@@ -1046,7 +1035,6 @@ return `
         }
     }
 
-    // ✅ ADD THE TOGGLE FUNCTION HERE ⬇️
     async function toggleTek(teamName, tekNumber) {
         const teams = await getAllTeams();
         const team = teams.find(t => t.name === teamName);
@@ -1056,7 +1044,6 @@ return `
             return;
         }
         
-        // Check if solution already submitted
         if (team.solution) {
             alert('❌ Δεν μπορείτε να τροποποιήσετε τεκμήρια μετά την υποβολή λύσης!');
             return;
@@ -1066,21 +1053,17 @@ return `
         const unlocked = team.unlocked || [];
         const timestamps = team.timestamps || {};
         
-        // Toggle: if unlocked, lock it; if locked, unlock it
         if (unlocked.includes(tekStr)) {
-            // LOCK IT - Remove from unlocked array
             const index = unlocked.indexOf(tekStr);
             unlocked.splice(index, 1);
             delete timestamps[tekStr];
             console.log(`🔒 Locked TEK ${tekNumber} for team ${teamName}`);
         } else {
-            // UNLOCK IT - Add to unlocked array
             unlocked.push(tekStr);
             timestamps[tekStr] = new Date().toISOString();
             console.log(`🔓 Unlocked TEK ${tekNumber} for team ${teamName}`);
         }
         
-        // Update team data
         await saveTeam(teamName, {
             ...team,
             unlocked: unlocked,
@@ -1088,8 +1071,9 @@ return `
             startTime: team.startTime || new Date().toISOString()
         });
         
-        // Refresh display
-        refreshTeams();
+        setTimeout(() => {
+            refreshTeams();
+        }, 200);
     }
 
 
@@ -1196,7 +1180,6 @@ return `
         });
     }
 
-    // === INITIALIZATION ===
     window.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             const status = document.getElementById('firebaseStatus');
@@ -1210,8 +1193,6 @@ return `
             refreshTeams();
         }, 300);
     });
-
-    // Auto-refresh every 5 seconds to show real-time updates
     setInterval(refreshTeams, 5000);
 </script>
 </body>
