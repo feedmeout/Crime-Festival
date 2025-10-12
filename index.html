@@ -1749,7 +1749,22 @@ function displaySolutionResult(solution) {
     
     statsHTML += '</div>';
 
-    resultDiv.innerHTML = '<div style="background: ' + headerGradient + '; color: white; padding: 30px; border-radius: 15px; margin: 20px 0; text-align: center; box-shadow: 0 10px 40px ' + headerShadow + ';">' +
+    // Add submission info header
+    const submissionHeader = '<div style="background: #e3f2fd; border: 2px solid #2196f3; padding: 15px; border-radius: 10px; margin-bottom: 20px; text-align: center;">' +
+        '<div style="font-size: 18px; color: #0d47a1; font-weight: bold; margin-bottom: 8px;">🔒 ΛΥΣΗ ΥΠΟΒΛΗΘΗΚΕ</div>' +
+        '<div style="font-size: 14px; color: #1565c0;">Επιτυχής υποβολή: ' + new Date(solution.submittedAt).toLocaleString('el-GR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        }) + '</div>' +
+        '<div style="font-size: 13px; color: #666; margin-top: 5px;">Δεν επιτρέπονται περαιτέρω υποβολές</div>' +
+        '</div>';
+
+    resultDiv.innerHTML = submissionHeader + 
+        '<div style="background: ' + headerGradient + '; color: white; padding: 30px; border-radius: 15px; margin: 20px 0; text-align: center; box-shadow: 0 10px 40px ' + headerShadow + ';">' +
+		
         '<h2 style="font-size: 32px; margin-bottom: 15px;">' +
         (isPerfect ? '🎉 ΤΕΛΕΙΑ ΛΥΣΗ!' : isContradiction ? '❌ ΛΟΓΙΚΗ ΑΝΤΙΦΑΣΗ' : solution.score === 0 ? '❌ ΛΑΘΟΣ ΑΠΑΝΤΗΣΗ' : '✔ ΛΥΣΗ ΥΠΟΒΛΗΘΗΚΕ') +
         '</h2>' +
@@ -1918,10 +1933,15 @@ function displaySolutionResult(solution) {
         '</div>' +
         '</div>';
     
-    resultDiv.style.display = 'block';
+resultDiv.style.display = 'block';
     resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    document.getElementById('solutionForm').style.opacity = '0.6';
-    document.getElementById('solutionForm').style.pointerEvents = 'none';
+    
+    // Hide the form completely instead of just graying it out
+    const solutionForm = document.getElementById('solutionForm');
+    if (solutionForm) {
+        solutionForm.style.display = 'none';
+    }
+    
     stopTimer();
 }
 
@@ -1994,25 +2014,18 @@ function renderEvidence() {
 
 async function initSolutionTab(teamData) {
     const solutionIntroBox = document.getElementById('solutionIntroBox');
+    const solutionForm = document.getElementById('solutionForm');
     const existingSolution = teamData.solution;
     
     if (existingSolution) {
+        // Hide the intro box completely - we'll show everything in the result
         if (solutionIntroBox) {
-            solutionIntroBox.innerHTML = `
-                <h2 style="color: #856404;">🔒 Η ΛΥΣΗ ΥΠΟΒΛΗΘΗΚΕ</h2>
-                <p style="color: #856404; font-weight: bold;">Η ομάδα σας έχει ήδη υποβάλει λύση. Δεν επιτρέπονται περαιτέρω υποβολές.</p>
-                <p style="color: #666; margin-top: 15px; font-size: 14px;">
-                    <strong>Επιτυχής υποβολή:</strong> ${new Date(existingSolution.submittedAt).toLocaleString('el-GR', {
-                        day: '2-digit',
-                        month: '2-digit',
-                        year: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    })}
-                </p>
-            `;
-            solutionIntroBox.style.background = '#fff3cd';
-            solutionIntroBox.style.border = '3px solid #ffc107';
+            solutionIntroBox.style.display = 'none';
+        }
+        
+        // Hide the form completely
+        if (solutionForm) {
+            solutionForm.style.display = 'none';
         }
         
         displaySolutionResult(existingSolution);
@@ -2062,7 +2075,7 @@ window.addEventListener('DOMContentLoaded', async () => {
             console.error('SuspectsModule not loaded! Make sure suspects.js is included before this script.');
         }
 		
-        renderEvidence();
+renderEvidence();
         const teamData = await getTeamData();
         await updateProgress(teamData);
         await initSolutionTab(teamData);
@@ -2071,6 +2084,21 @@ window.addEventListener('DOMContentLoaded', async () => {
         console.error('Error during initialization:', error);
         alert('Σφάλμα φόρτωσης! Παρακαλώ ανανεώστε τη σελίδα.');
     }
+    
+    // Poll for solution updates every 5 seconds when on solution tab
+    setInterval(async () => {
+        const solutionTab = document.getElementById('tab-solution');
+        if (solutionTab && solutionTab.classList.contains('active')) {
+            const teamData = await getTeamData();
+            const solutionForm = document.getElementById('solutionForm');
+            
+            // If solution exists but form is still visible, reload to show result
+            if (teamData.solution && solutionForm && solutionForm.style.display !== 'none') {
+                console.log('Solution detected from another source, refreshing display...');
+                await initSolutionTab(teamData);
+            }
+        }
+    }, 5000);
 });
 
 window.addEventListener('storage', async (e) => {
@@ -2078,6 +2106,12 @@ window.addEventListener('storage', async (e) => {
         renderEvidence();
         const teamData = await getTeamData();
         await updateProgress(teamData);
+        
+        // Check if solution was just submitted and update the solution tab
+        const solutionTab = document.getElementById('tab-solution');
+        if (solutionTab && solutionTab.classList.contains('active')) {
+            await initSolutionTab(teamData);
+        }
     }
 });
 
