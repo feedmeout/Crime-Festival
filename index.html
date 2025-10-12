@@ -1549,10 +1549,10 @@ async function submitSolution() {
         return;
     }
 
-    if (!promptCount || promptCount < 0) {
-        alert('Παρακαλώ εισάγετε έγκυρο αριθμό prompts!');
-        return;
-    }
+if (promptCount === null || promptCount === undefined || promptCount < 0) {
+    alert('Παρακαλώ εισάγετε έγκυρο αριθμό prompts!');
+    return;
+}
     
     const teamData = await getTeamData();
 
@@ -1650,34 +1650,44 @@ function displaySubmissionConfirmation() {
             </div>
         </div>
         
-        <div style="background: #fff3cd; border: 2px solid #ffc107; padding: 25px; border-radius: 10px; margin-top: 20px;">
-            <h3 style="color: #856404; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
-                <span style="font-size: 24px;">🔐</span>
-                ΑΠΟΚΑΛΥΨΗ ΑΠΟΤΕΛΕΣΜΑΤΩΝ
-            </h3>
-            <p style="color: #856404; margin-bottom: 15px; line-height: 1.6;">
-                Τα αποτελέσματά σας (βαθμολογία, ανάλυση και σωστή λύση) θα αποκαλυφθούν στο τέλος της δραστηριότητας!
-            </p>
-            <div style="background: rgba(255,193,7,0.1); padding: 15px; border-radius: 8px; border-left: 4px solid #ffc107; margin-top: 15px;">
-                <p style="color: #856404; font-size: 14px; margin: 0;">
-                    <strong>💡</strong> ΜΗΝ ΜΟΙΡΑΣΤΕΙΤΕ ΠΛΗΡΟΦΟΡΙΕΣ ΜΕ ΑΛΛΕΣ ΟΜΑΔΕΣ ΜΕΧΡΙ ΤΗΝ ΕΠΙΣΗΜΗ ΑΝΑΚΟΙΝΩΣΗ ΤΩΝ ΑΠΟΤΕΛΕΣΜΑΤΩΝ!
-                </p>
-            </div>
-            
-            <div style="margin-top: 25px; padding-top: 20px; border-top: 2px dashed #ffc107;">
-                <p style="color: #856404; margin-bottom: 15px; font-weight: bold;">
-                    Έχετε ήδη τον κωδικό; Εισάγετέ τον εδώ:
-                </p>
-                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                    <input type="password" id="solutionPassword" placeholder="Κωδικός πρόσβασης" 
-                           style="flex: 1; min-width: 200px; padding: 12px; border: 2px solid #ffc107; border-radius: 8px; font-size: 16px;">
-                    <button onclick="revealSolution()" 
-                            style="padding: 12px 24px; background: #ffc107; color: #000; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 16px;">
-                        🔓 ΑΠΟΚΑΛΥΨΗ
-                    </button>
-                </div>
-            </div>
+<div style="background: linear-gradient(135deg, #fff8e1 0%, #ffe0b2 100%); border: 3px solid #ff9800; padding: 30px; border-radius: 15px; margin-top: 20px; box-shadow: 0 8px 25px rgba(255, 152, 0, 0.2);">
+    <div style="text-align: center; margin-bottom: 25px;">
+        <div style="font-size: 48px; margin-bottom: 10px;">🔐</div>
+        <h3 style="color: #e65100; font-size: 22px; font-weight: bold; margin: 0; text-transform: uppercase; letter-spacing: 1px;">
+            ΑΠΟΚΑΛΥΨΗ ΑΠΟΤΕΛΕΣΜΑΤΩΝ
+        </h3>
+    </div>
+    
+    <div style="background: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; border-left: 5px solid #ff9800; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+        <p style="color: #5d4037; margin: 0; line-height: 1.8; font-size: 15px; text-align: center;">
+            Τα αποτελέσματά σας <strong style="color: #e65100;">(βαθμολογία, ανάλυση και σωστή λύση)</strong> θα αποκαλυφθούν στο τέλος της δραστηριότητας!
+        </p>
+    </div>
+    
+    <div style="background: linear-gradient(135deg, #ffecb3 0%, #ffe082 100%); padding: 18px; border-radius: 10px; border: 2px solid #ffa726; margin-bottom: 25px;">
+        <p style="color: #bf360c; font-size: 14px; margin: 0; text-align: center; line-height: 1.6; font-weight: 600;">
+            <span style="font-size: 20px; display: block; margin-bottom: 8px;">💡</span>
+            ΜΗΝ ΜΟΙΡΑΣΤΕΙΤΕ ΠΛΗΡΟΦΟΡΙΕΣ ΜΕ ΑΛΛΕΣ ΟΜΑΔΕΣ<br>
+            ΜΕΧΡΙ ΤΗΝ ΕΠΙΣΗΜΗ ΑΝΑΚΟΙΝΩΣΗ ΤΩΝ ΑΠΟΤΕΛΕΣΜΑΤΩΝ!
+        </p>
+    </div>
+    
+    <div style="background: rgba(255,255,255,0.6); padding: 25px; border-radius: 12px; border: 2px dashed #ff9800;">
+        <p style="color: #e65100; margin-bottom: 15px; font-weight: bold; text-align: center; font-size: 16px;">
+            Έχετε ήδη τον κωδικό; Εισάγετέ τον εδώ:
+        </p>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: stretch;">
+            <input type="password" id="solutionPassword" placeholder="Κωδικός πρόσβασης" 
+                   style="flex: 1; min-width: 200px; padding: 14px 18px; border: 3px solid #ff9800; border-radius: 10px; font-size: 16px; font-weight: 500; transition: all 0.3s ease; outline: none;">
+            <button onclick="revealSolution()" 
+                    style="padding: 14px 30px; background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%); color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 16px; box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3); transition: all 0.3s ease; white-space: nowrap;"
+                    onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(255, 152, 0, 0.4)';"
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(255, 152, 0, 0.3)';">
+                🔓 ΑΠΟΚΑΛΥΨΗ
+            </button>
         </div>
+    </div>
+</div>
     `;
     
     resultDiv.style.display = 'block';
