@@ -1015,60 +1015,69 @@ return `
         window.open(`${BASE_URL}index.html?team=${teamName}`, '_blank');
     }
 
-    async function unlockAll(teamName) {
-        if (confirm(`Ξεκλείδωμα όλων των TEKs για την ομάδα "${teamName}";`)) {
-            const allTeks = Array.from({length: TOTAL_TEKS}, (_, i) => (i + 1).toString());
-            const now = new Date().toISOString();
-            const timestamps = {};
-            allTeks.forEach((tek, i) => {
-                timestamps[tek] = new Date(Date.now() + i * 1000).toISOString();
-            });
-            
-            await saveTeam(teamName, {
-                unlocked: allTeks,
-                timestamps: timestamps,
-                startTime: now,
-                completedAt: now,
-                totalTimeMs: allTeks.length * 1000
-            });
-            refreshTeams();
-        }
+async function unlockAll(teamName) {
+    if (confirm(`Ξεκλείδωμα όλων των TEKs για την ομάδα "${teamName}";`)) {
+        const allTeks = Array.from({length: TOTAL_TEKS}, (_, i) => (i + 1).toString());
+        const now = new Date().toISOString();
+        const timestamps = {};
+        allTeks.forEach((tek, i) => {
+            timestamps[tek] = new Date(Date.now() + i * 1000).toISOString();
+        });
+        
+        // ✅ WAIT for save to complete
+        await saveTeam(teamName, {
+            unlocked: allTeks,
+            timestamps: timestamps,
+            startTime: now,
+            completedAt: now,
+            totalTimeMs: allTeks.length * 1000
+        });
+        
+        // ✅ Add delay and await refresh
+        await new Promise(resolve => setTimeout(resolve, 300));
+        await refreshTeams();
+    }
+}
+
+async function toggleTek(teamName, tekNumber) {
+    const teams = await getAllTeams();
+    const team = teams.find(t => t.name === teamName);
+    
+    if (!team) {
+        alert('Ομάδα δεν βρέθηκε!');
+        return;
+    }
+    
+    if (team.solution) {
+        alert('❌ Δεν μπορείτε να τροποποιήσετε τεκμήρια μετά την υποβολή λύσης!');
+        return;
+    }
+    
+    const tekStr = tekNumber.toString();
+    const unlocked = team.unlocked || [];
+    const timestamps = team.timestamps || {};
+    
+    if (unlocked.includes(tekStr)) {
+        const index = unlocked.indexOf(tekStr);
+        unlocked.splice(index, 1);
+        delete timestamps[tekStr];
+        console.log(`🔒 Locked TEK ${tekNumber} for team ${teamName}`);
+    } else {
+        unlocked.push(tekStr);
+        timestamps[tekStr] = new Date().toISOString();
+        console.log(`🔓 Unlocked TEK ${tekNumber} for team ${teamName}`);
     }
 
-    async function toggleTek(teamName, tekNumber) {
-        const teams = await getAllTeams();
-        const team = teams.find(t => t.name === teamName);
-        
-        if (!team) {
-            alert('Ομάδα δεν βρέθηκε!');
-            return;
-        }
-        
-        if (team.solution) {
-            alert('❌ Δεν μπορείτε να τροποποιήσετε τεκμήρια μετά την υποβολή λύσης!');
-            return;
-        }
-        
-        const tekStr = tekNumber.toString();
-        const unlocked = team.unlocked || [];
-        const timestamps = team.timestamps || {};
-        
-        if (unlocked.includes(tekStr)) {
-            const index = unlocked.indexOf(tekStr);
-            unlocked.splice(index, 1);
-            delete timestamps[tekStr];
-            console.log(`🔒 Locked TEK ${tekNumber} for team ${teamName}`);
-        } else {
-            unlocked.push(tekStr);
-            timestamps[tekStr] = new Date().toISOString();
-            console.log(`🔓 Unlocked TEK ${tekNumber} for team ${teamName}`);
-        }
-        
-        await saveTeam(teamName, {
-            ...team,
-            unlocked: unlocked,
-            timestamps: timestamps,
-            startTime: team.startTime || new Date().toISOString()
+    await saveTeam(teamName, {
+        ...team,
+        unlocked: unlocked,
+        timestamps: timestamps,
+        startTime: team.startTime || new Date().toISOString()
+    });
+    
+    await new Promise(resolve => setTimeout(resolve, 300));
+    await refreshTeams();
+}
         });
         
         setTimeout(() => {
