@@ -675,7 +675,9 @@ async function getAllTeams() {
     if (isFirebaseReady()) {
         const firebaseTeams = await getAllTeamsFromFirebase();
         firebaseTeams.forEach(team => {
-            // Ensure proper structure
+            console.log(`📦 Loading team ${team.name}:`, team); // ✅ DEBUG
+            
+            // Ensure proper structure - include ALL fields
             allTeams.set(team.name, {
                 name: team.name,
                 unlocked: team.unlocked || [],
@@ -684,33 +686,35 @@ async function getAllTeams() {
                 completedAt: team.completedAt || null,
                 totalTimeMs: team.totalTimeMs || null,
                 lastUpdate: team.lastUpdate || null,
-                solution: team.solution || null  // ✅ ADDED THIS LINE
+                solution: team.solution || null,  // ✅ CRITICAL
+                evidenceTimestamps: team.evidenceTimestamps || {}
             });
         });
     }
-        
-        // Then check localStorage (only for local admin changes)
-        for (let i = 0; i < localStorage.length; i++) {
-            const key = localStorage.key(i);
-            if (key.startsWith('unlocked_teks_')) {
-                const teamName = key.replace('unlocked_teks_', '');
-                // Only add from localStorage if not already in Firebase
-                if (!allTeams.has(teamName)) {
-                    const unlocked = JSON.parse(localStorage.getItem(key));
-                    allTeams.set(teamName, { 
-                        name: teamName, 
-                        unlocked: unlocked,
-                        timestamps: {},
-                        startTime: null,
-                        completedAt: null,
-                        totalTimeMs: null
-                    });
-                }
+    
+    // Then check localStorage (only for local admin changes)
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key.startsWith('unlocked_teks_')) {
+            const teamName = key.replace('unlocked_teks_', '');
+            // Only add from localStorage if not already in Firebase
+            if (!allTeams.has(teamName)) {
+                const unlocked = JSON.parse(localStorage.getItem(key));
+                allTeams.set(teamName, { 
+                    name: teamName, 
+                    unlocked: unlocked,
+                    timestamps: {},
+                    startTime: null,
+                    completedAt: null,
+                    totalTimeMs: null,
+                    solution: null  // ✅ ADD HERE TOO
+                });
             }
         }
-        
-        return Array.from(allTeams.values());
     }
+    
+    return Array.from(allTeams.values());
+}
 
     async function saveTeam(teamName, data) {
         // Save unlocked array to localStorage for backward compatibility
