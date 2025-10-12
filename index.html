@@ -1616,6 +1616,8 @@ const solution = {
                     completedAt: solution.submittedAt,
                     totalTimeMs: totalTimeMs
                 };
+				
+				localStorage.setItem(getStorageKey(), JSON.stringify(updatedData));
                 
                 if (window.firebaseDB) {
                     await window.firebaseSetDoc(
