@@ -809,16 +809,17 @@ async function refreshTeams() {
     teams = sortTeams(teams, sortOrder);
 
     noTeams.style.display = 'none';
-    container.innerHTML = teams.map(team => {
-        const progress = Math.round((team.unlocked.length / TOTAL_TEKS) * 100);
-        const isCompleted = !!team.solution;  // ✅ FIXED: Check if solution submitted, not just evidence unlocked
+container.innerHTML = teams.map(team => {
+    const progress = Math.round((team.unlocked.length / TOTAL_TEKS) * 100);
+    const allEvidenceUnlocked = team.unlocked.length === TOTAL_TEKS;
+    const solutionSubmitted = !!team.solution;
         
-        let timingHtml = '';
-        if (team.startTime) {
-            const now = new Date();
-            const startTime = new Date(team.startTime);
-            
-            if (isCompleted && team.completedAt) {
+let timingHtml = '';
+if (team.startTime) {
+    const now = new Date();
+    const startTime = new Date(team.startTime);
+    
+    if (solutionSubmitted && team.completedAt) {
                 timingHtml = `
                     <div class="timing-info completed">
                         <strong>⏱️ Χρόνος Ολοκλήρωσης:</strong>
@@ -843,13 +844,16 @@ async function refreshTeams() {
             }
         }
         
-        return `
-            <div class="team-card ${isCompleted ? 'completed' : ''}">
-                <h3>
-                    <span style="font-size: 24px;">👥</span> 
-                    ${team.name.toUpperCase()}
-                    ${isCompleted ? '<span class="completion-badge">✅ ΟΛΟΚΛΗΡΩΘΗΚΕ</span>' : ''}
-                </h3>
+return `
+    <div class="team-card ${solutionSubmitted ? 'completed' : ''}">
+        <h3>
+            <span style="font-size: 24px;">👥</span> 
+            ${team.name.toUpperCase()}
+            ${solutionSubmitted ? 
+                '<span class="completion-badge">✅ ΟΛΟΚΛΗΡΩΘΗΚΕ</span>' : 
+                (allEvidenceUnlocked ? '<span class="completion-badge" style="background: #17a2b8;">📦 ΠΛΗΡΗΣ ΣΥΛΛΟΓΗ</span>' : '')
+            }
+        </h3>
                 <div class="progress-bar">
                     <div class="progress-fill" style="width: ${progress}%;">${progress}%</div>
                 </div>
