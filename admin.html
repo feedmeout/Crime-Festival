@@ -656,18 +656,29 @@
         });
     }
 
-    async function saveTeamToFirebase(teamName, data) {
-        if (!isFirebaseReady()) return;
-        try {
-            await window.firebaseSetDoc(
-                window.firebaseDoc(window.firebaseDB, 'teams', teamName),
-                { ...data, lastUpdate: new Date().toISOString() }
-            );
-        } catch (error) {
-            console.error('Firebase save error:', error);
+async function saveTeamToFirebase(teamName, data) {
+    if (!isFirebaseReady()) return false;
+    try {
+        await window.firebaseSetDoc(
+            window.firebaseDoc(window.firebaseDB, 'teams', teamName),
+            { ...data, lastUpdate: new Date().toISOString() }
+        );
+        console.log('✅ Firebase save successful');
+        return true;
+    } catch (error) {
+        console.error('❌ Firebase save error:', error);
+        
+        // Show warning to user
+        const status = document.getElementById('firebaseStatus');
+        if (status) {
+            status.style.background = '#dc3545';
+            status.innerHTML = '⚠️ Firebase Sync Failed - Using Local Storage';
+            status.style.display = 'block';
         }
+        
+        return false;
     }
-
+}
     async function loadTeamFromFirebase(teamName) {
         if (!isFirebaseReady()) return null;
         try {
@@ -703,52 +714,87 @@
         }
     }
 
-    async function getAllTeams() {
-        const allTeams = new Map();
-        if (isFirebaseReady()) {
-            const firebaseTeams = await getAllTeamsFromFirebase();
-            firebaseTeams.forEach(team => {
-                console.log(`📦 Loading team ${team.name}:`, team);
-                allTeams.set(team.name, {
-                    name: team.name,
-                    unlocked: team.unlocked || [],
-                    timestamps: team.timestamps || {},
-                    startTime: team.startTime || null,
-                    completedAt: team.completedAt || null,
-                    totalTimeMs: team.totalTimeMs || null,
-                    lastUpdate: team.lastUpdate || null,
-                    solution: team.solution || null, 
-                    evidenceTimestamps: team.evidenceTimestamps || {}
-                });
+async function getAllTeams() {
+    const allTeams = new Map();
+    
+    // First, load from localStorage (always reliable)
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key.startsWith('unlocked_teks_')) {
+            const teamName = key.replace('unlocked_teks_', '');
+            const unlocked = JSON.parse(localStorage.getItem(key));
+            allTeams.set(teamName, { 
+                name: teamName, 
+                unlocked: unlocked,
+                timestamps: {},
+                startTime: null,
+                completedAt: null,
+                totalTimeMs: null,
+                solution: null,
+                source: 'localStorage'
             });
         }
-        
-        for (let i = 0; i < localStorage.length; i++) {
-            const key = localStorage.key(i);
-            if (key.startsWith('unlocked_teks_')) {
-                const teamName = key.replace('unlocked_teks_', '');
-                if (!allTeams.has(teamName)) {
-                    const unlocked = JSON.parse(localStorage.getItem(key));
-                    allTeams.set(teamName, { 
-                        name: teamName, 
-                        unlocked: unlocked,
-                        timestamps: {},
-                        startTime: null,
-                        completedAt: null,
-                        totalTimeMs: null,
-                        solution: null
+    }
+    
+    // Then, try to load from Firebase and merge
+    if (isFirebaseReady()) {
+        try {
+            const firebaseTeams = await getAllTeamsFromFirebase();
+            firebaseTeams.forEach(team => {
+                console.log(`📦 Loading team ${team.name} from Firebase:`, team);
+                
+                const localTeam = allTeams.get(team.name);
+                
+                // Only use Firebase data if it's newer or localStorage doesn't have it
+                if (!localTeam || (team.lastUpdate && (!localTeam.lastUpdate || team.lastUpdate > localTeam.lastUpdate))) {
+                    allTeams.set(team.name, {
+                        name: team.name,
+                        unlocked: team.unlocked || [],
+                        timestamps: team.timestamps || {},
+                        startTime: team.startTime || null,
+                        completedAt: team.completedAt || null,
+                        totalTimeMs: team.totalTimeMs || null,
+                        lastUpdate: team.lastUpdate || null,
+                        solution: team.solution || null, 
+                        evidenceTimestamps: team.evidenceTimestamps || {},
+                        source: 'firebase'
+                    });
+                } else {
+                    console.log(`⚠️ Using localStorage for ${team.name} (newer or Firebase failed)`);
+                    // Keep localStorage data but add Firebase metadata if available
+                    allTeams.set(team.name, {
+                        ...localTeam,
+                        timestamps: team.timestamps || localTeam.timestamps || {},
+                        startTime: team.startTime || localTeam.startTime || null,
+                        completedAt: team.completedAt || localTeam.completedAt || null,
+                        totalTimeMs: team.totalTimeMs || localTeam.totalTimeMs || null,
+                        solution: team.solution || localTeam.solution || null,
+                        source: 'localStorage-priority'
                     });
                 }
-            }
+            });
+        } catch (error) {
+            console.error('⚠️ Firebase load failed, using localStorage only:', error);
         }
-        
-        return Array.from(allTeams.values());
     }
+    
+    return Array.from(allTeams.values());
+}
 
-    async function saveTeam(teamName, data) {
-        localStorage.setItem(`unlocked_teks_${teamName}`, JSON.stringify(data.unlocked || []));
-        await saveTeamToFirebase(teamName, data);
+async function saveTeam(teamName, data) {
+    // Always save to localStorage first (reliable)
+    data.lastUpdate = new Date().toISOString();
+    localStorage.setItem(`unlocked_teks_${teamName}`, JSON.stringify(data.unlocked || []));
+    
+    // Try to sync to Firebase (may fail due to permissions)
+    const firebaseSuccess = await saveTeamToFirebase(teamName, data);
+    
+    if (!firebaseSuccess) {
+        console.warn('⚠️ Continuing with localStorage only for team:', teamName);
     }
+    
+    return true;
+}
 
     async function exportAllData() {
         const teams = await getAllTeams();
