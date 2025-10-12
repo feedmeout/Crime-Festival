@@ -667,8 +667,7 @@ async function saveTeamToFirebase(teamName, data) {
         return true;
     } catch (error) {
         console.error('❌ Firebase save error:', error);
-        
-        // Show warning to user
+
         const status = document.getElementById('firebaseStatus');
         if (status) {
             status.style.background = '#dc3545';
@@ -716,27 +715,35 @@ async function saveTeamToFirebase(teamName, data) {
 
 async function getAllTeams() {
     const allTeams = new Map();
-    
-    // First, load from localStorage (always reliable)
     for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
         if (key.startsWith('unlocked_teks_')) {
             const teamName = key.replace('unlocked_teks_', '');
-            const unlocked = JSON.parse(localStorage.getItem(key));
-            allTeams.set(teamName, { 
-                name: teamName, 
-                unlocked: unlocked,
-                timestamps: {},
-                startTime: null,
-                completedAt: null,
-                totalTimeMs: null,
-                solution: null,
-                source: 'localStorage'
-            });
+            const storedData = JSON.parse(localStorage.getItem(key));
+
+            if (Array.isArray(storedData)) {
+                allTeams.set(teamName, { 
+                    name: teamName, 
+                    unlocked: storedData,
+                    timestamps: {},
+                    startTime: null,
+                    completedAt: null,
+                    totalTimeMs: null,
+                    solution: null,
+                    lastUpdate: null,
+                    source: 'localStorage-legacy'
+                });
+            } else {
+
+                allTeams.set(teamName, {
+                    name: teamName,
+                    ...storedData,
+                    source: 'localStorage'
+                });
+            }
         }
     }
-    
-    // Then, try to load from Firebase and merge
+
     if (isFirebaseReady()) {
         try {
             const firebaseTeams = await getAllTeamsFromFirebase();
@@ -744,9 +751,7 @@ async function getAllTeams() {
                 console.log(`📦 Loading team ${team.name} from Firebase:`, team);
                 
                 const localTeam = allTeams.get(team.name);
-                
-                // Only use Firebase data if it's newer or localStorage doesn't have it
-                if (!localTeam || (team.lastUpdate && (!localTeam.lastUpdate || team.lastUpdate > localTeam.lastUpdate))) {
+                if (!localTeam) {
                     allTeams.set(team.name, {
                         name: team.name,
                         unlocked: team.unlocked || [],
@@ -759,18 +764,22 @@ async function getAllTeams() {
                         evidenceTimestamps: team.evidenceTimestamps || {},
                         source: 'firebase'
                     });
-                } else {
-                    console.log(`⚠️ Using localStorage for ${team.name} (newer or Firebase failed)`);
-                    // Keep localStorage data but add Firebase metadata if available
+                } else if (team.lastUpdate && localTeam.lastUpdate && team.lastUpdate > localTeam.lastUpdate) {
+                    console.log(`🔥 Firebase data is newer for ${team.name}`);
                     allTeams.set(team.name, {
-                        ...localTeam,
-                        timestamps: team.timestamps || localTeam.timestamps || {},
-                        startTime: team.startTime || localTeam.startTime || null,
-                        completedAt: team.completedAt || localTeam.completedAt || null,
-                        totalTimeMs: team.totalTimeMs || localTeam.totalTimeMs || null,
-                        solution: team.solution || localTeam.solution || null,
-                        source: 'localStorage-priority'
+                        name: team.name,
+                        unlocked: team.unlocked || [],
+                        timestamps: team.timestamps || {},
+                        startTime: team.startTime || null,
+                        completedAt: team.completedAt || null,
+                        totalTimeMs: team.totalTimeMs || null,
+                        lastUpdate: team.lastUpdate || null,
+                        solution: team.solution || null, 
+                        evidenceTimestamps: team.evidenceTimestamps || {},
+                        source: 'firebase-newer'
                     });
+                } else {
+                    console.log(`💾 localStorage data is newer for ${team.name}`);
                 }
             });
         } catch (error) {
@@ -782,11 +791,8 @@ async function getAllTeams() {
 }
 
 async function saveTeam(teamName, data) {
-    // Always save to localStorage first (reliable)
     data.lastUpdate = new Date().toISOString();
-    localStorage.setItem(`unlocked_teks_${teamName}`, JSON.stringify(data.unlocked || []));
-    
-    // Try to sync to Firebase (may fail due to permissions)
+    localStorage.setItem(`unlocked_teks_${teamName}`, JSON.stringify(data));
     const firebaseSuccess = await saveTeamToFirebase(teamName, data);
     
     if (!firebaseSuccess) {
