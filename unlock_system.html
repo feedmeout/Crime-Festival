@@ -327,14 +327,11 @@
         }
 
         async function getTeamData() {
-            // Try Firebase first
             const firebaseData = await loadFromFirebase(teamCode);
             if (firebaseData && firebaseData.unlocked && firebaseData.unlocked.length > 0) {
                 console.log('✅ Using Firebase data');
                 return firebaseData;
             }
-            
-            // Fallback to localStorage
             const localData = localStorage.getItem(getStorageKey());
             if (localData) {
                 const unlocked = JSON.parse(localData);
@@ -347,8 +344,7 @@
                     totalTimeMs: null
                 };
             }
-            
-            // New team
+
             console.log('ℹ️ New team, creating fresh data');
             return {
                 unlocked: [],
@@ -360,10 +356,7 @@
         }
 
         async function saveTeamData(data) {
-            // Save to localStorage for backward compatibility
             localStorage.setItem(getStorageKey(), JSON.stringify(data.unlocked || []));
-            
-            // Save to Firebase (CRITICAL)
             const saved = await saveToFirebase(teamCode, {
                 ...data,
                 lastUpdate: new Date().toISOString()
@@ -395,7 +388,6 @@
         }
 
         window.addEventListener('DOMContentLoaded', () => {
-            // Wait for Firebase to initialize
             setTimeout(() => {
                 if (!isFirebaseReady()) {
                     console.error('⚠️ Firebase failed to initialize after timeout');
@@ -452,17 +444,11 @@
 
         async function unlockNew(tek, tekNumber, teamData) {
             const now = new Date().toISOString();
-            
-            // Update data structure
             teamData.unlocked.push(tekNumber);
             teamData.timestamps[tekNumber] = now;
-            
-            // Set start time if this is the first TEK
             if (teamData.unlocked.length === 1) {
                 teamData.startTime = now;
             }
-            
-            // Check if completed
             const isCompleted = teamData.unlocked.length === 11;
             if (isCompleted && !teamData.completedAt) {
                 teamData.completedAt = now;
@@ -470,8 +456,6 @@
                 const endMs = new Date(now).getTime();
                 teamData.totalTimeMs = endMs - startMs;
             }
-            
-            // Save to both localStorage AND Firebase
             console.log('📝 Saving team data:', teamData);
             const saved = await saveTeamData(teamData);
             

@@ -65,11 +65,8 @@
                 alert('Παρακαλώ εισάγετε το όνομα της ομάδας!');
                 return;
             }
-            // Redirect to main game with team parameter
             window.location.href = `index.html?team=${teamName}`;
         }
-        
-        // Allow Enter key
         document.getElementById('teamName').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') enterGame();
         });

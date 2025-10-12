@@ -2166,6 +2166,46 @@ renderEvidence();
             }
         }
     }, 5000);
+	
+    // ⭐ ADD THIS NEW SECTION ⭐
+    // Polling function to check for updates from Firebase
+    async function checkForUpdates() {
+        if (!window.firebaseDB) return;
+        
+        try {
+            const docRef = window.firebaseDoc(window.firebaseDB, 'teams', teamCode);
+            const docSnap = await window.firebaseGetDoc(docRef);
+            
+            if (docSnap.exists()) {
+                const firebaseData = docSnap.data();
+                const localData = await getTeamData();
+                
+                // Check if Firebase has newer data
+                if (firebaseData.lastUpdate && 
+                    (!localData.lastUpdate || firebaseData.lastUpdate > localData.lastUpdate)) {
+                    
+                    console.log('🔄 New data detected from Firebase, updating...');
+                    
+                    // Update localStorage with Firebase data
+                    localStorage.setItem(getStorageKey(), JSON.stringify(firebaseData));
+                    
+                    // Re-render everything
+                    renderEvidence();
+                    await updateProgress(firebaseData);
+                    
+                    const solutionTab = document.getElementById('tab-solution');
+                    if (solutionTab && solutionTab.classList.contains('active')) {
+                        await initSolutionTab(firebaseData);
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('Error checking for updates:', error);
+        }
+    }
+
+    // Start polling for updates every 3 seconds
+    setInterval(checkForUpdates, 3000);
 });
 
 window.addEventListener('storage', async (e) => {

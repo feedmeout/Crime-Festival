@@ -221,21 +221,13 @@
         function generateFakeQR() {
             const canvas = document.getElementById('qrCanvas');
             const ctx = canvas.getContext('2d');
-            
-            // High resolution for printing (3x the display size for crisp print)
             const displaySize = 220;
-            const printScale = 4; // 4x resolution = 880x880 for excellent print quality
+            const printScale = 4;
             canvas.width = displaySize * printScale;
             canvas.height = displaySize * printScale;
-            
-            // Scale context for high-res drawing
             ctx.scale(printScale, printScale);
-            
-            // White background
             ctx.fillStyle = '#ffffff';
             ctx.fillRect(0, 0, displaySize, displaySize);
-            
-            // Black QR pattern
             ctx.fillStyle = '#000000';
             const moduleSize = 8.8;
             
