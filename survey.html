@@ -669,10 +669,9 @@ function renderWelcome() {
                         <strong>✅ Οι απαντήσεις σας έχουν αποθηκευτεί.</strong>
                     </p>
                 </div>
-                
-                <button class="btn btn-primary" onclick="window.close()" style="margin-top: 20px;">
-                    Κλείσιμο
-                </button>
+                <button class="btn btn-primary" onclick="closeWindow()" style="margin-top: 20px;">
+    Κλείσιμο
+</button>
             </div>
         `;
         return;
@@ -727,7 +726,7 @@ function renderWelcome() {
                 </div>
             ` : `
                 <div style="background: #fff3cd; border: 2px solid #ffc107; padding: 25px; border-radius: 12px; margin: 30px 0;">
-                    <p style="color: #856404; font-weight: 600; margin-bottom: 12px;">📋 ΣΗΜΑΝΤΙΚΟ - ΔΙΑΔΙΚΑΣΙΑ:</p>
+                    <p style="color: #856404; font-weight: 600; margin-bottom: 12px;">📋 ΔΙΑΔΙΚΑΣΙΑ</p>
                     <ol style="color: #856404; text-align: left; line-height: 1.8; margin: 0; padding-left: 20px;">
                         <li><strong>ΠΡΩΤΑ:</strong> Συμπληρώστε την Προκαταρκτική Έρευνα</li>
                         <li>Συμμετέχετε στη δραστηριότητα/παιχνίδι</li>
@@ -736,7 +735,7 @@ function renderWelcome() {
                 </div>
                 
                 <div style="background: #e7f3ff; border: 2px solid #2196f3; padding: 20px; border-radius: 12px; margin: 30px 0;">
-                    <p style="color: #0d47a1; line-height: 1.8; margin: 0;"><strong>📌 Σημαντικό:</strong></p>
+                    <p style="color: #0d47a1; line-height: 1.8; margin: 0;"><strong>📌 ΣΗΜΑΝΤΙΚΟ</strong></p>
                     <p style="color: #0d47a1; line-height: 1.8; margin: 8px 0;">• Η έρευνα είναι ανώνυμη</p>
                     <p style="color: #0d47a1; line-height: 1.8; margin: 8px 0;">• Διάρκεια: 5-10 λεπτά</p>
                     <p style="color: #d32f2f; line-height: 1.8; margin: 8px 0; font-weight: 600;">• Παρακαλούμε απαντήστε ειλικρινά - δεν υπάρχουν σωστές ή λάθος απαντήσεις!</p>
@@ -763,7 +762,7 @@ function renderWelcome() {
                             <strong style="display: block; margin-bottom: 5px;">ΤΕΛΙΚΗ</strong>
                             <small style="color: var(--gray-600);">
                                 ${hasPostData ? '✓ Συμπληρωμένη' : 
-                                  !hasPreData ? '🔒 Κλειδωμένη - Πρώτα συμπληρώστε την ΠΡΟΚΑΤΑΡΚΤΙΚΗ' : 
+                                  !hasPreData ? '🔒 Κλειδωμένη - Συμπληρώστε ΜΕΤΑ τη δραστηριότητα' : 
                                   'ΜΕΤΑ τη δραστηριότητα'}
                             </small>
                         </div>
@@ -1201,10 +1200,7 @@ async function submitSurvey() {
                     <div style="background: linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 152, 0, 0.1) 100%); border: 2px solid #ff9800; padding: 30px; border-radius: 16px; margin: 30px 0;">
                         <p style="color: #e65100; font-weight: 600; font-size: 20px; margin-bottom: 20px;">🎮 ΕΠΟΜΕΝΟ ΒΗΜΑ:</p>
                         <ol style="color: #e65100; text-align: left; line-height: 2; margin: 0 auto; padding-left: 20px; max-width: 500px; font-size: 16px;">
-                            <li><strong>Συμμετέχετε στη δραστηριότητα/παιχνίδι</strong></li>
-                            <li><strong>Μετά το τέλος της δραστηριότητας</strong></li>
-                            <li><strong>Επιστρέψτε σε αυτή τη σελίδα</strong></li>
-                            <li><strong>Συμπληρώστε την ΤΕΛΙΚΗ έρευνα</strong></li>
+                            <li><strong>Συμμετέχετε στο παιχνίδι</strong></li>
                         </ol>
                     </div>
                     
@@ -1224,9 +1220,9 @@ async function submitSurvey() {
                     <p style="font-size: 18px; color: var(--gray-700); margin-bottom: 30px;">
                         ΕΥΧΑΡΙΣΤΟΥΜΕ ΓΙΑ ΤΗ ΣΥΜΜΕΤΟΧΗ ΣΑΣ!
                     </p>
-                    <button class="btn btn-primary" onclick="window.close()">
-                        Κλείσιμο
-                    </button>
+<button class="btn btn-primary" onclick="closeWindow()">
+    Κλείσιμο
+</button>
                 </div>
             `;
         }
@@ -2650,6 +2646,13 @@ window.toggleOtherInput = toggleOtherInput;
 window.handleServicesSelection = handleServicesSelection;
 window.handleNoneSelected = handleNoneSelected;
 window.handleDontKnow = handleDontKnow;
+function closeWindow() {
+    window.opener = null;
+    window.open('', '_self');
+    window.close();
+}
+
+window.closeWindow = closeWindow;
 
     </script>
 </body>
