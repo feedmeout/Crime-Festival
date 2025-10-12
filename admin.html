@@ -790,99 +790,99 @@
         refreshTeams();
     }
 
-    async function refreshTeams() {
-        let teams = await getAllTeams();
-        const container = document.getElementById('teamsContainer');
-        const noTeams = document.getElementById('noTeams');
-        const sortOrder = document.getElementById('sortOrder').value;
+async function refreshTeams() {
+    let teams = await getAllTeams();
+    const container = document.getElementById('teamsContainer');
+    const noTeams = document.getElementById('noTeams');
+    const sortOrder = document.getElementById('sortOrder').value;
 
-        console.log(`📊 Loaded ${teams.length} teams from Firebase/localStorage`);
-        teams.forEach(t => console.log(`  - ${t.name}: ${t.unlocked.length} TEKs unlocked`));
+    console.log(`📊 Loaded ${teams.length} teams from Firebase/localStorage`);
+    teams.forEach(t => console.log(`  - ${t.name}: ${t.unlocked.length} TEKs unlocked`));
 
-        if (teams.length === 0) {
-            container.innerHTML = '';
-            noTeams.style.display = 'block';
-            return;
-        }
-
-        // Sort teams
-        teams = sortTeams(teams, sortOrder);
-
-        noTeams.style.display = 'none';
-        container.innerHTML = teams.map(team => {
-            const progress = Math.round((team.unlocked.length / TOTAL_TEKS) * 100);
-            const isCompleted = team.unlocked.length === TOTAL_TEKS;
-            
-            let timingHtml = '';
-            if (team.startTime) {
-                const now = new Date();
-                const startTime = new Date(team.startTime);
-                
-                if (isCompleted && team.completedAt) {
-                    timingHtml = `
-                        <div class="timing-info completed">
-                            <strong>⏱️ Χρόνος Ολοκλήρωσης:</strong>
-                            ${formatTime(team.totalTimeMs)}
-                            <div style="margin-top: 5px; font-size: 11px; color: #666;">
-                                Ξεκίνησε: ${formatDateTime(team.startTime)}<br>
-                                Ολοκληρώθηκε: ${formatDateTime(team.completedAt)}
-                            </div>
-                        </div>
-                    `;
-                } else {
-                    const elapsed = now - startTime;
-                    timingHtml = `
-                        <div class="timing-info">
-                            <strong>⏱️ Χρόνος σε εξέλιξη:</strong>
-                            ${formatTime(elapsed)}
-                            <div style="margin-top: 5px; font-size: 11px; color: #666;">
-                                Ξεκίνησε: ${formatDateTime(team.startTime)}
-                            </div>
-                        </div>
-                    `;
-                }
-            }
-            
-            return `
-                <div class="team-card ${isCompleted ? 'completed' : ''}">
-                    <h3>
-                        <span style="font-size: 24px;">👥</span> 
-                        ${team.name.toUpperCase()}
-                        ${isCompleted ? '<span class="completion-badge">✅ ΟΛΟΚΛΗΡΩΘΗΚΕ</span>' : ''}
-                    </h3>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: ${progress}%;">${progress}%</div>
-                    </div>
-                    <div class="team-stats">📊 ΞΕΚΛΕΙΔΩΜΕΝΑ: ${team.unlocked.length} / ${TOTAL_TEKS} ΣΤΟΙΧΕΙΑ</div>
-                    ${timingHtml}
-                    <div class="tek-grid">
-                        ${Array.from({length: TOTAL_TEKS}, (_, i) => {
-                            const tekNum = (i + 1).toString();
-                            const isUnlocked = team.unlocked.includes(tekNum);
-                            return `<div class="tek-box ${isUnlocked ? 'unlocked' : ''}">${i + 1}</div>`;
-                        }).join('')}
-                    </div>
-                    <div class="team-actions">
-                        <button class="btn btn-primary" onclick="viewTeam('${team.name}')">👁️ ΠΡΟΒΟΛΗ</button>
-                        <button class="btn" style="background: #17a2b8; color: white;" onclick="showTimestamps('${team.name}')">🕐 ΧΡΟΝΙΚΑ</button>
-                        <button class="btn btn-success" onclick="unlockAll('${team.name}')">🔓 ΟΛΑ</button>
-                        <button class="btn btn-secondary" onclick="resetTeam('${team.name}')">🔄 RESET</button>
-                        <button class="btn btn-danger" onclick="deleteTeam('${team.name}')">🗑️ DELETE</button>
-                    </div>
-                </div>
-            `;
-        }).join('');
-        
-        // Show last refresh time
-        const now = new Date().toLocaleTimeString('el-GR');
-        const lastRefreshEl = document.getElementById('lastRefresh');
-        if (lastRefreshEl) {
-            lastRefreshEl.innerHTML = `
-                <span class="icon">🔄</span>
-                <span>ΤΕΛΕΥΤΑΙΑ ΕΝΗΜΕΡΩΣΗ: ${now}</span>
-            `;
-        }
+    if (teams.length === 0) {
+        container.innerHTML = '';
+        noTeams.style.display = 'block';
+        return;
     }
+
+    // Sort teams
+    teams = sortTeams(teams, sortOrder);
+
+    noTeams.style.display = 'none';
+    container.innerHTML = teams.map(team => {
+        const progress = Math.round((team.unlocked.length / TOTAL_TEKS) * 100);
+        const isCompleted = !!team.solution;  // ✅ FIXED: Check if solution submitted, not just evidence unlocked
+        
+        let timingHtml = '';
+        if (team.startTime) {
+            const now = new Date();
+            const startTime = new Date(team.startTime);
+            
+            if (isCompleted && team.completedAt) {
+                timingHtml = `
+                    <div class="timing-info completed">
+                        <strong>⏱️ Χρόνος Ολοκλήρωσης:</strong>
+                        ${formatTime(team.totalTimeMs)}
+                        <div style="margin-top: 5px; font-size: 11px; color: #666;">
+                            Ξεκίνησε: ${formatDateTime(team.startTime)}<br>
+                            Ολοκληρώθηκε: ${formatDateTime(team.completedAt)}
+                        </div>
+                    </div>
+                `;
+            } else {
+                const elapsed = now - startTime;
+                timingHtml = `
+                    <div class="timing-info">
+                        <strong>⏱️ Χρόνος σε εξέλιξη:</strong>
+                        ${formatTime(elapsed)}
+                        <div style="margin-top: 5px; font-size: 11px; color: #666;">
+                            Ξεκίνησε: ${formatDateTime(team.startTime)}
+                        </div>
+                    </div>
+                `;
+            }
+        }
+        
+        return `
+            <div class="team-card ${isCompleted ? 'completed' : ''}">
+                <h3>
+                    <span style="font-size: 24px;">👥</span> 
+                    ${team.name.toUpperCase()}
+                    ${isCompleted ? '<span class="completion-badge">✅ ΟΛΟΚΛΗΡΩΘΗΚΕ</span>' : ''}
+                </h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: ${progress}%;">${progress}%</div>
+                </div>
+                <div class="team-stats">📊 ΞΕΚΛΕΙΔΩΜΕΝΑ: ${team.unlocked.length} / ${TOTAL_TEKS} ΣΤΟΙΧΕΙΑ</div>
+                ${timingHtml}
+                <div class="tek-grid">
+                    ${Array.from({length: TOTAL_TEKS}, (_, i) => {
+                        const tekNum = (i + 1).toString();
+                        const isUnlocked = team.unlocked.includes(tekNum);
+                        return `<div class="tek-box ${isUnlocked ? 'unlocked' : ''}">${i + 1}</div>`;
+                    }).join('')}
+                </div>
+                <div class="team-actions">
+                    <button class="btn btn-primary" onclick="viewTeam('${team.name}')">👁️ ΠΡΟΒΟΛΗ</button>
+                    <button class="btn" style="background: #17a2b8; color: white;" onclick="showTimestamps('${team.name}')">🕐 ΧΡΟΝΙΚΑ</button>
+                    <button class="btn btn-success" onclick="unlockAll('${team.name}')">🔓 ΟΛΑ</button>
+                    <button class="btn btn-secondary" onclick="resetTeam('${team.name}')">🔄 RESET</button>
+                    <button class="btn btn-danger" onclick="deleteTeam('${team.name}')">🗑️ DELETE</button>
+                </div>
+            </div>
+        `;
+    }).join('');
+    
+    // Show last refresh time
+    const now = new Date().toLocaleTimeString('el-GR');
+    const lastRefreshEl = document.getElementById('lastRefresh');
+    if (lastRefreshEl) {
+        lastRefreshEl.innerHTML = `
+            <span class="icon">🔄</span>
+            <span>ΤΕΛΕΥΤΑΙΑ ΕΝΗΜΕΡΩΣΗ: ${now}</span>
+        `;
+    }
+}
 
     function sortTeams(teams, order) {
         switch(order) {
