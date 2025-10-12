@@ -2155,7 +2155,8 @@ renderEvidence();
         console.error('Error during initialization:', error);
         alert('Σφάλμα φόρτωσης! Παρακαλώ ανανεώστε τη σελίδα.');
     }
-    setInterval(async () => {
+
+setInterval(async () => {
         const solutionTab = document.getElementById('tab-solution');
         if (solutionTab && solutionTab.classList.contains('active')) {
             const teamData = await getTeamData();
@@ -2166,9 +2167,47 @@ renderEvidence();
             }
         }
     }, 5000);
-	
-    // ⭐ ADD THIS NEW SECTION ⭐
-    // Polling function to check for updates from Firebase
+    
+    // ⚡ INSTANT REAL-TIME UPDATES ⚡
+    function setupRealtimeListener() {
+        if (!window.firebaseDB) {
+            console.warn('Firebase not ready, falling back to polling');
+            setInterval(checkForUpdates, 1000);
+            return;
+        }
+        
+        try {
+            import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js')
+                .then(({ onSnapshot }) => {
+                    const docRef = window.firebaseDoc(window.firebaseDB, 'teams', teamCode);
+                    
+                    onSnapshot(docRef, (doc) => {
+                        if (doc.exists()) {
+                            const firebaseData = doc.data();
+                            console.log('⚡ Real-time update received!');
+                            
+                            localStorage.setItem(getStorageKey(), JSON.stringify(firebaseData));
+                            renderEvidence();
+                            updateProgress(firebaseData);
+                            
+                            const solutionTab = document.getElementById('tab-solution');
+                            if (solutionTab && solutionTab.classList.contains('active')) {
+                                initSolutionTab(firebaseData);
+                            }
+                        }
+                    }, (error) => {
+                        console.error('Real-time listener error:', error);
+                        setInterval(checkForUpdates, 1000);
+                    });
+                    
+                    console.log('✅ Real-time listener active!');
+                });
+        } catch (error) {
+            console.error('Error setting up real-time listener:', error);
+            setInterval(checkForUpdates, 1000);
+        }
+    }
+
     async function checkForUpdates() {
         if (!window.firebaseDB) return;
         
@@ -2180,23 +2219,12 @@ renderEvidence();
                 const firebaseData = docSnap.data();
                 const localData = await getTeamData();
                 
-                // Check if Firebase has newer data
                 if (firebaseData.lastUpdate && 
                     (!localData.lastUpdate || firebaseData.lastUpdate > localData.lastUpdate)) {
                     
-                    console.log('🔄 New data detected from Firebase, updating...');
-                    
-                    // Update localStorage with Firebase data
                     localStorage.setItem(getStorageKey(), JSON.stringify(firebaseData));
-                    
-                    // Re-render everything
                     renderEvidence();
                     await updateProgress(firebaseData);
-                    
-                    const solutionTab = document.getElementById('tab-solution');
-                    if (solutionTab && solutionTab.classList.contains('active')) {
-                        await initSolutionTab(firebaseData);
-                    }
                 }
             }
         } catch (error) {
@@ -2204,8 +2232,7 @@ renderEvidence();
         }
     }
 
-    // Start polling for updates every 3 seconds
-    setInterval(checkForUpdates, 3000);
+    setupRealtimeListener();
 });
 
 window.addEventListener('storage', async (e) => {
