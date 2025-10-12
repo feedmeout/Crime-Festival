@@ -274,7 +274,41 @@
             border-color: #28a745;
             color: #155724;
         }
+.tek-box.unlocked {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
 
+        /* ✅ ADD THE NEW CSS HERE ⬇️ */
+        .tek-box.clickable {
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .tek-box.clickable:hover {
+            transform: scale(1.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .tek-box.clickable:active {
+            transform: scale(0.95);
+        }
+
+        .tek-box.disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .tek-box.unlocked.clickable:hover {
+            background: #b8dacc;
+            border-color: #1e7e34;
+        }
+
+        .tek-box:not(.unlocked).clickable:hover {
+            background: #fff3cd;
+            border-color: #ffc107;
+        }
         .quick-actions {
             display: flex;
             gap: 15px;
@@ -686,18 +720,16 @@ async function getAllTeams() {
                 completedAt: team.completedAt || null,
                 totalTimeMs: team.totalTimeMs || null,
                 lastUpdate: team.lastUpdate || null,
-                solution: team.solution || null,  // ✅ CRITICAL
+                solution: team.solution || null, 
                 evidenceTimestamps: team.evidenceTimestamps || {}
             });
         });
     }
     
-    // Then check localStorage (only for local admin changes)
     for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
         if (key.startsWith('unlocked_teks_')) {
             const teamName = key.replace('unlocked_teks_', '');
-            // Only add from localStorage if not already in Firebase
             if (!allTeams.has(teamName)) {
                 const unlocked = JSON.parse(localStorage.getItem(key));
                 allTeams.set(teamName, { 
@@ -717,7 +749,6 @@ async function getAllTeams() {
 }
 
     async function saveTeam(teamName, data) {
-        // Save unlocked array to localStorage for backward compatibility
         localStorage.setItem(`unlocked_teks_${teamName}`, JSON.stringify(data.unlocked || []));
         await saveTeamToFirebase(teamName, data);
     }
@@ -864,13 +895,16 @@ return `
                 </div>
                 <div class="team-stats">📊 ΞΕΚΛΕΙΔΩΜΕΝΑ: ${team.unlocked.length} / ${TOTAL_TEKS} ΣΤΟΙΧΕΙΑ</div>
                 ${timingHtml}
-                <div class="tek-grid">
-                    ${Array.from({length: TOTAL_TEKS}, (_, i) => {
-                        const tekNum = (i + 1).toString();
-                        const isUnlocked = team.unlocked.includes(tekNum);
-                        return `<div class="tek-box ${isUnlocked ? 'unlocked' : ''}">${i + 1}</div>`;
-                    }).join('')}
-                </div>
+<div class="tek-grid">
+    ${Array.from({length: TOTAL_TEKS}, (_, i) => {
+        const tekNum = (i + 1).toString();
+        const isUnlocked = team.unlocked.includes(tekNum);
+        const isLocked = !!team.solution; // Can't modify after solution submitted
+        return `<div class="tek-box ${isUnlocked ? 'unlocked' : ''} ${isLocked ? 'disabled' : 'clickable'}" 
+                     onclick="${isLocked ? '' : `toggleTek('${team.name}', ${i + 1})`}" 
+                     title="${isLocked ? 'Κλειδωμένο (λύση υποβλήθηκε)' : (isUnlocked ? 'Κλικ για κλείδωμα' : 'Κλικ για ξεκλείδωμα')}">${i + 1}</div>`;
+    }).join('')}
+</div>
                 <div class="team-actions">
                     <button class="btn btn-primary" onclick="viewTeam('${team.name}')">👁️ ΠΡΟΒΟΛΗ</button>
                     <button class="btn" style="background: #17a2b8; color: white;" onclick="showTimestamps('${team.name}')">🕐 ΧΡΟΝΙΚΑ</button>
@@ -881,8 +915,7 @@ return `
             </div>
         `;
     }).join('');
-    
-    // Show last refresh time
+
     const now = new Date().toLocaleTimeString('el-GR');
     const lastRefreshEl = document.getElementById('lastRefresh');
     if (lastRefreshEl) {
@@ -1012,6 +1045,53 @@ return `
             refreshTeams();
         }
     }
+
+    // ✅ ADD THE TOGGLE FUNCTION HERE ⬇️
+    async function toggleTek(teamName, tekNumber) {
+        const teams = await getAllTeams();
+        const team = teams.find(t => t.name === teamName);
+        
+        if (!team) {
+            alert('Ομάδα δεν βρέθηκε!');
+            return;
+        }
+        
+        // Check if solution already submitted
+        if (team.solution) {
+            alert('❌ Δεν μπορείτε να τροποποιήσετε τεκμήρια μετά την υποβολή λύσης!');
+            return;
+        }
+        
+        const tekStr = tekNumber.toString();
+        const unlocked = team.unlocked || [];
+        const timestamps = team.timestamps || {};
+        
+        // Toggle: if unlocked, lock it; if locked, unlock it
+        if (unlocked.includes(tekStr)) {
+            // LOCK IT - Remove from unlocked array
+            const index = unlocked.indexOf(tekStr);
+            unlocked.splice(index, 1);
+            delete timestamps[tekStr];
+            console.log(`🔒 Locked TEK ${tekNumber} for team ${teamName}`);
+        } else {
+            // UNLOCK IT - Add to unlocked array
+            unlocked.push(tekStr);
+            timestamps[tekStr] = new Date().toISOString();
+            console.log(`🔓 Unlocked TEK ${tekNumber} for team ${teamName}`);
+        }
+        
+        // Update team data
+        await saveTeam(teamName, {
+            ...team,
+            unlocked: unlocked,
+            timestamps: timestamps,
+            startTime: team.startTime || new Date().toISOString()
+        });
+        
+        // Refresh display
+        refreshTeams();
+    }
+
 
     async function resetTeam(teamName) {
         if (confirm(`Reset πρόοδο για την ομάδα "${teamName}";`)) {
