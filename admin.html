@@ -1154,22 +1154,15 @@ async function unlockAll(teamName) {
                 }
             }
         });
-
-        const completionTime = new Date();
-        const startTime = new Date(earliestTime);
-        const totalTimeMs = completionTime - startTime;        
+       
         const updatedTeam = {
             unlocked: allTeks,
             timestamps: timestamps,
             startTime: earliestTime,
-            completedAt: now,
-            totalTimeMs: totalTimeMs
         };
         
         console.log(`💾 Saving unlock all for team ${teamName}`);
         console.log(`   Start time: ${earliestTime}`);
-        console.log(`   Completion time: ${now}`);
-        console.log(`   Total time: ${formatTime(totalTimeMs)}`);
         
         localStorage.setItem(`unlocked_teks_${teamName}`, JSON.stringify(updatedTeam));
         await saveTeamToFirebase(teamName, updatedTeam);
