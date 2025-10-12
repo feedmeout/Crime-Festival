@@ -668,25 +668,26 @@
         }
     }
 
-    async function getAllTeams() {
-        const allTeams = new Map();
-        
-        // Prioritize Firebase (cloud data from all devices)
-        if (isFirebaseReady()) {
-            const firebaseTeams = await getAllTeamsFromFirebase();
-            firebaseTeams.forEach(team => {
-                // Ensure proper structure
-                allTeams.set(team.name, {
-                    name: team.name,
-                    unlocked: team.unlocked || [],
-                    timestamps: team.timestamps || {},
-                    startTime: team.startTime || null,
-                    completedAt: team.completedAt || null,
-                    totalTimeMs: team.totalTimeMs || null,
-                    lastUpdate: team.lastUpdate || null
-                });
+async function getAllTeams() {
+    const allTeams = new Map();
+    
+    // Prioritize Firebase (cloud data from all devices)
+    if (isFirebaseReady()) {
+        const firebaseTeams = await getAllTeamsFromFirebase();
+        firebaseTeams.forEach(team => {
+            // Ensure proper structure
+            allTeams.set(team.name, {
+                name: team.name,
+                unlocked: team.unlocked || [],
+                timestamps: team.timestamps || {},
+                startTime: team.startTime || null,
+                completedAt: team.completedAt || null,
+                totalTimeMs: team.totalTimeMs || null,
+                lastUpdate: team.lastUpdate || null,
+                solution: team.solution || null  // ✅ ADDED THIS LINE
             });
-        }
+        });
+    }
         
         // Then check localStorage (only for local admin changes)
         for (let i = 0; i < localStorage.length; i++) {
