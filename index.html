@@ -1573,6 +1573,8 @@ async function submitSolution() {
         totalTimeMs = now - start;
     }
 
+    const scoreResult = calculateScore(selectedSuspects, totalTimeMs, promptCount);
+
     const solution = {
         suspects: selectedSuspects,
         justification: justification,
@@ -1580,6 +1582,10 @@ async function submitSolution() {
         promptCount: promptCount,
         submittedAt: new Date().toISOString(),
         completionTimeMs: totalTimeMs,
+        score: scoreResult.score,
+        maxScore: scoreResult.maxScore,
+        breakdown: scoreResult.breakdown,
+        correctCount: scoreResult.correctCount,
         researchData: {
             evidenceUnlockSequence: Object.keys(teamData.evidenceTimestamps || {}).sort((a, b) => {
                 return new Date(teamData.evidenceTimestamps[a]) - new Date(teamData.evidenceTimestamps[b]);
@@ -1695,13 +1701,13 @@ function displaySolutionResult(solution) {
     let grade = '';
     let gradeColor = '';
     if (percentage >= 90) {
-        grade = 'ΑΡΧΙ-ΝΤΕΤΕΚΤΙΒΑΣ 🕵️';
+        grade = 'ΑΡΧΙ-ΝΤΕΤΕΚΤΙΒΣ 🕵️';
         gradeColor = '#00d4ff';
     } else if (percentage >= 80) {
         grade = 'ΑΝΩΤΕΡΟΙ ΑΝΑΚΡΙΤΕΣ 🎖️';
         gradeColor = '#ffd700';
     } else if (percentage >= 70) {
-        grade = 'ΝΤΕΤΕΚΤΙΒΑΣ 🔎';
+        grade = 'ΝΤΕΤΕΚΤΙΒΣ 🔎';
         gradeColor = '#c0c0c0';
     } else if (percentage >= 60) {
         grade = 'ΑΣΤΥΝΟΜΟΙ 👮';
@@ -1800,10 +1806,6 @@ function displaySolutionResult(solution) {
     statsHTML += '</div>';
     
     statsHTML += '</div>';
-
-    // ⭐ NOTE: submissionHeader and passwordSection are REMOVED from here ⭐
-    // They will be hidden by revealSolution() before this function is called
-    
     resultDiv.innerHTML = 
         '<div style="background: ' + headerGradient + '; color: white; padding: 30px; border-radius: 15px; margin: 20px 0; text-align: center; box-shadow: 0 10px 40px ' + headerShadow + ';">' +
 		
