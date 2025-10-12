@@ -1353,14 +1353,24 @@ async function updateProgress(teamData) {
         }
     }
 	
-    if (teamData.solution) {
-        if (!document.getElementById('submissionLockedBadge')) {
-            const lockedBadge = document.createElement('div');
-            lockedBadge.id = 'submissionLockedBadge';
-            lockedBadge.style.cssText = 'position: fixed; top: 80px; left: 50%; transform: translateX(-50%); z-index: 999; background: #ffc107; color: #000; padding: 10px 20px; border-radius: 8px; font-weight: bold; box-shadow: 0 4px 12px rgba(0,0,0,0.3);';
-            lockedBadge.textContent = '🔒 ΛΥΣΗ ΥΠΟΒΛΗΘΗΚΕ - ΜΟΝΟ ΠΡΟΒΟΛΗ';
-            document.body.appendChild(lockedBadge);
-        }
+if (teamData.solution) {
+    if (!document.getElementById('submissionLockedBadge')) {
+        const lockedBadge = document.createElement('div');
+        lockedBadge.id = 'submissionLockedBadge';
+        lockedBadge.style.cssText = 'position: fixed; top: 80px; left: 50%; transform: translateX(-50%); z-index: 999; background: #ffc107; color: #000; padding: 10px 20px; border-radius: 8px; font-weight: bold; box-shadow: 0 4px 12px rgba(0,0,0,0.3); transition: opacity 0.3s ease;';
+        lockedBadge.textContent = '🔒 ΛΥΣΗ ΥΠΟΒΛΗΘΗΚΕ - ΜΟΝΟ ΠΡΟΒΟΛΗ';
+        document.body.appendChild(lockedBadge);
+        
+        // ✅ Hide badge when scrolling
+        let scrollTimer;
+        window.addEventListener('scroll', () => {
+            lockedBadge.style.opacity = '0.3'; // Fade out while scrolling
+            
+            clearTimeout(scrollTimer);
+            scrollTimer = setTimeout(() => {
+                lockedBadge.style.opacity = '1'; // Fade back in when stopped
+            }, 150);
+        });
     }
 }
 
