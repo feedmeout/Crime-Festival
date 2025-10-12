@@ -1638,7 +1638,10 @@ const solution = {
 
 function displaySolutionResult(solution) {
     const resultDiv = document.getElementById('solutionResult');
-    
+    const solutionIntroBox = document.getElementById('solutionIntroBox');
+    if (solutionIntroBox) {
+        solutionIntroBox.style.display = 'none';
+    }
     const percentage = Math.round((solution.score / solution.maxScore) * 100);
     let grade = '';
     let gradeColor = '';
