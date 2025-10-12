@@ -1320,39 +1320,49 @@ async function logEvidenceUnlock(tekId) {
             };
         }
 
-        async function updateProgress(teamData) {
-            const unlockedTeks = teamData.unlocked || [];
-            const total = teks.length;
-            const unlocked = unlockedTeks.length;
-            const percentage = Math.round((unlocked / total) * 100);
+async function updateProgress(teamData) {
+    const unlockedTeks = teamData.unlocked || [];
+    const total = teks.length;
+    const unlocked = unlockedTeks.length;
+    const percentage = Math.round((unlocked / total) * 100);
 
-            document.getElementById('progressFill').style.width = percentage + '%';
-            document.getElementById('progressFill').textContent = percentage + '%';
-            document.getElementById('progressText').textContent = 
-                `Έχετε ξεκλειδώσει ${unlocked} από ${total} τεκμήρια`;
-            
-            const timerSection = document.getElementById('timerSection');
-            if (teamData.startTime && unlocked > 0) {
-                timerSection.style.display = 'block';
-                document.getElementById('startTime').textContent = 
-                    new Date(teamData.startTime).toLocaleString('el-GR', {
-                        day: '2-digit',
-                        month: '2-digit',
-                        year: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    });
-                
-                if (teamData.completedAt || teamData.solution) {
-                    document.getElementById('liveTimerLabel').textContent = 'Συνολικός Χρόνος:';
-                    document.getElementById('liveTimer').textContent = formatElapsedTime(teamData.totalTimeMs || 0);
-                    stopTimer();
-                } else {
-                    document.getElementById('liveTimerLabel').textContent = 'Χρόνος σε Εξέλιξη:';
-                    startLiveTimer(teamData.startTime);
-                }
-            }
+    document.getElementById('progressFill').style.width = percentage + '%';
+    document.getElementById('progressFill').textContent = percentage + '%';
+    document.getElementById('progressText').textContent = 
+        `Έχετε ξεκλειδώσει ${unlocked} από ${total} τεκμήρια`;
+    
+    const timerSection = document.getElementById('timerSection');
+    if (teamData.startTime && unlocked > 0) {
+        timerSection.style.display = 'block';
+        document.getElementById('startTime').textContent = 
+            new Date(teamData.startTime).toLocaleString('el-GR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        
+        if (teamData.completedAt || teamData.solution) {
+            document.getElementById('liveTimerLabel').textContent = 'Συνολικός Χρόνος:';
+            document.getElementById('liveTimer').textContent = formatElapsedTime(teamData.totalTimeMs || 0);
+            stopTimer();
+        } else {
+            document.getElementById('liveTimerLabel').textContent = 'Χρόνος σε Εξέλιξη:';
+            startLiveTimer(teamData.startTime);
         }
+    }
+	
+    if (teamData.solution) {
+        if (!document.getElementById('submissionLockedBadge')) {
+            const lockedBadge = document.createElement('div');
+            lockedBadge.id = 'submissionLockedBadge';
+            lockedBadge.style.cssText = 'position: fixed; top: 80px; left: 50%; transform: translateX(-50%); z-index: 999; background: #ffc107; color: #000; padding: 10px 20px; border-radius: 8px; font-weight: bold; box-shadow: 0 4px 12px rgba(0,0,0,0.3);';
+            lockedBadge.textContent = '🔒 ΛΥΣΗ ΥΠΟΒΛΗΘΗΚΕ - ΜΟΝΟ ΠΡΟΒΟΛΗ';
+            document.body.appendChild(lockedBadge);
+        }
+    }
+}
 
 function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
     let score = 0;
@@ -1525,38 +1535,38 @@ function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
     return { score, breakdown, maxScore: 140, correctCount };
 }
 
-        async function submitSolution() {
-            const checkboxes = document.querySelectorAll('input[name="suspect"]:checked');
-            const selectedSuspects = Array.from(checkboxes).map(cb => cb.value);
-            const justification = document.getElementById('justification').value.trim();
-            const promptCount = parseInt(document.getElementById('promptCount').value) || 0;
+async function submitSolution() {
+    const checkboxes = document.querySelectorAll('input[name="suspect"]:checked');
+    const selectedSuspects = Array.from(checkboxes).map(cb => cb.value);
+    const justification = document.getElementById('justification').value.trim();
+    const promptCount = parseInt(document.getElementById('promptCount').value) || 0;
 
-            if (selectedSuspects.length === 0) {
-                alert('Παρακαλώ επιλέξτε τουλάχιστον έναν ύποπτο ή αυτοκτονία!');
-                return;
-            }
-            
-            if (!justification || justification.length < 50) {
-                alert('Παρακαλώ συμπληρώστε αναλυτική αιτιολόγηση (τουλάχιστον 50 χαρακτήρες)!');
-                return;
-            }
-            
-            if (!promptCount || promptCount < 0) {
-                alert('Παρακαλώ εισάγετε έγκυρο αριθμό prompts!');
-                return;
-            }
-			
-            const teamData = await getTeamData();
-            if (teamData.unlocked.length < 6) {
-                alert(`Πρέπει να ξεκλειδώσετε τουλάχιστον 6 τεκμήρια πριν υποβάλετε λύση! (Έχετε: ${teamData.unlocked.length}/11)`);
-                return;
-            }
+    if (selectedSuspects.length === 0) {
+        alert('Παρακαλώ επιλέξτε τουλάχιστον έναν ύποπτο ή αυτοκτονία!');
+        return;
+    }
 
-            if (teamData.solution) {
-                alert('Έχετε ήδη υποβάλει λύση! Δεν μπορείτε να υποβάλετε ξανά.');
-                return;
-            }
-            
+    if (!justification || justification.length < 50) {
+        alert('Παρακαλώ συμπληρώστε αναλυτική αιτιολόγηση (τουλάχιστον 50 χαρακτήρες)!');
+        return;
+    }
+
+    if (!promptCount || promptCount < 0) {
+        alert('Παρακαλώ εισάγετε έγκυρο αριθμό prompts!');
+        return;
+    }
+    
+    const teamData = await getTeamData();
+
+    if (teamData.unlocked.length < 6) {
+        alert(`Πρέπει να ξεκλειδώσετε τουλάχιστον 6 τεκμήρια πριν υποβάλετε λύση! (Έχετε: ${teamData.unlocked.length}/11)`);
+        return;
+    }
+
+    if (teamData.solution) {
+        alert('Έχετε ήδη υποβάλει λύση! Δεν μπορείτε να υποβάλετε ξανά.');
+        return;
+    }            
             let totalTimeMs = null;
             if (teamData.startTime) {
                 const start = new Date(teamData.startTime);
@@ -1975,30 +1985,94 @@ function renderEvidence() {
 }
 
 async function initSolutionTab(teamData) {
-    const existingSolution = teamData.solution;
+    const solutionTab = document.getElementById('tab-solution');
     
-    if (existingSolution) {
-        displaySolutionResult(existingSolution);
+    if (teamData.solution) {
+        const lockedBanner = document.createElement('div');
+        lockedBanner.style.cssText = 'background: #fff3cd; border: 3px solid #ffc107; padding: 20px; border-radius: 10px; margin-bottom: 20px; text-align: center;';
+        lockedBanner.innerHTML = `
+            <h2 style="color: #856404; margin-bottom: 10px;">🔒 Η ΛΥΣΗ ΥΠΟΒΛΗΘΗΚΕ</h2>
+            <p style="color: #856404;">Η ομάδα σας έχει ήδη υποβάλει λύση. Δεν επιτρέπονται περαιτέρω υποβολές.</p>
+            <p style="color: #856404; margin-top: 10px; font-size: 14px;">
+                Υποβλήθηκε στις: ${new Date(teamData.solution.submittedAt).toLocaleString('el-GR')}
+            </p>
+        `;
+        
+        const introBox = solutionTab.querySelector('.intro-box');
+        if (introBox) {
+            introBox.insertAdjacentElement('afterend', lockedBanner);
+        }
+        
+        displaySolutionResult(teamData.solution);
     }
 }
 
 window.addEventListener('DOMContentLoaded', async () => {
+    // 1. CHECK IF TEAM NAME IS PROVIDED
+    if (teamCode === 'default') {
+        console.warn('⚠️ No team specified, redirecting to team entry...');
+        window.location.href = 'team_entry.html';
+        return;
+    }
+    
+    // 2. ✅ AUTO-CREATE TEAM IF DOESN'T EXIST
+    try {
+        const teamData = await getTeamData();
+        
+        // If team doesn't exist in Firebase, create it
+        if (!teamData.unlocked || teamData.unlocked.length === 0) {
+            console.log(`📝 Creating new team: ${teamCode}`);
+            const newTeamData = {
+                unlocked: [],
+                timestamps: {},
+                startTime: null,
+                completedAt: null,
+                totalTimeMs: null,
+                createdAt: new Date().toISOString()
+            };
+            
+            // Save to Firebase
+            if (window.firebaseDB) {
+                await window.firebaseSetDoc(
+                    window.firebaseDoc(window.firebaseDB, 'teams', teamCode),
+                    newTeamData
+                );
+                console.log(`✅ Team ${teamCode} created in Firebase`);
+            }
+            
+            // Also save to localStorage
+            localStorage.setItem(`unlocked_teks_${teamCode}`, JSON.stringify([]));
+        }
+    } catch (error) {
+        console.error('Error checking/creating team:', error);
+    }
+    
+    // 3. INITIALIZE TABS
     initTabs();
     
     try {
+        // 4. RENDER SUSPECTS
         if (typeof SuspectsModule !== 'undefined') {
             SuspectsModule.renderSuspects('suspectsContainer');
         } else {
             console.error('SuspectsModule not loaded! Make sure suspects.js is included before this script.');
         }
         
+        // 5. RENDER EVIDENCE CARDS
         renderEvidence();
         
+        // 6. LOAD TEAM DATA (reload after potential creation)
         const teamData = await getTeamData();
+        
+        // 7. UPDATE PROGRESS BAR AND TIMER
         await updateProgress(teamData);
+        
+        // 8. INITIALIZE SOLUTION TAB
         await initSolutionTab(teamData);
+        
     } catch (error) {
         console.error('Error during initialization:', error);
+        alert('Σφάλμα φόρτωσης! Παρακαλώ ανανεώστε τη σελίδα.');
     }
 });
 

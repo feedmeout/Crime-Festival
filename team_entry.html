@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <title>Είσοδος Ομάδας</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .entry-box {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+        h1 {
+            color: #1a1a2e;
+            margin-bottom: 20px;
+        }
+        input {
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-transform: lowercase;
+        }
+        button {
+            background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        button:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="entry-box">
+        <h1>🔍 Crime Festival 2025</h1>
+        <p style="color: #666; margin-bottom: 30px;">Εισάγετε το όνομα της ομάδας σας</p>
+        <input type="text" id="teamName" placeholder="π.χ. alpha, beta, delta..." autocomplete="off">
+        <button onclick="enterGame()">ΕΝΑΡΞΗ ΕΡΕΥΝΑΣ</button>
+    </div>
+    
+    <script>
+        function enterGame() {
+            const teamName = document.getElementById('teamName').value.trim().toLowerCase();
+            if (!teamName) {
+                alert('Παρακαλώ εισάγετε το όνομα της ομάδας!');
+                return;
+            }
+            // Redirect to main game with team parameter
+            window.location.href = `index.html?team=${teamName}`;
+        }
+        
+        // Allow Enter key
+        document.getElementById('teamName').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') enterGame();
+        });
+    </script>
+</body>
+</html>
