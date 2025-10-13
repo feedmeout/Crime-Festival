@@ -566,8 +566,6 @@ window.viewSolution = async function(teamName) {
         const maxScore = solution.maxScore || 140;
         const percentage = Math.round((solution.score / maxScore) * 100);
         const grade = getGrade(percentage);
-        
-        // Check if contradiction
         const hasSuicide = suspects.includes('suicide');
         const hasKiller = suspects.some(s => s !== 'suicide');
         const isContradiction = hasSuicide && hasKiller;
@@ -630,64 +628,59 @@ window.viewSolution = async function(teamName) {
                 <h3 style="margin-top: 25px; margin-bottom: 15px;">🎯 Αναλυτική Βαθμολογία:</h3>
                 <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: 13px; line-height: 1.7; max-height: 400px; overflow-y: auto;">
 ${solution.breakdown.map(item => {
-                        // Empty lines
+
                         if (item.trim() === '') {
                             return '<div style="height: 5px;"></div>';
                         }
-                        
-                        // Box/frame characters - ignore them
+
                         if (item.includes('╔') || item.includes('═') || item.includes('─')) {
                             return '';
                         }
                         
-                        // Styling based on content
                         let bgColor = '#f8f9fa';
                         let borderColor = '#dee2e6';
                         let textColor = '#333';
                         let fontWeight = 'normal';
-                        
-                        // Critical errors - red box
+
                         if (item.includes('ΛΟΓΙΚΗ ΑΝΤΙΦΑΣΗ') || item.includes('ΛΑΘΟΣ ΔΙΑΓΝΩΣΗ')) {
                             bgColor = '#f8d7da';
                             borderColor = '#dc3545';
                             textColor = '#721c24';
                             fontWeight = 'bold';
                         } 
-                        // Positive points - green box
+
                         else if (item.includes('✓') || item.includes('+')) {
                             bgColor = '#d4edda';
                             borderColor = '#28a745';
                             textColor = '#155724';
                         } 
-                        // Negative points - yellow/orange box
+						
                         else if (item.includes('✗') || item.includes('-') || item.includes('❌')) {
                             bgColor = '#fff3cd';
                             borderColor = '#ffc107';
                             textColor = '#856404';
                         } 
-                        // Warnings
+
                         else if (item.includes('⚠️')) {
                             bgColor = '#fff3cd';
                             borderColor = '#ffc107';
                             textColor = '#856404';
                         } 
-                        // Info - blue box
+
                         else if (item.includes('💡')) {
                             bgColor = '#e7f3ff';
                             borderColor = '#2196f3';
                             textColor = '#0d47a1';
                         }
-                        // Section headers (ΘΕΤΙΚΑ ΣΤΟΙΧΕΙΑ, ΑΡΝΗΤΙΚΑ ΣΤΟΙΧΕΙΑ)
+
                         else if (item.includes('ΘΕΤΙΚΑ ΣΤΟΙΧΕΙΑ') || item.includes('ΑΡΝΗΤΙΚΑ ΣΤΟΙΧΕΙΑ')) {
                             return `<div style="color: #0f3460; font-weight: bold; margin: 15px 0 8px 0; font-size: 14px;">${item}</div>`;
                         }
-                        
-                        // Indented lines (sub-items with arrows)
+
                         if (item.startsWith('   ')) {
                             return `<div style="padding: 4px 4px 4px 30px; margin: 2px 0; color: ${textColor}; font-size: 13px;">${item}</div>`;
                         }
-                        
-                        // Main items with colored boxes
+
                         return `<div style="padding: 10px 15px; margin: 5px 0; background: ${bgColor}; border-left: 4px solid ${borderColor}; border-radius: 4px; color: ${textColor}; font-weight: ${fontWeight};">${item}</div>`;
                     }).join('')}
                 </div>
