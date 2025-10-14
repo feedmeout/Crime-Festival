@@ -1489,7 +1489,6 @@ async function resetAll() {
                 await Promise.all(deletePromises);
                 
                 console.log(`✅ Deleted ${teams.length} teams and ${surveyCount} surveys`);
-                alert(`✅ Διαγράφηκαν ${teams.length} ομάδες και ${surveyCount} έρευνες!`);
             } catch (error) {
                 console.error('❌ Firebase delete error:', error);
                 alert(`⚠️ Σφάλμα: ${error.message}`);
