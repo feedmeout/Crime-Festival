@@ -563,7 +563,6 @@
             font-size: clamp(18px, 3vw, 20px);
         }
         
-        /* NEW UTILITY CLASSES */
         .success-icon {
             font-size: clamp(60px, 15vw, 100px);
             margin-bottom: 30px;
@@ -618,22 +617,21 @@
             font-size: clamp(22px, 4vw, 28px);
         }
         
-        .alert-box {
-            background: linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 152, 0, 0.1) 100%);
-            border: 2px solid var(--warning);
-            padding: clamp(20px, 4vw, 30px);
-            border-radius: 16px;
-            margin: 30px 0;
-        }
+.alert-box {
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 152, 0, 0.1) 100%);
+    border: 2px solid var(--warning);
+    padding: clamp(12px, 2vw, 14px) clamp(20px, 3vw, 24px);
+    border-radius: 12px;
+    margin: 30px 0;
+}
+
+.alert-message {
+    color: #e65100;
+    font-weight: 600;
+    font-size: clamp(14px, 2.5vw, 16px);
+    margin: 0;
+}
         
-        .alert-message {
-            color: #e65100;
-            font-weight: 600;
-            font-size: clamp(16px, 3vw, 20px);
-            margin-bottom: 20px;
-        }
-        
-        /* ACCESSIBILITY */
         @media (prefers-reduced-motion: reduce) {
             *,
             *::before,
@@ -644,7 +642,6 @@
             }
         }
         
-        /* MOBILE OPTIMIZATIONS */
         @media (max-width: 768px) {
             .wrapper { 
                 padding: 10px; 
@@ -713,8 +710,7 @@
                 min-height: 44px;
                 font-size: clamp(11px, 1.8vw, 12px); 
             }
-            
-            /* Show swipe indicator on 7-point scales */
+
             .likert-scale-7::after {
                 content: '← Swipe →';
                 display: block;
@@ -725,7 +721,6 @@
             }
         }
         
-        /* TABLET ADJUSTMENTS */
         @media (min-width: 769px) and (max-width: 1024px) {
             .radio-group, .checkbox-group {
                 grid-template-columns: repeat(auto-fill, minmax(min(180px, 100%), 1fr));
@@ -1616,7 +1611,7 @@ function renderDemographics() {
                         <span class="question-number">1.3</span>
                         Ηλικία
                     </label>
-                    <input type="number" id="age" name="age" min="16" max="100" placeholder="Σε έτη" required>
+                    <input type="number" id="age" name="age" min="13" max="100" placeholder="Σε έτη" required>
                 </div>
                 
                 <div class="form-group">
