@@ -214,6 +214,18 @@ button:disabled {
             </div>
             
             <div class="input-group">
+                <label for="memberName">Το Όνομά Σας *</label>
+                <input 
+                    type="text" 
+                    id="memberName" 
+                    placeholder="π.χ. Μαρία, Γιάννης"
+                    autocomplete="off"
+                    required
+                >
+                <p style="font-size: 12px; color: #999; margin-top: 5px;">Κάθε μέλος πρέπει να εισέλθει με το δικό του όνομα</p>
+            </div>
+            
+            <div class="input-group">
                 <label for="teamPassword">Κωδικός Ομάδας *</label>
                 <input 
                     type="password" 
@@ -269,10 +281,16 @@ button:disabled {
             event.preventDefault();
             
             const teamName = document.getElementById('teamName').value.trim().toLowerCase();
+            const memberName = document.getElementById('memberName').value.trim();
             const password = document.getElementById('teamPassword').value.trim();
 
             if (!teamName) {
                 showAlert('Παρακαλώ εισάγετε το όνομα της ομάδας!');
+                return;
+            }
+
+            if (!memberName) {
+                showAlert('Παρακαλώ εισάγετε το όνομά σας!');
                 return;
             }
 
@@ -307,11 +325,21 @@ button:disabled {
                     return;
                 }
 				
-                sessionStorage.setItem('teamName', teamName);
-                sessionStorage.setItem('teamAuth', 'true');
-                
-                console.log(`✅ Team authenticated: ${teamName}`);
-                window.location.href = 'index.html';
+                sessionStorage.setItem('teamCode', teamName);
+                sessionStorage.setItem('memberName', memberName);
+                sessionStorage.setItem('memberAuth', 'true');
+
+                const preSurveyDoc = `${teamName}_pre_${memberName}`;
+                const preSurveyRef = window.firebaseDoc(window.firebaseDB, 'surveys', preSurveyDoc);
+                const preSurveySnap = await window.firebaseGetDoc(preSurveyRef);
+
+                if (!preSurveySnap.exists()) {
+                    alert('Πρώτα πρέπει να ολοκληρώσετε την προκαταρκτική έρευνα!');
+                    window.location.href = `survey.html?team=${teamName}&member=${encodeURIComponent(memberName)}&type=pre`;
+                } else {
+                    console.log(`✅ Member authenticated: ${teamName}/${memberName}`);
+                    window.location.href = `index.html?team=${teamName}`;
+                }
 
             } catch (error) {
                 setLoading(false);
@@ -320,12 +348,12 @@ button:disabled {
             }
         }
         window.addEventListener('DOMContentLoaded', () => {
-            const storedTeam = sessionStorage.getItem('teamName');
-            const isAuthenticated = sessionStorage.getItem('teamAuth');
+            const storedTeam = sessionStorage.getItem('teamCode');
+            const isAuthenticated = sessionStorage.getItem('memberAuth');
             
             if (storedTeam && isAuthenticated === 'true') {
                 console.log('Already authenticated, redirecting...');
-                window.location.href = 'index.html';
+                window.location.href = `index.html?team=${storedTeam}`;
             }
         });
     </script>

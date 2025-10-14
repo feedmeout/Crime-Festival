@@ -898,16 +898,37 @@
 
     <script>
 	
-        function getDeviceId() {
-            let deviceId = localStorage.getItem('crime_festival_device_id');
-            if (!deviceId) {
-                deviceId = Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
+        function getTeamMemberId() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const team = urlParams.get('team');
+            const member = urlParams.get('member');
+            
+            if (!team || !member) {
+                return null;
+            }
+            
+            let deviceId = `${team}_${member}`;
+            if (!localStorage.getItem('crime_festival_device_id')) {
                 localStorage.setItem('crime_festival_device_id', deviceId);
             }
             return deviceId;
         }
 
-        const DEVICE_ID = getDeviceId();
+        const DEVICE_ID = getTeamMemberId();
+        
+        if (!DEVICE_ID) {
+            document.getElementById('app').innerHTML = `
+                <div class="form-section active center-content">
+                    <div class="warning-icon">⚠️</div>
+                    <h1 class="error-title">Λάθος Πρόσβαση</h1>
+                    <p>Πρέπει να εισέλθετε μέσω της αρχικής σελίδας.</p>
+                    <button class="btn btn-primary" onclick="window.location.href='team_entry.html'">
+                        Επιστροφή
+                    </button>
+                </div>
+            `;
+        }
+        
         let surveyData = {};
         let currentSection = 0;
         let surveyType = null;
