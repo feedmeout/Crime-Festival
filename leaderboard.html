@@ -694,19 +694,18 @@
                 tbody.innerHTML = `
                     <tr>
                         <td colspan="8" style="text-align: center; padding: 40px; color: #666;">
-                            Δεν υπάρχουν υποβολές ακόμα
+                            ΔΕΝ ΥΠΑΡΧΟΥΝ ΥΠΟΒΟΛΕΣ ΑΚΟΜΑ
                         </td>
                     </tr>
                 `;
                 mobileCards.innerHTML = `
                     <div style="text-align: center; padding: 40px; color: #666;">
-                        Δεν υπάρχουν υποβολές ακόμα
+                        ΔΕΝ ΥΠΑΡΧΟΥΝ ΥΠΟΒΟΛΕΣ ΑΚΟΜΑ
                     </div>
                 `;
                 return;
             }
-
-            // Generate table rows for desktop
+			
             tbody.innerHTML = teams.map((team, index) => {
                 const rank = index + 1;
                 const rankClass = rank <= 3 ? `rank-${rank}` : '';
@@ -750,7 +749,6 @@
                 `;
             }).join('');
 
-            // Generate mobile cards
             mobileCards.innerHTML = teams.map((team, index) => {
                 const rank = index + 1;
                 const rankClass = rank <= 3 ? `rank-${rank}` : '';
