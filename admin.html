@@ -523,6 +523,17 @@ body {
     max-width: 250px;
     line-height: 1.4;
     z-index: 9999;
+    transition: all 0.3s ease;
+}
+
+#firebaseStatus.syncing {
+    background: #17a2b8;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
 }
 
 @media (min-width: 576px) {
@@ -814,7 +825,7 @@ let teamsData = {};
         }
     }
 
-    async function getAllTeams() {
+async function getAllTeams() {
         const allTeams = new Map();
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
@@ -832,12 +843,24 @@ let teamsData = {};
                         totalTimeMs: null,
                         solution: null,
                         lastUpdate: null,
+                        teamSize: null,
+                        password: null,
+                        evidenceTimestamps: {},
                         source: 'localStorage-legacy'
                     });
                 } else {
                     allTeams.set(teamName, {
                         name: teamName,
-                        ...storedData,
+                        password: storedData.password || null,
+                        teamSize: storedData.teamSize || null,
+                        unlocked: storedData.unlocked || [],
+                        timestamps: storedData.timestamps || {},
+                        evidenceTimestamps: storedData.evidenceTimestamps || {},
+                        startTime: storedData.startTime || null,
+                        completedAt: storedData.completedAt || null,
+                        totalTimeMs: storedData.totalTimeMs || null,
+                        solution: storedData.solution || null,
+                        lastUpdate: storedData.lastUpdate || null,
                         source: 'localStorage'
                     });
                 }
@@ -848,40 +871,52 @@ let teamsData = {};
             try {
                 const firebaseTeams = await getAllTeamsFromFirebase();
                 firebaseTeams.forEach(team => {
-                    console.log(`📦 Loading team ${team.name} from Firebase:`, team);
+                    console.log(`📦 Processing team ${team.name} from Firebase`);
                     
                     const localTeam = allTeams.get(team.name);
+                    
                     if (!localTeam) {
                         allTeams.set(team.name, {
                             name: team.name,
                             password: team.password || null,
+                            teamSize: team.teamSize || null,
                             unlocked: team.unlocked || [],
                             timestamps: team.timestamps || {},
+                            evidenceTimestamps: team.evidenceTimestamps || {},
                             startTime: team.startTime || null,
                             completedAt: team.completedAt || null,
                             totalTimeMs: team.totalTimeMs || null,
                             lastUpdate: team.lastUpdate || null,
-                            solution: team.solution || null, 
-                            evidenceTimestamps: team.evidenceTimestamps || {},
+                            solution: team.solution || null,
                             source: 'firebase'
                         });
-                    } else if (team.lastUpdate && localTeam.lastUpdate && team.lastUpdate > localTeam.lastUpdate) {
-                        console.log(`🔥 Firebase data is newer for ${team.name}`);
-                        allTeams.set(team.name, {
-                            name: team.name,
-                            password: team.password || null,
-                            unlocked: team.unlocked || [],
-                            timestamps: team.timestamps || {},
-                            startTime: team.startTime || null,
-                            completedAt: team.completedAt || null,
-                            totalTimeMs: team.totalTimeMs || null,
-                            lastUpdate: team.lastUpdate || null,
-                            solution: team.solution || null, 
-                            evidenceTimestamps: team.evidenceTimestamps || {},
-                            source: 'firebase-newer'
-                        });
                     } else {
-                        console.log(`💾 localStorage data is newer for ${team.name}`);
+                        const teamLastUpdate = team.lastUpdate || '0';
+                        const localLastUpdate = localTeam.lastUpdate || '0';
+                        const mergedTeamSize = team.teamSize || localTeam.teamSize || null;
+                        const mergedPassword = team.password || localTeam.password || null;
+                        
+                        if (teamLastUpdate > localLastUpdate) {
+                            console.log(`🔥 Firebase data is newer for ${team.name}`);
+                            allTeams.set(team.name, {
+                                name: team.name,
+                                password: mergedPassword,
+                                teamSize: mergedTeamSize,
+                                unlocked: team.unlocked || [],
+                                timestamps: team.timestamps || {},
+                                evidenceTimestamps: team.evidenceTimestamps || {},
+                                startTime: team.startTime || null,
+                                completedAt: team.completedAt || null,
+                                totalTimeMs: team.totalTimeMs || null,
+                                lastUpdate: team.lastUpdate || null,
+                                solution: team.solution || null,
+                                source: 'firebase-newer'
+                            });
+                        } else {
+                            console.log(`💾 localStorage data is current for ${team.name}, but preserving teamSize`);
+                            localTeam.teamSize = mergedTeamSize;
+                            localTeam.password = mergedPassword;
+                        }
                     }
                 });
             } catch (error) {
@@ -889,10 +924,18 @@ let teamsData = {};
             }
         }
         
-        return Array.from(allTeams.values());
+        const teams = Array.from(allTeams.values());
+        console.log(`📊 Loaded ${teams.length} teams total`);
+        return teams;
     }
 
 async function saveTeam(teamName, data) {
+    const existingTeam = teamsData[teamName];
+    if (existingTeam && existingTeam.teamSize && !data.teamSize) {
+        console.warn(`⚠️ teamSize missing in save, preserving existing value: ${existingTeam.teamSize}`);
+        data.teamSize = existingTeam.teamSize;
+    }
+    
     if (data.teamSize !== undefined && data.teamSize !== null) {
         data.teamSize = parseInt(data.teamSize);
         if (isNaN(data.teamSize) || data.teamSize < 1) {
@@ -903,12 +946,20 @@ async function saveTeam(teamName, data) {
     }
     
     data.lastUpdate = new Date().toISOString();
+    
+    console.log(`💾 Saving team ${teamName} with data:`, {
+        teamSize: data.teamSize,
+        unlocked: data.unlocked?.length,
+        hasPassword: !!data.password
+    });
+    
     localStorage.setItem(`unlocked_teks_${teamName}`, JSON.stringify(data));
+    teamsData[teamName] = { name: teamName, ...data };
+    
     const firebaseSuccess = await saveTeamToFirebase(teamName, data);
     
     if (!firebaseSuccess) {
         console.warn('⚠️ Continuing with localStorage only for team:', teamName);
-        alert('Warning: Team created locally but Firebase save failed. Contact admin if this persists.');
     }
     
     if (firebaseSuccess && window.firebaseDB) {
@@ -919,13 +970,15 @@ async function saveTeam(teamName, data) {
             console.log('✅ Verified team saved with teamSize:', saved.teamSize);
             if (!saved.teamSize || saved.teamSize < 1) {
                 console.error('❌ teamSize not saved correctly!', saved);
-                alert(`ERROR: Team created but teamSize is ${saved.teamSize}. Please check Firebase manually.`);
             }
         }
     }
     
+    refreshTeams();
+    
     return true;
 }
+
     async function exportAllData() {
         const teams = await getAllTeams();
         
@@ -1025,6 +1078,8 @@ async function addTeam() {
 
 async function refreshTeams() {
     console.log('🔄 === REFRESH TEAMS START ===');
+    showSyncStatus('🔄 Syncing data...', 'syncing');
+    
     let teams = await getAllTeams();
     teamsData = {};
     teams.forEach(team => {
@@ -1037,12 +1092,13 @@ async function refreshTeams() {
     console.log(`📊 Loaded ${teams.length} teams from Firebase/localStorage`);
     teams.forEach(t => console.log(`  - ${t.name}: ${t.unlocked.length} TEKs unlocked, data:`, t.unlocked));
 
-    if (teams.length === 0) {
-        container.innerHTML = '';
+if (teams.length === 0) {
+        container.innerHTML = '<div style="text-align: center; padding: 40px; color: #999;">Δεν υπάρχουν ομάδες ακόμα</div>';
         if (window.timerInterval) {
             clearInterval(window.timerInterval);
         }
         
+        showSyncStatus('✅ Data synced', 'success');
         console.log('🔄 === REFRESH TEAMS END ===');
         return;
     }
@@ -1136,7 +1192,8 @@ window.timerInterval = setInterval(() => {
         `;
     }).join('');
     
-    container.innerHTML = html;        
+container.innerHTML = html;
+    showSyncStatus('✅ Data synced', 'success');
     console.log('🔄 === REFRESH TEAMS END ===');
 }
 
@@ -1519,11 +1576,13 @@ async function resetAll() {
         });
     }
 
-    let firestoreUnsubscribe = null;
+let firestoreUnsubscribe = null;
+    let lastKnownTeamsState = {};
+    
     function setupRealtimeListener() {
         if (!isFirebaseReady()) {
             console.warn('⚠️ Firebase not ready - using periodic refresh');
-            setInterval(refreshTeams, 5000);
+            setInterval(refreshTeams, 2000);
             return;
         }
 
@@ -1532,48 +1591,105 @@ async function resetAll() {
             firestoreUnsubscribe = window.firebaseOnSnapshot(teamsCollection, 
                 (snapshot) => {
                     console.log('🔥 Firebase real-time update received');
-                    refreshTeams();
+                    let hasChanges = false;
+                    
+                    snapshot.docChanges().forEach((change) => {
+                        if (change.type === 'added' || change.type === 'modified') {
+                            console.log(`📝 Team ${change.doc.id} was ${change.type}`);
+                            hasChanges = true;
+                        }
+                        if (change.type === 'removed') {
+                            console.log(`🗑️ Team ${change.doc.id} was removed`);
+                            hasChanges = true;
+                        }
+                    });
+                    
+                    if (hasChanges) {
+                        refreshTeams();
+                    }
                 },
                 (error) => {
                     console.error('❌ Firebase listener error:', error);
-                    if (!firestoreUnsubscribe) {
-                        setInterval(refreshTeams, 5000);
-                    }
+                    setInterval(refreshTeams, 2000);
                 }
             );
             console.log('✅ Real-time Firebase listener active');
+            setInterval(async () => {
+                const teams = await getAllTeams();
+                const currentState = JSON.stringify(teams.map(t => ({
+                    name: t.name,
+                    unlocked: t.unlocked.length,
+                    teamSize: t.teamSize,
+                    completedAt: t.completedAt
+                })));
+                
+                if (currentState !== lastKnownTeamsState) {
+                    console.log('🔄 State change detected via polling');
+                    lastKnownTeamsState = currentState;
+                    refreshTeams();
+                }
+            }, 2000);
+            
         } catch (error) {
             console.error('❌ Failed to setup Firebase listener:', error);
-            setInterval(refreshTeams, 5000);
+            setInterval(refreshTeams, 2000);
         }
     }
+	
+    window.addEventListener('storage', (e) => {
+        if (e.key && e.key.startsWith('unlocked_teks_')) {
+            console.log('💾 localStorage change detected from another tab');
+            refreshTeams();
+        }
+    });
 
 window.addEventListener('DOMContentLoaded', async () => {
         setTimeout(async () => {
-            const status = document.getElementById('firebaseStatus');
             if (isFirebaseReady()) {
-                status.style.display = 'block';
-                status.innerHTML = 'Connected to Firebase - Real-time sync active';
+                showSyncStatus('✅ Connected - Real-time sync active', 'success');
             } else {
-                console.warn('âš ï¸ Firebase not loaded - using localStorage only');
+                console.warn('⚠️ Firebase not loaded - using localStorage only');
+                showSyncStatus('⚠️ Local mode - No cloud sync', 'error');
             }
             
-            refreshTeams();
+            await refreshTeams();
             setupRealtimeListener();
             await updateLeaderboardButton();
             setInterval(updateLeaderboardButton, 5000);
             setTimeout(() => {
-                status.style.display = 'none';
+                const status = document.getElementById('firebaseStatus');
+                if (status && !status.classList.contains('syncing')) {
+                    status.style.display = 'none';
+                }
             }, 5000);
         }, 300);
     });
 
-    window.addEventListener('beforeunload', () => {
-        if (firestoreUnsubscribe) {
-            firestoreUnsubscribe();
+function showSyncStatus(message, type = 'success') {
+        const status = document.getElementById('firebaseStatus');
+        if (!status) return;
+        
+        status.classList.remove('syncing');
+        
+        if (type === 'syncing') {
+            status.classList.add('syncing');
+            status.style.background = '#17a2b8';
+        } else if (type === 'success') {
+            status.style.background = '#28a745';
+        } else if (type === 'error') {
+            status.style.background = '#dc3545';
         }
-    });
-
+        
+        status.innerHTML = message;
+        status.style.display = 'block';
+        
+        if (type !== 'syncing') {
+            setTimeout(() => {
+                status.style.display = 'none';
+            }, 3000);
+        }
+    }
+	
 async function checkLeaderboardStatus() {
     if (!window.firebaseDB) {
         console.warn('Firebase not ready');
