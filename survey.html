@@ -1423,17 +1423,25 @@ function handleDontKnow(checkbox) {
             showSection(currentSection);
         }
 
-        function validateSection() {
-            let isValid = true;
-            const activeSection = document.querySelector('.form-section.active');
-            activeSection.querySelectorAll('input[required]:not([type="radio"]):not([type="checkbox"]), textarea[required]').forEach(input => {
-                if (!input.disabled && !input.value.trim()) {
-                    input.style.borderColor = 'var(--danger)';
-                    isValid = false;
-                } else {
-                    input.style.borderColor = 'var(--gray-200)';
-                }
-            });
+function validateSection() {
+    let isValid = true;
+    const activeSection = document.querySelector('.form-section.active');
+    activeSection.querySelectorAll('input[required]:not([type="radio"]):not([type="checkbox"]), textarea[required]').forEach(input => {
+        if (!input.disabled && !input.value.trim()) {
+            input.style.borderColor = 'var(--danger)';
+            isValid = false;
+        } else {
+            input.style.borderColor = 'var(--gray-200)';
+        }
+        if (input.name === 'age' && input.value) {
+            const age = parseInt(input.value);
+            if (age < 13 || age > 100) {
+                input.style.borderColor = 'var(--danger)';
+                isValid = false;
+                alert('Η ηλικία πρέπει να είναι μεταξύ 13 και 100 ετών!');
+            }
+        }
+    });
 
             const radioGroups = {};
             activeSection.querySelectorAll('input[type="radio"][required]').forEach(radio => {
