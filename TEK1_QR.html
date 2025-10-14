@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Κάρτα Τεκμηρίου QR - Έτοιμο για Εκτύπωση</title>
+    
+    <!-- QR Code Generator Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    
     <style>
         @media print {
             body { margin: 0; }
@@ -115,8 +119,16 @@
         .qr-code {
             width: 220px;
             height: 220px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             background: white;
             border: 2px solid #333;
+        }
+        
+        .qr-code img {
+            max-width: 100%;
+            max-height: 100%;
         }
         
         .qr-label {
@@ -152,6 +164,13 @@
             color: #ffaa00;
             border-bottom: 2px solid #ff6b00;
             padding-bottom: 10px;
+        }
+        
+        .evidence-description {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #ccc;
+            line-height: 1.5;
         }
         
         .corner-marks {
@@ -206,65 +225,37 @@
         
         <div class="content">
             <div class="qr-section">
-                <canvas id="qrCanvas" class="qr-code"></canvas>
+                <div id="qrcode" class="qr-code"></div>
                 <div class="qr-label">ΣΚΑΝΑΡΕΤΕ ΕΔΩ</div>
             </div>
             
             <div class="info-section">
                 <h2 class="evidence-number">ΤΕΚ #001</h2>
                 <h3 class="evidence-title">ΜΠΟΥΚΑΛΙ ΟΥΙΣΚΙ</h3>
+                <p class="evidence-description">
+                    📍 Βρέθηκε στο γραφείο του θύματος<br>
+                    🧪 Ανάλυση: Ίχνη δακτυλικών αποτυπωμάτων, Χημικός έλεγχος<br>
+                    ⚠️ Πιθανό μέσο εγκλήματος
+                </p>
             </div>
         </div>
     </div>
 
     <script>
-        function generateFakeQR() {
-            const canvas = document.getElementById('qrCanvas');
-            const ctx = canvas.getContext('2d');
-            const displaySize = 220;
-            const printScale = 4;
-            canvas.width = displaySize * printScale;
-            canvas.height = displaySize * printScale;
-            ctx.scale(printScale, printScale);
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(0, 0, displaySize, displaySize);
-            ctx.fillStyle = '#000000';
-            const moduleSize = 8.8;
-            
-            const pattern = [
-                [1,1,1,1,1,1,1,0,1,0,1,0,1,0,1,1,1,1,1,1,1],
-                [1,0,0,0,0,0,1,0,0,1,0,1,0,0,1,0,0,0,0,0,1],
-                [1,0,1,1,1,0,1,0,1,1,0,0,1,0,1,0,1,1,1,0,1],
-                [1,0,1,1,1,0,1,0,0,1,1,0,0,0,1,0,1,1,1,0,1],
-                [1,0,1,1,1,0,1,0,1,0,1,1,0,0,1,0,1,1,1,0,1],
-                [1,0,0,0,0,0,1,0,0,0,1,0,1,0,1,0,0,0,0,0,1],
-                [1,1,1,1,1,1,1,0,1,0,1,0,1,0,1,1,1,1,1,1,1],
-                [0,0,0,0,0,0,0,0,1,1,0,1,0,0,0,0,0,0,0,0,0],
-                [1,0,1,1,0,1,1,0,0,1,1,0,1,1,0,1,0,1,1,0,1],
-                [0,1,0,0,1,0,0,1,1,0,0,1,0,0,1,0,1,0,0,1,0],
-                [1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,1],
-                [0,0,1,1,0,0,0,1,0,0,1,1,0,0,1,1,0,0,1,1,0],
-                [1,0,0,1,1,0,1,0,1,0,0,1,1,0,0,1,1,0,0,1,1],
-                [0,0,0,0,0,0,0,0,1,0,1,0,1,0,1,0,1,0,1,0,1],
-                [1,1,1,1,1,1,1,0,0,1,0,1,0,1,0,1,0,1,0,1,0],
-                [1,0,0,0,0,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1],
-                [1,0,1,1,1,0,1,0,0,1,1,0,0,1,1,0,0,1,1,0,0],
-                [1,0,1,1,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1],
-                [1,0,1,1,1,0,1,0,0,1,0,1,0,1,0,1,0,1,0,1,0],
-                [1,0,0,0,0,0,1,0,1,1,1,0,1,1,1,0,1,1,1,0,1],
-                [1,1,1,1,1,1,1,0,0,1,0,1,0,0,1,1,0,0,1,1,0]
-            ];
-            
-            pattern.forEach((row, y) => {
-                row.forEach((cell, x) => {
-                    if (cell === 1) {
-                        ctx.fillRect(x * moduleSize + 11, y * moduleSize + 11, moduleSize, moduleSize);
-                    }
-                });
+        window.onload = function() {
+            const baseURL = window.location.origin + window.location.pathname.replace('TEK1_QR.html', '');
+            const unlockURL = `${baseURL}unlock_system.html?tek=1`;
+            const qrcode = new QRCode(document.getElementById("qrcode"), {
+                text: unlockURL,
+                width: 220,
+                height: 220,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
             });
-        }
-        
-        window.onload = generateFakeQR;
+            
+            console.log("✅ QR Code generated for:", unlockURL);
+        };
     </script>
 </body>
 </html>
