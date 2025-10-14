@@ -1261,13 +1261,13 @@ button:focus-visible,
                 ΤΑ ΑΠΟΤΕΛΕΣΜΑΤΑ ΔΕΝ ΕΙΝΑΙ ΑΚΟΜΑ ΔΙΑΘΕΣΙΜΑ
             </h2>
             <div style="background: #d4edda; border: 2px solid #28a745; border-radius: 12px; padding: 20px; margin: 30px auto; max-width: 500px;">
-                <div style="font-size: 24px; margin-bottom: 10px;">✅</div>
+                <div style="font-size: 24px; margin-bottom: 10px;">⏱️</div>
                 <div style="color: #155724; font-weight: bold;">
-                    Η ΣΕΛΙΔΑ ΘΑ ΕΝΗΜΕΡΩΘΕΙ ΟΤΑΝ ΑΝΑΚΟΙΝΩΘΟΥΝ ΤΑ ΑΠΟΤΕΛΕΣΜΑΤΑ!<br>
+                    Η ΣΕΛΙΔΑ ΘΑ ΑΝΑΝΕΩΘΕΙ ΟΤΑΝ ΟΛΕΣ ΟΙ ΟΜΑΔΕΣ ΟΛΟΚΛΗΡΩΣΟΥΝ ΤΗΝ ΕΡΕΥΝΑ ΤΟΥΣ!!<br>
                 </div>
             </div>
             <p style="margin-top: 30px; color: #999; font-size: 14px;">
-                Αναζήτηση ενημερώσεων<span class="loading-dots"><span>.</span><span>.</span><span>.</span></span>
+                Έλεγχος ενημερώσεων<span class="loading-dots"><span>.</span><span>.</span><span>.</span></span>
             </p>
         </div>
     </div>
@@ -1965,7 +1965,6 @@ function displaySubmissionConfirmation() {
 							<p style="color: #fff; font-size: 14px; margin: 0; text-align: center; line-height: 1.7; font-weight: 600;">
 								ΚΡΑΤΗΣΤΕ ΤΗ ΛΥΣΗ ΣΑΣ ΜΥΣΤΙΚΗ!<br>
 								ΜΗΝ ΜΟΙΡΑΣΤΕΙΤΕ ΠΛΗΡΟΦΟΡΙΕΣ ΜΕ ΑΛΛΕΣ ΟΜΑΔΕΣ ΜΕΧΡΙ ΤΗΝ ΕΠΙΣΗΜΗ ΛΗΞΗ ΤΟΥ ΔΙΑΓΩΝΙΣΜΟΥ!<br>
-								Η ΑΠΟΚΑΛΥΨΗ ΣΤΟΙΧΕΙΩΝ ΚΑΤΑΣΤΡΕΦΕΙ ΤΟ ΜΥΣΤΗΡΙΟ!
 							</p>
 							</div>
 						</div>
@@ -3082,6 +3081,10 @@ window.addEventListener('resize', () => {
 });
 
 window.addEventListener('beforeunload', () => {
+    stopTimer();
+    if (firestoreUnsubscribe) {
+        firestoreUnsubscribe();
+    }
     if (resultsUnsubscribe) {
         resultsUnsubscribe();
     }
