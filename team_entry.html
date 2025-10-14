@@ -2,10 +2,43 @@
 <html lang="el">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Είσοδος Ομάδας</title>
+    
+    <!-- Firebase -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyA_9_40aa_wO_19g-1bIrSB6742aMOPwjo",
+          authDomain: "crime-festival-2025.firebaseapp.com",
+          projectId: "crime-festival-2025",
+          storageBucket: "crime-festival-2025.firebasestorage.app",
+          messagingSenderId: "663770004335",
+          appId: "1:663770004335:web:e42dbd983ab9b5277bc69a"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        window.firebaseDB = db;
+        window.firebaseDoc = doc;
+        window.firebaseGetDoc = getDoc;
+        window.firebaseReady = true;
+        
+        console.log("✅ Firebase connected in team_entry.html!");
+    </script>
+    
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             min-height: 100vh;
             display: flex;
@@ -13,6 +46,7 @@
             justify-content: center;
             padding: 20px;
         }
+
         .entry-box {
             background: white;
             padding: 40px;
@@ -22,19 +56,50 @@
             width: 100%;
             text-align: center;
         }
+
         h1 {
             color: #1a1a2e;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
+            font-size: 28px;
         }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            color: #333;
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
         input {
             width: 100%;
             padding: 15px;
-            font-size: 18px;
+            font-size: 16px;
             border: 2px solid #ddd;
             border-radius: 8px;
-            margin-bottom: 20px;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #ff6b00;
+        }
+
+        #teamName {
             text-transform: lowercase;
         }
+
         button {
             background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
             color: white;
@@ -44,31 +109,213 @@
             font-size: 18px;
             font-weight: bold;
             cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 15px rgba(255,107,0,0.3);
         }
+
         button:hover {
             transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255,107,0,0.5);
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            text-align: left;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #ff6b00;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .entry-box {
+                padding: 30px 20px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="entry-box">
         <h1>🔍 Crime Festival 2025</h1>
-        <p style="color: #666; margin-bottom: 30px;">Εισάγετε το όνομα της ομάδας σας</p>
-        <input type="text" id="teamName" placeholder="π.χ. alpha, beta, delta..." autocomplete="off">
-        <button onclick="enterGame()">ΕΝΑΡΞΗ ΕΡΕΥΝΑΣ</button>
+        <p class="subtitle">Εισάγετε τα στοιχεία της ομάδας σας</p>
+        
+        <div id="alertBox"></div>
+        
+        <form onsubmit="enterGame(event)">
+            <div class="input-group">
+                <label for="teamName">Όνομα Ομάδας *</label>
+                <input 
+                    type="text" 
+                    id="teamName" 
+                    placeholder="π.χ. alpha, beta, delta..." 
+                    autocomplete="off"
+                    required
+                >
+            </div>
+            
+            <div class="input-group">
+                <label for="teamPassword">Κωδικός Ομάδας *</label>
+                <input 
+                    type="password" 
+                    id="teamPassword" 
+                    placeholder="Εισάγετε τον κωδικό της ομάδας" 
+                    autocomplete="off"
+                    required
+                >
+            </div>
+            
+            <button type="submit" id="enterBtn">
+                ΕΝΑΡΞΗ ΕΡΕΥΝΑΣ
+            </button>
+        </form>
+        
+        <p style="color: #999; font-size: 12px; margin-top: 20px;">
+            💡 Αν δεν έχετε κωδικό, επικοινωνήστε με τον διοργανωτή
+        </p>
     </div>
     
     <script>
-        function enterGame() {
+        function showAlert(message, type = 'error') {
+            const alertBox = document.getElementById('alertBox');
+            alertBox.innerHTML = `
+                <div class="alert alert-${type}">
+                    ${type === 'error' ? '❌' : 'ℹ️'} ${message}
+                </div>
+            `;
+            
+            setTimeout(() => {
+                alertBox.innerHTML = '';
+            }, 5000);
+        }
+
+        function setLoading(isLoading) {
+            const btn = document.getElementById('enterBtn');
+            const teamInput = document.getElementById('teamName');
+            const passwordInput = document.getElementById('teamPassword');
+            
+            if (isLoading) {
+                btn.disabled = true;
+                btn.innerHTML = '<span class="loading"></span>Επαλήθευση...';
+                teamInput.disabled = true;
+                passwordInput.disabled = true;
+            } else {
+                btn.disabled = false;
+                btn.innerHTML = 'ΕΝΑΡΞΗ ΕΡΕΥΝΑΣ';
+                teamInput.disabled = false;
+                passwordInput.disabled = false;
+            }
+        }
+
+        async function enterGame(event) {
+            event.preventDefault();
+            
             const teamName = document.getElementById('teamName').value.trim().toLowerCase();
+            const password = document.getElementById('teamPassword').value.trim();
+
             if (!teamName) {
-                alert('Παρακαλώ εισάγετε το όνομα της ομάδας!');
+                showAlert('Παρακαλώ εισάγετε το όνομα της ομάδας!');
                 return;
             }
-            window.location.href = `index.html?team=${teamName}`;
+
+            if (!password) {
+                showAlert('Παρακαλώ εισάγετε τον κωδικό της ομάδας!');
+                return;
+            }
+
+            // Wait for Firebase to be ready
+            if (!window.firebaseReady) {
+                showAlert('Αναμονή σύνδεσης... Δοκιμάστε ξανά σε λίγο.', 'info');
+                return;
+            }
+
+            setLoading(true);
+
+            try {
+                // Check if team exists in Firebase
+                const docRef = window.firebaseDoc(window.firebaseDB, 'teams', teamName);
+                const docSnap = await window.firebaseGetDoc(docRef);
+
+                if (!docSnap.exists()) {
+                    setLoading(false);
+                    showAlert(`Η ομάδα "${teamName}" δεν βρέθηκε! Επικοινωνήστε με τον διοργανωτή.`);
+                    return;
+                }
+
+                const teamData = docSnap.data();
+
+                // Verify password
+                if (!teamData.password || teamData.password !== password) {
+                    setLoading(false);
+                    showAlert('Λάθος κωδικός! Προσπαθήστε ξανά.');
+                    document.getElementById('teamPassword').value = '';
+                    document.getElementById('teamPassword').focus();
+                    return;
+                }
+
+                // ✅ Success! Store team in sessionStorage
+                sessionStorage.setItem('teamName', teamName);
+                sessionStorage.setItem('teamAuth', 'true');
+                
+                console.log(`✅ Team authenticated: ${teamName}`);
+
+                // Redirect to index.html WITHOUT team parameter
+                window.location.href = 'index.html';
+
+            } catch (error) {
+                setLoading(false);
+                console.error('Login error:', error);
+                showAlert('Σφάλμα σύνδεσης. Παρακαλώ δοκιμάστε ξανά.');
+            }
         }
-        document.getElementById('teamName').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') enterGame();
+
+        // Check if already logged in
+        window.addEventListener('DOMContentLoaded', () => {
+            const storedTeam = sessionStorage.getItem('teamName');
+            const isAuthenticated = sessionStorage.getItem('teamAuth');
+            
+            if (storedTeam && isAuthenticated === 'true') {
+                console.log('Already authenticated, redirecting...');
+                window.location.href = 'index.html';
+            }
         });
     </script>
 </body>
