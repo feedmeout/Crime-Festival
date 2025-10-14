@@ -872,16 +872,14 @@ async function addTeam() {
         }
     }
 
-const teams = await getAllTeams();
-const team = teams.find(t => t.name === teamName);
-
 await saveTeam(teamName, {
-    password: team?.password,  // ✅ Preserve password
+    password: password,
     unlocked: [],
     timestamps: {},
     startTime: null,
     completedAt: null,
-    totalTimeMs: null
+    totalTimeMs: null,
+    createdAt: new Date().toISOString()
 });
     
     alertDiv.innerHTML = `<div class="alert alert-success">✅ Η ομάδα "${teamName}" δημιουργήθηκε με κωδικό: <strong>${password}</strong></div>`;
