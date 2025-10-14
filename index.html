@@ -1350,6 +1350,7 @@ async function getTeamData() {
             const parsed = JSON.parse(localData);
             if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
                 return {
+                    password: parsed.password || null,
                     unlocked: parsed.unlocked || [],
                     timestamps: parsed.timestamps || {},
                     startTime: parsed.startTime || null,
@@ -1362,6 +1363,7 @@ async function getTeamData() {
 			
             if (Array.isArray(parsed)) {
                 return {
+                    password: null,
                     unlocked: parsed,
                     timestamps: {},
                     startTime: null,
@@ -1377,6 +1379,7 @@ async function getTeamData() {
     }
 
     return {
+        password: null,
         unlocked: [],
         timestamps: {},
         startTime: null,
@@ -1614,7 +1617,6 @@ if (promptCount === null || promptCount === undefined || promptCount < 0) {
 }
     
     const teamData = await getTeamData();
-
     if (teamData.unlocked.length < 6) {
         alert(`Πρέπει να ξεκλειδώσετε τουλάχιστον 6 τεκμήρια πριν υποβάλετε λύση! (Έχετε: ${teamData.unlocked.length}/11)`);
         return;
@@ -1660,9 +1662,10 @@ if (promptCount === null || promptCount === undefined || promptCount < 0) {
         }
     };
     
-    try {
+try {
         const updatedData = {
             ...teamData,
+            password: teamData.password || null,
             solution: solution,
             completedAt: solution.submittedAt,
             totalTimeMs: totalTimeMs
@@ -2209,48 +2212,31 @@ async function initSolutionTab(teamData) {
 }
 
 window.addEventListener('DOMContentLoaded', async () => {
-    // Check authentication status
     const isAuthenticated = sessionStorage.getItem('teamAuth');
     const storedTeam = sessionStorage.getItem('teamName');
-    
-    // Only redirect if not authenticated AND no team in URL
+
     if (teamCode === 'default' && !isAuthenticated) {
         console.warn('⚠️ Not authenticated, redirecting to team entry...');
         window.location.href = 'team_entry.html';
         return;
     }
     
-    // Safety check: if authenticated but teamCode is still default
     if (teamCode === 'default' && storedTeam) {
         console.log('Using stored team name:', storedTeam);
         window.location.href = `index.html?team=${storedTeam}`;
         return;
     }
 	
-    try {
+try {
         const teamData = await getTeamData();
-		
-        if (!teamData.unlocked || teamData.unlocked.length === 0) {
-            console.log(`📝 Creating new team: ${teamCode}`);
-            const newTeamData = {
-                unlocked: [],
-                timestamps: {},
-                startTime: null,
-                completedAt: null,
-                totalTimeMs: null,
-                createdAt: new Date().toISOString()
-            };
-			
-            if (window.firebaseDB) {
-                await window.firebaseSetDoc(
-                    window.firebaseDoc(window.firebaseDB, 'teams', teamCode),
-                    newTeamData
-                );
-                console.log(`✅ Team ${teamCode} created in Firebase`);
-            }
-
-            localStorage.setItem(`unlocked_teks_${teamCode}`, JSON.stringify([]));
+        // Don't create new team data - it already exists from admin panel
+        // Just ensure we have the data loaded
+        if (!teamData.unlocked) {
+            console.warn(`⚠️ Team ${teamCode} has no unlock data, initializing empty array`);
+            teamData.unlocked = [];
         }
+        
+        console.log(`✅ Team ${teamCode} loaded successfully`);
     } catch (error) {
         console.error('Error checking/creating team:', error);
     }
@@ -2397,7 +2383,6 @@ function initTabs() {
     });
 }
 
-// Add logout function
 function logout() {
     if (confirm('Είστε σίγουροι ότι θέλετε να αποσυνδεθείτε;')) {
         sessionStorage.removeItem('teamName');
