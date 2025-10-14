@@ -910,11 +910,17 @@
 <body>
     <div class="animated-background"></div>
 
-    <div class="header">
+<div class="header">
         <h1>⚠️ ΦΑΚΕΛΟΣ ΥΠΟΘΕΣΗΣ ⚠️</h1>
         <div class="team-info" id="teamInfo" style="display: none;">
             <strong id="teamName"></strong>
         </div>
+        <button onclick="logout()" 
+                style="position: absolute; top: 20px; right: 20px; padding: 8px 16px; background: #dc3545; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: bold; box-shadow: 0 2px 8px rgba(220,53,69,0.3); transition: all 0.2s ease;"
+                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(220,53,69,0.5)'"
+                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(220,53,69,0.3)'">
+            🚪 Αποσύνδεση
+        </button>
     </div>
 
     <div class="container">
@@ -1247,11 +1253,15 @@ const SCORING = {
         };
 		
         const urlParams = new URLSearchParams(window.location.search);
-        const teamCode = urlParams.get('team') || 'default';
+        const teamCode = sessionStorage.getItem('teamName') || urlParams.get('team') || 'default';
 
         if (teamCode !== 'default') {
-            document.getElementById('teamInfo').style.display = 'block';
-            document.getElementById('teamName').textContent = `Ομάδα: ${teamCode}`;
+            const teamInfoDiv = document.getElementById('teamInfo');
+            const teamNameSpan = document.getElementById('teamName');
+            if (teamInfoDiv && teamNameSpan) {
+                teamInfoDiv.style.display = 'block';
+                teamNameSpan.textContent = `Ομáδα: ${teamCode.toUpperCase()}`;
+            }
         }
 
         let timerInterval = null;
@@ -2199,14 +2209,27 @@ async function initSolutionTab(teamData) {
 }
 
 window.addEventListener('DOMContentLoaded', async () => {
-    if (teamCode === 'default') {
-        console.warn('⚠️ No team specified, redirecting to team entry...');
+    // Check authentication status
+    const isAuthenticated = sessionStorage.getItem('teamAuth');
+    const storedTeam = sessionStorage.getItem('teamName');
+    
+    // Only redirect if not authenticated AND no team in URL
+    if (teamCode === 'default' && !isAuthenticated) {
+        console.warn('⚠️ Not authenticated, redirecting to team entry...');
         window.location.href = 'team_entry.html';
+        return;
+    }
+    
+    // Safety check: if authenticated but teamCode is still default
+    if (teamCode === 'default' && storedTeam) {
+        console.log('Using stored team name:', storedTeam);
+        window.location.href = `index.html?team=${storedTeam}`;
         return;
     }
 	
     try {
         const teamData = await getTeamData();
+		
         if (!teamData.unlocked || teamData.unlocked.length === 0) {
             console.log(`📝 Creating new team: ${teamCode}`);
             const newTeamData = {
@@ -2357,6 +2380,35 @@ function initTabs() {
     });
 }
 window.submitSolution = submitSolution;
+
+function initTabs() {
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabPanes = document.querySelectorAll('.tab-pane');
+
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const targetTab = button.getAttribute('data-tab');
+
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabPanes.forEach(pane => pane.classList.remove('active'));
+            button.classList.add('active');
+            document.getElementById(`tab-${targetTab}`).classList.add('active');
+        });
+    });
+}
+
+// Add logout function
+function logout() {
+    if (confirm('Είστε σίγουροι ότι θέλετε να αποσυνδεθείτε;')) {
+        sessionStorage.removeItem('teamName');
+        sessionStorage.removeItem('teamAuth');
+        window.location.href = 'team_entry.html';
+    }
+}
+
+window.submitSolution = submitSolution;
+window.logout = logout;
 </script>
+
 </body>
 </html>
