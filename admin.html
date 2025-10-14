@@ -1523,18 +1523,25 @@ async function resetAll() {
         }
     }
 
-    window.addEventListener('DOMContentLoaded', () => {
-        setTimeout(() => {
+window.addEventListener('DOMContentLoaded', async () => {
+        setTimeout(async () => {
             const status = document.getElementById('firebaseStatus');
             if (isFirebaseReady()) {
                 status.style.display = 'block';
-                status.innerHTML = '✅ Firebase Συνδεδεμένο - Real-time ενημέρωση ενεργή';
+                status.innerHTML = 'âœ… Firebase Î£Ï…Î½Î´ÎµÎ´ÎµÎ¼Î­Î½Î¿ - Real-time ÎµÎ½Î·Î¼Î­ÏÏ‰ÏƒÎ· ÎµÎ½ÎµÏÎ³Î®';
             } else {
-                console.warn('⚠️ Firebase not loaded - using localStorage only');
+                console.warn('âš ï¸ Firebase not loaded - using localStorage only');
             }
             
             refreshTeams();
             setupRealtimeListener();
+            
+            // Update leaderboard button status
+            await updateLeaderboardButton();
+            setInterval(updateLeaderboardButton, 5000);
+            
+            // Update timers every second for teams in progress
+            setInterval(updateTimers, 1000);
             
             setTimeout(() => {
                 status.style.display = 'none';
@@ -1635,13 +1642,6 @@ async function updateTimers() {
             }
         });
     }
-	
-window.addEventListener('DOMContentLoaded', () => {
-    setTimeout(async () => {
-        await updateLeaderboardButton();
-        setInterval(updateLeaderboardButton, 5000);
-    }, 500);
-});
 
 </script>
 </body>
