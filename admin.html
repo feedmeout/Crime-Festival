@@ -1093,7 +1093,7 @@ async function refreshTeams() {
     teams.forEach(t => console.log(`  - ${t.name}: ${t.unlocked.length} TEKs unlocked, data:`, t.unlocked));
 
 if (teams.length === 0) {
-        container.innerHTML = '<div style="text-align: center; padding: 40px; color: #999;">Δεν υπάρχουν ομάδες ακόμα</div>';
+        container.innerHTML = '<div style="text-align: center; padding: 40px; color: #999;">  </div>';
         if (window.timerInterval) {
             clearInterval(window.timerInterval);
         }
