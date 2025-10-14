@@ -1067,21 +1067,27 @@ async function refreshTeams() {
         clearInterval(window.timerInterval);
     }
     
-    // Update all timers every second
-    window.timerInterval = setInterval(() => {
-        document.querySelectorAll('.team-card').forEach(teamCard => {
-            const teamName = teamCard.dataset.teamId;
-            const team = teamsData[teamName];
+// Update all timers every second
+window.timerInterval = setInterval(() => {
+    document.querySelectorAll('.team-card').forEach(teamCard => {
+        const teamName = teamCard.dataset.teamId;
+        const team = teamsData[teamName];
+        
+        // Update timer only if game is in progress (started but not completed)
+        if (team && team.startTime && !team.completedAt && !team.solution) {
+            const elapsed = Date.now() - new Date(team.startTime).getTime();
             
-            if (team && team.startTime && !team.endTime) {
-                const elapsed = Date.now() - team.startTime;
-                const timerElement = teamCard.querySelector('.team-stats strong');
-                if (timerElement && timerElement.parentElement.textContent.includes('ΧΡΟΝΟΣ')) {
-                    timerElement.textContent = formatTime(elapsed);
-                }
+            // Find the timer element more specifically
+            const timerStats = Array.from(teamCard.querySelectorAll('.team-stats')).find(
+                el => el.textContent.includes('ΣΕ ΕΞΕΛΙΞΗ')
+            );
+            
+            if (timerStats) {
+                timerStats.innerHTML = `⏱️ ΧΡΟΝΟΣ ΣΕ ΕΞΕΛΙΞΗ: <strong>${formatTime(elapsed)}</strong>`;
             }
-        });
-    }, 1000);
+        }
+    });
+}, 1000);
     
     const html = teams.map(team => {
         const progress = Math.round((team.unlocked.length / TOTAL_TEKS) * 100);
@@ -1569,9 +1575,7 @@ window.addEventListener('DOMContentLoaded', async () => {
             refreshTeams();
             setupRealtimeListener();
             await updateLeaderboardButton();
-            setInterval(updateLeaderboardButton, 5000);
-            setInterval(updateTimers, 1000);
-            
+            setInterval(updateLeaderboardButton, 5000);            
             setTimeout(() => {
                 status.style.display = 'none';
             }, 5000);
@@ -1644,28 +1648,6 @@ await updateLeaderboardButton();
         alert('❌ Σφάλμα! Δοκιμάστε ξανά.');
     }
 }
-
-async function updateTimers() {
-        const teams = await getAllTeams();
-        
-        teams.forEach(team => {
-            if (team.startTime && !team.completedAt && !team.solution) {
-                const now = new Date();
-                const startTime = new Date(team.startTime);
-                const elapsed = now - startTime;
-                const teamCards = document.querySelectorAll('.team-card');
-                teamCards.forEach(card => {
-                    const teamNameElement = card.querySelector('h3');
-                    if (teamNameElement && teamNameElement.textContent.includes(team.name.toUpperCase())) {
-                        const timerElement = card.querySelector('.team-stats:has(strong)');
-                        if (timerElement && timerElement.textContent.includes('ΣΕ ΕΞΕΛΙΞΗ')) {
-                            timerElement.innerHTML = `⏱️ ΧΡΟΝΟΣ ΣΕ ΕΞΕΛΙΞΗ: <strong>${formatTime(elapsed)}</strong>`;
-                        }
-                    }
-                });
-            }
-        });
-    }
 
 </script>
 </body>
