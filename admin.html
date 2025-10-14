@@ -327,53 +327,6 @@ body {
     line-height: 1.5;
 }
 
-.password-box {
-    background: #fff3cd;
-    padding: 8px;
-    border-radius: 5px;
-    margin: 8px 0;
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 8px;
-}
-
-.copy-btn {
-    margin-left: auto;
-    padding: 6px 12px;
-    font-size: 11px;
-    cursor: pointer;
-    background: #ffc107;
-    border: none;
-    border-radius: 4px;
-    min-height: 44px;
-    min-width: 44px;
-    transition: all 0.2s ease;
-}
-
-.copy-btn:hover {
-    background: #ffb300;
-    transform: translateY(-2px);
-}
-
-.copy-btn:active {
-    transform: translateY(0);
-}
-
-.timing-info {
-    background: rgba(255, 107, 0, 0.1);
-    border-left: 3px solid #ff6b00;
-    padding: 10px;
-    margin: 10px 0;
-    border-radius: 5px;
-    font-size: clamp(11px, 2.2vw, 13px);
-}
-
-.timing-info.completed {
-    background: rgba(40, 167, 69, 0.1);
-    border-left: 3px solid #28a745;
-}
-
 .timing-info strong {
     display: block;
     margin-bottom: 3px;
@@ -712,7 +665,6 @@ body {
         <div class="section">
             <h2>👥 ΕΝΕΡΓΕΣ ΟΜΑΔΕΣ</h2>
             <div class="quick-actions">
-                <button class="btn btn-success" onclick="refreshTeams()">🔄 ΑΝΑΝΕΩΣΗ</button>
                 <button class="btn" style="background: #17a2b8; color: white;" onclick="exportAllData()">💾 EXPORT DATA (GAME)</button>
                 <button class="btn" style="background: #6c757d; color: white;" onclick="importData()">📥 IMPORT DATA (GAME)</button>
 				<button class="btn" style="background: #ffc107; color: #000;" onclick="window.location.href='leaderboard.html'">🏆 LEADERBOARD (ADMIN)</button>
@@ -1074,37 +1026,24 @@ async function addTeam() {
             const progress = Math.round((team.unlocked.length / TOTAL_TEKS) * 100);
             const allEvidenceUnlocked = team.unlocked.length === TOTAL_TEKS;
             const solutionSubmitted = !!team.solution;
-                
-            let timingHtml = '';
+            
+let timingHtml = '';
             if (team.startTime) {
                 const now = new Date();
                 const startTime = new Date(team.startTime);
                 
                 if (solutionSubmitted && team.completedAt) {
                     timingHtml = `
-                        <div class="timing-info completed">
-                            <strong>⏱️ Χρόνος Ολοκλήρωσης:</strong>
-                            ${formatTime(team.totalTimeMs)}
-                            <div style="margin-top: 5px; font-size: 11px; color: #666;">
-                                Ξεκίνησε: ${formatDateTime(team.startTime)}<br>
-                                Ολοκληρώθηκε: ${formatDateTime(team.completedAt)}
-                            </div>
-                        </div>
+                        <div class="team-stats">⏱️ ΧΡΟΝΟΣ ΟΛΟΚΛΗΡΩΣΗΣ: <strong>${formatTime(team.totalTimeMs)}</strong> | Ξεκίνησε: ${formatDateTime(team.startTime)} | Ολοκληρώθηκε: ${formatDateTime(team.completedAt)}</div>
                     `;
                 } else {
                     const elapsed = now - startTime;
                     timingHtml = `
-                        <div class="timing-info">
-                            <strong>⏱️ Χρόνος σε εξέλιξη:</strong>
-                            ${formatTime(elapsed)}
-                            <div style="margin-top: 5px; font-size: 11px; color: #666;">
-                                Ξεκίνησε: ${formatDateTime(team.startTime)}
-                            </div>
-                        </div>
+                        <div class="team-stats">⏱️ ΧΡΟΝΟΣ ΣΕ ΕΞΕΛΙΞΗ: <strong>${formatTime(elapsed)}</strong> | Ξεκίνησε: ${formatDateTime(team.startTime)}</div>
                     `;
                 }
             }
-            
+      
             console.log(`🎨 Rendering team ${team.name} with unlocked:`, team.unlocked);
                 
             return `
@@ -1122,10 +1061,7 @@ async function addTeam() {
                     </div>
 <div class="team-stats">📊 ΞΕΚΛΕΙΔΩΜΕΝΑ: ${team.unlocked.length} / ${TOTAL_TEKS} ΣΤΟΙΧΕΙΑ</div>
 <div class="team-stats">👥 ΜΕΛΗ: <strong>${team.teamSize || 'N/A'}</strong></div>
-<div class="team-stats password-box">
-                        🔑 Κωδικός: <strong>${team.password || 'N/A'}</strong>
-                        ${team.password ? `<button class="copy-btn" onclick="navigator.clipboard.writeText('${team.password}'); alert('Κωδικός αντιγράφηκε!')">📋 Αντιγραφή</button>` : ''}
-                    </div>
+<div class="team-stats">🔑 ΚΩΔΙΚΟΣ: <strong>${team.password || 'N/A'}</strong></div>
                     ${timingHtml}
                     <div class="tek-grid">
                         ${Array.from({length: TOTAL_TEKS}, (_, i) => {
@@ -1597,14 +1533,6 @@ async function toggleLeaderboard() {
     
     const currentStatus = await checkLeaderboardStatus();
     const newStatus = !currentStatus;
-    
-    const message = newStatus 
-        ? 'ΞΕΚΛΕΙΔΩΜΑ LEADERBOARD;\n\nΟι ομάδες θα μπορούν να δουν τα αποτελέσματα!' 
-        : 'ΚΛΕΙΔΩΜΑ LEADERBOARD;\n\nΟι ομάδες ΔΕΝ θα μπορούν να δουν τα αποτελέσματα!';
-    
-    if (!confirm(message)) {
-        return;
-    }
     
     try {
         const docRef = window.firebaseDoc(window.firebaseDB, 'config', 'leaderboard');

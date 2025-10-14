@@ -1544,7 +1544,7 @@ async function submitSurvey() {
                     </div>
                 </div>
             `;
-        } else {
+} else {
             document.getElementById('app').innerHTML = `
                 <div class="form-section active center-content">
                     <div class="success-icon">✅</div>
@@ -1552,8 +1552,15 @@ async function submitSurvey() {
                     <p style="font-size: clamp(16px, 3vw, 18px); color: var(--gray-700); margin-bottom: 30px;">
                         ΕΥΧΑΡΙΣΤΟΥΜΕ ΓΙΑ ΤΗ ΣΥΜΜΕΤΟΧΗ ΣΑΣ!
                     </p>
-                    <p style="font-size: clamp(12px, 2vw, 14px); color: var(--gray-600);">
-                        Μπορείτε να κλείσετε αυτή την καρτέλα.
+                    
+                    <div style="text-align: center; margin-top: 30px;">
+                        <button class="btn btn-primary" onclick="window.close(); if(!window.closed) window.location.href='index.html?team=${TEAM_MEMBER.team}'" style="font-size: clamp(14px, 2.5vw, 16px);">
+                            🏠 ΕΠΙΣΤΡΟΦΗ ΣΤΟ ΠΑΙΧΝΙΔΙ
+                        </button>
+                    </div>
+                    
+                    <p style="font-size: clamp(12px, 2vw, 14px); color: var(--gray-600); margin-top: 20px;">
+                        Ή μπορείτε να κλείσετε αυτή την καρτέλα
                     </p>
                 </div>
             `;
