@@ -721,6 +721,7 @@ body {
     </div>
 
 <script>
+let teamsData = {}; // Store all team data globally
     const BASE_URL = window.location.origin + window.location.pathname.replace('admin.html', '');
     const TOTAL_TEKS = 11;
     
@@ -1026,22 +1027,48 @@ async function addTeam() {
     refreshTeams();
 }
 
-    async function refreshTeams() {
-        console.log('🔄 === REFRESH TEAMS START ===');
-        
-        let teams = await getAllTeams();
-        
-        const container = document.getElementById('teamsContainer');
-        const noTeams = document.getElementById('noTeams');
-        const sortOrder = document.getElementById('sortOrder').value;
+async function refreshTeams() {
+    console.log('🔄 === REFRESH TEAMS START ===');
+    let teams = await getAllTeams();
+    
+    // Populate global teamsData for timer updates
+    teamsData = {};
+    teams.forEach(team => {
+        teamsData[team.name] = team;
+    });
+    
+    const container = document.getElementById('teamsContainer');
+    const noTeams = document.getElementById('noTeams');
+    const sortOrder = document.getElementById('sortOrder').value;
 
-        console.log(`📊 Loaded ${teams.length} teams from Firebase/localStorage`);
+    console.log(`📊 Loaded ${teams.length} teams from Firebase/localStorage`);
         teams.forEach(t => console.log(`  - ${t.name}: ${t.unlocked.length} TEKs unlocked, data:`, t.unlocked));
 
         if (teams.length === 0) {
             container.innerHTML = '';
-            noTeams.style.display = 'block';
-            console.log('🔄 === REFRESH TEAMS END (no teams) ===');
+        // Clear any existing timer interval
+        if (window.timerInterval) {
+            clearInterval(window.timerInterval);
+        }
+        
+        // Update all timers every second
+        window.timerInterval = setInterval(() => {
+            document.querySelectorAll('.team-card').forEach(teamCard => {
+                const teamName = teamCard.dataset.teamId;
+                const team = teamsData[teamName];
+                
+                if (team && team.startTime && !team.endTime) {
+                    const elapsed = Date.now() - team.startTime;
+                    const timerElement = teamCard.querySelector('.team-stats strong');
+                    if (timerElement && timerElement.parentElement.textContent.includes('ΧΡΟΝΟΣ')) {
+                        timerElement.textContent = formatTime(elapsed);
+                    }
+                }
+            });
+        }, 1000);
+        
+        console.log('🔄 === REFRESH TEAMS END ===');
+    }
             return;
         }
         
@@ -1075,7 +1102,7 @@ let timingHtml = '';
             console.log(`🎨 Rendering team ${team.name} with unlocked:`, team.unlocked);
                 
             return `
-                <div class="team-card ${solutionSubmitted ? 'completed' : ''}">
+                <div class="team-card ${solutionSubmitted ? 'completed' : ''}" data-team-id="${team.name}">
                     <h3>
                         <span style="font-size: 24px;">👥</span> 
                         ${team.name.toUpperCase()}
