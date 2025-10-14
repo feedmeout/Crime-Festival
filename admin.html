@@ -1024,25 +1024,6 @@ async function addTeam() {
     setTimeout(() => { alertDiv.innerHTML = ''; }, 5000);
     refreshTeams();
 }
-    await saveTeam(teamName, {
-        password: password,
-        teamSize: teamSize,
-        unlocked: [],
-        timestamps: {},
-        startTime: null,
-        completedAt: null,
-        totalTimeMs: null,
-        createdAt: new Date().toISOString()
-    });
-    
-    alertDiv.innerHTML = `<div class="alert alert-success">✅ Η ομάδα "${teamName}" δημιουργήθηκε με κωδικό: <strong>${password}</strong> και <strong>${teamSize} μέλη</strong></div>`;
-    document.getElementById('newTeamName').value = '';
-    document.getElementById('newTeamPassword').value = '';
-    document.getElementById('newTeamSize').value = '';
-    
-    setTimeout(() => { alertDiv.innerHTML = ''; }, 5000);
-    refreshTeams();
-}
 
     async function refreshTeams() {
         console.log('🔄 === REFRESH TEAMS START ===');
@@ -1631,6 +1612,30 @@ async function toggleLeaderboard() {
     }
 }
 
+async function updateTimers() {
+        const teams = await getAllTeams();
+        
+        teams.forEach(team => {
+            if (team.startTime && !team.completedAt && !team.solution) {
+                const now = new Date();
+                const startTime = new Date(team.startTime);
+                const elapsed = now - startTime;
+                
+                // Find the timer element for this team
+                const teamCards = document.querySelectorAll('.team-card');
+                teamCards.forEach(card => {
+                    const teamNameElement = card.querySelector('h3');
+                    if (teamNameElement && teamNameElement.textContent.includes(team.name.toUpperCase())) {
+                        const timerElement = card.querySelector('.team-stats:has(strong)');
+                        if (timerElement && timerElement.textContent.includes('ΣΕ ΕΞΕΛΙΞΗ')) {
+                            timerElement.innerHTML = `⏱️ ΧΡΟΝΟΣ ΣΕ ΕΞΕΛΙΞΗ: <strong>${formatTime(elapsed)}</strong>`;
+                        }
+                    }
+                });
+            }
+        });
+    }
+	
 window.addEventListener('DOMContentLoaded', () => {
     setTimeout(async () => {
         await updateLeaderboardButton();
