@@ -42,11 +42,14 @@ body {
     background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
     min-height: 100vh;
     padding: 20px;
+    overflow-x: hidden;
+    max-width: 100vw;
 }
 
 .container {
     max-width: 1400px;
     margin: 0 auto;
+    overflow-x: hidden;
 }
 
 .header {
@@ -98,6 +101,7 @@ body {
     border: 2px solid #ddd;
     border-radius: 8px;
     font-size: 16px;
+    transition: border-color 0.2s ease;
 }
 
 .team-input input:focus {
@@ -119,6 +123,10 @@ body {
 
 .btn:hover {
     transform: translateY(-2px);
+}
+
+.btn:active {
+    transform: translateY(0);
 }
 
 .btn-primary {
@@ -161,6 +169,8 @@ body {
     border-radius: 10px;
     padding: 15px;
     transition: transform 0.2s ease;
+    overflow: hidden;
+    max-width: 100%;
 }
 
 .team-card:hover {
@@ -185,9 +195,12 @@ body {
 
 .tek-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
     gap: 6px;
     margin: 12px 0;
+    max-width: 100%;
+    overflow: hidden;
+    width: 100%;
 }
 
 .tek-box {
@@ -196,11 +209,14 @@ body {
     align-items: center;
     justify-content: center;
     border-radius: 5px;
-    font-size: 12px;
+    font-size: clamp(10px, 2vw, 12px);
     font-weight: bold;
     border: 2px solid #ddd;
     background: white;
     min-height: 44px;
+    min-width: 44px;
+    padding: 4px;
+    transition: all 0.2s ease;
 }
 
 .tek-box.unlocked {
@@ -211,7 +227,6 @@ body {
 
 .tek-box.clickable {
     cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .tek-box.clickable:hover {
@@ -277,6 +292,12 @@ body {
     font-size: 15px;
     cursor: pointer;
     width: 100%;
+    transition: border-color 0.2s ease;
+}
+
+.sort-controls select:focus {
+    outline: none;
+    border-color: #ff6b00;
 }
 
 .last-update-box {
@@ -326,10 +347,43 @@ body {
 }
 
 .team-stats {
-    font-size: 13px;
+    font-size: clamp(12px, 2.5vw, 14px);
     color: #666;
     margin-bottom: 8px;
     line-height: 1.5;
+}
+
+.password-box {
+    background: #fff3cd;
+    padding: 8px;
+    border-radius: 5px;
+    margin: 8px 0;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.copy-btn {
+    margin-left: auto;
+    padding: 6px 12px;
+    font-size: 11px;
+    cursor: pointer;
+    background: #ffc107;
+    border: none;
+    border-radius: 4px;
+    min-height: 44px;
+    min-width: 44px;
+    transition: all 0.2s ease;
+}
+
+.copy-btn:hover {
+    background: #ffb300;
+    transform: translateY(-2px);
+}
+
+.copy-btn:active {
+    transform: translateY(0);
 }
 
 .timing-info {
@@ -338,7 +392,7 @@ body {
     padding: 10px;
     margin: 10px 0;
     border-radius: 5px;
-    font-size: 12px;
+    font-size: clamp(11px, 2.2vw, 13px);
 }
 
 .timing-info.completed {
@@ -471,10 +525,33 @@ body {
     color: #999;
     line-height: 1;
     padding: 5px 10px;
+    transition: color 0.2s ease;
 }
 
 .close-modal:hover {
     color: #333;
+}
+
+.info-box {
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: clamp(12px, 2.5vw, 14px);
+}
+
+.info-box-start {
+    background: #e3f2fd;
+    border-left: 3px solid #2196f3;
+}
+
+.info-box-complete {
+    background: #d4edda;
+    border-left: 3px solid #28a745;
+}
+
+.info-box strong {
+    display: block;
+    margin-bottom: 5px;
 }
 
 .timestamp-list {
@@ -491,6 +568,8 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
 }
 
 .timestamp-item .tek-label {
@@ -516,8 +595,8 @@ body {
     display: none;
     max-width: 250px;
     line-height: 1.4;
+    z-index: 9999;
 }
-
 
 @media (min-width: 576px) {
     body {
@@ -530,10 +609,6 @@ body {
 
     .header {
         padding: 25px;
-    }
-
-    .tek-grid {
-        grid-template-columns: repeat(6, 1fr);
     }
 
     .team-input {
@@ -569,7 +644,6 @@ body {
     }
 }
 
-
 @media (min-width: 768px) {
     .section {
         padding: 25px;
@@ -579,17 +653,27 @@ body {
         padding: 30px;
     }
 
+    .team-card {
+        padding: 15px 10px;
+    }
+
     .tek-grid {
-        grid-template-columns: repeat(11, 1fr);
+        grid-template-columns: repeat(11, minmax(0, 1fr));
         gap: 5px;
+        width: 100%;
+        max-width: 100%;
     }
 
     .tek-box {
-        font-size: 11px;
+        font-size: clamp(9px, 1vw, 11px);
+        min-width: 38px;
+        min-height: 38px;
+        border-width: 1px;
+        padding: 3px;
     }
 
     .team-list {
-        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
     }
 
     .modal-content {
@@ -602,22 +686,24 @@ body {
     }
 }
 
-
 @media (min-width: 1024px) {
     .section {
         padding: 30px;
     }
 
     .team-list {
-        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
         gap: 20px;
     }
 
     .team-card {
-        padding: 20px;
+        padding: 20px 15px;
+    }
+
+    .tek-grid {
+        gap: 6px;
     }
 }
-
 
 @media (max-height: 600px) and (orientation: landscape) {
     .header {
@@ -634,7 +720,6 @@ body {
         max-height: 85vh;
     }
 }
-
 </style>
 </head>
 
@@ -647,11 +732,11 @@ body {
 	
         <div class="section">
             <h2>➕ ΠΡΟΣΘΗΚΗ ΟΜΑΔΑΣ</h2>
-<div class="team-input">
-    <input type="text" id="newTeamName" placeholder="Όνομα ομάδας" />
-    <input type="text" id="newTeamPassword" placeholder="Κωδικός ομάδας" />
-    <button class="btn btn-primary" onclick="addTeam()">ΠΡΟΣΘΗΚΗ ΟΜΑΔΑΣ</button>
-</div>
+            <div class="team-input">
+                <input type="text" id="newTeamName" placeholder="Όνομα ομάδας" />
+                <input type="text" id="newTeamPassword" placeholder="Κωδικός ομάδας" />
+                <button class="btn btn-primary" onclick="addTeam()">ΠΡΟΣΘΗΚΗ ΟΜΑΔΑΣ</button>
+            </div>
             <div id="addTeamAlert"></div>
         </div>
 
@@ -700,7 +785,6 @@ body {
         </div>
     </div>
 
-    <!-- Modal for timestamp details -->
     <div id="timestampModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -754,28 +838,29 @@ body {
         });
     }
 
-async function saveTeamToFirebase(teamName, data) {
-    if (!isFirebaseReady()) return false;
-    try {
-        await window.firebaseSetDoc(
-            window.firebaseDoc(window.firebaseDB, 'teams', teamName),
-            { ...data, lastUpdate: new Date().toISOString() }
-        );
-        console.log('✅ Firebase save successful');
-        return true;
-    } catch (error) {
-        console.error('❌ Firebase save error:', error);
+    async function saveTeamToFirebase(teamName, data) {
+        if (!isFirebaseReady()) return false;
+        try {
+            await window.firebaseSetDoc(
+                window.firebaseDoc(window.firebaseDB, 'teams', teamName),
+                { ...data, lastUpdate: new Date().toISOString() }
+            );
+            console.log('✅ Firebase save successful');
+            return true;
+        } catch (error) {
+            console.error('❌ Firebase save error:', error);
 
-        const status = document.getElementById('firebaseStatus');
-        if (status) {
-            status.style.background = '#dc3545';
-            status.innerHTML = '⚠️ Firebase Sync Failed - Using Local Storage';
-            status.style.display = 'block';
+            const status = document.getElementById('firebaseStatus');
+            if (status) {
+                status.style.background = '#dc3545';
+                status.innerHTML = '⚠️ Firebase Sync Failed - Using Local Storage';
+                status.style.display = 'block';
+            }
+            
+            return false;
         }
-        
-        return false;
     }
-}
+
     async function loadTeamFromFirebase(teamName) {
         if (!isFirebaseReady()) return null;
         try {
@@ -811,96 +896,95 @@ async function saveTeamToFirebase(teamName, data) {
         }
     }
 
-async function getAllTeams() {
-    const allTeams = new Map();
-    for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (key.startsWith('unlocked_teks_')) {
-            const teamName = key.replace('unlocked_teks_', '');
-            const storedData = JSON.parse(localStorage.getItem(key));
+    async function getAllTeams() {
+        const allTeams = new Map();
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key.startsWith('unlocked_teks_')) {
+                const teamName = key.replace('unlocked_teks_', '');
+                const storedData = JSON.parse(localStorage.getItem(key));
 
-            if (Array.isArray(storedData)) {
-                allTeams.set(teamName, { 
-                    name: teamName, 
-                    unlocked: storedData,
-                    timestamps: {},
-                    startTime: null,
-                    completedAt: null,
-                    totalTimeMs: null,
-                    solution: null,
-                    lastUpdate: null,
-                    source: 'localStorage-legacy'
-                });
-            } else {
-
-                allTeams.set(teamName, {
-                    name: teamName,
-                    ...storedData,
-                    source: 'localStorage'
-                });
+                if (Array.isArray(storedData)) {
+                    allTeams.set(teamName, { 
+                        name: teamName, 
+                        unlocked: storedData,
+                        timestamps: {},
+                        startTime: null,
+                        completedAt: null,
+                        totalTimeMs: null,
+                        solution: null,
+                        lastUpdate: null,
+                        source: 'localStorage-legacy'
+                    });
+                } else {
+                    allTeams.set(teamName, {
+                        name: teamName,
+                        ...storedData,
+                        source: 'localStorage'
+                    });
+                }
             }
         }
-    }
 
-    if (isFirebaseReady()) {
-        try {
-            const firebaseTeams = await getAllTeamsFromFirebase();
-            firebaseTeams.forEach(team => {
-                console.log(`📦 Loading team ${team.name} from Firebase:`, team);
-                
-                const localTeam = allTeams.get(team.name);
-                if (!localTeam) {
-allTeams.set(team.name, {
-    name: team.name,
-    password: team.password || null,
-    unlocked: team.unlocked || [],
-    timestamps: team.timestamps || {},
-    startTime: team.startTime || null,
-    completedAt: team.completedAt || null,
-    totalTimeMs: team.totalTimeMs || null,
-    lastUpdate: team.lastUpdate || null,
-    solution: team.solution || null, 
-    evidenceTimestamps: team.evidenceTimestamps || {},
-    source: 'firebase'
-});
-                } else if (team.lastUpdate && localTeam.lastUpdate && team.lastUpdate > localTeam.lastUpdate) {
-                    console.log(`🔥 Firebase data is newer for ${team.name}`);
-allTeams.set(team.name, {
-    name: team.name,
-    password: team.password || null,
-    unlocked: team.unlocked || [],
-    timestamps: team.timestamps || {},
-    startTime: team.startTime || null,
-    completedAt: team.completedAt || null,
-    totalTimeMs: team.totalTimeMs || null,
-    lastUpdate: team.lastUpdate || null,
-    solution: team.solution || null, 
-    evidenceTimestamps: team.evidenceTimestamps || {},
-    source: 'firebase-newer'
-});
-                } else {
-                    console.log(`💾 localStorage data is newer for ${team.name}`);
-                }
-            });
-        } catch (error) {
-            console.error('⚠️ Firebase load failed, using localStorage only:', error);
+        if (isFirebaseReady()) {
+            try {
+                const firebaseTeams = await getAllTeamsFromFirebase();
+                firebaseTeams.forEach(team => {
+                    console.log(`📦 Loading team ${team.name} from Firebase:`, team);
+                    
+                    const localTeam = allTeams.get(team.name);
+                    if (!localTeam) {
+                        allTeams.set(team.name, {
+                            name: team.name,
+                            password: team.password || null,
+                            unlocked: team.unlocked || [],
+                            timestamps: team.timestamps || {},
+                            startTime: team.startTime || null,
+                            completedAt: team.completedAt || null,
+                            totalTimeMs: team.totalTimeMs || null,
+                            lastUpdate: team.lastUpdate || null,
+                            solution: team.solution || null, 
+                            evidenceTimestamps: team.evidenceTimestamps || {},
+                            source: 'firebase'
+                        });
+                    } else if (team.lastUpdate && localTeam.lastUpdate && team.lastUpdate > localTeam.lastUpdate) {
+                        console.log(`🔥 Firebase data is newer for ${team.name}`);
+                        allTeams.set(team.name, {
+                            name: team.name,
+                            password: team.password || null,
+                            unlocked: team.unlocked || [],
+                            timestamps: team.timestamps || {},
+                            startTime: team.startTime || null,
+                            completedAt: team.completedAt || null,
+                            totalTimeMs: team.totalTimeMs || null,
+                            lastUpdate: team.lastUpdate || null,
+                            solution: team.solution || null, 
+                            evidenceTimestamps: team.evidenceTimestamps || {},
+                            source: 'firebase-newer'
+                        });
+                    } else {
+                        console.log(`💾 localStorage data is newer for ${team.name}`);
+                    }
+                });
+            } catch (error) {
+                console.error('⚠️ Firebase load failed, using localStorage only:', error);
+            }
         }
+        
+        return Array.from(allTeams.values());
     }
-    
-    return Array.from(allTeams.values());
-}
 
-async function saveTeam(teamName, data) {
-    data.lastUpdate = new Date().toISOString();
-    localStorage.setItem(`unlocked_teks_${teamName}`, JSON.stringify(data));
-    const firebaseSuccess = await saveTeamToFirebase(teamName, data);
-    
-    if (!firebaseSuccess) {
-        console.warn('⚠️ Continuing with localStorage only for team:', teamName);
+    async function saveTeam(teamName, data) {
+        data.lastUpdate = new Date().toISOString();
+        localStorage.setItem(`unlocked_teks_${teamName}`, JSON.stringify(data));
+        const firebaseSuccess = await saveTeamToFirebase(teamName, data);
+        
+        if (!firebaseSuccess) {
+            console.warn('⚠️ Continuing with localStorage only for team:', teamName);
+        }
+        
+        return true;
     }
-    
-    return true;
-}
 
     async function exportAllData() {
         const teams = await getAllTeams();
@@ -944,47 +1028,47 @@ async function saveTeam(teamName, data) {
         input.click();
     }
 
-async function addTeam() {
-    const teamName = document.getElementById('newTeamName').value.trim().toLowerCase();
-    const password = document.getElementById('newTeamPassword').value.trim();
-    const alertDiv = document.getElementById('addTeamAlert');
-    
-    if (!teamName) {
-        alertDiv.innerHTML = '<div class="alert alert-danger">⚠️ Παρακαλώ εισάγετε όνομα ομάδας</div>';
-        return;
-    }
-
-    if (!password) {
-        alertDiv.innerHTML = '<div class="alert alert-danger">⚠️ Παρακαλώ εισάγετε κωδικό ομάδας</div>';
-        return;
-    }
-
-    if (isFirebaseReady()) {
-        const docRef = window.firebaseDoc(window.firebaseDB, 'teams', teamName);
-        const docSnap = await window.firebaseGetDoc(docRef);
-        if (docSnap.exists()) {
-            alertDiv.innerHTML = '<div class="alert alert-warning">⚠️ Η ομάδα υπάρχει ήδη</div>';
+    async function addTeam() {
+        const teamName = document.getElementById('newTeamName').value.trim().toLowerCase();
+        const password = document.getElementById('newTeamPassword').value.trim();
+        const alertDiv = document.getElementById('addTeamAlert');
+        
+        if (!teamName) {
+            alertDiv.innerHTML = '<div class="alert alert-danger">⚠️ Παρακαλώ εισάγετε όνομα ομάδας</div>';
             return;
         }
-    }
 
-await saveTeam(teamName, {
-    password: password,
-    unlocked: [],
-    timestamps: {},
-    startTime: null,
-    completedAt: null,
-    totalTimeMs: null,
-    createdAt: new Date().toISOString()
-});
-    
-    alertDiv.innerHTML = `<div class="alert alert-success">✅ Η ομάδα "${teamName}" δημιουργήθηκε με κωδικό: <strong>${password}</strong></div>`;
-    document.getElementById('newTeamName').value = '';
-    document.getElementById('newTeamPassword').value = '';
-    
-    setTimeout(() => { alertDiv.innerHTML = ''; }, 5000);
-    refreshTeams();
-}
+        if (!password) {
+            alertDiv.innerHTML = '<div class="alert alert-danger">⚠️ Παρακαλώ εισάγετε κωδικό ομάδας</div>';
+            return;
+        }
+
+        if (isFirebaseReady()) {
+            const docRef = window.firebaseDoc(window.firebaseDB, 'teams', teamName);
+            const docSnap = await window.firebaseGetDoc(docRef);
+            if (docSnap.exists()) {
+                alertDiv.innerHTML = '<div class="alert alert-warning">⚠️ Η ομάδα υπάρχει ήδη</div>';
+                return;
+            }
+        }
+
+        await saveTeam(teamName, {
+            password: password,
+            unlocked: [],
+            timestamps: {},
+            startTime: null,
+            completedAt: null,
+            totalTimeMs: null,
+            createdAt: new Date().toISOString()
+        });
+        
+        alertDiv.innerHTML = `<div class="alert alert-success">✅ Η ομάδα "${teamName}" δημιουργήθηκε με κωδικό: <strong>${password}</strong></div>`;
+        document.getElementById('newTeamName').value = '';
+        document.getElementById('newTeamPassword').value = '';
+        
+        setTimeout(() => { alertDiv.innerHTML = ''; }, 5000);
+        refreshTeams();
+    }
 
     async function refreshTeams() {
         console.log('🔄 === REFRESH TEAMS START ===');
@@ -1060,14 +1144,12 @@ await saveTeam(teamName, {
                     <div class="progress-bar">
                         <div class="progress-fill" style="width: ${progress}%;">${progress}%</div>
                     </div>
-
-<div class="team-stats">📊 ΞΕΚΛΕΙΔΩΜΕΝΑ: ${team.unlocked.length} / ${TOTAL_TEKS} ΣΤΟΙΧΕΙΑ</div>
-<div class="team-stats" style="background: #fff3cd; padding: 8px; border-radius: 5px; margin: 8px 0;">
-    🔑 Κωδικός: <strong>${team.password || 'N/A'}</strong>
-    ${team.password ? `<button onclick="navigator.clipboard.writeText('${team.password}'); alert('Κωδικός αντιγράφηκε!')" style="margin-left: 10px; padding: 4px 8px; font-size: 11px; cursor: pointer; background: #ffc107; border: none; border-radius: 4px;">📋 Αντιγραφή</button>` : ''}
-</div>
-${timingHtml}
-
+                    <div class="team-stats">📊 ΞΕΚΛΕΙΔΩΜΕΝΑ: ${team.unlocked.length} / ${TOTAL_TEKS} ΣΤΟΙΧΕΙΑ</div>
+                    <div class="team-stats password-box">
+                        🔑 Κωδικός: <strong>${team.password || 'N/A'}</strong>
+                        ${team.password ? `<button class="copy-btn" onclick="navigator.clipboard.writeText('${team.password}'); alert('Κωδικός αντιγράφηκε!')">📋 Αντιγραφή</button>` : ''}
+                    </div>
+                    ${timingHtml}
                     <div class="tek-grid">
                         ${Array.from({length: TOTAL_TEKS}, (_, i) => {
                             const tekNum = (i + 1).toString();
@@ -1147,7 +1229,7 @@ ${timingHtml}
         
         if (team.startTime) {
             html += `
-                <div style="background: #e3f2fd; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                <div class="info-box info-box-start">
                     <strong>🚀 Έναρξη:</strong> ${formatDateTime(team.startTime)}
                 </div>
             `;
@@ -1155,7 +1237,7 @@ ${timingHtml}
 
         if (team.completedAt) {
             html += `
-                <div style="background: #d4edda; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                <div class="info-box info-box-complete">
                     <strong>🏁 Ολοκλήρωση:</strong> ${formatDateTime(team.completedAt)}<br>
                     <strong>⏱️ Συνολικός Χρόνος:</strong> ${formatTime(team.totalTimeMs)}
                 </div>
@@ -1202,91 +1284,91 @@ ${timingHtml}
         window.open(`${BASE_URL}index.html?team=${teamName}`, '_blank');
     }
 
-async function toggleTek(teamName, tekNumber) {
-    console.log(`🎯 Toggle TEK ${tekNumber} for team ${teamName}`);
-    
-    const teams = await getAllTeams();
-    const team = teams.find(t => t.name === teamName);
-    
-    if (!team) {
-        alert('Ομάδα δεν βρέθηκε!');
-        return;
-    }
-    
-    if (team.solution) {
-        alert('❌ Δεν μπορείτε να τροποποιήσετε τεκμήρια μετά την υποβολή λύσης!');
-        return;
-    }
-    
-    const tekStr = tekNumber.toString();
-    const unlocked = [...(team.unlocked || [])];
-    const timestamps = {...(team.timestamps || {})};
-    
-    if (unlocked.includes(tekStr)) {
-        const index = unlocked.indexOf(tekStr);
-        unlocked.splice(index, 1);
-        delete timestamps[tekStr];
-        console.log(`🔒 Locked TEK ${tekNumber} for team ${teamName}`);
-    } else {
-        unlocked.push(tekStr);
-        timestamps[tekStr] = new Date().toISOString();
-        console.log(`🔓 Unlocked TEK ${tekNumber} for team ${teamName}`);
-    }
-    
-    const updatedTeam = {
-        ...team,
-        unlocked: unlocked,
-        timestamps: timestamps,
-        startTime: team.startTime || new Date().toISOString(),
-        lastUpdate: new Date().toISOString()
-    };
-    
-    console.log(`💾 Saving team ${teamName} with ${unlocked.length} TEKs`);
-    localStorage.setItem(`unlocked_teks_${teamName}`, JSON.stringify(updatedTeam));
-    await refreshTeams();
-    await saveTeamToFirebase(teamName, updatedTeam);
-    
-    console.log('✅ Toggle complete');
-}
-
-async function unlockAll(teamName) {
-    if (confirm(`ΞΕΚΛΕΙΔΩΜΑ ΟΛΩΝ ΤΩΝ ΤΕΚΜΗΡΙΩΝ ΓΙΑ ΤΗΝ ΟΜΑΔΑ "${teamName}";`)) {
-        console.log(`🔓 Unlocking all TEKs for team ${teamName}`);
+    async function toggleTek(teamName, tekNumber) {
+        console.log(`🎯 Toggle TEK ${tekNumber} for team ${teamName}`);
+        
         const teams = await getAllTeams();
         const team = teams.find(t => t.name === teamName);
         
-        const allTeks = Array.from({length: TOTAL_TEKS}, (_, i) => (i + 1).toString());
-        const now = new Date().toISOString();
-        const timestamps = {...(team?.timestamps || {})};
-        let earliestTime = team?.startTime || now;
-        allTeks.forEach((tek, i) => {
-            if (!timestamps[tek]) {
-                timestamps[tek] = new Date(Date.now() + i * 100).toISOString();
-            } else {
-                const existingTime = new Date(timestamps[tek]);
-                if (existingTime < new Date(earliestTime)) {
-                    earliestTime = timestamps[tek];
-                }
-            }
-        });
-       
+        if (!team) {
+            alert('Ομάδα δεν βρέθηκε!');
+            return;
+        }
+        
+        if (team.solution) {
+            alert('❌ Δεν μπορείτε να τροποποιήσετε τεκμήρια μετά την υποβολή λύσης!');
+            return;
+        }
+        
+        const tekStr = tekNumber.toString();
+        const unlocked = [...(team.unlocked || [])];
+        const timestamps = {...(team.timestamps || {})};
+        
+        if (unlocked.includes(tekStr)) {
+            const index = unlocked.indexOf(tekStr);
+            unlocked.splice(index, 1);
+            delete timestamps[tekStr];
+            console.log(`🔒 Locked TEK ${tekNumber} for team ${teamName}`);
+        } else {
+            unlocked.push(tekStr);
+            timestamps[tekStr] = new Date().toISOString();
+            console.log(`🔓 Unlocked TEK ${tekNumber} for team ${teamName}`);
+        }
+        
         const updatedTeam = {
             ...team,
-            password: team?.password || null,
-            unlocked: allTeks,
+            unlocked: unlocked,
             timestamps: timestamps,
-            startTime: earliestTime,
+            startTime: team.startTime || new Date().toISOString(),
             lastUpdate: new Date().toISOString()
         };
-       
-        console.log(`💾 Saving unlock all for team ${teamName}`);
+        
+        console.log(`💾 Saving team ${teamName} with ${unlocked.length} TEKs`);
         localStorage.setItem(`unlocked_teks_${teamName}`, JSON.stringify(updatedTeam));
         await refreshTeams();
         await saveTeamToFirebase(teamName, updatedTeam);
         
-        console.log('✅ Unlock all complete');
+        console.log('✅ Toggle complete');
     }
-}
+
+    async function unlockAll(teamName) {
+        if (confirm(`ΞΕΚΛΕΙΔΩΜΑ ΟΛΩΝ ΤΩΝ ΤΕΚΜΗΡΙΩΝ ΓΙΑ ΤΗΝ ΟΜΑΔΑ "${teamName}";`)) {
+            console.log(`🔓 Unlocking all TEKs for team ${teamName}`);
+            const teams = await getAllTeams();
+            const team = teams.find(t => t.name === teamName);
+            
+            const allTeks = Array.from({length: TOTAL_TEKS}, (_, i) => (i + 1).toString());
+            const now = new Date().toISOString();
+            const timestamps = {...(team?.timestamps || {})};
+            let earliestTime = team?.startTime || now;
+            allTeks.forEach((tek, i) => {
+                if (!timestamps[tek]) {
+                    timestamps[tek] = new Date(Date.now() + i * 100).toISOString();
+                } else {
+                    const existingTime = new Date(timestamps[tek]);
+                    if (existingTime < new Date(earliestTime)) {
+                        earliestTime = timestamps[tek];
+                    }
+                }
+            });
+        
+            const updatedTeam = {
+                ...team,
+                password: team?.password || null,
+                unlocked: allTeks,
+                timestamps: timestamps,
+                startTime: earliestTime,
+                lastUpdate: new Date().toISOString()
+            };
+        
+            console.log(`💾 Saving unlock all for team ${teamName}`);
+            localStorage.setItem(`unlocked_teks_${teamName}`, JSON.stringify(updatedTeam));
+            await refreshTeams();
+            await saveTeamToFirebase(teamName, updatedTeam);
+            
+            console.log('✅ Unlock all complete');
+        }
+    }
 
     async function resetTeam(teamName) {
         if (confirm(`Reset πρόοδο για την ομάδα "${teamName}";`)) {
@@ -1317,42 +1399,42 @@ async function unlockAll(teamName) {
         }
     }
 
-async function unlockAllForAll() {
-    if (confirm('ΞΕΚΛΕΙΔΩΜΑ ΟΛΩΝ ΤΩΝ ΤΕΚΜΗΡΙΩΝ ΓΙΑ ΟΛΕΣ ΤΙΣ ΟΜΑΔΕΣ;')) {
-        const teams = await getAllTeams();
-        const allTeks = Array.from({length: TOTAL_TEKS}, (_, i) => (i + 1).toString());
-        
-        for (const team of teams) {
-            const now = new Date().toISOString();
-            const timestamps = {...(team.timestamps || {})};
-            let earliestTime = team.startTime || now;
-            allTeks.forEach((tek, i) => {
-                if (!timestamps[tek]) {
-                    timestamps[tek] = new Date(Date.now() + i * 100).toISOString();
-                } else {
-                    const existingTime = new Date(timestamps[tek]);
-                    if (existingTime < new Date(earliestTime)) {
-                        earliestTime = timestamps[tek];
+    async function unlockAllForAll() {
+        if (confirm('ΞΕΚΛΕΙΔΩΜΑ ΟΛΩΝ ΤΩΝ ΤΕΚΜΗΡΙΩΝ ΓΙΑ ΟΛΕΣ ΤΙΣ ΟΜΑΔΕΣ;')) {
+            const teams = await getAllTeams();
+            const allTeks = Array.from({length: TOTAL_TEKS}, (_, i) => (i + 1).toString());
+            
+            for (const team of teams) {
+                const now = new Date().toISOString();
+                const timestamps = {...(team.timestamps || {})};
+                let earliestTime = team.startTime || now;
+                allTeks.forEach((tek, i) => {
+                    if (!timestamps[tek]) {
+                        timestamps[tek] = new Date(Date.now() + i * 100).toISOString();
+                    } else {
+                        const existingTime = new Date(timestamps[tek]);
+                        if (existingTime < new Date(earliestTime)) {
+                            earliestTime = timestamps[tek];
+                        }
                     }
-                }
-            });
-            
-            const completionTime = new Date();
-            const startTime = new Date(earliestTime);
-            const totalTimeMs = completionTime - startTime;
-            
-await saveTeam(team.name, {
-    ...team,
-    unlocked: allTeks,
-    timestamps: timestamps,
-    startTime: earliestTime,
-    completedAt: now,
-    totalTimeMs: totalTimeMs
-});
+                });
+                
+                const completionTime = new Date();
+                const startTime = new Date(earliestTime);
+                const totalTimeMs = completionTime - startTime;
+                
+                await saveTeam(team.name, {
+                    ...team,
+                    unlocked: allTeks,
+                    timestamps: timestamps,
+                    startTime: earliestTime,
+                    completedAt: now,
+                    totalTimeMs: totalTimeMs
+                });
+            }
+            refreshTeams();
         }
-        refreshTeams();
     }
-}
 
     async function resetAll() {
         if (confirm('ΔΙΑΓΡΑΦΗ ΟΛΩΝ ΤΩΝ ΟΜΑΔΩΝ;')) {
@@ -1404,7 +1486,7 @@ await saveTeam(team.name, {
         });
     }
 
-let firestoreUnsubscribe = null;
+    let firestoreUnsubscribe = null;
 
     function setupRealtimeListener() {
         if (!isFirebaseReady()) {
@@ -1446,6 +1528,10 @@ let firestoreUnsubscribe = null;
             
             refreshTeams();
             setupRealtimeListener();
+            
+            setTimeout(() => {
+                status.style.display = 'none';
+            }, 5000);
         }, 300);
     });
 

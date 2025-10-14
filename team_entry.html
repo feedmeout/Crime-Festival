@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Είσοδος Ομάδας</title>
-    
-    <!-- Firebase -->
+	
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
         import { getFirestore, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
@@ -26,11 +25,10 @@
         window.firebaseDoc = doc;
         window.firebaseGetDoc = getDoc;
         window.firebaseReady = true;
-        
         console.log("✅ Firebase connected in team_entry.html!");
     </script>
     
-
+<style>
 * {
     margin: 0;
     padding: 0;
@@ -180,7 +178,6 @@ button:disabled {
     100% { transform: rotate(360deg); }
 }
 
-/* Touch device optimizations */
 @media (hover: none) and (pointer: coarse) {
     button:hover {
         transform: none;
@@ -192,21 +189,17 @@ button:disabled {
     }
 }
 
-/* Small mobile devices */
 @media (max-width: 380px) {
     .entry-box {
         padding: 20px 16px;
     }
 }
-
-
+</style>
 
 </head>
 <body>
     <div class="entry-box">
-        <h1>🔍 Crime Festival 2025</h1>
-        <p class="subtitle">Εισάγετε τα στοιχεία της ομάδας σας</p>
-        
+        <h1>🔍 ΦΕΣΤΙΒΑΛ ΑΣΤΥΝΟΜΙΚΗΣ ΛΟΓΟΤΕΧΝΕΙΑΣ</h1>        
         <div id="alertBox"></div>
         
         <form onsubmit="enterGame(event)">
@@ -215,7 +208,6 @@ button:disabled {
                 <input 
                     type="text" 
                     id="teamName" 
-                    placeholder="π.χ. alpha, beta, delta..." 
                     autocomplete="off"
                     required
                 >
@@ -226,7 +218,6 @@ button:disabled {
                 <input 
                     type="password" 
                     id="teamPassword" 
-                    placeholder="Εισάγετε τον κωδικό της ομάδας" 
                     autocomplete="off"
                     required
                 >
@@ -238,7 +229,7 @@ button:disabled {
         </form>
         
 <p class="footer-hint">
-    💡 Αν δεν έχετε κωδικό, επικοινωνήστε με τον διοργανωτή
+    💡 Αν δεν έχετε στοιχεία σύνδεσης, επικοινωνήστε με τον διοργανωτή.
 </p>
     </div>
     
@@ -289,8 +280,7 @@ button:disabled {
                 showAlert('Παρακαλώ εισάγετε τον κωδικό της ομάδας!');
                 return;
             }
-
-            // Wait for Firebase to be ready
+			
             if (!window.firebaseReady) {
                 showAlert('Αναμονή σύνδεσης... Δοκιμάστε ξανά σε λίγο.', 'info');
                 return;
@@ -299,7 +289,6 @@ button:disabled {
             setLoading(true);
 
             try {
-                // Check if team exists in Firebase
                 const docRef = window.firebaseDoc(window.firebaseDB, 'teams', teamName);
                 const docSnap = await window.firebaseGetDoc(docRef);
 
@@ -310,8 +299,6 @@ button:disabled {
                 }
 
                 const teamData = docSnap.data();
-
-                // Verify password
                 if (!teamData.password || teamData.password !== password) {
                     setLoading(false);
                     showAlert('Λάθος κωδικός! Προσπαθήστε ξανά.');
@@ -319,14 +306,11 @@ button:disabled {
                     document.getElementById('teamPassword').focus();
                     return;
                 }
-
-                // ✅ Success! Store team in sessionStorage
+				
                 sessionStorage.setItem('teamName', teamName);
                 sessionStorage.setItem('teamAuth', 'true');
                 
                 console.log(`✅ Team authenticated: ${teamName}`);
-
-                // Redirect to index.html WITHOUT team parameter
                 window.location.href = 'index.html';
 
             } catch (error) {
@@ -335,8 +319,6 @@ button:disabled {
                 showAlert('Σφάλμα σύνδεσης. Παρακαλώ δοκιμάστε ξανά.');
             }
         }
-
-        // Check if already logged in
         window.addEventListener('DOMContentLoaded', () => {
             const storedTeam = sessionStorage.getItem('teamName');
             const isAuthenticated = sessionStorage.getItem('teamAuth');
