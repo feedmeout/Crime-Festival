@@ -1231,11 +1231,12 @@ button:focus-visible,
     <div class="intro-box survey-tab-content">
         <div class="survey-icon">📊</div>
         <h2 class="survey-title">ΕΡΕΥΝΑ ΑΞΙΟΛΟΓΗΣΗΣ ΑΠΟΨΕΩΝ & ΕΜΠΕΙΡΙΩΝ</h2>                     
-        <a href="https://feedmeout.github.io/Crime-Festival/survey.html" 
-           target="_blank" 
-           class="btn btn-primary survey-btn">
-            📋 ΑΝΟΙΓΜΑ ΕΡΩΤΗΜΑΤΟΛΟΓΙΟΥ
-        </a>
+<a href="#" 
+   onclick="openSurvey(); return false;" 
+   class="btn btn-primary" 
+   style="margin-top: 20px; font-size: clamp(16px, 3.5vw, 18px); padding: clamp(15px, 3vw, 18px) clamp(30px, 6vw, 40px);">
+    📊 ΜΕΤΑΒΑΣΗ ΣΤΟ ΕΡΩΤΗΜΑΤΟΛΟΓΙΟ
+</a>
     </div>
 </div>
             </div>
@@ -1516,6 +1517,21 @@ const SCORING = {
         function getStorageKey() {
             return `unlocked_teks_${teamCode}`;
         }
+
+function openSurvey() {
+    const teamCode = sessionStorage.getItem('teamCode');
+    const memberName = sessionStorage.getItem('memberName');
+    
+    if (!teamCode || !memberName) {
+        alert('❌ Σφάλμα: Δεν βρέθηκαν στοιχεία σύνδεσης. Παρακαλώ συνδεθείτε ξανά.');
+        window.location.href = 'team_entry.html';
+        return;
+    }
+    
+    // Open survey with proper parameters
+    const surveyUrl = `survey.html?team=${encodeURIComponent(teamCode)}&member=${encodeURIComponent(memberName)}`;
+    window.open(surveyUrl, '_blank');
+}
 
 function getUnlockedTeks() {
     const stored = localStorage.getItem(getStorageKey());
