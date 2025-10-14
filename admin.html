@@ -1030,8 +1030,6 @@ async function addTeam() {
 async function refreshTeams() {
     console.log('🔄 === REFRESH TEAMS START ===');
     let teams = await getAllTeams();
-    
-    // Populate global teamsData for timer updates
     teamsData = {};
     teams.forEach(team => {
         teamsData[team.name] = team;
@@ -1047,8 +1045,6 @@ async function refreshTeams() {
     if (teams.length === 0) {
         container.innerHTML = '';
         noTeams.style.display = 'block';
-        
-        // Clear any existing timer interval
         if (window.timerInterval) {
             clearInterval(window.timerInterval);
         }
@@ -1058,26 +1054,20 @@ async function refreshTeams() {
     }
     
     teams = sortTeams(teams, sortOrder);
-
     noTeams.style.display = 'none';
     container.innerHTML = '';
     
-    // Clear any existing timer interval
     if (window.timerInterval) {
         clearInterval(window.timerInterval);
     }
-    
-// Update all timers every second
+
 window.timerInterval = setInterval(() => {
     document.querySelectorAll('.team-card').forEach(teamCard => {
         const teamName = teamCard.dataset.teamId;
         const team = teamsData[teamName];
-        
-        // Update timer only if game is in progress (started but not completed)
+		
         if (team && team.startTime && !team.completedAt && !team.solution) {
             const elapsed = Date.now() - new Date(team.startTime).getTime();
-            
-            // Find the timer element more specifically
             const timerStats = Array.from(teamCard.querySelectorAll('.team-stats')).find(
                 el => el.textContent.includes('ΣΕ ΕΞΕΛΙΞΗ')
             );
@@ -1252,95 +1242,103 @@ async function showTimestamps(teamName) {
         }
     }
 
-    function viewTeam(teamName) {
-        window.open(`${BASE_URL}index.html?team=${teamName}`, '_blank');
-    }
+function viewTeam(teamName) {
+    window.open(`${BASE_URL}index.html?team=${teamName}`, '_blank');
+}
 
-    async function toggleTek(teamName, tekNumber) {
-        console.log(`🎯 Toggle TEK ${tekNumber} for team ${teamName}`);
-        
+async function toggleTek(teamName, tekNumber) {
+    console.log(`🎯 Toggle TEK ${tekNumber} for team ${teamName}`);
+    
+    const teams = await getAllTeams();
+    const team = teams.find(t => t.name === teamName);
+    
+    if (!team) {
+        alert('Ομάδα δεν βρέθηκε!');
+        return;
+    }
+    
+    if (team.solution) {
+        alert('❌ Δεν μπορείτε να τροποποιήσετε τεκμήρια μετά την υποβολή λύσης!');
+        return;
+    }
+    
+    const tekStr = tekNumber.toString();
+    const unlocked = [...(team.unlocked || [])];
+    const timestamps = {...(team.timestamps || {})};
+    
+    if (unlocked.includes(tekStr)) {
+        const index = unlocked.indexOf(tekStr);
+        unlocked.splice(index, 1);
+        delete timestamps[tekStr];
+        console.log(`🔒 Locked TEK ${tekNumber} for team ${teamName}`);
+    } else {
+        unlocked.push(tekStr);
+        timestamps[tekStr] = new Date().toISOString();
+        console.log(`🔓 Unlocked TEK ${tekNumber} for team ${teamName}`);
+    }
+    
+    const updatedTeam = {
+        password: team.password || null,
+        teamSize: team.teamSize || null,
+        unlocked: unlocked,
+        timestamps: timestamps,
+        evidenceTimestamps: team.evidenceTimestamps || {},
+        startTime: team.startTime || new Date().toISOString(),
+        completedAt: team.completedAt || null,
+        totalTimeMs: team.totalTimeMs || null,
+        solution: team.solution || null,
+        lastUpdate: new Date().toISOString()
+    };
+    
+    console.log(`💾 Saving team ${teamName} with ${unlocked.length} TEKs`);
+    await saveTeam(teamName, updatedTeam);
+    await refreshTeams();
+    
+    console.log('✅ Toggle complete');
+}
+
+async function unlockAll(teamName) {
+    if (confirm(`ΞΕΚΛΕΙΔΩΜΑ ΟΛΩΝ ΤΩΝ ΤΕΚΜΗΡΙΩΝ ΓΙΑ ΤΗΝ ΟΜΑΔΑ "${teamName}";`)) {
+        console.log(`🔓 Unlocking all TEKs for team ${teamName}`);
         const teams = await getAllTeams();
         const team = teams.find(t => t.name === teamName);
         
-        if (!team) {
-            alert('Ομάδα δεν βρέθηκε!');
-            return;
-        }
+        const allTeks = Array.from({length: TOTAL_TEKS}, (_, i) => (i + 1).toString());
+        const now = new Date().toISOString();
+        const timestamps = {...(team?.timestamps || {})};
+        let earliestTime = team?.startTime || now;
         
-        if (team.solution) {
-            alert('❌ Δεν μπορείτε να τροποποιήσετε τεκμήρια μετά την υποβολή λύσης!');
-            return;
-        }
-        
-        const tekStr = tekNumber.toString();
-        const unlocked = [...(team.unlocked || [])];
-        const timestamps = {...(team.timestamps || {})};
-        
-        if (unlocked.includes(tekStr)) {
-            const index = unlocked.indexOf(tekStr);
-            unlocked.splice(index, 1);
-            delete timestamps[tekStr];
-            console.log(`🔒 Locked TEK ${tekNumber} for team ${teamName}`);
-        } else {
-            unlocked.push(tekStr);
-            timestamps[tekStr] = new Date().toISOString();
-            console.log(`🔓 Unlocked TEK ${tekNumber} for team ${teamName}`);
-        }
-        
-        const updatedTeam = {
-            ...team,
-            unlocked: unlocked,
-            timestamps: timestamps,
-            startTime: team.startTime || new Date().toISOString(),
-            lastUpdate: new Date().toISOString()
-        };
-        
-        console.log(`💾 Saving team ${teamName} with ${unlocked.length} TEKs`);
-        localStorage.setItem(`unlocked_teks_${teamName}`, JSON.stringify(updatedTeam));
-        await refreshTeams();
-        await saveTeamToFirebase(teamName, updatedTeam);
-        
-        console.log('✅ Toggle complete');
-    }
-
-    async function unlockAll(teamName) {
-        if (confirm(`ΞΕΚΛΕΙΔΩΜΑ ΟΛΩΝ ΤΩΝ ΤΕΚΜΗΡΙΩΝ ΓΙΑ ΤΗΝ ΟΜΑΔΑ "${teamName}";`)) {
-            console.log(`🔓 Unlocking all TEKs for team ${teamName}`);
-            const teams = await getAllTeams();
-            const team = teams.find(t => t.name === teamName);
-            
-            const allTeks = Array.from({length: TOTAL_TEKS}, (_, i) => (i + 1).toString());
-            const now = new Date().toISOString();
-            const timestamps = {...(team?.timestamps || {})};
-            let earliestTime = team?.startTime || now;
-            allTeks.forEach((tek, i) => {
-                if (!timestamps[tek]) {
-                    timestamps[tek] = new Date(Date.now() + i * 100).toISOString();
-                } else {
-                    const existingTime = new Date(timestamps[tek]);
-                    if (existingTime < new Date(earliestTime)) {
-                        earliestTime = timestamps[tek];
-                    }
+        allTeks.forEach((tek, i) => {
+            if (!timestamps[tek]) {
+                timestamps[tek] = new Date(Date.now() + i * 100).toISOString();
+            } else {
+                const existingTime = new Date(timestamps[tek]);
+                if (existingTime < new Date(earliestTime)) {
+                    earliestTime = timestamps[tek];
                 }
-            });
+            }
+        });
+    
+        const updatedTeam = {
+            password: team?.password || null,
+            teamSize: team?.teamSize || null,
+            unlocked: allTeks,
+            timestamps: timestamps,
+            evidenceTimestamps: team?.evidenceTimestamps || {},
+            startTime: earliestTime,
+            completedAt: team?.completedAt || null,
+            totalTimeMs: team?.totalTimeMs || null,
+            solution: team?.solution || null,
+            lastUpdate: now
+        };
+    
+        console.log(`💾 Saving unlock all for team ${teamName}`);
+        await saveTeam(teamName, updatedTeam);
+        await refreshTeams();
         
-            const updatedTeam = {
-                ...team,
-                password: team?.password || null,
-                unlocked: allTeks,
-                timestamps: timestamps,
-                startTime: earliestTime,
-                lastUpdate: new Date().toISOString()
-            };
-        
-            console.log(`💾 Saving unlock all for team ${teamName}`);
-            localStorage.setItem(`unlocked_teks_${teamName}`, JSON.stringify(updatedTeam));
-            await refreshTeams();
-            await saveTeamToFirebase(teamName, updatedTeam);
-            
-            console.log('✅ Unlock all complete');
-        }
+        console.log('✅ Unlock all complete');
     }
+}
 
 async function resetTeam(teamName) {
     if (confirm(`Reset πρόοδο για την ομάδα "${teamName}";`)) {
@@ -1441,14 +1439,17 @@ async function deleteTeam(teamName) {
                 const startTime = new Date(earliestTime);
                 const totalTimeMs = completionTime - startTime;
                 
-                await saveTeam(team.name, {
-                    ...team,
-                    unlocked: allTeks,
-                    timestamps: timestamps,
-                    startTime: earliestTime,
-                    completedAt: now,
-                    totalTimeMs: totalTimeMs
-                });
+await saveTeam(team.name, {
+    password: team.password || null,
+    teamSize: team.teamSize || null,
+    unlocked: allTeks,
+    timestamps: timestamps,
+    startTime: earliestTime,
+    completedAt: now,
+    totalTimeMs: totalTimeMs,
+    solution: team.solution || null,
+    evidenceTimestamps: team.evidenceTimestamps || {}
+});
             }
             refreshTeams();
         }
@@ -1575,7 +1576,7 @@ window.addEventListener('DOMContentLoaded', async () => {
             refreshTeams();
             setupRealtimeListener();
             await updateLeaderboardButton();
-            setInterval(updateLeaderboardButton, 5000);            
+            setInterval(updateLeaderboardButton, 5000);
             setTimeout(() => {
                 status.style.display = 'none';
             }, 5000);
