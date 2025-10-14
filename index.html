@@ -2491,7 +2491,7 @@ try {
         console.error('Error checking/creating team:', error);
     }
     
-    initTabs();
+    initTabsWithResults(); // CHANGED from initTabs()
     
     try {
         if (typeof SuspectsModule !== 'undefined') {
@@ -2605,21 +2605,6 @@ window.addEventListener('storage', async (e) => {
     }
 });
 
-function initTabs() {
-    const tabButtons = document.querySelectorAll('.tab-button');
-    const tabPanes = document.querySelectorAll('.tab-pane');
-
-    tabButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const targetTab = button.getAttribute('data-tab');
-
-            tabButtons.forEach(btn => btn.classList.remove('active'));
-            tabPanes.forEach(pane => pane.classList.remove('active'));
-            button.classList.add('active');
-            document.getElementById(`tab-${targetTab}`).classList.add('active');
-        });
-    });
-}
 window.submitSolution = submitSolution;
 
 function initTabs() {
@@ -2669,13 +2654,10 @@ async function checkSurveyCompletion() {
     }
 
     try {
-        // Check for survey responses with this team's name
         const preSurveyDoc = `${teamCode}_pre`;
         const postSurveyDoc = `${teamCode}_post`;
-        
         const preDocRef = window.firebaseDoc(window.firebaseDB, 'surveys', preSurveyDoc);
         const postDocRef = window.firebaseDoc(window.firebaseDB, 'surveys', postSurveyDoc);
-        
         const preSnap = await window.firebaseGetDoc(preDocRef);
         const postSnap = await window.firebaseGetDoc(postDocRef);
         
@@ -2710,8 +2692,6 @@ async function updateResultsTabState() {
     const surveysIncomplete = document.getElementById('surveysIncomplete');
     const leaderboardLocked = document.getElementById('leaderboardLocked');
     const leaderboardUnlockedDiv = document.getElementById('leaderboardUnlocked');
-    
-    // Update survey status display
     const preSurveyStatus = document.getElementById('preSurveyStatus');
     const postSurveyStatus = document.getElementById('postSurveyStatus');
     
@@ -2727,24 +2707,18 @@ async function updateResultsTabState() {
             : '❌ <strong>Έρευνα Μετά:</strong> Δεν έχει ολοκληρωθεί';
     }
     
-    // Show appropriate state
     if (!surveys.pre || !surveys.post) {
-        // State 1: Surveys incomplete
         surveysIncomplete.style.display = 'block';
         leaderboardLocked.style.display = 'none';
         leaderboardUnlockedDiv.style.display = 'none';
     } else if (!leaderboardUnlocked) {
-        // State 2: Surveys complete, leaderboard locked
         surveysIncomplete.style.display = 'none';
         leaderboardLocked.style.display = 'block';
         leaderboardUnlockedDiv.style.display = 'none';
     } else {
-        // State 3: Everything unlocked
         surveysIncomplete.style.display = 'none';
         leaderboardLocked.style.display = 'none';
         leaderboardUnlockedDiv.style.display = 'block';
-        
-        // Load leaderboard data
         await loadLeaderboardData();
     }
 }
@@ -2822,7 +2796,6 @@ function displayResultsLeaderboard(teams) {
         return;
     }
 
-    // Show table on desktop, cards on mobile
     if (window.innerWidth > 768) {
         table.style.display = 'table';
         cards.style.display = 'none';
@@ -2831,7 +2804,6 @@ function displayResultsLeaderboard(teams) {
         cards.style.display = 'block';
     }
 
-    // Generate table rows
     tableBody.innerHTML = teams.map((team, index) => {
         const rank = index + 1;
         const rankClass = rank <= 3 ? `rank-${rank}` : '';
@@ -2868,7 +2840,6 @@ function displayResultsLeaderboard(teams) {
         `;
     }).join('');
 
-    // Generate mobile cards
     cardsContainer.innerHTML = teams.map((team, index) => {
         const rank = index + 1;
         const rankClass = rank <= 3 ? `rank-${rank}` : '';
@@ -2912,7 +2883,6 @@ function displayResultsLeaderboard(teams) {
     }).join('');
 }
 
-// Set up real-time listener for leaderboard unlock status
 function setupResultsListener() {
     if (!window.firebaseDB) {
         console.warn('Firebase not ready for results listener');
@@ -2946,17 +2916,21 @@ function setupResultsListener() {
     }
 }
 
-// Update results tab when it becomes active
-const originalInitTabs = window.initTabs || initTabs;
-function initTabs() {
-    if (originalInitTabs) originalInitTabs();
-    
+function initTabsWithResults() {
     const tabButtons = document.querySelectorAll('.tab-button');
-    
+    const tabPanes = document.querySelectorAll('.tab-pane');
+
     tabButtons.forEach(button => {
         button.addEventListener('click', async () => {
             const targetTab = button.getAttribute('data-tab');
+
+            // Switch tabs
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabPanes.forEach(pane => pane.classList.remove('active'));
+            button.classList.add('active');
+            document.getElementById(`tab-${targetTab}`).classList.add('active');
             
+            // Update results tab if clicked
             if (targetTab === 'results') {
                 await updateResultsTabState();
             }
@@ -2964,17 +2938,12 @@ function initTabs() {
     });
 }
 
-// Initialize on page load
-window.addEventListener('DOMContentLoaded', async () => {
-    // ... existing DOMContentLoaded code ...
-    
-    // Set up results tab
+window.addEventListener('DOMContentLoaded', async () => {    
     setTimeout(() => {
         setupResultsListener();
     }, 1000);
 });
 
-// Handle window resize for responsive table/cards
 window.addEventListener('resize', () => {
     const table = document.getElementById('resultsTable');
     const cards = document.getElementById('resultsCards');
@@ -2990,7 +2959,6 @@ window.addEventListener('resize', () => {
     }
 });
 
-// Cleanup on page unload
 window.addEventListener('beforeunload', () => {
     if (resultsUnsubscribe) {
         resultsUnsubscribe();
