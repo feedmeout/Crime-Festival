@@ -1010,8 +1010,7 @@ function renderWelcome() {
                 
                 <div class="note-box">
                     <p class="note-text">
-                        <strong>✅ Οι απαντήσεις σας έχουν αποθηκευτεί.</strong><br>
-                        <small>Μπορείτε να κλείσετε αυτή την καρτέλα.</small>
+                        <strong>✅ ΜΠΟΡΕΙΤΕ ΝΑ ΚΛΕΙΣΕΤΕ ΑΥΤΗ ΤΗΝ ΚΑΡΤΕΛΑ!</strong><br>
                     </p>
                 </div>
             </div>
@@ -1057,7 +1056,7 @@ function renderWelcome() {
             
             ${hasPreData ? `
                 <div class="completed-box">
-                    <p class="completed-text">✅ Έχετε συμπληρώσει την προκαταρκτική έρευνα</p>
+                    <p class="completed-text">✅ ΕΧΕΤΕ ΣΥΜΠΛΗΡΩΣΕΙ ΤΗΝ ΠΡΟΚΑΤΑΡΚΤΙΚΗ ΕΡΕΥΝΑ</p>
                     <p class="completed-date">Ημερομηνία: ${new Date(existingPreData.submittedAt).toLocaleString('el-GR')}</p>
                 </div>
                 
@@ -1092,7 +1091,7 @@ function renderWelcome() {
                         <div>
                             <div class="survey-option-icon">📋</div>
                             <strong class="survey-option-title">ΠΡΟΚΑΤΑΡΚΤΙΚΗ</strong>
-                            <small class="survey-option-subtitle">${hasPreData ? '✓ Συμπληρωμένη' : 'ΠΡΙΝ τη δραστηριότητα'}</small>
+                            <small class="survey-option-subtitle">${hasPreData ? '✓ ΣΥΜΠΛΗΡΩΜΕΝΗ' : 'ΠΡΙΝ ΤΗ ΔΡΑΣΤΗΡΙΟΤΗΤΑ'}</small>
                         </div>
                     </label>
                     <label class="radio-option" style="padding: clamp(20px, 3vw, 25px); ${!hasPreData || hasPostData ? 'opacity: 0.5;' : ''}">
@@ -1103,7 +1102,7 @@ function renderWelcome() {
                             <small class="survey-option-subtitle">
                                 ${hasPostData ? '✓ Συμπληρωμένη' : 
                                   !hasPreData ? '🔒 Κλειδωμένη - Συμπληρώστε ΜΕΤΑ τη δραστηριότητα' : 
-                                  'ΜΕΤΑ τη δραστηριότητα'}
+                                  'ΜΕΤΑ ΤΗ ΔΡΑΣΤΗΡΙΟΤΗΤΑ'}
                             </small>
                         </div>
                     </label>
