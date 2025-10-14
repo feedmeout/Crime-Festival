@@ -606,6 +606,7 @@ body {
     .modal-content {
         padding: 30px;
     }
+}
 
 @media (min-width: 1024px) {
     .section {
@@ -1527,7 +1528,7 @@ window.addEventListener('DOMContentLoaded', async () => {
             const status = document.getElementById('firebaseStatus');
             if (isFirebaseReady()) {
                 status.style.display = 'block';
-                status.innerHTML = 'âœ… Firebase Î£Ï…Î½Î´ÎµÎ´ÎµÎ¼Î­Î½Î¿ - Real-time ÎµÎ½Î·Î¼Î­ÏÏ‰ÏƒÎ· ÎµÎ½ÎµÏÎ³Î®';
+                status.innerHTML = 'Connected to Firebase - Real-time sync active';
             } else {
                 console.warn('âš ï¸ Firebase not loaded - using localStorage only');
             }
