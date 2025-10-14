@@ -989,6 +989,56 @@ button:focus-visible,
         display: block !important;
     }
 }
+@keyframes swing {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-10deg); }
+    75% { transform: rotate(10deg); }
+}
+
+.loading-dots {
+    display: inline-block;
+    margin-left: 5px;
+}
+
+.loading-dots span {
+    animation: blink 1.4s infinite;
+    animation-fill-mode: both;
+}
+
+.loading-dots span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.loading-dots span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes blink {
+    0%, 80%, 100% { opacity: 0; }
+    40% { opacity: 1; }
+}
+
+.stat-card {
+    background: white;
+    padding: 20px 15px;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.stat-card h3 {
+    color: #666;
+    font-size: clamp(11px, 2.5vw, 14px);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+.stat-card .value {
+    font-size: clamp(24px, 6vw, 32px);
+    font-weight: bold;
+    color: #ff6b00;
+}
+
 </style>
 
 </head>
@@ -1022,16 +1072,18 @@ button:focus-visible,
             </div>
         </div>
 
-        <!-- Tab Navigation -->
-        <div class="tabs-container">
-            <div class="tabs-nav">
-                <button class="tab-button active" data-tab="intro">📋 ΠΕΡΙΣΤΑΤΙΚΟ</button>
-                <button class="tab-button" data-tab="forensics">🥼 ΙΑΤΡΟΔΙΚΑΣΤΙΚΗ & ΧΡΟΝΟΛΟΓΙΟ</button>
-                <button class="tab-button" data-tab="suspects">👥 ΚΑΤΑΛΟΓΟΣ ΥΠΟΠΤΩΝ</button>
-                <button class="tab-button" data-tab="evidence">📦 ΤΕΚΜΗΡΙΑ</button>
-                <button class="tab-button" data-tab="solution">✅ ΛΥΣΗ</button>
-				<button class="tab-button" data-tab="survey">📊 ΕΡΕΥΝΑ</button>
-            </div>
+<!-- Tab Navigation -->
+<div class="tabs-container">
+    <div class="tabs-nav">
+        <button class="tab-button active" data-tab="intro">📋 ΠΕΡΙΣΤΑΤΙΚΟ</button>
+        <button class="tab-button" data-tab="forensics">🥼 ΙΑΤΡΟΔΙΚΑΣΤΙΚΗ & ΧΡΟΝΟΛΟΓΙΟ</button>
+        <button class="tab-button" data-tab="suspects">👥 ΚΑΤΑΛΟΓΟΣ ΥΠΟΠΤΩΝ</button>
+        <button class="tab-button" data-tab="evidence">📦 ΤΕΚΜΗΡΙΑ</button>
+        <button class="tab-button" data-tab="solution">✅ ΛΥΣΗ</button>
+        <button class="tab-button" data-tab="survey">📊 ΕΡΕΥΝΑ</button>
+        <!-- NEW TAB -->
+        <button class="tab-button" data-tab="results">🏆 ΚΑΤΑΤΑΞΗ</button>
+    </div>
 
             <!-- Tab Content -->
             <div class="tabs-content">
@@ -1172,7 +1224,7 @@ button:focus-visible,
 
                     <div id="solutionResult" style="display: none;"></div>
                 </div>
-				                <!-- Tab 6: Survey -->
+<!-- Tab 6: Survey -->
 <div class="tab-pane" id="tab-survey">
     <div class="intro-box survey-tab-content">
         <div class="survey-icon">📊</div>
@@ -1181,12 +1233,6 @@ button:focus-visible,
            target="_blank" 
            class="btn btn-primary survey-btn">
             📋 ΑΝΟΙΓΜΑ ΕΡΩΤΗΜΑΤΟΛΟΓΙΟΥ
-        </a>
-        <a href="results.html" 
-           target="_blank" 
-           class="btn btn-primary survey-btn" 
-           style="margin-top: 20px; background: linear-gradient(135deg, #28a745 0%, #20c997 100%);">
-            🏆 ΠΡΟΒΟΛΗ ΑΠΟΤΕΛΕΣΜΑΤΩΝ
         </a>
     </div>
 </div>
@@ -1202,6 +1248,120 @@ button:focus-visible,
             11 ΤΕΚΜΗΡΙΑ | 5 ΥΠΟΠΤΟΙ | 1 ΑΛΗΘΕΙΑ
         </p>
     </div>
+
+
+
+<!-- Tab 7: Results/Leaderboard -->
+<div class="tab-pane" id="tab-results">
+    <!-- State 1: Surveys Not Completed -->
+    <div id="surveysIncomplete" style="display: none;">
+        <div class="intro-box" style="text-align: center; padding: 60px 30px;">
+            <div style="font-size: clamp(80px, 20vw, 120px); margin-bottom: 30px;">🔒</div>
+            <h2 style="color: #1a1a2e; font-size: clamp(20px, 5vw, 28px); margin-bottom: 20px;">
+                Ολοκληρώστε Πρώτα τις Έρευνες
+            </h2>
+            <p style="color: #666; font-size: clamp(14px, 3vw, 16px); line-height: 1.6; margin-bottom: 20px;">
+                Για να δείτε τα αποτελέσματα, πρέπει να ολοκληρώσετε <strong>και τις δύο έρευνες</strong> (πριν και μετά το παιχνίδι).
+            </p>
+            <div style="background: #fff3cd; border: 2px solid #ffc107; border-radius: 12px; padding: 20px; margin: 20px auto; max-width: 500px;">
+                <div style="font-size: 24px; margin-bottom: 10px;">📝</div>
+                <div style="color: #856404; font-weight: bold; margin-bottom: 10px;">Κατάσταση Ερευνών:</div>
+                <div id="surveyStatus" style="color: #666; font-size: 14px; line-height: 1.8;">
+                    <div id="preSurveyStatus">⏳ Έλεγχος...</div>
+                    <div id="postSurveyStatus">⏳ Έλεγχος...</div>
+                </div>
+            </div>
+            <a href="#" onclick="switchToSurveyTab(); return false;" 
+               class="btn btn-primary" 
+               style="margin-top: 20px; font-size: clamp(16px, 3.5vw, 18px); padding: clamp(15px, 3vw, 18px) clamp(30px, 6vw, 40px);">
+                📊 ΜΕΤΑΒΑΣΗ ΣΤΟ ΕΡΩΤΗΜΑΤΟΛΟΓΙΟ
+            </a>
+        </div>
+    </div>
+
+    <!-- State 2: Surveys Completed, Leaderboard Locked -->
+    <div id="leaderboardLocked" style="display: none;">
+        <div class="intro-box" style="text-align: center; padding: 60px 30px;">
+            <div style="font-size: clamp(80px, 20vw, 120px); margin-bottom: 30px; animation: swing 3s ease-in-out infinite;">
+                🔒
+            </div>
+            <h2 style="color: #1a1a2e; font-size: clamp(20px, 5vw, 28px); margin-bottom: 20px;">
+                Τα Αποτελέσματα Δεν Είναι Ακόμα Διαθέσιμα
+            </h2>
+            <p style="color: #666; font-size: clamp(14px, 3vw, 16px); line-height: 1.6; margin-bottom: 15px;">
+                Η αποκάλυψη του μυστηρίου θα γίνει σύντομα!
+            </p>
+            <p style="color: #666; font-size: clamp(14px, 3vw, 16px); line-height: 1.6; margin-bottom: 15px;">
+                Παρακαλούμε περιμένετε την ανακοίνωση των οργανωτών.
+            </p>
+            <div style="background: #d4edda; border: 2px solid #28a745; border-radius: 12px; padding: 20px; margin: 30px auto; max-width: 500px;">
+                <div style="font-size: 24px; margin-bottom: 10px;">✅</div>
+                <div style="color: #155724; font-weight: bold;">
+                    Έχετε ολοκληρώσει τις έρευνες!<br>
+                    Η σελίδα θα ενημερωθεί αυτόματα όταν τα αποτελέσματα ανακοινωθούν.
+                </div>
+            </div>
+            <p style="margin-top: 30px; color: #999; font-size: 14px;">
+                Αναζήτηση ενημερώσεων<span class="loading-dots"><span>.</span><span>.</span><span>.</span></span>
+            </p>
+        </div>
+    </div>
+
+    <!-- State 3: Surveys Completed, Leaderboard Unlocked -->
+    <div id="leaderboardUnlocked" style="display: none;">
+        <div style="background: rgba(40, 167, 69, 0.1); border: 2px solid #28a745; border-radius: 12px; padding: 15px; margin-bottom: 20px; text-align: center;">
+            <strong style="color: #28a745; font-size: 16px;">✅ Αποτελέσματα Διαθέσιμα</strong>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 25px;">
+            <div class="stat-card" style="background: white; padding: 20px 15px; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); text-align: center;">
+                <h3 style="color: #666; font-size: clamp(11px, 2.5vw, 14px); margin-bottom: 10px; text-transform: uppercase;">Σύνολο Υποβολών</h3>
+                <div class="value" id="totalTeams" style="font-size: clamp(24px, 6vw, 32px); font-weight: bold; color: #ff6b00;">-</div>
+            </div>
+            <div class="stat-card" style="background: white; padding: 20px 15px; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); text-align: center;">
+                <h3 style="color: #666; font-size: clamp(11px, 2.5vw, 14px); margin-bottom: 10px; text-transform: uppercase;">Τέλειες Λύσεις</h3>
+                <div class="value" id="perfectScores" style="font-size: clamp(24px, 6vw, 32px); font-weight: bold; color: #ff6b00;">-</div>
+            </div>
+            <div class="stat-card" style="background: white; padding: 20px 15px; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); text-align: center;">
+                <h3 style="color: #666; font-size: clamp(11px, 2.5vw, 14px); margin-bottom: 10px; text-transform: uppercase;">Μέσος Όρος Βαθμών</h3>
+                <div class="value" id="avgScore" style="font-size: clamp(24px, 6vw, 32px); font-weight: bold; color: #ff6b00;">-</div>
+            </div>
+            <div class="stat-card" style="background: white; padding: 20px 15px; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); text-align: center;">
+                <h3 style="color: #666; font-size: clamp(11px, 2.5vw, 14px); margin-bottom: 10px; text-transform: uppercase;">Μέσος Χρόνος</h3>
+                <div class="value" id="avgTime" style="font-size: clamp(16px, 4vw, 20px); font-weight: bold; color: #ff6b00;">-</div>
+            </div>
+        </div>
+
+        <!-- Leaderboard -->
+        <div style="background: white; border-radius: 15px; padding: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); overflow-x: auto;">
+            <h2 style="color: #1a1a2e; font-size: clamp(18px, 4vw, 24px); margin-bottom: 20px; padding-bottom: 15px; border-bottom: 3px solid #ff6b00;">
+                🏆 ΚΑΤΑΤΑΞΗ ΟΜΑΔΩΝ
+            </h2>
+            
+            <!-- Desktop Table -->
+            <table id="resultsTable" style="width: 100%; border-collapse: collapse; min-width: 650px; display: none;">
+                <thead>
+                    <tr style="background: linear-gradient(135deg, #0f3460 0%, #16213e 100%); color: white;">
+                        <th style="padding: 12px 10px; text-align: left; font-size: clamp(11px, 2vw, 13px); text-transform: uppercase;">Θέση</th>
+                        <th style="padding: 12px 10px; text-align: left; font-size: clamp(11px, 2vw, 13px); text-transform: uppercase;">Ομάδα</th>
+                        <th style="padding: 12px 10px; text-align: left; font-size: clamp(11px, 2vw, 13px); text-transform: uppercase;">Βαθμολογία</th>
+                        <th style="padding: 12px 10px; text-align: left; font-size: clamp(11px, 2vw, 13px); text-transform: uppercase;">Τίτλος</th>
+                        <th style="padding: 12px 10px; text-align: left; font-size: clamp(11px, 2vw, 13px); text-transform: uppercase;">Χρόνος</th>
+                    </tr>
+                </thead>
+                <tbody id="resultsTableBody">
+                    <tr>
+                        <td colspan="5" style="text-align: center; padding: 40px; color: #666;">Φόρτωση...</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Mobile Cards -->
+            <div id="resultsCards" style="display: none;"></div>
+        </div>
+    </div>
+</div>
 
     <script src="suspects.js"></script>
 
@@ -2488,6 +2648,367 @@ function logout() {
 
 window.submitSolution = submitSolution;
 window.logout = logout;
+
+// === RESULTS TAB MANAGEMENT ===
+const CORRECT_SUSPECTS = ['konstantinos', 'georgios', 'eleni'];
+const SUSPECT_NAMES = {
+    'maria': 'Παπαδοπούλου Μαρία',
+    'konstantinos': 'Αναγνώστου Κωνσταντίνος',
+    'eleni': 'Μαυρίδη Ελένη',
+    'georgios': 'Πετρόπουλος Γεώργιος',
+    'alexandra': 'Νικολάου Αλεξάνδρα',
+    'suicide': 'Αυτοκτονία'
+};
+
+let resultsUnsubscribe = null;
+
+function switchToSurveyTab() {
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabPanes = document.querySelectorAll('.tab-pane');
+    
+    tabButtons.forEach(btn => btn.classList.remove('active'));
+    tabPanes.forEach(pane => pane.classList.remove('active'));
+    
+    document.querySelector('[data-tab="survey"]').classList.add('active');
+    document.getElementById('tab-survey').classList.add('active');
+}
+
+async function checkSurveyCompletion() {
+    if (!window.firebaseDB) {
+        console.warn('Firebase not ready for survey check');
+        return { pre: false, post: false };
+    }
+
+    try {
+        // Check for survey responses with this team's name
+        const preSurveyDoc = `${teamCode}_pre`;
+        const postSurveyDoc = `${teamCode}_post`;
+        
+        const preDocRef = window.firebaseDoc(window.firebaseDB, 'surveys', preSurveyDoc);
+        const postDocRef = window.firebaseDoc(window.firebaseDB, 'surveys', postSurveyDoc);
+        
+        const preSnap = await window.firebaseGetDoc(preDocRef);
+        const postSnap = await window.firebaseGetDoc(postDocRef);
+        
+        return {
+            pre: preSnap.exists(),
+            post: postSnap.exists()
+        };
+    } catch (error) {
+        console.error('Error checking surveys:', error);
+        return { pre: false, post: false };
+    }
+}
+
+async function checkLeaderboardUnlocked() {
+    if (!window.firebaseDB) return false;
+    
+    try {
+        const docRef = window.firebaseDoc(window.firebaseDB, 'config', 'leaderboard');
+        const docSnap = await window.firebaseGetDoc(docRef);
+        
+        return docSnap.exists() ? (docSnap.data().unlocked || false) : false;
+    } catch (error) {
+        console.error('Error checking leaderboard status:', error);
+        return false;
+    }
+}
+
+async function updateResultsTabState() {
+    const surveys = await checkSurveyCompletion();
+    const leaderboardUnlocked = await checkLeaderboardUnlocked();
+    
+    const surveysIncomplete = document.getElementById('surveysIncomplete');
+    const leaderboardLocked = document.getElementById('leaderboardLocked');
+    const leaderboardUnlockedDiv = document.getElementById('leaderboardUnlocked');
+    
+    // Update survey status display
+    const preSurveyStatus = document.getElementById('preSurveyStatus');
+    const postSurveyStatus = document.getElementById('postSurveyStatus');
+    
+    if (preSurveyStatus) {
+        preSurveyStatus.innerHTML = surveys.pre 
+            ? '✅ <strong>Έρευνα Πριν:</strong> Ολοκληρώθηκε' 
+            : '❌ <strong>Έρευνα Πριν:</strong> Δεν έχει ολοκληρωθεί';
+    }
+    
+    if (postSurveyStatus) {
+        postSurveyStatus.innerHTML = surveys.post 
+            ? '✅ <strong>Έρευνα Μετά:</strong> Ολοκληρώθηκε' 
+            : '❌ <strong>Έρευνα Μετά:</strong> Δεν έχει ολοκληρωθεί';
+    }
+    
+    // Show appropriate state
+    if (!surveys.pre || !surveys.post) {
+        // State 1: Surveys incomplete
+        surveysIncomplete.style.display = 'block';
+        leaderboardLocked.style.display = 'none';
+        leaderboardUnlockedDiv.style.display = 'none';
+    } else if (!leaderboardUnlocked) {
+        // State 2: Surveys complete, leaderboard locked
+        surveysIncomplete.style.display = 'none';
+        leaderboardLocked.style.display = 'block';
+        leaderboardUnlockedDiv.style.display = 'none';
+    } else {
+        // State 3: Everything unlocked
+        surveysIncomplete.style.display = 'none';
+        leaderboardLocked.style.display = 'none';
+        leaderboardUnlockedDiv.style.display = 'block';
+        
+        // Load leaderboard data
+        await loadLeaderboardData();
+    }
+}
+
+function getResultsGrade(percentage) {
+    if (percentage >= 90) return { name: 'ΑΡΧΙ-ΝΤΕΤΕΚΤΙΒΣ 🕵️', color: '#00d4ff' };
+    if (percentage >= 80) return { name: 'ΑΝΩΤΕΡΟΙ ΑΝΑΚΡΙΤΕΣ 🎖️', color: '#ffd700' };
+    if (percentage >= 70) return { name: 'ΝΤΕΤΕΚΤΙΒΣ 🔎', color: '#c0c0c0' };
+    if (percentage >= 60) return { name: 'ΑΣΤΥΝΟΜΟΙ 👮', color: '#cd7f32' };
+    if (percentage >= 50) return { name: 'ΕΡΕΥΝΗΤΕΣ 📋', color: '#ffcc00' };
+    if (percentage >= 40) return { name: 'ΑΣΚΟΥΜΕΝΟΙ 🎓', color: '#28a745' };
+    return { name: 'ΝΕΟΣΥΛΛΕΚΤΟΙ 🎯', color: '#6c757d' };
+}
+
+async function loadLeaderboardData() {
+    try {
+        const querySnapshot = await window.firebaseGetDocs(
+            window.firebaseCollection(window.firebaseDB, 'teams')
+        );
+        
+        const teams = [];
+        querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            if (data.solution) {
+                teams.push({
+                    name: doc.id,
+                    ...data
+                });
+            }
+        });
+
+        teams.sort((a, b) => b.solution.score - a.solution.score);
+
+        displayResultsStats(teams);
+        displayResultsLeaderboard(teams);
+
+    } catch (error) {
+        console.error('Error loading leaderboard:', error);
+    }
+}
+
+function displayResultsStats(teams) {
+    const totalTeams = teams.length;
+    const perfectScores = teams.filter(t => {
+        const suspects = t.solution.suspects || [];
+        return suspects.length === 3 && 
+               suspects.includes('konstantinos') && 
+               suspects.includes('georgios') && 
+               suspects.includes('eleni');
+    }).length;
+    
+    const avgScore = totalTeams > 0 
+        ? Math.round(teams.reduce((sum, t) => sum + t.solution.score, 0) / totalTeams)
+        : 0;
+    
+    const avgTime = totalTeams > 0
+        ? formatTime(teams.reduce((sum, t) => sum + (t.solution.completionTimeMs || 0), 0) / totalTeams)
+        : 'N/A';
+
+    document.getElementById('totalTeams').textContent = totalTeams;
+    document.getElementById('perfectScores').textContent = perfectScores;
+    document.getElementById('avgScore').textContent = avgScore;
+    document.getElementById('avgTime').textContent = avgTime;
+}
+
+function displayResultsLeaderboard(teams) {
+    const tableBody = document.getElementById('resultsTableBody');
+    const cardsContainer = document.getElementById('resultsCards');
+    const table = document.getElementById('resultsTable');
+    const cards = document.getElementById('resultsCards');
+    
+    if (teams.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 40px; color: #666;">Δεν υπάρχουν υποβολές ακόμα</td></tr>';
+        cardsContainer.innerHTML = '<div style="text-align: center; padding: 40px; color: #666;">Δεν υπάρχουν υποβολές ακόμα</div>';
+        return;
+    }
+
+    // Show table on desktop, cards on mobile
+    if (window.innerWidth > 768) {
+        table.style.display = 'table';
+        cards.style.display = 'none';
+    } else {
+        table.style.display = 'none';
+        cards.style.display = 'block';
+    }
+
+    // Generate table rows
+    tableBody.innerHTML = teams.map((team, index) => {
+        const rank = index + 1;
+        const rankClass = rank <= 3 ? `rank-${rank}` : '';
+        const solution = team.solution;
+        
+        const maxScore = solution.maxScore || 140;
+        const percentage = Math.round((solution.score / maxScore) * 100);
+        const grade = getResultsGrade(percentage);
+        const rankEmoji = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : rank;
+
+        const isCurrentTeam = team.name === teamCode;
+        const rowStyle = isCurrentTeam ? 'background: #fff3cd; font-weight: bold;' : '';
+
+        return `
+            <tr style="${rowStyle}">
+                <td class="rank ${rankClass}" style="padding: 12px 10px; font-size: clamp(18px, 4vw, 24px); font-weight: bold; text-align: center;">
+                    ${rankEmoji}
+                </td>
+                <td style="padding: 12px 10px; font-weight: bold; color: #1a1a2e; text-transform: uppercase;">
+                    ${team.name.toUpperCase()}${isCurrentTeam ? ' (ΕΣΥ)' : ''}
+                </td>
+                <td style="padding: 12px 10px; font-weight: bold; color: #28a745;">
+                    ${solution.score}/${maxScore}
+                </td>
+                <td style="padding: 12px 10px;">
+                    <span style="display: inline-block; padding: 6px 12px; border-radius: 6px; font-size: clamp(10px, 2vw, 12px); font-weight: bold; background: ${grade.color}; color: ${percentage >= 50 ? '#000' : '#fff'};">
+                        ${grade.name}
+                    </span>
+                </td>
+                <td style="padding: 12px 10px;">
+                    ${formatTime(solution.completionTimeMs)}
+                </td>
+            </tr>
+        `;
+    }).join('');
+
+    // Generate mobile cards
+    cardsContainer.innerHTML = teams.map((team, index) => {
+        const rank = index + 1;
+        const rankClass = rank <= 3 ? `rank-${rank}` : '';
+        const solution = team.solution;
+        
+        const maxScore = solution.maxScore || 140;
+        const percentage = Math.round((solution.score / maxScore) * 100);
+        const grade = getResultsGrade(percentage);
+        const rankEmoji = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `#${rank}`;
+
+        const isCurrentTeam = team.name === teamCode;
+        const cardStyle = isCurrentTeam ? 'border: 3px solid #ffc107; box-shadow: 0 5px 25px rgba(255,193,7,0.4);' : '';
+
+        return `
+            <div style="background: white; border: 2px solid #e0e0e0; border-radius: 12px; padding: 20px; margin-bottom: 15px; ${cardStyle}">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 2px solid #f0f0f0;">
+                    <div class="${rankClass}" style="font-size: 36px; font-weight: bold;">${rankEmoji}</div>
+                    <div style="font-size: 18px; font-weight: bold; color: #1a1a2e; text-transform: uppercase; flex: 1; margin: 0 15px;">
+                        ${team.name.toUpperCase()}${isCurrentTeam ? '<br><span style="color: #ffc107; font-size: 14px;">⭐ Η ΟΜΑΔΑ ΣΑΣ</span>' : ''}
+                    </div>
+                    <div style="font-size: 24px; font-weight: bold; color: #28a745;">
+                        ${solution.score}/${maxScore}
+                    </div>
+                </div>
+                
+                <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f5f5f5;">
+                    <div style="font-weight: bold; color: #666; font-size: 13px;">ΤΙΤΛΟΣ</div>
+                    <div>
+                        <span style="display: inline-block; padding: 6px 12px; border-radius: 6px; font-size: 10px; font-weight: bold; background: ${grade.color}; color: ${percentage >= 50 ? '#000' : '#fff'};">
+                            ${grade.name}
+                        </span>
+                    </div>
+                </div>
+                
+                <div style="display: flex; justify-content: space-between; padding: 10px 0;">
+                    <div style="font-weight: bold; color: #666; font-size: 13px;">ΧΡΟΝΟΣ</div>
+                    <div style="color: #333;">${formatTime(solution.completionTimeMs)}</div>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// Set up real-time listener for leaderboard unlock status
+function setupResultsListener() {
+    if (!window.firebaseDB) {
+        console.warn('Firebase not ready for results listener');
+        setTimeout(setupResultsListener, 500);
+        return;
+    }
+
+    try {
+        const docRef = window.firebaseDoc(window.firebaseDB, 'config', 'leaderboard');
+        
+        if (resultsUnsubscribe) {
+            resultsUnsubscribe();
+        }
+
+        resultsUnsubscribe = window.firebaseOnSnapshot(docRef, 
+            () => {
+                console.log('Leaderboard status changed, updating results tab...');
+                const resultsTab = document.getElementById('tab-results');
+                if (resultsTab && resultsTab.classList.contains('active')) {
+                    updateResultsTabState();
+                }
+            },
+            (error) => {
+                console.error('Error listening to leaderboard status:', error);
+            }
+        );
+
+        console.log('✅ Results tab real-time listener active');
+    } catch (error) {
+        console.error('Error setting up results listener:', error);
+    }
+}
+
+// Update results tab when it becomes active
+const originalInitTabs = window.initTabs || initTabs;
+function initTabs() {
+    if (originalInitTabs) originalInitTabs();
+    
+    const tabButtons = document.querySelectorAll('.tab-button');
+    
+    tabButtons.forEach(button => {
+        button.addEventListener('click', async () => {
+            const targetTab = button.getAttribute('data-tab');
+            
+            if (targetTab === 'results') {
+                await updateResultsTabState();
+            }
+        });
+    });
+}
+
+// Initialize on page load
+window.addEventListener('DOMContentLoaded', async () => {
+    // ... existing DOMContentLoaded code ...
+    
+    // Set up results tab
+    setTimeout(() => {
+        setupResultsListener();
+    }, 1000);
+});
+
+// Handle window resize for responsive table/cards
+window.addEventListener('resize', () => {
+    const table = document.getElementById('resultsTable');
+    const cards = document.getElementById('resultsCards');
+    
+    if (table && cards) {
+        if (window.innerWidth > 768) {
+            table.style.display = 'table';
+            cards.style.display = 'none';
+        } else {
+            table.style.display = 'none';
+            cards.style.display = 'block';
+        }
+    }
+});
+
+// Cleanup on page unload
+window.addEventListener('beforeunload', () => {
+    if (resultsUnsubscribe) {
+        resultsUnsubscribe();
+    }
+});
+
+
 </script>
 
 </body>
