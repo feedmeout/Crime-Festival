@@ -1415,45 +1415,42 @@ async function deleteTeam(teamName) {
     }
 }
 
-    async function unlockAllForAll() {
-        if (confirm('ΞΕΚΛΕΙΔΩΜΑ ΟΛΩΝ ΤΩΝ ΤΕΚΜΗΡΙΩΝ ΓΙΑ ΟΛΕΣ ΤΙΣ ΟΜΑΔΕΣ;')) {
-            const teams = await getAllTeams();
-            const allTeks = Array.from({length: TOTAL_TEKS}, (_, i) => (i + 1).toString());
+async function unlockAllForAll() {
+    if (confirm('ΞΕΚΛΕΙΔΩΜΑ ΟΛΩΝ ΤΩΝ ΤΕΚΜΗΡΙΩΝ ΓΙΑ ΟΛΕΣ ΤΙΣ ΟΜΑΔΕΣ;')) {
+        const teams = await getAllTeams();
+        const allTeks = Array.from({length: TOTAL_TEKS}, (_, i) => (i + 1).toString());
+        
+        for (const team of teams) {
+            const now = new Date().toISOString();
+            const timestamps = {...(team.timestamps || {})};
+            let earliestTime = team.startTime || now;
             
-            for (const team of teams) {
-                const now = new Date().toISOString();
-                const timestamps = {...(team.timestamps || {})};
-                let earliestTime = team.startTime || now;
-                allTeks.forEach((tek, i) => {
-                    if (!timestamps[tek]) {
-                        timestamps[tek] = new Date(Date.now() + i * 100).toISOString();
-                    } else {
-                        const existingTime = new Date(timestamps[tek]);
-                        if (existingTime < new Date(earliestTime)) {
-                            earliestTime = timestamps[tek];
-                        }
+            allTeks.forEach((tek, i) => {
+                if (!timestamps[tek]) {
+                    timestamps[tek] = new Date(Date.now() + i * 100).toISOString();
+                } else {
+                    const existingTime = new Date(timestamps[tek]);
+                    if (existingTime < new Date(earliestTime)) {
+                        earliestTime = timestamps[tek];
                     }
-                });
-                
-                const completionTime = new Date();
-                const startTime = new Date(earliestTime);
-                const totalTimeMs = completionTime - startTime;
-                
-await saveTeam(team.name, {
-    password: team.password || null,
-    teamSize: team.teamSize || null,
-    unlocked: allTeks,
-    timestamps: timestamps,
-    startTime: earliestTime,
-    completedAt: now,
-    totalTimeMs: totalTimeMs,
-    solution: team.solution || null,
-    evidenceTimestamps: team.evidenceTimestamps || {}
-});
-            }
-            refreshTeams();
+                }
+            });
+            
+            await saveTeam(team.name, {
+                password: team.password || null,
+                teamSize: team.teamSize || null,
+                unlocked: allTeks,
+                timestamps: timestamps,
+                startTime: earliestTime,
+                completedAt: team.completedAt || null,  // Keep existing value
+                totalTimeMs: team.totalTimeMs || null,  // Keep existing value
+                solution: team.solution || null,
+                evidenceTimestamps: team.evidenceTimestamps || {}
+            });
         }
+        refreshTeams();
     }
+}
 
 async function resetAll() {
     if (confirm('ΔΙΑΓΡΑΦΗ ΟΛΩΝ ΤΩΝ ΟΜΑΔΩΝ ΚΑΙ ΕΡΕΥΝΩΝ;')) {
