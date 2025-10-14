@@ -686,16 +686,12 @@ body {
                 </select>
             </div>
             
-            <div id="teamsContainer" class="team-list"></div>
-            <div id="noTeams" style="display: none; text-align: center; padding: 40px; color: #999;">
-                <p style="font-size: 18px;">ΔΕΝ ΥΠΑΡΧΟΥΝ ΟΜΑΔΕΣ ΑΚΟΜΑ</p>
-            </div>
-        </div>
+<div id="teamsContainer" class="team-list"></div>
 
         <div class="section">
             <h2>🔗 URL GENERATOR (QR CODES)</h2>
             <div class="team-input">
-                <input type="text" id="urlTeamName" placeholder="Όνομα ομάδας" />
+                <input type="text" id="urlTeamName" />
                 <button class="btn btn-primary" onclick="generateUrls()">Δημιουργία URLs</button>
             </div>
             <div class="url-generator" id="urlOutput" style="display: none;">
@@ -1042,16 +1038,16 @@ async function refreshTeams() {
     console.log(`📊 Loaded ${teams.length} teams from Firebase/localStorage`);
     teams.forEach(t => console.log(`  - ${t.name}: ${t.unlocked.length} TEKs unlocked, data:`, t.unlocked));
 
-    if (teams.length === 0) {
-        container.innerHTML = '';
-        noTeams.style.display = 'block';
-        if (window.timerInterval) {
-            clearInterval(window.timerInterval);
-        }
-        
-        console.log('🔄 === REFRESH TEAMS END ===');
-        return;
+if (teams.length === 0) {
+    container.innerHTML = '';
+    // noTeams.style.display = 'none';  // ← Keep hidden
+    if (window.timerInterval) {
+        clearInterval(window.timerInterval);
     }
+    
+    console.log('🔄 === REFRESH TEAMS END ===');
+    return;
+}
     
     teams = sortTeams(teams, sortOrder);
     noTeams.style.display = 'none';
@@ -1277,18 +1273,18 @@ async function toggleTek(teamName, tekNumber) {
         console.log(`🔓 Unlocked TEK ${tekNumber} for team ${teamName}`);
     }
     
-    const updatedTeam = {
-        password: team.password || null,
-        teamSize: team.teamSize || null,
-        unlocked: unlocked,
-        timestamps: timestamps,
-        evidenceTimestamps: team.evidenceTimestamps || {},
-        startTime: team.startTime || new Date().toISOString(),
-        completedAt: team.completedAt || null,
-        totalTimeMs: team.totalTimeMs || null,
-        solution: team.solution || null,
-        lastUpdate: new Date().toISOString()
-    };
+const updatedTeam = {
+    password: team.password || null,
+    teamSize: team.teamSize !== undefined ? team.teamSize : null,  // ← FIXED
+    unlocked: unlocked,
+    timestamps: timestamps,
+    evidenceTimestamps: team.evidenceTimestamps || {},
+    startTime: team.startTime || new Date().toISOString(),
+    completedAt: team.completedAt || null,
+    totalTimeMs: team.totalTimeMs || null,
+    solution: team.solution || null,
+    lastUpdate: new Date().toISOString()
+};
     
     console.log(`💾 Saving team ${teamName} with ${unlocked.length} TEKs`);
     await saveTeam(teamName, updatedTeam);
@@ -1319,18 +1315,18 @@ async function unlockAll(teamName) {
             }
         });
     
-        const updatedTeam = {
-            password: team?.password || null,
-            teamSize: team?.teamSize || null,
-            unlocked: allTeks,
-            timestamps: timestamps,
-            evidenceTimestamps: team?.evidenceTimestamps || {},
-            startTime: earliestTime,
-            completedAt: team?.completedAt || null,
-            totalTimeMs: team?.totalTimeMs || null,
-            solution: team?.solution || null,
-            lastUpdate: now
-        };
+const updatedTeam = {
+    password: team?.password || null,
+    teamSize: team?.teamSize !== undefined ? team.teamSize : null,  // ← FIXED
+    unlocked: allTeks,
+    timestamps: timestamps,
+    evidenceTimestamps: team?.evidenceTimestamps || {},
+    startTime: earliestTime,
+    completedAt: team?.completedAt || null,
+    totalTimeMs: team?.totalTimeMs || null,
+    solution: team?.solution || null,
+    lastUpdate: now
+};
     
         console.log(`💾 Saving unlock all for team ${teamName}`);
         await saveTeam(teamName, updatedTeam);
@@ -1345,15 +1341,15 @@ async function resetTeam(teamName) {
         const teams = await getAllTeams();
         const team = teams.find(t => t.name === teamName);
         
-        await saveTeam(teamName, {
-            password: team?.password || null,
-            teamSize: team?.teamSize || null,
-            unlocked: [],
-            timestamps: {},
-            startTime: null,
-            completedAt: null,
-            totalTimeMs: null
-        });
+await saveTeam(teamName, {
+    password: team?.password || null,
+    teamSize: team?.teamSize !== undefined ? team.teamSize : null,  // ← FIXED
+    unlocked: [],
+    timestamps: {},
+    startTime: null,
+    completedAt: null,
+    totalTimeMs: null
+});
             refreshTeams();
         }
     }
@@ -1398,10 +1394,7 @@ async function deleteTeam(teamName) {
                 await window.firebaseDeleteDoc(
                     window.firebaseDoc(window.firebaseDB, 'teams', teamName)
                 );
-                console.log(`✅ Deleted team document: ${teamName}`);
-                
-                alert(`✅ Διαγράφηκε η ομάδα "${teamName}" και ${surveyCount} έρευνες!`);
-                
+                console.log(`✅ Deleted team document: ${teamName}`);                
             } catch (error) {
                 console.error('❌ Firebase delete error:', error);
                 alert(`⚠️ Σφάλμα κατά τη διαγραφή: ${error.message}\nΕλέγξτε το console για λεπτομέρειες.`);
@@ -1436,17 +1429,17 @@ async function unlockAllForAll() {
                 }
             });
             
-            await saveTeam(team.name, {
-                password: team.password || null,
-                teamSize: team.teamSize || null,
-                unlocked: allTeks,
-                timestamps: timestamps,
-                startTime: earliestTime,
-                completedAt: team.completedAt || null,  // Keep existing value
-                totalTimeMs: team.totalTimeMs || null,  // Keep existing value
-                solution: team.solution || null,
-                evidenceTimestamps: team.evidenceTimestamps || {}
-            });
+await saveTeam(team.name, {
+    password: team.password || null,
+    teamSize: team.teamSize !== undefined ? team.teamSize : null,  // ← FIXED
+    unlocked: allTeks,
+    timestamps: timestamps,
+    startTime: earliestTime,
+    completedAt: team.completedAt || null,
+    totalTimeMs: team.totalTimeMs || null,
+    solution: team.solution || null,
+    evidenceTimestamps: team.evidenceTimestamps || {}
+});
         }
         refreshTeams();
     }
