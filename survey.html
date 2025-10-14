@@ -898,7 +898,7 @@
 
     <script>
 	
-        function getTeamMemberId() {
+function getTeamMemberParams() {
             const urlParams = new URLSearchParams(window.location.search);
             const team = urlParams.get('team');
             const member = urlParams.get('member');
@@ -907,16 +907,12 @@
                 return null;
             }
             
-            let deviceId = `${team}_${member}`;
-            if (!localStorage.getItem('crime_festival_device_id')) {
-                localStorage.setItem('crime_festival_device_id', deviceId);
-            }
-            return deviceId;
+            return { team, member };
         }
 
-        const DEVICE_ID = getTeamMemberId();
+        const TEAM_MEMBER = getTeamMemberParams();
         
-        if (!DEVICE_ID) {
+if (!TEAM_MEMBER) {
             document.getElementById('app').innerHTML = `
                 <div class="form-section active center-content">
                     <div class="warning-icon">⚠️</div>
@@ -936,7 +932,7 @@
         let existingPreData = null;
         let existingPostData = null;
         
-        console.log('Device ID:', DEVICE_ID);
+console.log('Team:', TEAM_MEMBER?.team, 'Member:', TEAM_MEMBER?.member);
 
         let initAttempts = 0;
         const maxAttempts = 50;
@@ -954,15 +950,17 @@
 
         setTimeout(waitForFirebase, 500);
 
-        async function initializeSurvey() {
+async function initializeSurvey() {
             try {
-                const preDocRef = window.firebaseDoc(window.firebaseDB, 'surveys', DEVICE_ID + '_pre');
+                const preDocId = `${TEAM_MEMBER.team}_pre_${TEAM_MEMBER.member}`;
+                const preDocRef = window.firebaseDoc(window.firebaseDB, 'surveys', preDocId);
                 const preSnap = await window.firebaseGetDoc(preDocRef);
                 if (preSnap.exists()) {
                     existingPreData = preSnap.data();
                 }
 
-                const postDocRef = window.firebaseDoc(window.firebaseDB, 'surveys', DEVICE_ID + '_post');
+                const postDocId = `${TEAM_MEMBER.team}_post_${TEAM_MEMBER.member}`;
+                const postDocRef = window.firebaseDoc(window.firebaseDB, 'surveys', postDocId);
                 const postSnap = await window.firebaseGetDoc(postDocRef);
                 if (postSnap.exists()) {
                     existingPostData = postSnap.data();
@@ -1519,13 +1517,14 @@ async function submitSurvey() {
 
     try {
         const data = {
-            deviceId: DEVICE_ID,
+            teamCode: TEAM_MEMBER.team,
+            memberName: TEAM_MEMBER.member,
             surveyType: surveyType,
             submittedAt: new Date().toISOString(),
             responses: surveyData
         };
 
-        const docId = DEVICE_ID + '_' + surveyType;
+        const docId = `${TEAM_MEMBER.team}_${surveyType}_${TEAM_MEMBER.member}`;
         const docRef = window.firebaseDoc(window.firebaseDB, 'surveys', docId);
         await window.firebaseSetDoc(docRef, data);
 
