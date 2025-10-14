@@ -872,15 +872,17 @@ async function addTeam() {
         }
     }
 
-    await saveTeam(teamName, {
-        password: password,
-        unlocked: [],
-        timestamps: {},
-        startTime: null,
-        completedAt: null,
-        totalTimeMs: null,
-        createdAt: new Date().toISOString()
-    });
+const teams = await getAllTeams();
+const team = teams.find(t => t.name === teamName);
+
+await saveTeam(teamName, {
+    password: team?.password,  // ✅ Preserve password
+    unlocked: [],
+    timestamps: {},
+    startTime: null,
+    completedAt: null,
+    totalTimeMs: null
+});
     
     alertDiv.innerHTML = `<div class="alert alert-success">✅ Η ομάδα "${teamName}" δημιουργήθηκε με κωδικό: <strong>${password}</strong></div>`;
     document.getElementById('newTeamName').value = '';
@@ -1177,11 +1179,12 @@ async function unlockAll(teamName) {
             }
         });
        
-        const updatedTeam = {
-            unlocked: allTeks,
-            timestamps: timestamps,
-            startTime: earliestTime,
-        };
+const updatedTeam = {
+    ...team,
+    unlocked: allTeks,
+    timestamps: timestamps,
+    startTime: earliestTime,
+};
         
         console.log(`💾 Saving unlock all for team ${teamName}`);
         console.log(`   Start time: ${earliestTime}`);
@@ -1252,13 +1255,14 @@ async function unlockAllForAll() {
             const startTime = new Date(earliestTime);
             const totalTimeMs = completionTime - startTime;
             
-            await saveTeam(team.name, {
-                unlocked: allTeks,
-                timestamps: timestamps,
-                startTime: earliestTime,
-                completedAt: now,
-                totalTimeMs: totalTimeMs
-            });
+await saveTeam(team.name, {
+    ...team,
+    unlocked: allTeks,
+    timestamps: timestamps,
+    startTime: earliestTime,
+    completedAt: now,
+    totalTimeMs: totalTimeMs
+});
         }
         refreshTeams();
     }
