@@ -40,7 +40,7 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             min-height: 100vh;
-            padding: 20px;
+            padding: 15px;
         }
 
         .container {
@@ -50,27 +50,31 @@
 
         .header {
             background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
-            padding: 30px;
+            padding: 25px 20px;
             border-radius: 15px;
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.3);
         }
 
         .header h1 {
             color: white;
-            font-size: 32px;
+            font-size: clamp(20px, 5vw, 32px);
             margin-bottom: 10px;
         }
 
         .header p {
             color: rgba(255,255,255,0.9);
-            font-size: 16px;
+            font-size: clamp(14px, 3vw, 16px);
         }
 
         .action-bar {
             text-align: center;
             margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
         }
 
         .btn {
@@ -81,9 +85,9 @@
             font-weight: bold;
             cursor: pointer;
             transition: transform 0.2s ease;
-            margin: 5px;
             text-decoration: none;
             display: inline-block;
+            white-space: nowrap;
         }
 
         .btn:hover {
@@ -102,14 +106,14 @@
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
         }
 
         .stat-card {
             background: white;
-            padding: 20px;
+            padding: 20px 15px;
             border-radius: 10px;
             box-shadow: 0 5px 20px rgba(0,0,0,0.1);
             text-align: center;
@@ -117,13 +121,13 @@
 
         .stat-card h3 {
             color: #666;
-            font-size: 14px;
+            font-size: clamp(11px, 2.5vw, 14px);
             margin-bottom: 10px;
             text-transform: uppercase;
         }
 
         .stat-card .value {
-            font-size: 32px;
+            font-size: clamp(24px, 6vw, 32px);
             font-weight: bold;
             color: #ff6b00;
         }
@@ -131,14 +135,15 @@
         .leaderboard {
             background: white;
             border-radius: 15px;
-            padding: 30px;
+            padding: 20px;
             margin-bottom: 30px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            overflow-x: auto;
         }
 
         .leaderboard h2 {
             color: #1a1a2e;
-            font-size: 24px;
+            font-size: clamp(18px, 4vw, 24px);
             margin-bottom: 20px;
             padding-bottom: 15px;
             border-bottom: 3px solid #ff6b00;
@@ -148,22 +153,24 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
+            min-width: 650px;
         }
 
         .leaderboard-table th {
             background: linear-gradient(135deg, #0f3460 0%, #16213e 100%);
             color: white;
-            padding: 15px;
+            padding: 12px 10px;
             text-align: left;
-            font-size: 13px;
+            font-size: clamp(11px, 2vw, 13px);
             text-transform: uppercase;
             font-weight: bold;
+            white-space: nowrap;
         }
 
         .leaderboard-table td {
-            padding: 15px;
+            padding: 12px 10px;
             border-bottom: 1px solid #ddd;
-            font-size: 14px;
+            font-size: clamp(12px, 2vw, 14px);
         }
 
         .leaderboard-table tr:hover {
@@ -171,10 +178,105 @@
         }
 
         .rank {
+            font-size: clamp(18px, 4vw, 24px);
+            font-weight: bold;
+            width: 50px;
+            text-align: center;
+        }
+
+        /* Mobile Cards */
+        .mobile-cards {
+            display: none;
+        }
+
+        .team-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .team-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .card-rank {
+            font-size: 36px;
+            font-weight: bold;
+        }
+
+        .card-team-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #1a1a2e;
+            text-transform: uppercase;
+            flex: 1;
+            margin: 0 15px;
+        }
+
+        .card-score {
             font-size: 24px;
             font-weight: bold;
-            width: 60px;
-            text-align: center;
+            color: #28a745;
+            white-space: nowrap;
+        }
+
+        .card-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .card-row:last-child {
+            border-bottom: none;
+        }
+
+        .card-label {
+            font-weight: bold;
+            color: #666;
+            font-size: 13px;
+            text-transform: uppercase;
+        }
+
+        .card-value {
+            font-size: 14px;
+            color: #333;
+            text-align: right;
+        }
+
+        .card-suspects {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            max-width: 60%;
+        }
+
+        .card-actions {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid #f0f0f0;
+        }
+
+        .card-actions .btn {
+            width: 100%;
+            padding: 12px;
+            font-size: 14px;
         }
 
         .rank-1 { color: #ffd700; }
@@ -184,32 +286,34 @@
         .team-name {
             font-weight: bold;
             color: #1a1a2e;
-            font-size: 16px;
+            font-size: clamp(13px, 2.5vw, 16px);
             text-transform: uppercase;
         }
 
         .score {
-            font-size: 20px;
+            font-size: clamp(16px, 3vw, 20px);
             font-weight: bold;
             color: #28a745;
+            white-space: nowrap;
         }
 
         .grade-badge {
             display: inline-block;
             padding: 6px 12px;
             border-radius: 6px;
-            font-size: 12px;
+            font-size: clamp(10px, 2vw, 12px);
             font-weight: bold;
-            margin-left: 10px;
+            white-space: nowrap;
         }
 
         .badge {
             display: inline-block;
             padding: 4px 8px;
             border-radius: 4px;
-            font-size: 11px;
+            font-size: clamp(9px, 1.8vw, 11px);
             font-weight: bold;
             margin: 2px;
+            white-space: nowrap;
         }
 
         .badge-correct {
@@ -232,6 +336,7 @@
         .solution-details h3 {
             color: #0f3460;
             margin-bottom: 15px;
+            font-size: clamp(16px, 3vw, 18px);
         }
 
         .suspect-list {
@@ -251,7 +356,7 @@
             background: rgba(0,0,0,0.8);
             z-index: 1000;
             overflow-y: auto;
-            padding: 20px;
+            padding: 15px;
         }
 
         .modal.active {
@@ -263,7 +368,7 @@
         .modal-content {
             background: white;
             border-radius: 15px;
-            padding: 30px;
+            padding: 25px;
             max-width: 800px;
             width: 100%;
             max-height: 90vh;
@@ -282,7 +387,7 @@
 
         .modal-header h2 {
             color: #1a1a2e;
-            font-size: 24px;
+            font-size: clamp(18px, 4vw, 24px);
         }
 
         .close-modal {
@@ -293,28 +398,110 @@
             background: none;
             border: none;
             padding: 0;
+            min-width: 32px;
         }
 
         .close-modal:hover {
             color: #333;
         }
 
+        /* Mobile optimizations */
         @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+
+            .leaderboard {
+                padding: 15px;
+                border-radius: 10px;
+            }
+
+            /* Hide table, show cards on mobile */
             .leaderboard-table {
+                display: none;
+            }
+
+            .mobile-cards {
+                display: block;
+            }
+
+            .btn {
+                padding: 10px 16px;
                 font-size: 12px;
             }
-            
-            .leaderboard-table th,
-            .leaderboard-table td {
-                padding: 10px 5px;
+
+            .modal-content {
+                padding: 20px 15px;
             }
 
-            .header h1 {
-                font-size: 24px;
+            .stat-card {
+                padding: 15px 10px;
+            }
+        }
+
+        /* Small mobile */
+        @media (max-width: 480px) {
+            .header {
+                padding: 20px 15px;
+                margin-bottom: 15px;
             }
 
-            .stat-card .value {
-                font-size: 24px;
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-bar {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .grade-badge {
+                font-size: 9px;
+                padding: 4px 8px;
+            }
+
+            .suspect-list {
+                gap: 5px;
+            }
+
+            .badge {
+                font-size: 9px;
+                padding: 3px 6px;
+            }
+        }
+
+        /* Tablet */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .leaderboard-table {
+                font-size: 13px;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                background: white;
+            }
+
+            .action-bar,
+            .modal {
+                display: none !important;
+            }
+
+            .leaderboard {
+                box-shadow: none;
             }
         }
     </style>
@@ -345,12 +532,14 @@
             </div>
             <div class="stat-card">
                 <h3>Μέσος Χρόνος</h3>
-                <div class="value" style="font-size: 20px;">-</div>
+                <div class="value" style="font-size: clamp(16px, 4vw, 20px);">-</div>
             </div>
         </div>
 
         <div class="leaderboard">
             <h2>🏆 ΚΑΤΑΤΑΞΗ ΟΜΑΔΩΝ</h2>
+            
+            <!-- Desktop/Tablet Table -->
             <table class="leaderboard-table" id="leaderboardTable">
                 <thead>
                     <tr>
@@ -372,6 +561,13 @@
                     </tr>
                 </tbody>
             </table>
+
+            <!-- Mobile Cards -->
+            <div class="mobile-cards" id="mobileCards">
+                <div style="text-align: center; padding: 40px; color: #666;">
+                    Φόρτωση δεδομένων...
+                </div>
+            </div>
         </div>
     </div>
 
@@ -396,7 +592,7 @@
             'suicide': 'Αυτοκτονία'
         };
 
-function getGrade(percentage) {
+        function getGrade(percentage) {
             if (percentage >= 90) return { name: 'ΑΡΧΙ-ΝΤΕΤΕΚΤΙΒΣ 🕵️', color: '#00d4ff' };
             if (percentage >= 80) return { name: 'ΑΝΩΤΕΡΟΙ ΑΝΑΚΡΙΤΕΣ 🎖️', color: '#ffd700' };
             if (percentage >= 70) return { name: 'ΝΤΕΤΕΚΤΙΒΣ 🔎', color: '#c0c0c0' };
@@ -456,6 +652,11 @@ function getGrade(percentage) {
                         </td>
                     </tr>
                 `;
+                document.getElementById('mobileCards').innerHTML = `
+                    <div style="text-align: center; color: #dc3545; padding: 40px;">
+                        ❌ Σφάλμα φόρτωσης δεδομένων
+                    </div>
+                `;
             }
         }
 
@@ -487,6 +688,7 @@ function getGrade(percentage) {
 
         function displayLeaderboard(teams) {
             const tbody = document.getElementById('leaderboardBody');
+            const mobileCards = document.getElementById('mobileCards');
             
             if (teams.length === 0) {
                 tbody.innerHTML = `
@@ -496,9 +698,15 @@ function getGrade(percentage) {
                         </td>
                     </tr>
                 `;
+                mobileCards.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #666;">
+                        Δεν υπάρχουν υποβολές ακόμα
+                    </div>
+                `;
                 return;
             }
 
+            // Generate table rows for desktop
             tbody.innerHTML = teams.map((team, index) => {
                 const rank = index + 1;
                 const rankClass = rank <= 3 ? `rank-${rank}` : '';
@@ -541,159 +749,213 @@ function getGrade(percentage) {
                     </tr>
                 `;
             }).join('');
+
+            // Generate mobile cards
+            mobileCards.innerHTML = teams.map((team, index) => {
+                const rank = index + 1;
+                const rankClass = rank <= 3 ? `rank-${rank}` : '';
+                const solution = team.solution;
+                const suspects = solution.suspects || [];
+                
+                const maxScore = solution.maxScore || 140;
+                const percentage = Math.round((solution.score / maxScore) * 100);
+                const grade = getGrade(percentage);
+
+                const rankEmoji = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `#${rank}`;
+
+                return `
+                    <div class="team-card">
+                        <div class="card-header">
+                            <div class="card-rank ${rankClass}">${rankEmoji}</div>
+                            <div class="card-team-name">${team.name.toUpperCase()}</div>
+                            <div class="card-score">${solution.score}/${maxScore}</div>
+                        </div>
+
+                        <div class="card-row">
+                            <div class="card-label">Τίτλος</div>
+                            <div class="card-value">
+                                <span class="grade-badge" style="background: ${grade.color}; color: ${percentage >= 50 ? '#000' : '#fff'};">
+                                    ${grade.name}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="card-row">
+                            <div class="card-label">Δράστες</div>
+                            <div class="card-suspects">
+                                ${suspects.map(s => `
+                                    <span class="badge ${CORRECT_SUSPECTS.includes(s) ? 'badge-correct' : 'badge-incorrect'}">
+                                        ${SUSPECT_NAMES[s] || s}
+                                    </span>
+                                `).join('')}
+                            </div>
+                        </div>
+
+                        <div class="card-row">
+                            <div class="card-label">Χρόνος</div>
+                            <div class="card-value">${formatTime(solution.completionTimeMs)}</div>
+                        </div>
+
+                        <div class="card-row">
+                            <div class="card-label">Prompts</div>
+                            <div class="card-value">${solution.promptCount || 0}</div>
+                        </div>
+
+                        <div class="card-actions">
+                            <button class="btn btn-primary" onclick="viewSolution('${team.name}')">
+                                👁️ Προβολή Λύσης
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
         }
 
-window.viewSolution = async function(teamName) {
-    try {
-        const querySnapshot = await window.firebaseGetDocs(
-            window.firebaseCollection(window.firebaseDB, 'teams')
-        );
-        
-        let teamData = null;
-        querySnapshot.forEach((doc) => {
-            if (doc.id === teamName) {
-                teamData = doc.data();
-            }
-        });
-
-        if (!teamData || !teamData.solution) {
-            alert('Δεν βρέθηκαν δεδομένα για αυτή την ομάδα');
-            return;
-        }
-
-        const solution = teamData.solution;
-        const suspects = solution.suspects || [];
-        const maxScore = solution.maxScore || 140;
-        const percentage = Math.round((solution.score / maxScore) * 100);
-        const grade = getGrade(percentage);
-        const hasSuicide = suspects.includes('suicide');
-        const hasKiller = suspects.some(s => s !== 'suicide');
-        const isContradiction = hasSuicide && hasKiller;
-        
-        document.getElementById('modalTeamName').textContent = 
-            `Λύση Ομάδας: ${teamName.toUpperCase()}`;
-        
-        document.getElementById('modalContent').innerHTML = `
-            <div class="solution-details">
-                <h3>📊 Βαθμολογία</h3>
-                <div style="font-size: 32px; font-weight: bold; color: ${solution.score === 0 ? '#dc3545' : '#28a745'}; margin: 15px 0;">
-                    ${solution.score}/${maxScore} πόντοι
-                </div>
-                <div style="font-size: 20px; font-weight: bold; margin: 10px 0;">
-                    <span style="background: ${grade.color}; color: ${percentage >= 50 ? '#000' : '#fff'}; padding: 8px 16px; border-radius: 8px;">
-                        ${grade.name}
-                    </span>
-                    <span style="color: #666; margin-left: 10px;">(${percentage}%)</span>
-                </div>
+        window.viewSolution = async function(teamName) {
+            try {
+                const querySnapshot = await window.firebaseGetDocs(
+                    window.firebaseCollection(window.firebaseDB, 'teams')
+                );
                 
-                ${isContradiction ? `
-                    <div style="background: #f8d7da; border: 2px solid #dc3545; padding: 15px; border-radius: 8px; margin: 15px 0;">
-                        <strong style="color: #721c24;">⚠️ ΛΟΓΙΚΗ ΑΝΤΙΦΑΣΗ:</strong>
-                        <p style="color: #721c24; margin: 5px 0;">Η ομάδα επέλεξε ταυτόχρονα δολοφονία ΚΑΙ αυτοκτονία</p>
-                    </div>
-                ` : ''}
+                let teamData = null;
+                querySnapshot.forEach((doc) => {
+                    if (doc.id === teamName) {
+                        teamData = doc.data();
+                    }
+                });
+
+                if (!teamData || !teamData.solution) {
+                    alert('Δεν βρέθηκαν δεδομένα για αυτή την ομάδα');
+                    return;
+                }
+
+                const solution = teamData.solution;
+                const suspects = solution.suspects || [];
+                const maxScore = solution.maxScore || 140;
+                const percentage = Math.round((solution.score / maxScore) * 100);
+                const grade = getGrade(percentage);
+                const hasSuicide = suspects.includes('suicide');
+                const hasKiller = suspects.some(s => s !== 'suicide');
+                const isContradiction = hasSuicide && hasKiller;
                 
-                <h3 style="margin-top: 20px;">👥 Δράστες που επέλεξαν:</h3>
-                <div class="suspect-list">
-                    ${suspects.map(s => `
-                        <span class="badge ${CORRECT_SUSPECTS.includes(s) ? 'badge-correct' : 'badge-incorrect'}" style="font-size: 14px; padding: 8px 12px;">
-                            ${CORRECT_SUSPECTS.includes(s) ? '✔' : '✗'} ${SUSPECT_NAMES[s] || s}
-                        </span>
-                    `).join('')}
-                </div>
-
-                <h3 style="margin-top: 20px;">📝 Αιτιολόγηση:</h3>
-                <div style="background: white; padding: 15px; border-radius: 8px; border: 1px solid #ddd; white-space: pre-wrap; line-height: 1.6; max-height: 300px; overflow-y: auto;">
-                    ${solution.justification || 'Δεν παρασχέθηκε αιτιολόγηση'}
-                </div>
-
-                <h3 style="margin-top: 20px;">⏱️ Στατιστικά:</h3>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-top: 10px;">
-                    <div style="background: #e3f2fd; padding: 10px; border-radius: 8px;">
-                        <strong>Χρόνος:</strong><br>${formatTime(solution.completionTimeMs)}
-                    </div>
-                    <div style="background: #e3f2fd; padding: 10px; border-radius: 8px;">
-                        <strong>Prompts:</strong><br>${solution.promptCount || 0}
-                    </div>
-                    <div style="background: #e3f2fd; padding: 10px; border-radius: 8px;">
-                        <strong>Υποβολή:</strong><br>${new Date(solution.submittedAt).toLocaleString('el-GR', {
-                            day: '2-digit',
-                            month: '2-digit',
-                            hour: '2-digit',
-                            minute: '2-digit'
-                        })}
-                    </div>
-                </div>
-
-                <h3 style="margin-top: 25px; margin-bottom: 15px;">🎯 Αναλυτική Βαθμολογία:</h3>
-                <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: 13px; line-height: 1.7; max-height: 400px; overflow-y: auto;">
-${solution.breakdown.map(item => {
-
-                        if (item.trim() === '') {
-                            return '<div style="height: 5px;"></div>';
-                        }
-
-                        if (item.includes('╔') || item.includes('═') || item.includes('─')) {
-                            return '';
-                        }
+                document.getElementById('modalTeamName').textContent = 
+                    `Λύση Ομάδας: ${teamName.toUpperCase()}`;
+                
+                document.getElementById('modalContent').innerHTML = `
+                    <div class="solution-details">
+                        <h3>📊 Βαθμολογία</h3>
+                        <div style="font-size: clamp(24px, 6vw, 32px); font-weight: bold; color: ${solution.score === 0 ? '#dc3545' : '#28a745'}; margin: 15px 0;">
+                            ${solution.score}/${maxScore} πόντοι
+                        </div>
+                        <div style="font-size: clamp(16px, 4vw, 20px); font-weight: bold; margin: 10px 0;">
+                            <span style="background: ${grade.color}; color: ${percentage >= 50 ? '#000' : '#fff'}; padding: 8px 16px; border-radius: 8px;">
+                                ${grade.name}
+                            </span>
+                            <span style="color: #666; margin-left: 10px;">(${percentage}%)</span>
+                        </div>
                         
-                        let bgColor = '#f8f9fa';
-                        let borderColor = '#dee2e6';
-                        let textColor = '#333';
-                        let fontWeight = 'normal';
+                        ${isContradiction ? `
+                            <div style="background: #f8d7da; border: 2px solid #dc3545; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                                <strong style="color: #721c24;">⚠️ ΛΟΓΙΚΗ ΑΝΤΙΦΑΣΗ:</strong>
+                                <p style="color: #721c24; margin: 5px 0;">Η ομάδα επέλεξε ταυτόχρονα δολοφονία ΚΑΙ αυτοκτονία</p>
+                            </div>
+                        ` : ''}
+                        
+                        <h3 style="margin-top: 20px;">👥 Δράστες που επέλεξαν:</h3>
+                        <div class="suspect-list">
+                            ${suspects.map(s => `
+                                <span class="badge ${CORRECT_SUSPECTS.includes(s) ? 'badge-correct' : 'badge-incorrect'}" style="font-size: 14px; padding: 8px 12px;">
+                                    ${CORRECT_SUSPECTS.includes(s) ? '✔' : '✗'} ${SUSPECT_NAMES[s] || s}
+                                </span>
+                            `).join('')}
+                        </div>
 
-                        if (item.includes('ΛΟΓΙΚΗ ΑΝΤΙΦΑΣΗ') || item.includes('ΛΑΘΟΣ ΔΙΑΓΝΩΣΗ')) {
-                            bgColor = '#f8d7da';
-                            borderColor = '#dc3545';
-                            textColor = '#721c24';
-                            fontWeight = 'bold';
-                        } 
+                        <h3 style="margin-top: 20px;">📝 Αιτιολόγηση:</h3>
+                        <div style="background: white; padding: 15px; border-radius: 8px; border: 1px solid #ddd; white-space: pre-wrap; line-height: 1.6; max-height: 300px; overflow-y: auto; font-size: clamp(12px, 2.5vw, 14px);">
+                            ${solution.justification || 'Δεν παρασχέθηκε αιτιολόγηση'}
+                        </div>
 
-                        else if (item.includes('✓') || item.includes('+')) {
-                            bgColor = '#d4edda';
-                            borderColor = '#28a745';
-                            textColor = '#155724';
-                        } 
-						
-                        else if (item.includes('✗') || item.includes('-') || item.includes('❌')) {
-                            bgColor = '#fff3cd';
-                            borderColor = '#ffc107';
-                            textColor = '#856404';
-                        } 
+                        <h3 style="margin-top: 20px;">⏱️ Στατιστικά:</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-top: 10px;">
+                            <div style="background: #e3f2fd; padding: 10px; border-radius: 8px;">
+                                <strong>Χρόνος:</strong><br>${formatTime(solution.completionTimeMs)}
+                            </div>
+                            <div style="background: #e3f2fd; padding: 10px; border-radius: 8px;">
+                                <strong>Prompts:</strong><br>${solution.promptCount || 0}
+                            </div>
+                            <div style="background: #e3f2fd; padding: 10px; border-radius: 8px;">
+                                <strong>Υποβολή:</strong><br>${new Date(solution.submittedAt).toLocaleString('el-GR', {
+                                    day: '2-digit',
+                                    month: '2-digit',
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                })}
+                            </div>
+                        </div>
 
-                        else if (item.includes('⚠️')) {
-                            bgColor = '#fff3cd';
-                            borderColor = '#ffc107';
-                            textColor = '#856404';
-                        } 
+                        <h3 style="margin-top: 25px; margin-bottom: 15px;">🎯 Αναλυτική Βαθμολογία:</h3>
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: clamp(11px, 2vw, 13px); line-height: 1.7; max-height: 400px; overflow-y: auto;">
+${solution.breakdown.map(item => {
+                            if (item.trim() === '') {
+                                return '<div style="height: 5px;"></div>';
+                            }
 
-                        else if (item.includes('💡')) {
-                            bgColor = '#e7f3ff';
-                            borderColor = '#2196f3';
-                            textColor = '#0d47a1';
-                        }
+                            if (item.includes('╔') || item.includes('═') || item.includes('─')) {
+                                return '';
+                            }
+                            
+                            let bgColor = '#f8f9fa';
+                            let borderColor = '#dee2e6';
+                            let textColor = '#333';
+                            let fontWeight = 'normal';
 
-                        else if (item.includes('ΘΕΤΙΚΑ ΣΤΟΙΧΕΙΑ') || item.includes('ΑΡΝΗΤΙΚΑ ΣΤΟΙΧΕΙΑ')) {
-                            return `<div style="color: #0f3460; font-weight: bold; margin: 15px 0 8px 0; font-size: 14px;">${item}</div>`;
-                        }
+                            if (item.includes('ΛΟΓΙΚΗ ΑΝΤΙΦΑΣΗ') || item.includes('ΛΑΘΟΣ ΔΙΑΓΝΩΣΗ')) {
+                                bgColor = '#f8d7da';
+                                borderColor = '#dc3545';
+                                textColor = '#721c24';
+                                fontWeight = 'bold';
+                            } 
+                            else if (item.includes('✓') || item.includes('+')) {
+                                bgColor = '#d4edda';
+                                borderColor = '#28a745';
+                                textColor = '#155724';
+                            } 
+                            else if (item.includes('✗') || item.includes('-') || item.includes('❌')) {
+                                bgColor = '#fff3cd';
+                                borderColor = '#ffc107';
+                                textColor = '#856404';
+                            } 
+                            else if (item.includes('⚠️')) {
+                                bgColor = '#fff3cd';
+                                borderColor = '#ffc107';
+                                textColor = '#856404';
+                            } 
+                            else if (item.includes('💡')) {
+                                bgColor = '#e7f3ff';
+                                borderColor = '#2196f3';
+                                textColor = '#0d47a1';
+                            }
+                            else if (item.includes('ΘΕΤΙΚΑ ΣΤΟΙΧΕΙΑ') || item.includes('ΑΡΝΗΤΙΚΑ ΣΤΟΙΧΕΙΑ')) {
+                                return `<div style="color: #0f3460; font-weight: bold; margin: 15px 0 8px 0; font-size: clamp(12px, 2.5vw, 14px);">${item}</div>`;
+                            }
 
-                        if (item.startsWith('   ')) {
-                            return `<div style="padding: 4px 4px 4px 30px; margin: 2px 0; color: ${textColor}; font-size: 13px;">${item}</div>`;
-                        }
+                            if (item.startsWith('   ')) {
+                                return `<div style="padding: 4px 4px 4px 30px; margin: 2px 0; color: ${textColor}; font-size: clamp(11px, 2vw, 13px);">${item}</div>`;
+                            }
 
-                        return `<div style="padding: 10px 15px; margin: 5px 0; background: ${bgColor}; border-left: 4px solid ${borderColor}; border-radius: 4px; color: ${textColor}; font-weight: ${fontWeight};">${item}</div>`;
-                    }).join('')}
-                </div>
-            </div>
-        `;
+                            return `<div style="padding: 10px 15px; margin: 5px 0; background: ${bgColor}; border-left: 4px solid ${borderColor}; border-radius: 4px; color: ${textColor}; font-weight: ${fontWeight};">${item}</div>`;
+                        }).join('')}
+                        </div>
+                    </div>
+                `;
 
-        document.getElementById('solutionModal').classList.add('active');
+                document.getElementById('solutionModal').classList.add('active');
 
-    } catch (error) {
-        console.error('Error loading solution:', error);
-        alert('Σφάλμα φόρτωσης λύσης');
-    }
-};
+            } catch (error) {
+                console.error('Error loading solution:', error);
+                alert('Σφάλμα φόρτωσης λύσης');
+            }
+        };
 
         window.closeModal = function() {
             document.getElementById('solutionModal').classList.remove('active');
