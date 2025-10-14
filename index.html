@@ -2474,6 +2474,10 @@ async function initSolutionTab(teamData) {
 }
 
 window.addEventListener('DOMContentLoaded', async () => {
+    console.log('🔄 Initializing tabs...');
+    initTabsWithResults();
+    console.log('✅ Tabs initialized');
+
     const isMemberAuth = sessionStorage.getItem('memberAuth');
     const storedTeam = sessionStorage.getItem('teamCode');
     const memberName = sessionStorage.getItem('memberName');
