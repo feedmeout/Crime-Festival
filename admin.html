@@ -550,10 +550,11 @@
 	
         <div class="section">
             <h2>➕ ΠΡΟΣΘΗΚΗ ΟΜΑΔΑΣ</h2>
-            <div class="team-input">
-                <input type="text" id="newTeamName" placeholder="Όνομα ομάδας (π.χ. alpha, beta, ...)" />
-                <button class="btn btn-primary" onclick="addTeam()">ΠΡΟΣΘΗΚΗ ΟΜΑΔΑΣ</button>
-            </div>
+<div class="team-input">
+    <input type="text" id="newTeamName" placeholder="Όνομα ομάδας (π.χ. alpha, beta, ...)" />
+    <input type="text" id="newTeamPassword" placeholder="Κωδικός ομάδας (π.χ. pass123)" />
+    <button class="btn btn-primary" onclick="addTeam()">ΠΡΟΣΘΗΚΗ ΟΜΑΔΑΣ</button>
+</div>
             <div id="addTeamAlert"></div>
         </div>
 
@@ -844,35 +845,48 @@ async function saveTeam(teamName, data) {
         input.click();
     }
 
-    async function addTeam() {
-        const teamName = document.getElementById('newTeamName').value.trim().toLowerCase();
-        const alertDiv = document.getElementById('addTeamAlert');
-        
-        if (!teamName) {
-            alertDiv.innerHTML = '<div class="alert alert-danger">⚠️ Παρακαλώ εισάγετε όνομα ομάδας</div>';
-            return;
-        }
+async function addTeam() {
+    const teamName = document.getElementById('newTeamName').value.trim().toLowerCase();
+    const password = document.getElementById('newTeamPassword').value.trim();
+    const alertDiv = document.getElementById('addTeamAlert');
+    
+    if (!teamName) {
+        alertDiv.innerHTML = '<div class="alert alert-danger">⚠️ Παρακαλώ εισάγετε όνομα ομάδας</div>';
+        return;
+    }
 
-        const existing = localStorage.getItem(`unlocked_teks_${teamName}`);
-        if (existing) {
+    if (!password) {
+        alertDiv.innerHTML = '<div class="alert alert-danger">⚠️ Παρακαλώ εισάγετε κωδικό ομάδας</div>';
+        return;
+    }
+
+    // Check if team exists in Firebase
+    if (isFirebaseReady()) {
+        const docRef = window.firebaseDoc(window.firebaseDB, 'teams', teamName);
+        const docSnap = await window.firebaseGetDoc(docRef);
+        if (docSnap.exists()) {
             alertDiv.innerHTML = '<div class="alert alert-warning">⚠️ Η ομάδα υπάρχει ήδη</div>';
             return;
         }
-
-        await saveTeam(teamName, {
-            unlocked: [],
-            timestamps: {},
-            startTime: null,
-            completedAt: null,
-            totalTimeMs: null
-        });
-        
-        alertDiv.innerHTML = `<div class="alert alert-success">✅ Η ομάδα "${teamName}" δημιουργήθηκε</div>`;
-        document.getElementById('newTeamName').value = '';
-        
-        setTimeout(() => { alertDiv.innerHTML = ''; }, 3000);
-        refreshTeams();
     }
+
+    await saveTeam(teamName, {
+        password: password,
+        unlocked: [],
+        timestamps: {},
+        startTime: null,
+        completedAt: null,
+        totalTimeMs: null,
+        createdAt: new Date().toISOString()
+    });
+    
+    alertDiv.innerHTML = `<div class="alert alert-success">✅ Η ομάδα "${teamName}" δημιουργήθηκε με κωδικό: <strong>${password}</strong></div>`;
+    document.getElementById('newTeamName').value = '';
+    document.getElementById('newTeamPassword').value = '';
+    
+    setTimeout(() => { alertDiv.innerHTML = ''; }, 5000);
+    refreshTeams();
+}
 
     async function refreshTeams() {
         console.log('🔄 === REFRESH TEAMS START ===');
@@ -948,8 +962,14 @@ async function saveTeam(teamName, data) {
                     <div class="progress-bar">
                         <div class="progress-fill" style="width: ${progress}%;">${progress}%</div>
                     </div>
-                    <div class="team-stats">📊 ΞΕΚΛΕΙΔΩΜΕΝΑ: ${team.unlocked.length} / ${TOTAL_TEKS} ΣΤΟΙΧΕΙΑ</div>
-                    ${timingHtml}
+
+<div class="team-stats">📊 ΞΕΚΛΕΙΔΩΜΕΝΑ: ${team.unlocked.length} / ${TOTAL_TEKS} ΣΤΟΙΧΕΙΑ</div>
+<div class="team-stats" style="background: #fff3cd; padding: 8px; border-radius: 5px; margin: 8px 0;">
+    🔑 Κωδικός: <strong>${team.password || 'N/A'}</strong>
+    ${team.password ? `<button onclick="navigator.clipboard.writeText('${team.password}'); alert('Κωδικός αντιγράφηκε!')" style="margin-left: 10px; padding: 4px 8px; font-size: 11px; cursor: pointer; background: #ffc107; border: none; border-radius: 4px;">📋 Αντιγραφή</button>` : ''}
+</div>
+${timingHtml}
+
                     <div class="tek-grid">
                         ${Array.from({length: TOTAL_TEKS}, (_, i) => {
                             const tekNum = (i + 1).toString();
