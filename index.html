@@ -1260,9 +1260,6 @@ button:focus-visible,
             <h2 style="color: #1a1a2e; font-size: clamp(20px, 5vw, 28px); margin-bottom: 20px;">
                 Ολοκληρώστε Πρώτα τις Έρευνες
             </h2>
-            <p style="color: #666; font-size: clamp(14px, 3vw, 16px); line-height: 1.6; margin-bottom: 20px;">
-                Για να δείτε τα αποτελέσματα, πρέπει να ολοκληρώσετε <strong>και τις δύο έρευνες</strong> (πριν και μετά το παιχνίδι).
-            </p>
             <div style="background: #fff3cd; border: 2px solid #ffc107; border-radius: 12px; padding: 20px; margin: 20px auto; max-width: 500px;">
                 <div style="font-size: 24px; margin-bottom: 10px;">📝</div>
                 <div style="color: #856404; font-weight: bold; margin-bottom: 10px;">Κατάσταση Ερευνών:</div>
@@ -2491,8 +2488,7 @@ try {
         console.error('Error checking/creating team:', error);
     }
     
-    initTabsWithResults(); // CHANGED from initTabs()
-    
+    initTabsWithResults();
     try {
         if (typeof SuspectsModule !== 'undefined') {
             SuspectsModule.renderSuspects('suspectsContainer');
@@ -2697,14 +2693,14 @@ async function updateResultsTabState() {
     
     if (preSurveyStatus) {
         preSurveyStatus.innerHTML = surveys.pre 
-            ? '✅ <strong>Έρευνα Πριν:</strong> Ολοκληρώθηκε' 
-            : '❌ <strong>Έρευνα Πριν:</strong> Δεν έχει ολοκληρωθεί';
+            ? '✅ <strong>ΠΡΟΚΑΤΑΡΚΤΙΚΗ ΕΡΕΥΝΑ:</strong> ΟΛΟΚΛΗΡΩΘΗΚΕ' 
+            : '❌ <strong>ΠΡΟΚΑΤΑΡΚΤΙΚΗ ΕΡΕΥΝΑ:</strong> ΔΕΝ ΕΧΕΙ ΟΛΟΚΛΗΡΩΘΕΙ';
     }
     
     if (postSurveyStatus) {
         postSurveyStatus.innerHTML = surveys.post 
-            ? '✅ <strong>Έρευνα Μετά:</strong> Ολοκληρώθηκε' 
-            : '❌ <strong>Έρευνα Μετά:</strong> Δεν έχει ολοκληρωθεί';
+            ? '✅ <strong>ΤΕΛΙΚΗ ΕΡΕΥΝΑ:</strong> ΟΛΟΚΛΗΡΩΘΗΚΕ' 
+            : '❌ <strong>ΤΕΛΙΚΗ ΕΡΕΥΝΑ:</strong> ΔΕΝ ΕΧΕΙ ΟΛΟΚΛΗΡΩΘΕΙ';
     }
     
     if (!surveys.pre || !surveys.post) {
@@ -2923,14 +2919,10 @@ function initTabsWithResults() {
     tabButtons.forEach(button => {
         button.addEventListener('click', async () => {
             const targetTab = button.getAttribute('data-tab');
-
-            // Switch tabs
             tabButtons.forEach(btn => btn.classList.remove('active'));
             tabPanes.forEach(pane => pane.classList.remove('active'));
             button.classList.add('active');
             document.getElementById(`tab-${targetTab}`).classList.add('active');
-            
-            // Update results tab if clicked
             if (targetTab === 'results') {
                 await updateResultsTabState();
             }
