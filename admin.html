@@ -753,32 +753,34 @@ async function getAllTeams() {
                 
                 const localTeam = allTeams.get(team.name);
                 if (!localTeam) {
-                    allTeams.set(team.name, {
-                        name: team.name,
-                        unlocked: team.unlocked || [],
-                        timestamps: team.timestamps || {},
-                        startTime: team.startTime || null,
-                        completedAt: team.completedAt || null,
-                        totalTimeMs: team.totalTimeMs || null,
-                        lastUpdate: team.lastUpdate || null,
-                        solution: team.solution || null, 
-                        evidenceTimestamps: team.evidenceTimestamps || {},
-                        source: 'firebase'
-                    });
+allTeams.set(team.name, {
+    name: team.name,
+    password: team.password || null,  // ✅ ADD THIS LINE
+    unlocked: team.unlocked || [],
+    timestamps: team.timestamps || {},
+    startTime: team.startTime || null,
+    completedAt: team.completedAt || null,
+    totalTimeMs: team.totalTimeMs || null,
+    lastUpdate: team.lastUpdate || null,
+    solution: team.solution || null, 
+    evidenceTimestamps: team.evidenceTimestamps || {},
+    source: 'firebase'
+});
                 } else if (team.lastUpdate && localTeam.lastUpdate && team.lastUpdate > localTeam.lastUpdate) {
                     console.log(`🔥 Firebase data is newer for ${team.name}`);
-                    allTeams.set(team.name, {
-                        name: team.name,
-                        unlocked: team.unlocked || [],
-                        timestamps: team.timestamps || {},
-                        startTime: team.startTime || null,
-                        completedAt: team.completedAt || null,
-                        totalTimeMs: team.totalTimeMs || null,
-                        lastUpdate: team.lastUpdate || null,
-                        solution: team.solution || null, 
-                        evidenceTimestamps: team.evidenceTimestamps || {},
-                        source: 'firebase-newer'
-                    });
+allTeams.set(team.name, {
+    name: team.name,
+    password: team.password || null,  // ✅ ADD THIS LINE HERE TOO
+    unlocked: team.unlocked || [],
+    timestamps: team.timestamps || {},
+    startTime: team.startTime || null,
+    completedAt: team.completedAt || null,
+    totalTimeMs: team.totalTimeMs || null,
+    lastUpdate: team.lastUpdate || null,
+    solution: team.solution || null, 
+    evidenceTimestamps: team.evidenceTimestamps || {},
+    source: 'firebase-newer'
+});
                 } else {
                     console.log(`💾 localStorage data is newer for ${team.name}`);
                 }
