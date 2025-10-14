@@ -1030,6 +1030,8 @@ async function addTeam() {
 async function refreshTeams() {
     console.log('🔄 === REFRESH TEAMS START ===');
     let teams = await getAllTeams();
+    
+    // Populate global teamsData for timer updates
     teamsData = {};
     teams.forEach(team => {
         teamsData[team.name] = team;
@@ -1040,114 +1042,115 @@ async function refreshTeams() {
     const sortOrder = document.getElementById('sortOrder').value;
 
     console.log(`📊 Loaded ${teams.length} teams from Firebase/localStorage`);
-        teams.forEach(t => console.log(`  - ${t.name}: ${t.unlocked.length} TEKs unlocked, data:`, t.unlocked));
+    teams.forEach(t => console.log(`  - ${t.name}: ${t.unlocked.length} TEKs unlocked, data:`, t.unlocked));
 
-if (teams.length === 0) {
-    container.innerHTML = '';
-    noTeams.style.display = 'block';
-    return;
-}
-
-noTeams.style.display = 'none';
-container.innerHTML = '';
-
-if (window.timerInterval) {
-    clearInterval(window.timerInterval);
-}
+    if (teams.length === 0) {
+        container.innerHTML = '';
+        noTeams.style.display = 'block';
         
-        window.timerInterval = setInterval(() => {
-            document.querySelectorAll('.team-card').forEach(teamCard => {
-                const teamName = teamCard.dataset.teamId;
-                const team = teamsData[teamName];
-                
-                if (team && team.startTime && !team.endTime) {
-                    const elapsed = Date.now() - team.startTime;
-                    const timerElement = teamCard.querySelector('.team-stats strong');
-                    if (timerElement && timerElement.parentElement.textContent.includes('ΧΡΟΝΟΣ')) {
-                        timerElement.textContent = formatTime(elapsed);
-                    }
-                }
-            });
-        }, 1000);
-        
-        console.log('🔄 === REFRESH TEAMS END ===');
-    }
-            return;
+        // Clear any existing timer interval
+        if (window.timerInterval) {
+            clearInterval(window.timerInterval);
         }
         
-        teams = sortTeams(teams, sortOrder);
+        console.log('🔄 === REFRESH TEAMS END ===');
+        return;
+    }
+    
+    teams = sortTeams(teams, sortOrder);
 
-        noTeams.style.display = 'none';
-        container.innerHTML = '';
-        
-        const html = teams.map(team => {
-            const progress = Math.round((team.unlocked.length / TOTAL_TEKS) * 100);
-            const allEvidenceUnlocked = team.unlocked.length === TOTAL_TEKS;
-            const solutionSubmitted = !!team.solution;
+    noTeams.style.display = 'none';
+    container.innerHTML = '';
+    
+    // Clear any existing timer interval
+    if (window.timerInterval) {
+        clearInterval(window.timerInterval);
+    }
+    
+    // Update all timers every second
+    window.timerInterval = setInterval(() => {
+        document.querySelectorAll('.team-card').forEach(teamCard => {
+            const teamName = teamCard.dataset.teamId;
+            const team = teamsData[teamName];
             
-let timingHtml = '';
-            if (team.startTime) {
-                const now = new Date();
-                const startTime = new Date(team.startTime);
-                
-                if (solutionSubmitted && team.completedAt) {
-                    timingHtml = `
-                        <div class="team-stats">⏱️ ΧΡΟΝΟΣ ΟΛΟΚΛΗΡΩΣΗΣ: <strong>${formatTime(team.totalTimeMs)}</strong></div>
-                    `;
-                } else {
-                    const elapsed = now - startTime;
-                    timingHtml = `
-                        <div class="team-stats">⏱️ ΧΡΟΝΟΣ ΣΕ ΕΞΕΛΙΞΗ: <strong>${formatTime(elapsed)}</strong></div>
-                    `;
+            if (team && team.startTime && !team.endTime) {
+                const elapsed = Date.now() - team.startTime;
+                const timerElement = teamCard.querySelector('.team-stats strong');
+                if (timerElement && timerElement.parentElement.textContent.includes('ΧΡΟΝΟΣ')) {
+                    timerElement.textContent = formatTime(elapsed);
                 }
             }
-      
-            console.log(`🎨 Rendering team ${team.name} with unlocked:`, team.unlocked);
-                
-            return `
-                <div class="team-card ${solutionSubmitted ? 'completed' : ''}" data-team-id="${team.name}">
-                    <h3>
-                        <span style="font-size: 24px;">👥</span> 
-                        ${team.name.toUpperCase()}
-                        ${solutionSubmitted ? 
-                            '<span class="completion-badge">✅ ΟΛΟΚΛΗΡΩΘΗΚΕ</span>' : 
-                            (allEvidenceUnlocked ? '<span class="completion-badge" style="background: #17a2b8;">📦 ΠΛΗΡΗΣ ΣΥΛΛΟΓΗ</span>' : '')
-                        }
-                    </h3>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: ${progress}%;">${progress}%</div>
-                    </div>
-<div class="team-stats">📊 ΞΕΚΛΕΙΔΩΜΕΝΑ: ${team.unlocked.length} / ${TOTAL_TEKS} ΣΤΟΙΧΕΙΑ</div>
-<div class="team-stats">👥 ΜΕΛΗ: <strong>${team.teamSize || 'N/A'}</strong></div>
-<div class="team-stats">🔑 ΚΩΔΙΚΟΣ: <strong>${team.password || 'N/A'}</strong></div>
-                    ${timingHtml}
-                    <div class="tek-grid">
-                        ${Array.from({length: TOTAL_TEKS}, (_, i) => {
-                            const tekNum = (i + 1).toString();
-                            const isUnlocked = team.unlocked.includes(tekNum);
-                            const isLocked = !!team.solution;
-                            
-                            console.log(`  TEK ${tekNum}: unlocked=${isUnlocked}, array contains:`, team.unlocked);
-                            
-                            return `<div class="tek-box ${isUnlocked ? 'unlocked' : ''} ${isLocked ? 'disabled' : 'clickable'}" 
-                                         onclick="${isLocked ? '' : `toggleTek('${team.name}', ${i + 1})`}" 
-                                         title="${isLocked ? 'Κλειδωμένο (λύση υποβλήθηκε)' : (isUnlocked ? 'Κλικ για κλείδωμα' : 'Κλικ για ξεκλείδωμα')}">${i + 1}</div>`;
-                        }).join('')}
-                    </div>
-                    <div class="team-actions">
-                        <button class="btn btn-primary" onclick="viewTeam('${team.name}')">👁️ ΠΡΟΒΟΛΗ</button>
-                        <button class="btn" style="background: #17a2b8; color: white;" onclick="showTimestamps('${team.name}')">🕐 ΧΡΟΝΙΚΑ</button>
-                        <button class="btn btn-success" onclick="unlockAll('${team.name}')">🔓 ΟΛΑ</button>
-                        <button class="btn btn-secondary" onclick="resetTeam('${team.name}')">🔄 RESET</button>
-                        <button class="btn btn-danger" onclick="deleteTeam('${team.name}')">🗑️ ΔΙΑΦΡΑΦΗ</button>
-                    </div>
-                </div>
-            `;
-        }).join('');
+        });
+    }, 1000);
+    
+    const html = teams.map(team => {
+        const progress = Math.round((team.unlocked.length / TOTAL_TEKS) * 100);
+        const allEvidenceUnlocked = team.unlocked.length === TOTAL_TEKS;
+        const solutionSubmitted = !!team.solution;
         
-        container.innerHTML = html;        
-        console.log('🔄 === REFRESH TEAMS END ===');
-    }
+        let timingHtml = '';
+        if (team.startTime) {
+            const now = new Date();
+            const startTime = new Date(team.startTime);
+            
+            if (solutionSubmitted && team.completedAt) {
+                timingHtml = `
+                    <div class="team-stats">⏱️ ΧΡΟΝΟΣ ΟΛΟΚΛΗΡΩΣΗΣ: <strong>${formatTime(team.totalTimeMs)}</strong></div>
+                `;
+            } else {
+                const elapsed = now - startTime;
+                timingHtml = `
+                    <div class="team-stats">⏱️ ΧΡΟΝΟΣ ΣΕ ΕΞΕΛΙΞΗ: <strong>${formatTime(elapsed)}</strong></div>
+                `;
+            }
+        }
+  
+        console.log(`🎨 Rendering team ${team.name} with unlocked:`, team.unlocked);
+            
+        return `
+            <div class="team-card ${solutionSubmitted ? 'completed' : ''}" data-team-id="${team.name}">
+                <h3>
+                    <span style="font-size: 24px;">👥</span> 
+                    ${team.name.toUpperCase()}
+                    ${solutionSubmitted ? 
+                        '<span class="completion-badge">✅ ΟΛΟΚΛΗΡΩΘΗΚΕ</span>' : 
+                        (allEvidenceUnlocked ? '<span class="completion-badge" style="background: #17a2b8;">📦 ΠΛΗΡΗΣ ΣΥΛΛΟΓΗ</span>' : '')
+                    }
+                </h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: ${progress}%;">${progress}%</div>
+                </div>
+                <div class="team-stats">📊 ΞΕΚΛΕΙΔΩΜΕΝΑ: ${team.unlocked.length} / ${TOTAL_TEKS} ΣΤΟΙΧΕΙΑ</div>
+                <div class="team-stats">👥 ΜΕΛΗ: <strong>${team.teamSize || 'N/A'}</strong></div>
+                <div class="team-stats">🔑 ΚΩΔΙΚΟΣ: <strong>${team.password || 'N/A'}</strong></div>
+                ${timingHtml}
+                <div class="tek-grid">
+                    ${Array.from({length: TOTAL_TEKS}, (_, i) => {
+                        const tekNum = (i + 1).toString();
+                        const isUnlocked = team.unlocked.includes(tekNum);
+                        const isLocked = !!team.solution;
+                        
+                        console.log(`  TEK ${tekNum}: unlocked=${isUnlocked}, array contains:`, team.unlocked);
+                        
+                        return `<div class="tek-box ${isUnlocked ? 'unlocked' : ''} ${isLocked ? 'disabled' : 'clickable'}" 
+                                     onclick="${isLocked ? '' : `toggleTek('${team.name}', ${i + 1})`}" 
+                                     title="${isLocked ? 'Κλειδωμένο (λύση υποβλήθηκε)' : (isUnlocked ? 'Κλικ για κλείδωμα' : 'Κλικ για ξεκλείδωμα')}">${i + 1}</div>`;
+                    }).join('')}
+                </div>
+                <div class="team-actions">
+                    <button class="btn btn-primary" onclick="viewTeam('${team.name}')">👁️ ΠΡΟΒΟΛΗ</button>
+                    <button class="btn" style="background: #17a2b8; color: white;" onclick="showTimestamps('${team.name}')">🕐 ΧΡΟΝΙΚΑ</button>
+                    <button class="btn btn-success" onclick="unlockAll('${team.name}')">🔓 ΟΛΑ</button>
+                    <button class="btn btn-secondary" onclick="resetTeam('${team.name}')">🔄 RESET</button>
+                    <button class="btn btn-danger" onclick="deleteTeam('${team.name}')">🗑️ ΔΙΑΦΡΑΦΗ</button>
+                </div>
+            </div>
+        `;
+    }).join('');
+    
+    container.innerHTML = html;        
+    console.log('🔄 === REFRESH TEAMS END ===');
+}
 
     function sortTeams(teams, order) {
         switch(order) {
