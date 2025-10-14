@@ -1910,17 +1910,13 @@ researchData: {
     };
     
 try {
-        const updatedData = {
-            password: teamData.password || null,
-            unlocked: teamData.unlocked || [],
-            timestamps: teamData.timestamps || {},
-            evidenceTimestamps: teamData.evidenceTimestamps || {},
-            startTime: teamData.startTime || null,
-            solution: solution,
-            completedAt: solution.submittedAt,
-            totalTimeMs: totalTimeMs,
-            lastUpdate: new Date().toISOString()
-        };
+    const updatedData = {
+        ...teamData,
+        solution: solution,
+        completedAt: solution.submittedAt,
+        totalTimeMs: totalTimeMs,
+        lastUpdate: new Date().toISOString()
+    };
         
         localStorage.setItem(getStorageKey(), JSON.stringify(updatedData));
         
