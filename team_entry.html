@@ -335,12 +335,30 @@ button:disabled {
                 const preSurveyRef = window.firebaseDoc(window.firebaseDB, 'surveys', preSurveyDoc);
                 const preSurveySnap = await window.firebaseGetDoc(preSurveyRef);
 
+                // Check if there's a redirect parameter
+                const urlParams = new URLSearchParams(window.location.search);
+                const redirectUrl = urlParams.get('redirect');
+
                 if (!preSurveySnap.exists()) {
                     alert('Πρώτα πρέπει να ολοκληρώσετε την προκαταρκτική έρευνα!');
-                    window.location.href = `survey.html?team=${teamName}&member=${encodeURIComponent(memberName)}&type=pre`;
+                    const surveyUrl = `survey.html?team=${teamName}&member=${encodeURIComponent(memberName)}&type=pre`;
+                    
+                    // If there was a redirect, append it to the survey URL so we can redirect after
+                    if (redirectUrl) {
+                        window.location.href = `${surveyUrl}&redirect=${encodeURIComponent(redirectUrl)}`;
+                    } else {
+                        window.location.href = surveyUrl;
+                    }
                 } else {
                     console.log(`✅ Member authenticated: ${teamName}/${memberName}`);
-                    window.location.href = `index.html?team=${teamName}`;
+                    
+                    // If there's a redirect URL, go there; otherwise go to index.html
+                    if (redirectUrl) {
+                        console.log(`🔄 Redirecting to: ${redirectUrl}`);
+                        window.location.href = redirectUrl;
+                    } else {
+                        window.location.href = `index.html?team=${teamName}`;
+                    }
                 }
 
             } catch (error) {
@@ -349,13 +367,24 @@ button:disabled {
                 showAlert('Σφάλμα σύνδεσης. Παρακαλώ δοκιμάστε ξανά.');
             }
         }
+        
         window.addEventListener('DOMContentLoaded', () => {
             const storedTeam = sessionStorage.getItem('teamCode');
             const isAuthenticated = sessionStorage.getItem('memberAuth');
             
             if (storedTeam && isAuthenticated === 'true') {
-                console.log('Already authenticated, redirecting...');
-                window.location.href = `index.html?team=${storedTeam}`;
+                console.log('Already authenticated, checking for redirect...');
+                
+                const urlParams = new URLSearchParams(window.location.search);
+                const redirectUrl = urlParams.get('redirect');
+                
+                if (redirectUrl) {
+                    console.log(`🔄 Already logged in, redirecting to: ${redirectUrl}`);
+                    window.location.href = redirectUrl;
+                } else {
+                    console.log('Already logged in, redirecting to index...');
+                    window.location.href = `index.html?team=${storedTeam}`;
+                }
             }
         });
     </script>

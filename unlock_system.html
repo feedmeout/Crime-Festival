@@ -269,7 +269,6 @@
 
         const urlParams = new URLSearchParams(window.location.search);
         const tekNumber = urlParams.get('tek');
-        const teamCode = urlParams.get('team') || 'default';
 
         function isFirebaseReady() {
             return typeof window.firebaseReady !== 'undefined' && window.firebaseReady === true;
@@ -322,17 +321,17 @@
             }
         }
 
-        function getStorageKey() {
+        function getStorageKey(teamCode) {
             return `unlocked_teks_${teamCode}`;
         }
 
-        async function getTeamData() {
+        async function getTeamData(teamCode) {
             const firebaseData = await loadFromFirebase(teamCode);
             if (firebaseData && firebaseData.unlocked && firebaseData.unlocked.length > 0) {
                 console.log('✅ Using Firebase data');
                 return firebaseData;
             }
-            const localData = localStorage.getItem(getStorageKey());
+            const localData = localStorage.getItem(getStorageKey(teamCode));
             if (localData) {
                 const unlocked = JSON.parse(localData);
                 console.log('ℹ️ Using localStorage data (migrating to Firebase structure)');
@@ -355,8 +354,8 @@
             };
         }
 
-        async function saveTeamData(data) {
-            localStorage.setItem(getStorageKey(), JSON.stringify(data.unlocked || []));
+        async function saveTeamData(teamCode, data) {
+            localStorage.setItem(getStorageKey(teamCode), JSON.stringify(data.unlocked || []));
             const saved = await saveToFirebase(teamCode, {
                 ...data,
                 lastUpdate: new Date().toISOString()
@@ -399,28 +398,41 @@
         async function processUnlock() {
             const container = document.getElementById('unlockContainer');
 
+            // Check if user is logged in via sessionStorage
+            const teamCode = sessionStorage.getItem('teamCode');
+            const memberAuth = sessionStorage.getItem('memberAuth');
+
+            if (!teamCode || memberAuth !== 'true') {
+                console.log('⚠️ User not logged in, redirecting to login page');
+                const redirectUrl = encodeURIComponent(window.location.href);
+                window.location.href = `team_entry.html?redirect=${redirectUrl}`;
+                return;
+            }
+
+            console.log(`✅ User authenticated: team=${teamCode}`);
+
             if (!tekNumber || !tekInfo[tekNumber]) {
                 container.innerHTML = `
                     <div class="error">
                         <h2>❌ Σφάλμα</h2>
                         <p>Μη έγκυρος κωδικός τεκμηρίου!</p>
                     </div>
-                    <a href="index.html${teamCode !== 'default' ? '?team=' + teamCode : ''}" class="btn">Επιστροφή</a>
+                    <a href="index.html?team=${teamCode}" class="btn">Επιστροφή</a>
                 `;
                 return;
             }
 
             const tek = tekInfo[tekNumber];
-            const teamData = await getTeamData();
+            const teamData = await getTeamData(teamCode);
 
             if (teamData.unlocked.includes(tekNumber)) {
-                showAlreadyUnlocked(tek, tekNumber, teamData);
+                showAlreadyUnlocked(tek, tekNumber, teamData, teamCode);
             } else {
-                await unlockNew(tek, tekNumber, teamData);
+                await unlockNew(tek, tekNumber, teamData, teamCode);
             }
         }
 
-        function showAlreadyUnlocked(tek, tekNumber, teamData) {
+        function showAlreadyUnlocked(tek, tekNumber, teamData, teamCode) {
             const container = document.getElementById('unlockContainer');
             const unlockTime = teamData.timestamps[tekNumber];
             const timeInfo = unlockTime ? 
@@ -428,7 +440,7 @@
             
             container.innerHTML = `
                 <div class="unlock-icon">⚠️</div>
-                ${teamCode !== 'default' ? `<div class="team-badge">Ομάδα: ${teamCode}</div>` : ''}
+                <div class="team-badge">Ομάδα: ${teamCode}</div>
                 <h1>Τεκμήριο Ήδη Ξεκλειδωμένο</h1>
                 <div class="tek-badge">ΤΕΚ #${tekNumber.padStart(3, '0')}</div>
                 <div class="already-unlocked">
@@ -437,12 +449,12 @@
                     <p><strong>${tek.name}</strong></p>
                     ${timeInfo}
                 </div>
-                <a href="${tek.page}${teamCode !== 'default' ? '?team=' + teamCode : ''}" class="btn">Προβολή Τεκμηρίου</a>
-                <a href="index.html${teamCode !== 'default' ? '?team=' + teamCode : ''}" class="btn btn-secondary">Επιστροφή στον Φάκελο</a>
+                <a href="${tek.page}?team=${teamCode}" class="btn">Προβολή Τεκμηρίου</a>
+                <a href="index.html?team=${teamCode}" class="btn btn-secondary">Επιστροφή στον Φάκελο</a>
             `;
         }
 
-        async function unlockNew(tek, tekNumber, teamData) {
+        async function unlockNew(tek, tekNumber, teamData, teamCode) {
             const now = new Date().toISOString();
             teamData.unlocked.push(tekNumber);
             teamData.timestamps[tekNumber] = now;
@@ -457,7 +469,7 @@
                 teamData.totalTimeMs = endMs - startMs;
             }
             console.log('📝 Saving team data:', teamData);
-            const saved = await saveTeamData(teamData);
+            const saved = await saveTeamData(teamCode, teamData);
             
             const container = document.getElementById('unlockContainer');
             
@@ -478,7 +490,7 @@
             
             container.innerHTML = `
                 <div class="unlock-icon">✅</div>
-                ${teamCode !== 'default' ? `<div class="team-badge">Ομάδα: ${teamCode}</div>` : ''}
+                <div class="team-badge">Ομάδα: ${teamCode}</div>
                 <h1>Νέο Τεκμήριο Ξεκλειδώθηκε!</h1>
                 <div class="tek-badge">ΤΕΚ #${tekNumber.padStart(3, '0')}</div>
                 <div style="font-size: 60px; margin: 20px 0; animation: pulse 1s ease-in-out infinite;">
@@ -493,8 +505,8 @@
                     📊 Έχετε ξεκλειδώσει ${teamData.unlocked.length} από 11 τεκμήρια
                     ${firebaseStatus}
                 </p>
-                <a href="${tek.page}${teamCode !== 'default' ? '?team=' + teamCode : ''}" class="btn">Προβολή Τεκμηρίου</a>
-                <a href="index.html${teamCode !== 'default' ? '?team=' + teamCode : ''}" class="btn btn-secondary">Επιστροφή στον Φάκελο</a>
+                <a href="${tek.page}?team=${teamCode}" class="btn">Προβολή Τεκμηρίου</a>
+                <a href="index.html?team=${teamCode}" class="btn btn-secondary">Επιστροφή στον Φάκελο</a>
             `;
         }
     </script>
