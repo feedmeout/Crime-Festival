@@ -2796,6 +2796,21 @@ function displayLeaderboardError(message) {
     }
 }
 
+function formatTime(ms) {
+    if (!ms) return 'N/A';
+    const seconds = Math.floor(ms / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    
+    const h = hours;
+    const m = minutes % 60;
+    const s = seconds % 60;
+    
+    if (h > 0) return `${h}ω ${m}λ ${s}δ`;
+    else if (m > 0) return `${m}λ ${s}δ`;
+    else return `${s}δ`;
+}
+
 function displayResultsStats(teams) {
     const totalTeams = teams.length;
     const perfectScores = teams.filter(t => {
