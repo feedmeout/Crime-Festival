@@ -708,7 +708,7 @@ body {
     <div id="timestampModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 id="modalTeamName">Χρονικά Σημεία</h2>
+                <h2 id="modalTeamName">ΧΡΟΝΙΚΑ ΣΗΜΕΙΑ</h2>
                 <span class="close-modal" onclick="closeModal()">&times;</span>
             </div>
             <div id="modalContent"></div>
@@ -1034,7 +1034,7 @@ let timingHtml = '';
                 
                 if (solutionSubmitted && team.completedAt) {
                     timingHtml = `
-                        <div class="team-stats">⏱️ ΧΡΟΝΟΣ ΟΛΟΚΛΗΡΩΣΗΣ: <strong>${formatTime(team.totalTimeMs)}</strong> | Ξεκίνησε: ${formatDateTime(team.startTime)} | Ολοκληρώθηκε: ${formatDateTime(team.completedAt)}</div>
+                        <div class="team-stats">⏱️ ΧΡΟΝΟΣ ΟΛΟΚΛΗΡΩΣΗΣ: <strong>${formatTime(team.totalTimeMs)}</strong></div>
                     `;
                 } else {
                     const elapsed = now - startTime;
@@ -1116,61 +1116,63 @@ let timingHtml = '';
         }
     }
 
-    async function showTimestamps(teamName) {
-        const teams = await getAllTeams();
-        const team = teams.find(t => t.name === teamName);
-        
-        if (!team) return;
+async function showTimestamps(teamName) {
+    const teams = await getAllTeams();
+    const team = teams.find(t => t.name === teamName);
+    
+    if (!team) return;
 
-        const modal = document.getElementById('timestampModal');
-        const modalTeamName = document.getElementById('modalTeamName');
-        const modalContent = document.getElementById('modalContent');
+    const modal = document.getElementById('timestampModal');
+    const modalTeamName = document.getElementById('modalTeamName');
+    const modalContent = document.getElementById('modalContent');
 
-        modalTeamName.textContent = `Χρονικά Σημεία - ${teamName.toUpperCase()}`;
+    modalTeamName.textContent = `ΧΡΟΝΙΚΑ ΣΗΜΕΙΑ - ${teamName.toUpperCase()}`;
 
-        let html = '';
+    let html = '';
+    if (team.startTime || team.completedAt) {
+        html += '<div class="info-box info-box-start">';
+        html += '<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 10px;">';
         
         if (team.startTime) {
-            html += `
-                <div class="info-box info-box-start">
-                    <strong>🚀 Έναρξη:</strong> ${formatDateTime(team.startTime)}
-                </div>
-            `;
+            html += `<div><strong>🚀 Έναρξη:</strong> ${formatDateTime(team.startTime)}</div>`;
         }
-
+        
         if (team.completedAt) {
-            html += `
-                <div class="info-box info-box-complete">
-                    <strong>🏁 Ολοκλήρωση:</strong> ${formatDateTime(team.completedAt)}<br>
-                    <strong>⏱️ Συνολικός Χρόνος:</strong> ${formatTime(team.totalTimeMs)}
-                </div>
-            `;
+            html += `<div><strong>🏁 Ολοκλήρωση:</strong> ${formatDateTime(team.completedAt)}</div>`;
         }
-
-        if (team.timestamps && Object.keys(team.timestamps).length > 0) {
-            html += '<h3 style="margin: 20px 0 10px 0;">Ξεκλειδώματα ΤΕΚ:</h3>';
-            html += '<ul class="timestamp-list">';
-            const sortedTeks = Object.entries(team.timestamps)
-                .sort((a, b) => new Date(a[1]) - new Date(b[1]));
-            
-            sortedTeks.forEach(([tek, timestamp]) => {
-                html += `
-                    <li class="timestamp-item">
-                        <span class="tek-label">ΤΕΚ #${tek.padStart(2, '0')}</span>
-                        <span class="time">${formatDateTime(timestamp)}</span>
-                    </li>
-                `;
-            });
-            
-            html += '</ul>';
-        } else {
-            html += '<p style="color: #999; text-align: center; padding: 20px;">Δεν υπάρχουν χρονικά δεδομένα</p>';
+        
+        html += '</div>';
+		
+        if (team.completedAt && team.totalTimeMs) {
+            html += `<div><strong>⏱️ Συνολικός Χρόνος:</strong> ${formatTime(team.totalTimeMs)}</div>`;
         }
-
-        modalContent.innerHTML = html;
-        modal.classList.add('active');
+        
+        html += '</div>';
     }
 
+    if (team.timestamps && Object.keys(team.timestamps).length > 0) {
+        html += '<h3 style="margin: 20px 0 10px 0;">Ξεκλειδώματα ΤΕΚ:</h3>';
+        html += '<ul class="timestamp-list">';
+        const sortedTeks = Object.entries(team.timestamps)
+            .sort((a, b) => new Date(a[1]) - new Date(b[1]));
+        
+        sortedTeks.forEach(([tek, timestamp]) => {
+            html += `
+                <li class="timestamp-item">
+                    <span class="tek-label">ΤΕΚ #${tek.padStart(2, '0')}</span>
+                    <span class="time">${formatDateTime(timestamp)}</span>
+                </li>
+            `;
+        });
+        
+        html += '</ul>';
+    } else {
+        html += '<p style="color: #999; text-align: center; padding: 20px;">Δεν υπάρχουν χρονικά δεδομένα</p>';
+    }
+
+    modalContent.innerHTML = html;
+    modal.classList.add('active');
+}
     function closeModal() {
         const modal = document.getElementById('timestampModal');
         modal.classList.remove('active');

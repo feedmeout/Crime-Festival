@@ -2696,14 +2696,8 @@ async function loadLeaderboardData() {
 
         console.log(`${teams.length} teams have submitted solutions`);
 
-        if (teams.length === 0) {
-            displayLeaderboardError(
-                'Δεν υπάρχουν ομάδες που έχουν υποβάλει λύση ακόμα.\n\n' +
-                'Βεβαιωθείτε ότι η ομάδα σας έχει:\n' +
-                '✓ Ξεκλειδώσει τουλάχιστον 6 τεκμήρια\n' +
-                '✓ Υποβάλει τη λύση της από την καρτέλα "ΛΥΣΗ"\n' +
-                '✓ Δει το μήνυμα επιτυχούς υποβολής'
-            );
+if (teams.length === 0) {
+            displayLeaderboardError('Δεν υπάρχουν ομάδες που έχουν υποβάλει λύση ακόμα!');
             return;
         }
 
