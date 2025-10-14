@@ -2473,139 +2473,6 @@ async function initSolutionTab(teamData) {
     }
 }
 
-window.addEventListener('DOMContentLoaded', async () => {
-    console.log('🔄 Initializing tabs...');
-    initTabsWithResults();
-    console.log('✅ Tabs initialized');
-
-    const isMemberAuth = sessionStorage.getItem('memberAuth');
-    const storedTeam = sessionStorage.getItem('teamCode');
-    const memberName = sessionStorage.getItem('memberName');
-
-    if (teamCode === 'default' && !isMemberAuth) {
-        console.warn('⚠️ Not authenticated, redirecting to member entry...');
-        window.location.href = 'team_member_entry.html';
-        return;
-    }
-    
-    if (teamCode === 'default' && storedTeam) {
-        console.log('Using stored team:', storedTeam);
-        window.location.href = `index.html?team=${storedTeam}`;
-        return;
-    }
-	
-try {
-        const teamData = await getTeamData();
-        if (!teamData.unlocked) {
-            console.warn(`⚠️ Team ${teamCode} has no unlock data, initializing empty array`);
-            teamData.unlocked = [];
-        }
-        
-        console.log(`✅ Team ${teamCode} loaded successfully`);
-    } catch (error) {
-        console.error('Error checking/creating team:', error);
-    }
-    
-    initTabsWithResults();
-    try {
-        if (typeof SuspectsModule !== 'undefined') {
-            SuspectsModule.renderSuspects('suspectsContainer');
-        } else {
-            console.error('SuspectsModule not loaded! Make sure suspects.js is included before this script.');
-        }
-		
-renderEvidence();
-        const teamData = await getTeamData();
-        await updateProgress(teamData);
-        await initSolutionTab(teamData);
-        
-    } catch (error) {
-        console.error('Error during initialization:', error);
-        alert('Σφάλμα φόρτωσης! Παρακαλώ ανανεώστε τη σελίδα.');
-    }
-
-setInterval(async () => {
-        const solutionTab = document.getElementById('tab-solution');
-        if (solutionTab && solutionTab.classList.contains('active')) {
-            const teamData = await getTeamData();
-            const solutionForm = document.getElementById('solutionForm');
-            if (teamData.solution && solutionForm && solutionForm.style.display !== 'none') {
-                console.log('Solution detected from another source, refreshing display...');
-                await initSolutionTab(teamData);
-            }
-        }
-    }, 5000);
-
-let firestoreUnsubscribe = null;
-
-function setupRealtimeListener() {
-    if (!window.firebaseDB || !window.firebaseOnSnapshot) {
-        console.warn('Firebase not ready, falling back to polling');
-        setInterval(checkForUpdates, 3000);
-        return;
-    }
-    
-    try {
-        const docRef = window.firebaseDoc(window.firebaseDB, 'teams', teamCode);
-        
-        firestoreUnsubscribe = window.firebaseOnSnapshot(docRef, 
-            (doc) => {
-                if (doc.exists()) {
-                    const firebaseData = doc.data();
-                    console.log('⚡ Real-time update received for team:', teamCode);
-                    
-                    localStorage.setItem(getStorageKey(), JSON.stringify(firebaseData));
-                    renderEvidence();
-                    updateProgress(firebaseData);
-                    
-                    const solutionTab = document.getElementById('tab-solution');
-                    if (solutionTab && solutionTab.classList.contains('active')) {
-                        initSolutionTab(firebaseData);
-                    }
-                }
-            }, 
-            (error) => {
-                console.error('Real-time listener error:', error);
-                setInterval(checkForUpdates, 3000);
-            }
-        );
-        
-        console.log('✅ Real-time listener active for team:', teamCode);
-    } catch (error) {
-        console.error('Error setting up real-time listener:', error);
-        setInterval(checkForUpdates, 3000);
-    }
-}
-
-async function checkForUpdates() {
-        if (!window.firebaseDB) return;
-        
-        try {
-            const docRef = window.firebaseDoc(window.firebaseDB, 'teams', teamCode);
-            const docSnap = await window.firebaseGetDoc(docRef);
-            
-            if (docSnap.exists()) {
-                const firebaseData = docSnap.data();
-                const localData = await getTeamData();
-                
-                if (firebaseData.lastUpdate && 
-                    (!localData.lastUpdate || firebaseData.lastUpdate > localData.lastUpdate)) {
-                    
-                    localStorage.setItem(getStorageKey(), JSON.stringify(firebaseData));
-                    renderEvidence();
-                    await updateProgress(firebaseData);
-                }
-            }
-        } catch (error) {
-            console.error('Error checking for updates:', error);
-        }
-    }
-
-    setTimeout(() => {
-        setupRealtimeListener();
-    }, 500);
-});
-
 window.addEventListener('storage', async (e) => {
     if (e.key === getStorageKey() || e.key === `solution_${teamCode}`) {
         console.log('🔄 Storage change detected, updating UI...');
@@ -3108,7 +2975,137 @@ function initTabsWithResults() {
     });
 }
 
-window.addEventListener('DOMContentLoaded', async () => {    
+window.addEventListener('DOMContentLoaded', async () => {
+    console.log('🔄 Initializing tabs...');
+    initTabsWithResults();
+    console.log('✅ Tabs initialized');
+
+    const isMemberAuth = sessionStorage.getItem('memberAuth');
+    const storedTeam = sessionStorage.getItem('teamCode');
+    const memberName = sessionStorage.getItem('memberName');
+
+    if (teamCode === 'default' && !isMemberAuth) {
+        console.warn('⚠️ Not authenticated, redirecting to member entry...');
+        window.location.href = 'team_member_entry.html';
+        return;
+    }
+    
+    if (teamCode === 'default' && storedTeam) {
+        console.log('Using stored team:', storedTeam);
+        window.location.href = `index.html?team=${storedTeam}`;
+        return;
+    }
+	
+    try {
+        const teamData = await getTeamData();
+        if (!teamData.unlocked) {
+            console.warn(`⚠️ Team ${teamCode} has no unlock data, initializing empty array`);
+            teamData.unlocked = [];
+        }
+        
+        console.log(`✅ Team ${teamCode} loaded successfully`);
+    } catch (error) {
+        console.error('Error checking/creating team:', error);
+    }
+    
+    try {
+        if (typeof SuspectsModule !== 'undefined') {
+            SuspectsModule.renderSuspects('suspectsContainer');
+        } else {
+            console.error('SuspectsModule not loaded! Make sure suspects.js is included before this script.');
+        }
+		
+        renderEvidence();
+        const teamData = await getTeamData();
+        await updateProgress(teamData);
+        await initSolutionTab(teamData);
+        
+    } catch (error) {
+        console.error('Error during initialization:', error);
+        alert('Σφάλμα φόρτωσης! Παρακαλώ ανανεώστε τη σελίδα.');
+    }
+
+    setInterval(async () => {
+        const solutionTab = document.getElementById('tab-solution');
+        if (solutionTab && solutionTab.classList.contains('active')) {
+            const teamData = await getTeamData();
+            const solutionForm = document.getElementById('solutionForm');
+            if (teamData.solution && solutionForm && solutionForm.style.display !== 'none') {
+                console.log('Solution detected from another source, refreshing display...');
+                await initSolutionTab(teamData);
+            }
+        }
+    }, 5000);
+
+    let firestoreUnsubscribe = null;
+
+    function setupRealtimeListener() {
+        if (!window.firebaseDB || !window.firebaseOnSnapshot) {
+            console.warn('Firebase not ready, falling back to polling');
+            setInterval(checkForUpdates, 3000);
+            return;
+        }
+        
+        try {
+            const docRef = window.firebaseDoc(window.firebaseDB, 'teams', teamCode);
+            
+            firestoreUnsubscribe = window.firebaseOnSnapshot(docRef, 
+                (doc) => {
+                    if (doc.exists()) {
+                        const firebaseData = doc.data();
+                        console.log('⚡ Real-time update received for team:', teamCode);
+                        
+                        localStorage.setItem(getStorageKey(), JSON.stringify(firebaseData));
+                        renderEvidence();
+                        updateProgress(firebaseData);
+                        
+                        const solutionTab = document.getElementById('tab-solution');
+                        if (solutionTab && solutionTab.classList.contains('active')) {
+                            initSolutionTab(firebaseData);
+                        }
+                    }
+                }, 
+                (error) => {
+                    console.error('Real-time listener error:', error);
+                    setInterval(checkForUpdates, 3000);
+                }
+            );
+            
+            console.log('✅ Real-time listener active for team:', teamCode);
+        } catch (error) {
+            console.error('Error setting up real-time listener:', error);
+            setInterval(checkForUpdates, 3000);
+        }
+    }
+
+    async function checkForUpdates() {
+        if (!window.firebaseDB) return;
+        
+        try {
+            const docRef = window.firebaseDoc(window.firebaseDB, 'teams', teamCode);
+            const docSnap = await window.firebaseGetDoc(docRef);
+            
+            if (docSnap.exists()) {
+                const firebaseData = docSnap.data();
+                const localData = await getTeamData();
+                
+                if (firebaseData.lastUpdate && 
+                    (!localData.lastUpdate || firebaseData.lastUpdate > localData.lastUpdate)) {
+                    
+                    localStorage.setItem(getStorageKey(), JSON.stringify(firebaseData));
+                    renderEvidence();
+                    await updateProgress(firebaseData);
+                }
+            }
+        } catch (error) {
+            console.error('Error checking for updates:', error);
+        }
+    }
+
+    setTimeout(() => {
+        setupRealtimeListener();
+    }, 500);
+    
     setTimeout(() => {
         setupResultsListener();
     }, 1000);
