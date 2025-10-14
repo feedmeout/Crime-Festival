@@ -29,519 +29,615 @@
         
         console.log("✅ Firebase connected!");
     </script>
-    
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    min-height: 100vh;
+    padding: 20px;
+}
 
-        .header {
-            background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
-            padding: 30px;
-            border-radius: 15px;
-            text-align: center;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-        }
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
 
-        .header h1 {
-            color: white;
-            font-size: 32px;
-            margin-bottom: 10px;
-        }
+.header {
+    background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    margin-bottom: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+}
 
-        .header p {
-            color: rgba(255,255,255,0.9);
-            font-size: 16px;
-        }
+.header h1 {
+    color: white;
+    font-size: clamp(20px, 5vw, 32px);
+    margin-bottom: 8px;
+}
 
-        .section {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 25px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-        }
+.header p {
+    color: rgba(255,255,255,0.9);
+    font-size: clamp(12px, 3vw, 16px);
+}
 
-        .section h2 {
-            color: #1a1a2e;
-            font-size: 24px;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 3px solid #ff6b00;
-        }
+.section {
+    background: white;
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+}
 
-        .team-input {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
+.section h2 {
+    color: #1a1a2e;
+    font-size: clamp(18px, 4vw, 24px);
+    margin-bottom: 15px;
+    padding-bottom: 12px;
+    border-bottom: 3px solid #ff6b00;
+}
 
-        .team-input input {
-            flex: 1;
-            min-width: 200px;
-            padding: 12px 20px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
-        }
+.team-input {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 15px;
+    flex-direction: column;
+}
 
-        .team-input input:focus {
-            outline: none;
-            border-color: #ff6b00;
-        }
+.team-input input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+}
 
-        .btn {
-            padding: 12px 30px;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
+.team-input input:focus {
+    outline: none;
+    border-color: #ff6b00;
+}
 
-        .btn:hover {
-            transform: translateY(-2px);
-        }
+.btn {
+    padding: 14px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    width: 100%;
+    min-height: 44px;
+}
 
-        .btn-primary {
-            background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
-            color: white;
-            box-shadow: 0 4px 15px rgba(255,107,0,0.3);
-        }
+.btn:hover {
+    transform: translateY(-2px);
+}
 
-        .btn-primary:hover {
-            box-shadow: 0 6px 20px rgba(255,107,0,0.5);
-        }
+.btn-primary {
+    background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(255,107,0,0.3);
+}
 
-        .btn-danger {
-            background: #dc3545;
-            color: white;
-            box-shadow: 0 4px 15px rgba(220,53,69,0.3);
-        }
+.btn-primary:hover {
+    box-shadow: 0 6px 20px rgba(255,107,0,0.5);
+}
 
-        .btn-success {
-            background: #28a745;
-            color: white;
-            box-shadow: 0 4px 15px rgba(40,167,69,0.3);
-        }
+.btn-danger {
+    background: #dc3545;
+    color: white;
+    box-shadow: 0 4px 15px rgba(220,53,69,0.3);
+}
 
-        .btn-secondary {
-            background: #6c757d;
-            color: white;
-        }
+.btn-success {
+    background: #28a745;
+    color: white;
+    box-shadow: 0 4px 15px rgba(40,167,69,0.3);
+}
 
-        .team-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
 
-        .team-card {
-            background: #f8f9fa;
-            border: 2px solid #dee2e6;
-            border-radius: 10px;
-            padding: 20px;
-            transition: transform 0.2s ease;
-        }
+.team-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+    margin-top: 15px;
+}
 
-        .team-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-        }
+.team-card {
+    background: #f8f9fa;
+    border: 2px solid #dee2e6;
+    border-radius: 10px;
+    padding: 15px;
+    transition: transform 0.2s ease;
+}
 
-        .team-card.completed {
-            border: 3px solid #28a745;
-            background: linear-gradient(135deg, #f0fff4 0%, #d4edda 100%);
-        }
+.team-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
 
-        .team-card h3 {
-            color: #0f3460;
-            font-size: 20px;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+.team-card.completed {
+    border: 3px solid #28a745;
+    background: linear-gradient(135deg, #f0fff4 0%, #d4edda 100%);
+}
 
-        .progress-bar {
-            background: #e0e0e0;
-            height: 25px;
-            border-radius: 12px;
-            overflow: hidden;
-            margin-bottom: 10px;
-        }
+.team-card h3 {
+    color: #0f3460;
+    font-size: clamp(16px, 4vw, 20px);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
 
-        .progress-fill {
-            background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 12px;
-            transition: width 0.3s ease;
-        }
+.tek-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    margin: 12px 0;
+}
 
-        .team-stats {
-            font-size: 13px;
-            color: #666;
-            margin-bottom: 10px;
-            line-height: 1.6;
-        }
+.tek-box {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: bold;
+    border: 2px solid #ddd;
+    background: white;
+    min-height: 44px;
+}
 
-        .timing-info {
-            background: rgba(255, 107, 0, 0.1);
-            border-left: 3px solid #ff6b00;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 5px;
-            font-size: 12px;
-        }
-
-        .timing-info.completed {
-            background: rgba(40, 167, 69, 0.1);
-            border-left: 3px solid #28a745;
-        }
-
-        .timing-info strong {
-            display: block;
-            margin-bottom: 3px;
-            color: #333;
-        }
-
-        .completion-badge {
-            background: #28a745;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 11px;
-            font-weight: bold;
-            display: inline-block;
-            margin-left: 10px;
-        }
-
-        .team-actions {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .team-actions .btn {
-            font-size: 13px;
-            padding: 8px 16px;
-        }
-
-        .tek-grid {
-            display: grid;
-            grid-template-columns: repeat(11, 1fr);
-            gap: 5px;
-            margin-top: 10px;
-            margin-bottom: 15px;
-        }
-
-        .tek-box {
-            aspect-ratio: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 5px;
-            font-size: 11px;
-            font-weight: bold;
-            border: 2px solid #ddd;
-            background: white;
-        }
-
-        .tek-box.unlocked {
-            background: #d4edda;
-            border-color: #28a745;
-            color: #155724;
-        }
 .tek-box.unlocked {
-            background: #d4edda;
-            border-color: #28a745;
-            color: #155724;
-        }
+    background: #d4edda;
+    border-color: #28a745;
+    color: #155724;
+}
 
-        /* ✅ ADD THE NEW CSS HERE ⬇️ */
-        .tek-box.clickable {
-            cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
+.tek-box.clickable {
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
 
-        .tek-box.clickable:hover {
-            transform: scale(1.1);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        }
+.tek-box.clickable:hover {
+    transform: scale(1.1);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
 
-        .tek-box.clickable:active {
-            transform: scale(0.95);
-        }
+.tek-box.clickable:active {
+    transform: scale(0.95);
+}
 
-        .tek-box.disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
+.tek-box.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
 
-        .tek-box.unlocked.clickable:hover {
-            background: #b8dacc;
-            border-color: #1e7e34;
-        }
+.tek-box.unlocked.clickable:hover {
+    background: #b8dacc;
+    border-color: #1e7e34;
+}
 
-        .tek-box:not(.unlocked).clickable:hover {
-            background: #fff3cd;
-            border-color: #ffc107;
-        }
-        .quick-actions {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-        }
+.tek-box:not(.unlocked).clickable:hover {
+    background: #fff3cd;
+    border-color: #ffc107;
+}
 
-        .sort-controls {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
+.team-actions {
+    display: flex;
+    gap: 8px;
+    flex-direction: column;
+}
 
-        .sort-controls label {
-            font-weight: bold;
-            color: #333;
-        }
+.team-actions .btn {
+    font-size: 14px;
+    padding: 12px 16px;
+}
 
-        .sort-controls select {
-            padding: 8px 15px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 14px;
-            cursor: pointer;
-        }
+.quick-actions {
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
 
-        .last-update-box {
-            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-            border: 2px solid #2196f3;
-            border-radius: 8px;
-            padding: 10px 20px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 13px;
-            font-weight: 600;
-            color: #0d47a1;
-            box-shadow: 0 2px 8px rgba(33, 150, 243, 0.2);
-            margin-left: auto;
-        }
+.sort-controls {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 15px;
+    align-items: stretch;
+    flex-direction: column;
+}
 
-        .last-update-box .icon {
-            font-size: 16px;
-            animation: pulse 2s ease-in-out infinite;
-        }
+.sort-controls label {
+    font-weight: bold;
+    color: #333;
+    font-size: 14px;
+}
 
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.6; }
-        }
+.sort-controls select {
+    padding: 12px 15px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 15px;
+    cursor: pointer;
+    width: 100%;
+}
 
-        .alert {
-            padding: 15px 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-size: 14px;
-        }
+.last-update-box {
+    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+    border: 2px solid #2196f3;
+    border-radius: 8px;
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #0d47a1;
+    box-shadow: 0 2px 8px rgba(33, 150, 243, 0.2);
+    text-align: center;
+}
 
-        .alert-success {
-            background: #d4edda;
-            border: 1px solid #c3e6cb;
-            color: #155724;
-        }
+.last-update-box .icon {
+    font-size: 16px;
+    animation: pulse 2s ease-in-out infinite;
+}
 
-        .alert-danger {
-            background: #f8d7da;
-            border: 1px solid #f5c6cb;
-            color: #721c24;
-        }
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
 
-        .alert-warning {
-            background: #fff3cd;
-            border: 1px solid #ffeaa7;
-            color: #856404;
-        }
+.progress-bar {
+    background: #e0e0e0;
+    height: 30px;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
 
-        .url-generator {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 20px;
-        }
+.progress-fill {
+    background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 13px;
+    transition: width 0.3s ease;
+}
 
-        .url-generator h3 {
-            color: #0f3460;
-            margin-bottom: 15px;
-        }
+.team-stats {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
 
-        .url-list {
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 15px;
-            font-family: monospace;
-            font-size: 13px;
-            max-height: 200px;
-            overflow-y: auto;
-        }
+.timing-info {
+    background: rgba(255, 107, 0, 0.1);
+    border-left: 3px solid #ff6b00;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    font-size: 12px;
+}
 
-        .url-list div {
-            padding: 5px;
-            border-bottom: 1px solid #eee;
-        }
+.timing-info.completed {
+    background: rgba(40, 167, 69, 0.1);
+    border-left: 3px solid #28a745;
+}
 
-        .url-list div:last-child {
-            border-bottom: none;
-        }
+.timing-info strong {
+    display: block;
+    margin-bottom: 3px;
+    color: #333;
+}
 
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.7);
-            overflow: auto;
-        }
+.completion-badge {
+    background: #28a745;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 5px;
+    font-size: 10px;
+    font-weight: bold;
+    display: inline-block;
+    margin-left: 5px;
+}
 
-        .modal.active {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+.alert {
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
 
-        .modal-content {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            max-width: 700px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-        }
+.alert-success {
+    background: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+}
 
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #ff6b00;
-        }
+.alert-danger {
+    background: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+}
 
-        .modal-header h2 {
-            color: #1a1a2e;
-            font-size: 24px;
-        }
+.alert-warning {
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    color: #856404;
+}
 
-        .close-modal {
-            font-size: 32px;
-            cursor: pointer;
-            color: #999;
-            line-height: 1;
-        }
+.url-generator {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 15px;
+}
 
-        .close-modal:hover {
-            color: #333;
-        }
+.url-generator h3 {
+    color: #0f3460;
+    margin-bottom: 15px;
+}
 
-        .timestamp-list {
-            list-style: none;
-            padding: 0;
-        }
+.url-list {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 12px;
+    font-family: monospace;
+    font-size: 11px;
+    max-height: 200px;
+    overflow-y: auto;
+    word-break: break-all;
+}
 
-        .timestamp-item {
-            padding: 12px;
-            margin-bottom: 8px;
-            background: #f8f9fa;
-            border-left: 3px solid #ff6b00;
-            border-radius: 5px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+.url-list div {
+    padding: 5px;
+    border-bottom: 1px solid #eee;
+}
 
-        .timestamp-item .tek-label {
-            font-weight: bold;
-            color: #0f3460;
-        }
+.url-list div:last-child {
+    border-bottom: none;
+}
 
-        .timestamp-item .time {
-            color: #666;
-            font-size: 13px;
-        }
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    overflow: auto;
+    padding: 10px;
+}
 
-        #firebaseStatus {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: #28a745;
-            color: white;
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-size: 11px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            display: none;
-            max-width: 250px;
-            line-height: 1.4;
-        }
+.modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-        @media (max-width: 768px) {
-            .team-list {
-                grid-template-columns: 1fr;
-            }
-            
-            .quick-actions {
-                flex-direction: column;
-            }
-            
-            .btn {
-                width: 100%;
-            }
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    max-width: 700px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
 
-            .sort-controls {
-                flex-direction: column;
-                align-items: stretch;
-            }
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #ff6b00;
+}
 
-            .last-update-box {
-                margin-left: 0;
-                margin-top: 10px;
-                justify-content: center;
-            }
-        }
-    </style>
+.modal-header h2 {
+    color: #1a1a2e;
+    font-size: clamp(18px, 4vw, 24px);
+}
+
+.close-modal {
+    font-size: 28px;
+    cursor: pointer;
+    color: #999;
+    line-height: 1;
+    padding: 5px 10px;
+}
+
+.close-modal:hover {
+    color: #333;
+}
+
+.timestamp-list {
+    list-style: none;
+    padding: 0;
+}
+
+.timestamp-item {
+    padding: 12px;
+    margin-bottom: 8px;
+    background: #f8f9fa;
+    border-left: 3px solid #ff6b00;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.timestamp-item .tek-label {
+    font-weight: bold;
+    color: #0f3460;
+}
+
+.timestamp-item .time {
+    color: #666;
+    font-size: 13px;
+}
+
+#firebaseStatus {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #28a745;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 11px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    display: none;
+    max-width: 250px;
+    line-height: 1.4;
+}
+
+
+@media (min-width: 576px) {
+    body {
+        padding: 20px;
+    }
+
+    .section {
+        padding: 20px;
+    }
+
+    .header {
+        padding: 25px;
+    }
+
+    .tek-grid {
+        grid-template-columns: repeat(6, 1fr);
+    }
+
+    .team-input {
+        flex-direction: row;
+    }
+
+    .team-input input {
+        min-width: 200px;
+    }
+
+    .quick-actions {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        width: auto;
+    }
+
+    .team-actions {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .sort-controls {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .sort-controls select {
+        width: auto;
+        min-width: 200px;
+    }
+}
+
+
+@media (min-width: 768px) {
+    .section {
+        padding: 25px;
+    }
+
+    .header {
+        padding: 30px;
+    }
+
+    .tek-grid {
+        grid-template-columns: repeat(11, 1fr);
+        gap: 5px;
+    }
+
+    .tek-box {
+        font-size: 11px;
+    }
+
+    .team-list {
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    }
+
+    .modal-content {
+        padding: 30px;
+    }
+
+    .last-update-box {
+        margin-left: auto;
+        width: auto;
+    }
+}
+
+
+@media (min-width: 1024px) {
+    .section {
+        padding: 30px;
+    }
+
+    .team-list {
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 20px;
+    }
+
+    .team-card {
+        padding: 20px;
+    }
+}
+
+
+@media (max-height: 600px) and (orientation: landscape) {
+    .header {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+
+    .section {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+
+    .modal-content {
+        max-height: 85vh;
+    }
+}
+
+</style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
@@ -552,8 +648,8 @@
         <div class="section">
             <h2>➕ ΠΡΟΣΘΗΚΗ ΟΜΑΔΑΣ</h2>
 <div class="team-input">
-    <input type="text" id="newTeamName" placeholder="Όνομα ομάδας (π.χ. alpha, beta, ...)" />
-    <input type="text" id="newTeamPassword" placeholder="Κωδικός ομάδας (π.χ. pass123)" />
+    <input type="text" id="newTeamName" placeholder="Όνομα ομάδας" />
+    <input type="text" id="newTeamPassword" placeholder="Κωδικός ομάδας" />
     <button class="btn btn-primary" onclick="addTeam()">ΠΡΟΣΘΗΚΗ ΟΜΑΔΑΣ</button>
 </div>
             <div id="addTeamAlert"></div>
@@ -1146,14 +1242,8 @@ async function toggleTek(teamName, tekNumber) {
     };
     
     console.log(`💾 Saving team ${teamName} with ${unlocked.length} TEKs`);
-    
-    // Save to localStorage immediately for instant UI update
     localStorage.setItem(`unlocked_teks_${teamName}`, JSON.stringify(updatedTeam));
-    
-    // Update UI immediately
     await refreshTeams();
-    
-    // Then save to Firebase in background
     await saveTeamToFirebase(teamName, updatedTeam);
     
     console.log('✅ Toggle complete');
@@ -1190,14 +1280,8 @@ async function unlockAll(teamName) {
         };
        
         console.log(`💾 Saving unlock all for team ${teamName}`);
-        
-        // Save to localStorage immediately
         localStorage.setItem(`unlocked_teks_${teamName}`, JSON.stringify(updatedTeam));
-        
-        // Update UI immediately
         await refreshTeams();
-        
-        // Then save to Firebase in background
         await saveTeamToFirebase(teamName, updatedTeam);
         
         console.log('✅ Unlock all complete');
