@@ -1355,21 +1355,41 @@ async function resetTeam(teamName) {
         }
     }
 
-    async function deleteTeam(teamName) {
-        if (confirm(`ΔΙΑΓΡΑΦΗ ΟΜΑΔΑΣ "${teamName}";`)) {
-            localStorage.removeItem(`unlocked_teks_${teamName}`);
-            if (isFirebaseReady()) {
-                try {
-                    await window.firebaseDeleteDoc(
-                        window.firebaseDoc(window.firebaseDB, 'teams', teamName)
-                    );
-                } catch (error) {
-                    console.error('Firebase delete error:', error);
-                }
+async function deleteTeam(teamName) {
+    if (confirm(`ΔΙΑΓΡΑΦΗ ΟΜΑΔΑΣ "${teamName}";`)) {
+        localStorage.removeItem(`unlocked_teks_${teamName}`);
+        
+        if (isFirebaseReady()) {
+            try {
+                await window.firebaseDeleteDoc(
+                    window.firebaseDoc(window.firebaseDB, 'teams', teamName)
+                );
+
+                const surveysRef = window.firebaseCollection(window.firebaseDB, 'surveys');
+                const querySnapshot = await window.firebaseGetDocs(surveysRef);
+                
+                const deletePromises = [];
+                querySnapshot.forEach((doc) => {
+                    if (doc.id.startsWith(`${teamName}_`)) {
+                        console.log(`🗑️ Deleting survey: ${doc.id}`);
+                        deletePromises.push(
+                            window.firebaseDeleteDoc(
+                                window.firebaseDoc(window.firebaseDB, 'surveys', doc.id)
+                            )
+                        );
+                    }
+                });
+                
+                await Promise.all(deletePromises);
+                
+                console.log(`✅ Deleted team ${teamName} and ${deletePromises.length} related surveys`);
+            } catch (error) {
+                console.error('Firebase delete error:', error);
             }
-            refreshTeams();
         }
+        refreshTeams();
     }
+}
 
     async function unlockAllForAll() {
         if (confirm('ΞΕΚΛΕΙΔΩΜΑ ΟΛΩΝ ΤΩΝ ΤΕΚΜΗΡΙΩΝ ΓΙΑ ΟΛΕΣ ΤΙΣ ΟΜΑΔΕΣ;')) {
@@ -1408,24 +1428,45 @@ async function resetTeam(teamName) {
         }
     }
 
-    async function resetAll() {
-        if (confirm('ΔΙΑΓΡΑΦΗ ΟΛΩΝ ΤΩΝ ΟΜΑΔΩΝ;')) {
-            const teams = await getAllTeams();
-            for (const team of teams) {
-                localStorage.removeItem(`unlocked_teks_${team.name}`);
-                if (isFirebaseReady()) {
-                    try {
-                        await window.firebaseDeleteDoc(
-                            window.firebaseDoc(window.firebaseDB, 'teams', team.name)
-                        );
-                    } catch (error) {
-                        console.error('Firebase delete error:', error);
-                    }
-                }
-            }
-            refreshTeams();
+async function resetAll() {
+    if (confirm('ΔΙΑΓΡΑΦΗ ΟΛΩΝ ΤΩΝ ΟΜΑΔΩΝ;')) {
+        const teams = await getAllTeams();
+        for (const team of teams) {
+            localStorage.removeItem(`unlocked_teks_${team.name}`);
         }
+        
+        if (isFirebaseReady()) {
+            try {
+                for (const team of teams) {
+                    await window.firebaseDeleteDoc(
+                        window.firebaseDoc(window.firebaseDB, 'teams', team.name)
+                    );
+                }
+                
+                const surveysRef = window.firebaseCollection(window.firebaseDB, 'surveys');
+                const querySnapshot = await window.firebaseGetDocs(surveysRef);
+                
+                const deletePromises = [];
+                querySnapshot.forEach((doc) => {
+                    console.log(`🗑️ Deleting survey: ${doc.id}`);
+                    deletePromises.push(
+                        window.firebaseDeleteDoc(
+                            window.firebaseDoc(window.firebaseDB, 'surveys', doc.id)
+                        )
+                    );
+                });
+                
+                await Promise.all(deletePromises);
+                
+                console.log(`✅ Deleted ${teams.length} teams and ${deletePromises.length} surveys`);
+            } catch (error) {
+                console.error('Firebase delete error:', error);
+            }
+        }
+        
+        refreshTeams();
     }
+}
 
     function generateUrls() {
         const teamName = document.getElementById('urlTeamName').value.trim().toLowerCase();
