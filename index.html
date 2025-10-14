@@ -2630,6 +2630,7 @@ function logout() {
         window.location.href = 'team_member_entry.html';
     }
 }
+
 window.submitSolution = submitSolution;
 window.logout = logout;
 window.switchToSurveyTab = switchToSurveyTab;
@@ -2678,21 +2679,17 @@ async function checkSurveyCompletion() {
         const membersWithBoth = new Set();
         querySnapshot.forEach((doc) => {
             const docId = doc.id;
-            
-            // Check for pre-survey pattern: {teamCode}_pre_{memberName}
             if (docId.startsWith(`${teamCode}_pre_`)) {
                 const memberName = docId.replace(`${teamCode}_pre_`, '');
                 preMembers.add(memberName);
             }
-            
-            // Check for post-survey pattern: {teamCode}_post_{memberName}
+			
             if (docId.startsWith(`${teamCode}_post_`)) {
                 const memberName = docId.replace(`${teamCode}_post_`, '');
                 postMembers.add(memberName);
             }
         });
-        
-        // Find members who completed BOTH surveys
+
         preMembers.forEach(member => {
             if (postMembers.has(member)) {
                 membersWithBoth.add(member);
@@ -2746,7 +2743,6 @@ async function checkLeaderboardUnlocked() {
 }
 
 async function updateResultsTabState() {
-    // Check if current member completed post-survey
     const memberName = sessionStorage.getItem('memberName');
     const teamCode = sessionStorage.getItem('teamCode') || new URLSearchParams(window.location.search).get('team');
     
@@ -2754,22 +2750,18 @@ async function updateResultsTabState() {
         console.error('Member or team info missing!');
         return;
     }
-    
-    // Check if THIS member completed post-survey
+
     const postSurveyDoc = `${teamCode}_post_${memberName}`;
     const postSurveyRef = window.firebaseDoc(window.firebaseDB, 'surveys', postSurveyDoc);
     const postSurveySnap = await window.firebaseGetDoc(postSurveyRef);
     const memberCompletedPost = postSurveySnap.exists();
-    
-    // Check overall team progress
     const surveys = await checkSurveyCompletion();
     const leaderboardUnlocked = await checkLeaderboardUnlocked();
     
     const surveysIncomplete = document.getElementById('surveysIncomplete');
     const leaderboardLocked = document.getElementById('leaderboardLocked');
     const leaderboardUnlockedDiv = document.getElementById('leaderboardUnlocked');
-    
-    // If THIS member hasn't completed post-survey, show redirect
+
     if (!memberCompletedPost) {
         surveysIncomplete.innerHTML = `
             <div class="intro-box" style="text-align: center; padding: 60px 30px;">
