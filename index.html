@@ -1527,8 +1527,7 @@ function openSurvey() {
         window.location.href = 'team_entry.html';
         return;
     }
-    
-    // Open survey with proper parameters
+
     const surveyUrl = `survey.html?team=${encodeURIComponent(teamCode)}&member=${encodeURIComponent(memberName)}`;
     window.open(surveyUrl, '_blank');
 }
@@ -2847,13 +2846,29 @@ function getResultsGrade(percentage) {
 
 async function loadLeaderboardData() {
     try {
+        console.log('📊 Loading leaderboard data...');
+        
+        if (!window.firebaseDB) {
+            console.error('Firebase not ready!');
+            displayLeaderboardError('Σύνδεση με τη βάση δεδομένων απέτυχε');
+            return;
+        }
+        
         const querySnapshot = await window.firebaseGetDocs(
             window.firebaseCollection(window.firebaseDB, 'teams')
         );
         
+        console.log(`Found ${querySnapshot.size} teams in database`);
+        
         const teams = [];
         querySnapshot.forEach((doc) => {
             const data = doc.data();
+            console.log(`Team ${doc.id}:`, {
+                hasSolution: !!data.solution,
+                score: data.solution?.score,
+                unlocked: data.unlocked?.length
+            });
+            
             if (data.solution) {
                 teams.push({
                     name: doc.id,
@@ -2862,6 +2877,19 @@ async function loadLeaderboardData() {
             }
         });
 
+        console.log(`${teams.length} teams have submitted solutions`);
+
+        if (teams.length === 0) {
+            displayLeaderboardError(
+                'Δεν υπάρχουν ομάδες που έχουν υποβάλει λύση ακόμα.\n\n' +
+                'Βεβαιωθείτε ότι η ομάδα σας έχει:\n' +
+                '✓ Ξεκλειδώσει τουλάχιστον 6 τεκμήρια\n' +
+                '✓ Υποβάλει τη λύση της από την καρτέλα "ΛΥΣΗ"\n' +
+                '✓ Δει το μήνυμα επιτυχούς υποβολής'
+            );
+            return;
+        }
+
         teams.sort((a, b) => b.solution.score - a.solution.score);
 
         displayResultsStats(teams);
@@ -2869,6 +2897,31 @@ async function loadLeaderboardData() {
 
     } catch (error) {
         console.error('Error loading leaderboard:', error);
+        displayLeaderboardError(`Σφάλμα φόρτωσης: ${error.message}`);
+    }
+}
+function displayLeaderboardError(message) {
+    const tableBody = document.getElementById('resultsTableBody');
+    const cardsContainer = document.getElementById('resultsCards');
+    
+    const errorHTML = `
+        <div style="text-align: center; padding: 40px; color: #666;">
+            <div style="font-size: 60px; margin-bottom: 20px;">⚠️</div>
+            <div style="color: #dc3545; font-weight: bold; margin-bottom: 15px; white-space: pre-line;">
+                ${message}
+            </div>
+            <button onclick="loadLeaderboardData()" style="margin-top: 20px; padding: 12px 24px; background: #ff6b00; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                🔄 Δοκιμάστε Ξανά
+            </button>
+        </div>
+    `;
+    
+    if (tableBody) {
+        tableBody.innerHTML = `<tr><td colspan="5">${errorHTML}</td></tr>`;
+    }
+    
+    if (cardsContainer) {
+        cardsContainer.innerHTML = errorHTML;
     }
 }
 
@@ -2902,9 +2955,13 @@ function displayResultsLeaderboard(teams) {
     const table = document.getElementById('resultsTable');
     const cards = document.getElementById('resultsCards');
     
+    if (!tableBody || !cardsContainer || !table || !cards) {
+        console.error('Leaderboard elements not found in DOM!');
+        return;
+    }
+    
     if (teams.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 40px; color: #666;">Δεν υπάρχουν υποβολές ακόμα</td></tr>';
-        cardsContainer.innerHTML = '<div style="text-align: center; padding: 40px; color: #666;">Δεν υπάρχουν υποβολές ακόμα</div>';
+        displayLeaderboardError('Δεν υπάρχουν υποβολές ακόμα');
         return;
     }
 
@@ -2993,7 +3050,8 @@ function displayResultsLeaderboard(teams) {
             </div>
         `;
     }).join('');
-}
+    
+    console.log('✅ Leaderboard displayed successfully');
 
 function setupResultsListener() {
     if (!window.firebaseDB) {
