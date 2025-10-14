@@ -1228,31 +1228,19 @@ button:focus-visible,
     <div class="intro-box survey-tab-content">
         <div class="survey-icon">📊</div>
         <h2 class="survey-title">ΕΡΕΥΝΑ ΑΞΙΟΛΟΓΗΣΗΣ ΑΠΟΨΕΩΝ & ΕΜΠΕΙΡΙΩΝ</h2>                     
-<a href="#" 
-   onclick="openSurvey(); return false;" 
-   class="btn btn-primary" 
-   style="margin-top: 20px; font-size: clamp(16px, 3.5vw, 18px); padding: clamp(15px, 3vw, 18px) clamp(30px, 6vw, 40px);">
-    📊 ΜΕΤΑΒΑΣΗ ΣΤΟ ΕΡΩΤΗΜΑΤΟΛΟΓΙΟ
-</a>
+        <a href="#" 
+           onclick="openSurvey(); return false;" 
+           class="btn btn-primary" 
+           style="margin-top: 20px; font-size: clamp(16px, 3.5vw, 18px); padding: clamp(15px, 3vw, 18px) clamp(30px, 6vw, 40px);">
+            📊 ΜΕΤΑΒΑΣΗ ΣΤΟ ΕΡΩΤΗΜΑΤΟΛΟΓΙΟ
+        </a>
     </div>
 </div>
-            </div>
-        </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="footer">
-        <p><strong>ΦΕΣΤΙΒΑΛ ΑΣΤΥΝΟΜΙΚΗΣ ΛΟΓΟΤΕΧΝΙΑΣ 2025</strong></p>
-        <p style="margin-top: 10px; opacity: 0.7; font-size: 12px;">
-            11 ΤΕΚΜΗΡΙΑ | 5 ΥΠΟΠΤΟΙ | 1 ΑΛΗΘΕΙΑ
-        </p>
-    </div>
 
 <!-- Tab 7: Results/Leaderboard -->
 <div class="tab-pane" id="tab-results">
     <!-- State 1: Surveys Not Completed -->
-	<div id="surveysIncomplete" style="display: none; padding-bottom: 80px;">
+    <div id="surveysIncomplete" style="display: none; padding-bottom: 80px;">
         <div class="intro-box" style="text-align: center; padding: 60px 30px;">
             <div style="font-size: clamp(80px, 20vw, 120px); margin-bottom: 30px;">🔒</div>
             <h2 style="color: #1a1a2e; font-size: clamp(20px, 5vw, 28px); margin-bottom: 20px;">
@@ -1266,7 +1254,8 @@ button:focus-visible,
                     <div id="postSurveyStatus">⏳ Έλεγχος...</div>
                 </div>
             </div>
-            <a href="#" onclick="switchToSurveyTab(); return false;" 
+            <a href="#" 
+               onclick="window.location.href='survey.html?team=' + encodeURIComponent(sessionStorage.getItem('teamCode')) + '&member=' + encodeURIComponent(sessionStorage.getItem('memberName')); return false;"
                class="btn btn-primary" 
                style="margin-top: 20px; font-size: clamp(16px, 3.5vw, 18px); padding: clamp(15px, 3vw, 18px) clamp(30px, 6vw, 40px);">
                 📊 ΜΕΤΑΒΑΣΗ ΣΤΟ ΕΡΩΤΗΜΑΤΟΛΟΓΙΟ
@@ -1289,7 +1278,6 @@ button:focus-visible,
                     ΟΛΑ ΤΑ ΜΕΛΗ ΤΗΣ ΟΜΑΔΑΣ ΣΑΣ ΕΧΟΥΝ ΟΛΟΚΛΗΡΩΣΕΙ ΚΑΙ ΤΙΣ ΔΥΟ ΕΡΕΥΝΕΣ!<br>
                     Η ΣΕΛΙΔΑ ΘΑ ΕΝΗΜΕΡΩΘΕΙ ΑΥΤΟΜΑΤΑ ΟΤΑΝ ΤΑ ΑΠΟΤΕΛΕΣΜΑΤΑ ΑΝΑΚΟΙΝΩΘΟΥΝ.
                 </div>
-
             </div>
             <p style="margin-top: 30px; color: #999; font-size: 14px;">
                 Αναζήτηση ενημερώσεων<span class="loading-dots"><span>.</span><span>.</span><span>.</span></span>
@@ -1299,10 +1287,6 @@ button:focus-visible,
 
     <!-- State 3: Surveys Completed, Leaderboard Unlocked -->
     <div id="leaderboardUnlocked" style="display: none; padding-bottom: 80px;">
-        <div style="background: rgba(40, 167, 69, 0.1); border: 2px solid #28a745; border-radius: 12px; padding: 15px; margin-bottom: 20px; text-align: center;">
-            <strong style="color: #28a745; font-size: 16px;">✅ Αποτελέσματα Διαθέσιμα</strong>
-        </div>
-
         <!-- Stats Grid -->
         <div class="stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 25px;">
             <div class="stat-card" style="background: white; padding: 20px 15px; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); text-align: center;">
@@ -1351,21 +1335,33 @@ button:focus-visible,
             <div id="resultsCards" style="display: none;"></div>
         </div>
     </div>
+</div> <!-- closes tab-results -->
+
+</div> <!-- closes tabs-content -->
+
+<div class="footer">
+    <p><strong>ΦΕΣΤΙΒΑΛ ΑΣΤΥΝΟΜΙΚΗΣ ΛΟΓΟΤΕΧΝΙΑΣ 2025</strong></p>
+    <p style="margin-top: 10px; opacity: 0.7; font-size: 12px;">
+        11 ΤΕΚΜΗΡΙΑ | 5 ΥΠΟΠΤΟΙ | 1 ΑΛΗΘΕΙΑ
+    </p>
 </div>
 
-    <script src="suspects.js"></script>
+</div> <!-- closes tabs-container -->
+</div> <!-- closes container -->
 
-    <script>
-        const teks = [
-            {
-                id: '1',
-                name: 'Μπουκάλι Ουίσκι',
-                subtitle: 'Μπουκάλι Jack Daniels',
-                icon: '🍾',
-                description: '<strong>Τοποθεσία:</strong> Γραφείο θύματος<br><strong>Ευρήματα:</strong> Κυάνιο στον πάτο + αποτυπώματα θύματος, Παπαδοπούλου, Αναγνώστου, Πετρόπουλος',
-                page: 'TEK1_AR.html',
-                critical: true
-            },
+<script src="suspects.js"></script>
+
+<script>
+    const teks = [
+        {
+            id: '1',
+            name: 'Μπουκάλι Ουίσκι',
+            subtitle: 'Μπουκάλι Jack Daniels',
+            icon: '🍾',
+            description: '<strong>Τοποθεσία:</strong> Γραφείο θύματος<br><strong>Ευρήματα:</strong> Κυάνιο στον πάτο + αποτυπώματα θύματος, Παπαδοπούλου, Αναγνώστου, Πετρόπουλος',
+            page: 'TEK1_AR.html',
+            critical: true
+        },
             {
                 id: '2',
                 name: 'Κρυστάλλινα Ποτήρια',
