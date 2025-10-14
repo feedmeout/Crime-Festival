@@ -1664,11 +1664,15 @@ if (promptCount === null || promptCount === undefined || promptCount < 0) {
     
 try {
         const updatedData = {
-            ...teamData,
             password: teamData.password || null,
+            unlocked: teamData.unlocked || [],
+            timestamps: teamData.timestamps || {},
+            evidenceTimestamps: teamData.evidenceTimestamps || {},
+            startTime: teamData.startTime || null,
             solution: solution,
             completedAt: solution.submittedAt,
-            totalTimeMs: totalTimeMs
+            totalTimeMs: totalTimeMs,
+            lastUpdate: new Date().toISOString()
         };
         
         localStorage.setItem(getStorageKey(), JSON.stringify(updatedData));
@@ -2272,10 +2276,10 @@ setInterval(async () => {
         }
     }, 5000);
 
-    function setupRealtimeListener() {
+function setupRealtimeListener() {
         if (!window.firebaseDB) {
             console.warn('Firebase not ready, falling back to polling');
-            setInterval(checkForUpdates, 1000);
+            setInterval(checkForUpdates, 3000);
             return;
         }
         
@@ -2311,7 +2315,7 @@ setInterval(async () => {
         }
     }
 
-    async function checkForUpdates() {
+async function checkForUpdates() {
         if (!window.firebaseDB) return;
         
         try {
@@ -2335,11 +2339,15 @@ setInterval(async () => {
         }
     }
 
-    setupRealtimeListener();
+    // Initialize real-time listener after everything else is set up
+    setTimeout(() => {
+        setupRealtimeListener();
+    }, 500);
 });
 
 window.addEventListener('storage', async (e) => {
-    if (e.key === getStorageKey()) {
+    if (e.key === getStorageKey() || e.key === `solution_${teamCode}`) {
+        console.log('🔄 Storage change detected, updating UI...');
         renderEvidence();
         const teamData = await getTeamData();
         await updateProgress(teamData);

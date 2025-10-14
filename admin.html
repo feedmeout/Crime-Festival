@@ -7,7 +7,7 @@
 
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getFirestore, doc, setDoc, getDoc, getDocs, collection, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        import { getFirestore, doc, setDoc, getDoc, getDocs, collection, deleteDoc, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
         const firebaseConfig = {
           apiKey: "AIzaSyA_9_40aa_wO_19g-1bIrSB6742aMOPwjo",
           authDomain: "crime-festival-2025.firebaseapp.com",
@@ -18,13 +18,14 @@
         };
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        window.firebaseDB = db;
+		window.firebaseDB = db;
         window.firebaseDoc = doc;
         window.firebaseSetDoc = setDoc;
         window.firebaseGetDoc = getDoc;
         window.firebaseGetDocs = getDocs;
         window.firebaseCollection = collection;
         window.firebaseDeleteDoc = deleteDoc;
+        window.firebaseOnSnapshot = onSnapshot;
         
         console.log("✅ Firebase connected!");
     </script>
@@ -755,7 +756,7 @@ async function getAllTeams() {
                 if (!localTeam) {
 allTeams.set(team.name, {
     name: team.name,
-    password: team.password || null,  // ✅ ADD THIS LINE
+    password: team.password || null,
     unlocked: team.unlocked || [],
     timestamps: team.timestamps || {},
     startTime: team.startTime || null,
@@ -770,7 +771,7 @@ allTeams.set(team.name, {
                     console.log(`🔥 Firebase data is newer for ${team.name}`);
 allTeams.set(team.name, {
     name: team.name,
-    password: team.password || null,  // ✅ ADD THIS LINE HERE TOO
+    password: team.password || null,
     unlocked: team.unlocked || [],
     timestamps: team.timestamps || {},
     startTime: team.startTime || null,
@@ -862,7 +863,6 @@ async function addTeam() {
         return;
     }
 
-    // Check if team exists in Firebase
     if (isFirebaseReady()) {
         const docRef = window.firebaseDoc(window.firebaseDB, 'teams', teamName);
         const docSnap = await window.firebaseGetDoc(docRef);
@@ -1179,11 +1179,12 @@ async function unlockAll(teamName) {
        
 const updatedTeam = {
     ...team,
+    password: team?.password || null,
     unlocked: allTeks,
     timestamps: timestamps,
     startTime: earliestTime,
 };
-        
+       
         console.log(`💾 Saving unlock all for team ${teamName}`);
         console.log(`   Start time: ${earliestTime}`);
         
@@ -1316,21 +1317,57 @@ await saveTeam(team.name, {
         });
     }
 
+let firestoreUnsubscribe = null;
+
+    function setupRealtimeListener() {
+        if (!isFirebaseReady()) {
+            console.warn('⚠️ Firebase not ready - using periodic refresh');
+            setInterval(refreshTeams, 5000);
+            return;
+        }
+
+        try {
+            const teamsCollection = window.firebaseCollection(window.firebaseDB, 'teams');
+            firestoreUnsubscribe = window.firebaseOnSnapshot(teamsCollection, 
+                (snapshot) => {
+                    console.log('🔥 Firebase real-time update received');
+                    refreshTeams();
+                },
+                (error) => {
+                    console.error('❌ Firebase listener error:', error);
+                    if (!firestoreUnsubscribe) {
+                        setInterval(refreshTeams, 5000);
+                    }
+                }
+            );
+            console.log('✅ Real-time Firebase listener active');
+        } catch (error) {
+            console.error('❌ Failed to setup Firebase listener:', error);
+            setInterval(refreshTeams, 5000);
+        }
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             const status = document.getElementById('firebaseStatus');
             if (isFirebaseReady()) {
                 status.style.display = 'block';
-                status.innerHTML = '✅ Firebase Συνδεδεμένο - Αυτόματη ενημέρωση κάθε 5 δευτ.';
+                status.innerHTML = '✅ Firebase Συνδεδεμένο - Real-time ενημέρωση ενεργή';
             } else {
                 console.warn('⚠️ Firebase not loaded - using localStorage only');
             }
             
             refreshTeams();
+            setupRealtimeListener();
         }, 300);
     });
-    
-    setInterval(refreshTeams, 5000);
+
+    window.addEventListener('beforeunload', () => {
+        if (firestoreUnsubscribe) {
+            firestoreUnsubscribe();
+        }
+    });
+	
 </script>
 </body>
 </html>
