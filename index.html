@@ -7,7 +7,7 @@
 
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getFirestore, doc, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        import { getFirestore, doc, setDoc, getDoc, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
         const firebaseConfig = {
             apiKey: "AIzaSyA_9_40aa_wO_19g-1bIrSB6742aMOPwjo",
@@ -21,10 +21,11 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        window.firebaseDB = db;
-        window.firebaseDoc = doc;
-        window.firebaseSetDoc = setDoc;
-        window.firebaseGetDoc = getDoc;
+window.firebaseDB = db;
+window.firebaseDoc = doc;
+window.firebaseSetDoc = setDoc;
+window.firebaseGetDoc = getDoc;
+window.firebaseOnSnapshot = onSnapshot;
         
         console.log("✅ Firebase connected in index.html!");
     </script>
@@ -2276,44 +2277,46 @@ setInterval(async () => {
         }
     }, 5000);
 
+let firestoreUnsubscribe = null;
+
 function setupRealtimeListener() {
-        if (!window.firebaseDB) {
-            console.warn('Firebase not ready, falling back to polling');
-            setInterval(checkForUpdates, 3000);
-            return;
-        }
-        
-        try {
-            import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js')
-                .then(({ onSnapshot }) => {
-                    const docRef = window.firebaseDoc(window.firebaseDB, 'teams', teamCode);
-                    
-                    onSnapshot(docRef, (doc) => {
-                        if (doc.exists()) {
-                            const firebaseData = doc.data();
-                            console.log('⚡ Real-time update received!');
-                            
-                            localStorage.setItem(getStorageKey(), JSON.stringify(firebaseData));
-                            renderEvidence();
-                            updateProgress(firebaseData);
-                            
-                            const solutionTab = document.getElementById('tab-solution');
-                            if (solutionTab && solutionTab.classList.contains('active')) {
-                                initSolutionTab(firebaseData);
-                            }
-                        }
-                    }, (error) => {
-                        console.error('Real-time listener error:', error);
-                        setInterval(checkForUpdates, 1000);
-                    });
-                    
-                    console.log('✅ Real-time listener active!');
-                });
-        } catch (error) {
-            console.error('Error setting up real-time listener:', error);
-            setInterval(checkForUpdates, 1000);
-        }
+    if (!window.firebaseDB || !window.firebaseOnSnapshot) {
+        console.warn('Firebase not ready, falling back to polling');
+        setInterval(checkForUpdates, 3000);
+        return;
     }
+    
+    try {
+        const docRef = window.firebaseDoc(window.firebaseDB, 'teams', teamCode);
+        
+        firestoreUnsubscribe = window.firebaseOnSnapshot(docRef, 
+            (doc) => {
+                if (doc.exists()) {
+                    const firebaseData = doc.data();
+                    console.log('⚡ Real-time update received for team:', teamCode);
+                    
+                    localStorage.setItem(getStorageKey(), JSON.stringify(firebaseData));
+                    renderEvidence();
+                    updateProgress(firebaseData);
+                    
+                    const solutionTab = document.getElementById('tab-solution');
+                    if (solutionTab && solutionTab.classList.contains('active')) {
+                        initSolutionTab(firebaseData);
+                    }
+                }
+            }, 
+            (error) => {
+                console.error('Real-time listener error:', error);
+                setInterval(checkForUpdates, 3000);
+            }
+        );
+        
+        console.log('✅ Real-time listener active for team:', teamCode);
+    } catch (error) {
+        console.error('Error setting up real-time listener:', error);
+        setInterval(checkForUpdates, 3000);
+    }
+}
 
 async function checkForUpdates() {
         if (!window.firebaseDB) return;

@@ -1141,23 +1141,26 @@ async function toggleTek(teamName, tekNumber) {
         ...team,
         unlocked: unlocked,
         timestamps: timestamps,
-        startTime: team.startTime || new Date().toISOString()
+        startTime: team.startTime || new Date().toISOString(),
+        lastUpdate: new Date().toISOString()
     };
     
     console.log(`💾 Saving team ${teamName} with ${unlocked.length} TEKs`);
-    await saveTeam(teamName, updatedTeam);
     
-    console.log('⏳ Waiting for Firebase sync...');
-    await new Promise(resolve => setTimeout(resolve, 500));
+    // Save to localStorage immediately for instant UI update
+    localStorage.setItem(`unlocked_teks_${teamName}`, JSON.stringify(updatedTeam));
     
-    console.log('🔄 Refreshing display...');
+    // Update UI immediately
     await refreshTeams();
+    
+    // Then save to Firebase in background
+    await saveTeamToFirebase(teamName, updatedTeam);
     
     console.log('✅ Toggle complete');
 }
 
 async function unlockAll(teamName) {
-    if (confirm(`ΞΕΚΛΕΙΔΩΜΑ ΟΛΩΝ ΤΩΝ ΤΕΚΜΗΡΙΩΝ ΓΙΑ ΤΗΝ ΟΜΑΔΑ"${teamName}";`)) {
+    if (confirm(`ΞΕΚΛΕΙΔΩΜΑ ΟΛΩΝ ΤΩΝ ΤΕΚΜΗΡΙΩΝ ΓΙΑ ΤΗΝ ΟΜΑΔΑ "${teamName}";`)) {
         console.log(`🔓 Unlocking all TEKs for team ${teamName}`);
         const teams = await getAllTeams();
         const team = teams.find(t => t.name === teamName);
@@ -1177,25 +1180,25 @@ async function unlockAll(teamName) {
             }
         });
        
-const updatedTeam = {
-    ...team,
-    password: team?.password || null,
-    unlocked: allTeks,
-    timestamps: timestamps,
-    startTime: earliestTime,
-};
+        const updatedTeam = {
+            ...team,
+            password: team?.password || null,
+            unlocked: allTeks,
+            timestamps: timestamps,
+            startTime: earliestTime,
+            lastUpdate: new Date().toISOString()
+        };
        
         console.log(`💾 Saving unlock all for team ${teamName}`);
-        console.log(`   Start time: ${earliestTime}`);
         
+        // Save to localStorage immediately
         localStorage.setItem(`unlocked_teks_${teamName}`, JSON.stringify(updatedTeam));
-        await saveTeamToFirebase(teamName, updatedTeam);
         
-        console.log('⏳ Waiting for Firebase sync...');
-        await new Promise(resolve => setTimeout(resolve, 500));
-        
-        console.log('🔄 Refreshing display...');
+        // Update UI immediately
         await refreshTeams();
+        
+        // Then save to Firebase in background
+        await saveTeamToFirebase(teamName, updatedTeam);
         
         console.log('✅ Unlock all complete');
     }
