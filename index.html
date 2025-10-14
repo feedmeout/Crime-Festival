@@ -1056,7 +1056,6 @@ button:focus-visible,
     </div>
 
     <div class="container">
-        <!-- Timer Section -->
         <div class="timer-section" id="timerSection">
             <h2>⏱️ΧΡΟΝΟΜΕΤΡΗΣΗ ΟΜΑΔΑΣ</h2>
             <div class="timer-grid">
@@ -1071,7 +1070,6 @@ button:focus-visible,
             </div>
         </div>
 
-<!-- Tab Navigation -->
 <div class="tabs-container">
     <div class="tabs-nav">
         <button class="tab-button active" data-tab="intro">📋 ΠΕΡΙΣΤΑΤΙΚΟ</button>
@@ -1080,13 +1078,10 @@ button:focus-visible,
         <button class="tab-button" data-tab="evidence">📦 ΤΕΚΜΗΡΙΑ</button>
         <button class="tab-button" data-tab="solution">✅ ΛΥΣΗ</button>
         <button class="tab-button" data-tab="survey">📊 ΕΡΕΥΝΑ</button>
-        <!-- NEW TAB -->
         <button class="tab-button" data-tab="results">🏆 ΚΑΤΑΤΑΞΗ</button>
     </div>
 
-            <!-- Tab Content -->
             <div class="tabs-content">
-                <!-- Tab 1: Intro -->
                 <div class="tab-pane active" id="tab-intro">
                     <div class="intro-box">
                         <h2>📋 ΠΕΡΙΣΤΑΤΙΚΟ</h2>
@@ -1105,8 +1100,6 @@ button:focus-visible,
                         <p>Ωστόσο, η εξέταση της σκηνής και η ανάκριση του προσωπικού αποκάλυψαν ανωμαλίες που προκαλούν υποψίες...</p>
                     </div>
                 </div>
-
-                <!-- Tab 2: Forensics & Timeline (moved from position 3) -->
                 <div class="tab-pane" id="tab-forensics">
                     <div class="forensic-box">
                         <h2>🥼 ΙΑΤΡΟΔΙΚΑΣΤΙΚΗ ΕΚΘΕΣΗ</h2>
@@ -1129,12 +1122,10 @@ button:focus-visible,
                     </div>
                 </div>
 
-                <!-- Tab 3: Suspects (moved from position 2) -->
                 <div class="tab-pane" id="tab-suspects">
                     <div id="suspectsContainer"></div>
                 </div>
 
-                <!-- Tab 4: Evidence -->
                 <div class="tab-pane" id="tab-evidence">
                     <div class="progress-bar-container">
                         <div class="progress-title">📊 ΠΡΟΟΔΟΣ ΕΡΕΥΝΑΣ</div>
@@ -1150,7 +1141,6 @@ button:focus-visible,
                     </div>
                 </div>
 
-                <!-- Tab 5: Solution -->
                 <div class="tab-pane" id="tab-solution">
                     <div class="intro-box" id="solutionIntroBox">
                         <h2>✅ ΥΠΟΒΟΛΗ ΛΥΣΗΣ</h2>
@@ -1223,7 +1213,6 @@ button:focus-visible,
 
                     <div id="solutionResult" style="display: none;"></div>
                 </div>
-<!-- Tab 6: Survey -->
 <div class="tab-pane" id="tab-survey">
     <div class="intro-box survey-tab-content">
         <div class="survey-icon">📊</div>
@@ -1237,9 +1226,7 @@ button:focus-visible,
     </div>
 </div>
 
-<!-- Tab 7: Results/Leaderboard -->
 <div class="tab-pane" id="tab-results">
-    <!-- State 1: Surveys Not Completed -->
     <div id="surveysIncomplete" style="display: none; padding-bottom: 80px;">
         <div class="intro-box" style="text-align: center; padding: 60px 30px;">
             <div style="font-size: clamp(80px, 20vw, 120px); margin-bottom: 30px;">🔒</div>
@@ -1263,7 +1250,6 @@ button:focus-visible,
         </div>
     </div>
 
-    <!-- State 2: Surveys Completed, Leaderboard Locked -->
     <div id="leaderboardLocked" style="display: none; padding-bottom: 80px;">
         <div class="intro-box" style="text-align: center; padding: 60px 30px;">
             <div style="font-size: clamp(80px, 20vw, 120px); margin-bottom: 30px; animation: swing 3s ease-in-out infinite;">
@@ -1284,10 +1270,7 @@ button:focus-visible,
             </p>
         </div>
     </div>
-
-    <!-- State 3: Surveys Completed, Leaderboard Unlocked -->
     <div id="leaderboardUnlocked" style="display: none; padding-bottom: 80px;">
-        <!-- Stats Grid -->
         <div class="stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 25px;">
             <div class="stat-card" style="background: white; padding: 20px 15px; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); text-align: center;">
                 <h3 style="color: #666; font-size: clamp(11px, 2.5vw, 14px); margin-bottom: 10px; text-transform: uppercase;">Σύνολο Υποβολών</h3>
@@ -1307,13 +1290,10 @@ button:focus-visible,
             </div>
         </div>
 
-        <!-- Leaderboard -->
         <div style="background: white; border-radius: 15px; padding: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); overflow-x: auto;">
             <h2 style="color: #1a1a2e; font-size: clamp(18px, 4vw, 24px); margin-bottom: 20px; padding-bottom: 15px; border-bottom: 3px solid #ff6b00;">
                 🏆 ΚΑΤΑΤΑΞΗ ΟΜΑΔΩΝ
             </h2>
-            
-            <!-- Desktop Table -->
             <table id="resultsTable" style="width: 100%; border-collapse: collapse; min-width: 650px; display: none;">
                 <thead>
                     <tr style="background: linear-gradient(135deg, #0f3460 0%, #16213e 100%); color: white;">
@@ -1330,14 +1310,12 @@ button:focus-visible,
                     </tr>
                 </tbody>
             </table>
-
-            <!-- Mobile Cards -->
             <div id="resultsCards" style="display: none;"></div>
         </div>
     </div>
-</div> <!-- closes tab-results -->
+</div>
 
-</div> <!-- closes tabs-content -->
+</div> 
 
 <div class="footer">
     <p><strong>ΦΕΣΤΙΒΑΛ ΑΣΤΥΝΟΜΙΚΗΣ ΛΟΓΟΤΕΧΝΙΑΣ 2025</strong></p>
@@ -1346,8 +1324,8 @@ button:focus-visible,
     </p>
 </div>
 
-</div> <!-- closes tabs-container -->
-</div> <!-- closes container -->
+</div>
+</div>
 
 <script src="suspects.js"></script>
 
@@ -1951,7 +1929,6 @@ function displaySubmissionConfirmation() {
     }
     
     resultDiv.innerHTML = `
-        <!-- Compact Success Message -->
         <div style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; padding: 20px 30px; border-radius: 12px; margin: 20px 0; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 15px rgba(40,167,69,0.3); flex-wrap: wrap; gap: 15px;">
             <div style="display: flex; align-items: center; gap: 15px;">
                 <div style="font-size: 40px;">✅</div>
@@ -1968,9 +1945,7 @@ function displaySubmissionConfirmation() {
             </div>
         </div>
 
-        <!-- Main Results Box -->
         <div style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); border: 3px solid #ff6b00; padding: 0; border-radius: 15px; margin-top: 20px; box-shadow: 0 10px 40px rgba(255, 107, 0, 0.4); overflow: hidden;">
-            <!-- Header Section -->
             <div style="background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%); padding: 25px; text-align: center; position: relative;">
                 <div style="font-size: 56px; margin-bottom: 10px; filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));">🔐</div>
                 <h3 style="color: #000; font-size: 24px; font-weight: bold; margin: 0; text-transform: uppercase; letter-spacing: 2px; text-shadow: 1px 1px 2px rgba(255,255,255,0.3);">
@@ -1978,10 +1953,7 @@ function displaySubmissionConfirmation() {
                 </h3>
                 <div style="position: absolute; top: 0; left: 0; right: 0; height: 100%; background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(0,0,0,0.05) 10px, rgba(0,0,0,0.05) 20px); pointer-events: none;"></div>
             </div>
-            
-            <!-- Main Content -->
             <div style="padding: 30px;">
-                <!-- Warning Box -->
                 <div style="background: linear-gradient(135deg, rgba(255, 107, 0, 0.2) 0%, rgba(255, 136, 0, 0.2) 100%); border: 2px solid #ff6b00; border-radius: 12px; padding: 20px; margin-bottom: 30px; position: relative; overflow: hidden;">
                     <div style="position: absolute; top: -20px; right: -20px; font-size: 100px; opacity: 0.1;">⚠️</div>
                     <div style="position: relative; z-index: 1;">
@@ -1996,8 +1968,7 @@ function displaySubmissionConfirmation() {
 							</p>
 							</div>
 						</div>
-							
-                <!-- Password Section -->
+
                 <div style="background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 25px; backdrop-filter: blur(5px);">
                     <div style="text-align: center; margin-bottom: 20px;">
                         <div style="display: inline-flex; align-items: center; gap: 10px; background: rgba(255, 107, 0, 0.2); padding: 10px 20px; border-radius: 25px; border: 1px solid rgba(255, 107, 0, 0.4);">
@@ -2241,7 +2212,7 @@ function displaySolutionResult(solution) {
         '<div style="font-size: 12px; color: #555;">«Θα τελειώσει απόψε»</div>' +
         '</div>' +
         '<div style="background: #fff3cd; padding: 10px; border-radius: 6px; border-left: 3px solid #ffc107;">' +
-        '<div style="font-weight: bold; color: #856404; margin-bottom: 4px;">🥃 Δυο Ποτήρια</div>' +
+        '<div style="font-weight: bold; color: #856404; margin-bottom: 4px;">🥃 Ποτήρια</div>' +
         '<div style="font-size: 12px; color: #555;">Ένα με κυάνιο, ένα καθαρό</div>' +
         '</div>' +
         '<div style="background: #f8d7da; padding: 10px; border-radius: 6px; border-left: 3px solid #dc3545;">' +
@@ -2257,7 +2228,7 @@ function displaySolutionResult(solution) {
         '<div style="font-size: 12px; color: #555;">Απενεργοποίηση 20:55</div>' +
         '</div>' +
         '<div style="background: #ffe0e0; padding: 10px; border-radius: 6px; border-left: 3px solid #ff6b6b;">' +
-        '<div style="font-weight: bold; color: #c92a2a; margin-bottom: 4px;">🍽️ Παραγγελία x2</div>' +
+        '<div style="font-weight: bold; color: #c92a2a; margin-bottom: 4px;">🍽️ Παραγγελία</div>' +
         '<div style="font-size: 12px; color: #555;">Φαγητό για 2, θύμα μόνο</div>' +
         '</div>' +
         '</div>' +

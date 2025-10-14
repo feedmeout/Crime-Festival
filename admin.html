@@ -713,14 +713,14 @@ body {
             <h2>👥 ΕΝΕΡΓΕΣ ΟΜΑΔΕΣ</h2>
             <div class="quick-actions">
                 <button class="btn btn-success" onclick="refreshTeams()">🔄 ΑΝΑΝΕΩΣΗ</button>
-                <button class="btn" style="background: #17a2b8; color: white;" onclick="exportAllData()">💾 EXPORT (GAME)</button>
-                <button class="btn" style="background: #6c757d; color: white;" onclick="importData()">📥 IMPORT (GAME)</button>
+                <button class="btn" style="background: #17a2b8; color: white;" onclick="exportAllData()">💾 EXPORT DATA (GAME)</button>
+                <button class="btn" style="background: #6c757d; color: white;" onclick="importData()">📥 IMPORT DATA (GAME)</button>
 				<button class="btn" style="background: #ffc107; color: #000;" onclick="window.location.href='leaderboard.html'">🏆 LEADERBOARD (ADMIN)</button>
 				<button class="btn" id="leaderboardToggleBtn" style="background: #dc3545; color: white;" onclick="toggleLeaderboard()">
 					🔒 LOADING...
 				</button>
                 <button class="btn btn-secondary" onclick="unlockAllForAll()">🔓 ΞΕΚΛΕΙΔΩΜΑ ΤΕΚΜΗΡΙΩΝ</button>
-                <button class="btn btn-danger" onclick="resetAll()">🗑️ ΔΙΑΓΡΑΦΗ ΟΛΩΝ</button>
+                <button class="btn btn-danger" onclick="resetAll()">🗑️ ΔΙΑΓΡΑΦΗ ΟΛΩΝ (ΟΜΑΔΕΣ)</button>
             </div>
             
             <div class="sort-controls">
@@ -1580,10 +1580,10 @@ async function updateLeaderboardButton() {
     
     if (btn) {
         if (isUnlocked) {
-            btn.innerHTML = '🔓 ΚΛΕΙΔΩΜΑ LEADERBOARD';
+            btn.innerHTML = '🔓 ΚΛΕΙΔΩΜΑ LEADERBOARD (ΟΜΑΔΕΣ)';
             btn.style.background = '#28a745';
         } else {
-            btn.innerHTML = '🔒 ΞΕΚΛΕΙΔΩΜΑ LEADERBOARD';
+            btn.innerHTML = '🔒 ΞΕΚΛΕΙΔΩΜΑ LEADERBOARD (ΟΜΑΔΕΣ)';
             btn.style.background = '#dc3545';
         }
     }
