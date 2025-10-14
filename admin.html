@@ -300,32 +300,6 @@ body {
     border-color: #ff6b00;
 }
 
-.last-update-box {
-    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-    border: 2px solid #2196f3;
-    border-radius: 8px;
-    padding: 10px 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    font-size: 12px;
-    font-weight: 600;
-    color: #0d47a1;
-    box-shadow: 0 2px 8px rgba(33, 150, 243, 0.2);
-    text-align: center;
-}
-
-.last-update-box .icon {
-    font-size: 16px;
-    animation: pulse 2s ease-in-out infinite;
-}
-
-@keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.6; }
-}
-
 .progress-bar {
     background: #e0e0e0;
     height: 30px;
@@ -680,12 +654,6 @@ body {
         padding: 30px;
     }
 
-    .last-update-box {
-        margin-left: auto;
-        width: auto;
-    }
-}
-
 @media (min-width: 1024px) {
     .section {
         padding: 30px;
@@ -732,11 +700,12 @@ body {
 	
         <div class="section">
             <h2>➕ ΠΡΟΣΘΗΚΗ ΟΜΑΔΑΣ</h2>
-            <div class="team-input">
-                <input type="text" id="newTeamName" placeholder="Όνομα" />
-                <input type="text" id="newTeamPassword" placeholder="Κωδικός" />
-                <button class="btn btn-primary" onclick="addTeam()">ΠΡΟΣΘΗΚΗ ΟΜΑΔΑΣ</button>
-            </div>
+<div class="team-input">
+    <input type="text" id="newTeamName" placeholder="ΟΝΟΜΑ" />
+    <input type="text" id="newTeamPassword" placeholder="ΚΩΔΙΚΟΣ" />
+    <input type="number" id="newTeamSize" placeholder="ΜΕΛΗ (1-10)" min="1" max="10" />
+    <button class="btn btn-primary" onclick="addTeam()">ΠΡΟΣΘΗΚΗ ΟΜΑΔΑΣ</button>
+</div>
             <div id="addTeamAlert"></div>
         </div>
 
@@ -762,10 +731,6 @@ body {
                     <option value="completion">ΧΡΟΝΟΣ ΟΛΟΚΛΗΡΩΣΗΣ (ΤΑΧΥΤΕΡΟ)</option>
                     <option value="recent">ΠΙΟ ΠΡΟΣΦΑΤΟ</option>
                 </select>
-                <div class="last-update-box" id="lastRefresh">
-                    <span class="icon">🔄</span>
-                    <span>Αναμονή ενημέρωσης...</span>
-                </div>
             </div>
             
             <div id="teamsContainer" class="team-list"></div>
@@ -1031,47 +996,55 @@ body {
         input.click();
     }
 
-    async function addTeam() {
-        const teamName = document.getElementById('newTeamName').value.trim().toLowerCase();
-        const password = document.getElementById('newTeamPassword').value.trim();
-        const alertDiv = document.getElementById('addTeamAlert');
-        
-        if (!teamName) {
-            alertDiv.innerHTML = '<div class="alert alert-danger">⚠️ Παρακαλώ εισάγετε όνομα ομάδας</div>';
-            return;
-        }
+async function addTeam() {
+    const alertDiv = document.getElementById('addTeamAlert');
+    const teamName = document.getElementById('newTeamName').value.trim().toLowerCase();
+    const password = document.getElementById('newTeamPassword').value.trim();
+    const teamSize = parseInt(document.getElementById('newTeamSize').value);
 
-        if (!password) {
-            alertDiv.innerHTML = '<div class="alert alert-danger">⚠️ Παρακαλώ εισάγετε κωδικό ομάδας</div>';
-            return;
-        }
-
-        if (isFirebaseReady()) {
-            const docRef = window.firebaseDoc(window.firebaseDB, 'teams', teamName);
-            const docSnap = await window.firebaseGetDoc(docRef);
-            if (docSnap.exists()) {
-                alertDiv.innerHTML = '<div class="alert alert-warning">⚠️ Η ομάδα υπάρχει ήδη</div>';
-                return;
-            }
-        }
-
-        await saveTeam(teamName, {
-            password: password,
-            unlocked: [],
-            timestamps: {},
-            startTime: null,
-            completedAt: null,
-            totalTimeMs: null,
-            createdAt: new Date().toISOString()
-        });
-        
-        alertDiv.innerHTML = `<div class="alert alert-success">✅ Η ομάδα "${teamName}" δημιουργήθηκε με κωδικό: <strong>${password}</strong></div>`;
-        document.getElementById('newTeamName').value = '';
-        document.getElementById('newTeamPassword').value = '';
-        
-        setTimeout(() => { alertDiv.innerHTML = ''; }, 5000);
-        refreshTeams();
+    if (!teamName) {
+        alertDiv.innerHTML = '<div class="alert alert-danger">⚠️ Παρακαλώ εισάγετε όνομα ομάδας</div>';
+        return;
     }
+
+    if (!password) {
+        alertDiv.innerHTML = '<div class="alert alert-danger">⚠️ Παρακαλώ εισάγετε κωδικό ομάδας</div>';
+        return;
+    }
+
+    if (!teamSize || teamSize < 1 || teamSize > 10) {
+        alertDiv.innerHTML = '<div class="alert alert-danger">⚠️ Παρακαλώ εισάγετε αριθμό μελών (1-10)</div>';
+        return;
+    }
+
+    if (isFirebaseReady()) {
+        const docRef = window.firebaseDoc(window.firebaseDB, 'teams', teamName);
+        const docSnap = await window.firebaseGetDoc(docRef);
+        if (docSnap.exists()) {
+            alertDiv.innerHTML = '<div class="alert alert-warning">⚠️ Η ομάδα υπάρχει ήδη</div>';
+            return;
+        }
+    }
+
+    await saveTeam(teamName, {
+        password: password,
+        teamSize: teamSize,
+        unlocked: [],
+        timestamps: {},
+        startTime: null,
+        completedAt: null,
+        totalTimeMs: null,
+        createdAt: new Date().toISOString()
+    });
+    
+    alertDiv.innerHTML = `<div class="alert alert-success">✅ Η ομάδα "${teamName}" δημιουργήθηκε με κωδικό: <strong>${password}</strong> και <strong>${teamSize} μέλη</strong></div>`;
+    document.getElementById('newTeamName').value = '';
+    document.getElementById('newTeamPassword').value = '';
+    document.getElementById('newTeamSize').value = '';
+    
+    setTimeout(() => { alertDiv.innerHTML = ''; }, 5000);
+    refreshTeams();
+}
 
     async function refreshTeams() {
         console.log('🔄 === REFRESH TEAMS START ===');
@@ -1147,8 +1120,9 @@ body {
                     <div class="progress-bar">
                         <div class="progress-fill" style="width: ${progress}%;">${progress}%</div>
                     </div>
-                    <div class="team-stats">📊 ΞΕΚΛΕΙΔΩΜΕΝΑ: ${team.unlocked.length} / ${TOTAL_TEKS} ΣΤΟΙΧΕΙΑ</div>
-                    <div class="team-stats password-box">
+<div class="team-stats">📊 ΞΕΚΛΕΙΔΩΜΕΝΑ: ${team.unlocked.length} / ${TOTAL_TEKS} ΣΤΟΙΧΕΙΑ</div>
+<div class="team-stats">👥 ΜΕΛΗ: <strong>${team.teamSize || 'N/A'}</strong></div>
+<div class="team-stats password-box">
                         🔑 Κωδικός: <strong>${team.password || 'N/A'}</strong>
                         ${team.password ? `<button class="copy-btn" onclick="navigator.clipboard.writeText('${team.password}'); alert('Κωδικός αντιγράφηκε!')">📋 Αντιγραφή</button>` : ''}
                     </div>
@@ -1177,17 +1151,7 @@ body {
             `;
         }).join('');
         
-        container.innerHTML = html;
-
-        const now = new Date().toLocaleTimeString('el-GR');
-        const lastRefreshEl = document.getElementById('lastRefresh');
-        if (lastRefreshEl) {
-            lastRefreshEl.innerHTML = `
-                <span class="icon">🔄</span>
-                <span>ΤΕΛΕΥΤΑΙΑ ΕΝΗΜΕΡΩΣΗ: ${now}</span>
-            `;
-        }
-        
+        container.innerHTML = html;        
         console.log('🔄 === REFRESH TEAMS END ===');
     }
 
@@ -1373,15 +1337,20 @@ body {
         }
     }
 
-    async function resetTeam(teamName) {
-        if (confirm(`Reset πρόοδο για την ομάδα "${teamName}";`)) {
-            await saveTeam(teamName, {
-                unlocked: [],
-                timestamps: {},
-                startTime: null,
-                completedAt: null,
-                totalTimeMs: null
-            });
+async function resetTeam(teamName) {
+    if (confirm(`Reset πρόοδο για την ομάδα "${teamName}";`)) {
+        const teams = await getAllTeams();
+        const team = teams.find(t => t.name === teamName);
+        
+        await saveTeam(teamName, {
+            password: team?.password || null,
+            teamSize: team?.teamSize || null,
+            unlocked: [],
+            timestamps: {},
+            startTime: null,
+            completedAt: null,
+            totalTimeMs: null
+        });
             refreshTeams();
         }
     }
@@ -1544,7 +1513,6 @@ body {
         }
     });
 
-// === LEADERBOARD UNLOCK FEATURE ===
 async function checkLeaderboardStatus() {
     if (!window.firebaseDB) {
         console.warn('Firebase not ready');
@@ -1617,12 +1585,9 @@ async function toggleLeaderboard() {
     }
 }
 
-// Initialize button on page load
 window.addEventListener('DOMContentLoaded', () => {
     setTimeout(async () => {
         await updateLeaderboardButton();
-        
-        // Refresh button status every 5 seconds
         setInterval(updateLeaderboardButton, 5000);
     }, 500);
 });
