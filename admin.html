@@ -721,7 +721,7 @@ body {
     </div>
 
 <script>
-let teamsData = {}; // Store all team data globally
+let teamsData = {};
     const BASE_URL = window.location.origin + window.location.pathname.replace('admin.html', '');
     const TOTAL_TEKS = 11;
     
@@ -1030,8 +1030,6 @@ async function addTeam() {
 async function refreshTeams() {
     console.log('🔄 === REFRESH TEAMS START ===');
     let teams = await getAllTeams();
-    
-    // Populate global teamsData for timer updates
     teamsData = {};
     teams.forEach(team => {
         teamsData[team.name] = team;
@@ -1044,14 +1042,19 @@ async function refreshTeams() {
     console.log(`📊 Loaded ${teams.length} teams from Firebase/localStorage`);
         teams.forEach(t => console.log(`  - ${t.name}: ${t.unlocked.length} TEKs unlocked, data:`, t.unlocked));
 
-        if (teams.length === 0) {
-            container.innerHTML = '';
-        // Clear any existing timer interval
-        if (window.timerInterval) {
-            clearInterval(window.timerInterval);
-        }
+if (teams.length === 0) {
+    container.innerHTML = '';
+    noTeams.style.display = 'block';
+    return;
+}
+
+noTeams.style.display = 'none';
+container.innerHTML = '';
+
+if (window.timerInterval) {
+    clearInterval(window.timerInterval);
+}
         
-        // Update all timers every second
         window.timerInterval = setInterval(() => {
             document.querySelectorAll('.team-card').forEach(teamCard => {
                 const teamName = teamCard.dataset.teamId;
