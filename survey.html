@@ -984,30 +984,22 @@ function renderWelcome() {
                     ΣΑΣ ΕΥΧΑΡΙΣΤΟΥΜΕ ΘΕΡΜΑ<br>ΓΙΑ ΤΗ ΣΥΜΜΕΤΟΧΗ ΣΑΣ!
                 </h1>
                 
-                <div class="info-box">
-                    <div class="grid-gap-12">
-                        <div class="info-item">
-                            <span class="info-icon">📋</span>
-                            <div class="text-left">
-                                <strong class="info-strong">ΠΡΟΚΑΤΑΡΚΤΙΚΗ ΕΡΕΥΝΑ</strong><br>
-                                <small class="info-small">Ημερομηνία: ${new Date(existingPreData.submittedAt).toLocaleString('el-GR')}</small>
-                            </div>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-icon">📊</span>
-                            <div class="text-left">
-                                <strong class="info-strong">ΤΕΛΙΚΗ ΕΡΕΥΝΑ</strong><br>
-                                <small class="info-small">Ημερομηνία: ${new Date(existingPostData.submittedAt).toLocaleString('el-GR')}</small>
-                            </div>
-                        </div>
+<div class="info-box" style="text-align: center; padding: clamp(25px, 4vw, 35px);">
+                    <div style="margin-bottom: 20px;">
+                        <span style="font-size: clamp(20px, 3vw, 24px); margin-right: 10px;">📋</span>
+                        <strong style="display: block; margin-top: 8px; font-size: clamp(14px, 2.5vw, 16px);">ΠΡΟΚΑΤΑΡΚΤΙΚΗ ΕΡΕΥΝΑ</strong>
+                        <small style="color: var(--gray-600); font-size: clamp(12px, 2vw, 14px);">Ημερομηνία: ${new Date(existingPreData.submittedAt).toLocaleString('el-GR')}</small>
+                    </div>
+                    <div>
+                        <span style="font-size: clamp(20px, 3vw, 24px); margin-right: 10px;">📊</span>
+                        <strong style="display: block; margin-top: 8px; font-size: clamp(14px, 2.5vw, 16px);">ΤΕΛΙΚΗ ΕΡΕΥΝΑ</strong>
+                        <small style="color: var(--gray-600); font-size: clamp(12px, 2vw, 14px);">Ημερομηνία: ${new Date(existingPostData.submittedAt).toLocaleString('el-GR')}</small>
                     </div>
                 </div>
                 
-                <div class="note-box">
-                    <p class="note-text">
-                        <strong>✅ ΜΠΟΡΕΙΤΕ ΝΑ ΚΛΕΙΣΕΤΕ ΑΥΤΗ ΤΗΝ ΚΑΡΤΕΛΑ!</strong><br>
-                    </p>
-                </div>
+                <p style="text-align: center; margin: 30px 0; font-size: clamp(15px, 3vw, 17px); color: var(--gray-700);">
+                    <strong>✅ ΜΠΟΡΕΙΤΕ ΝΑ ΚΛΕΙΣΕΤΕ ΑΥΤΗ ΤΗΝ ΚΑΡΤΕΛΑ!</strong>
+                </p>
             </div>
         `;
         return;
