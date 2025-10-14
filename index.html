@@ -1053,9 +1053,6 @@ button:focus-visible,
         <div class="team-info" id="teamInfo" style="display: none;">
             <strong id="teamName"></strong>
         </div>
-<button onclick="logout()" class="logout-btn">
-    🚪 Αποσύνδεση
-</button>
     </div>
 
     <div class="container">
@@ -2497,17 +2494,7 @@ function initTabs() {
     });
 }
 
-function logout() {
-    if (confirm('Είστε σίγουροι ότι θέλετε να αποσυνδεθείτε;')) {
-        sessionStorage.removeItem('teamCode');
-        sessionStorage.removeItem('memberName');
-        sessionStorage.removeItem('memberAuth');
-        window.location.href = 'team_member_entry.html';
-    }
-}
-
 window.submitSolution = submitSolution;
-window.logout = logout;
 window.switchToSurveyTab = switchToSurveyTab;
 
 let resultsUnsubscribe = null;
@@ -2644,7 +2631,7 @@ async function updateResultsTabState() {
                 <h2 style="color: #1a1a2e; font-size: clamp(20px, 5vw, 28px); margin-bottom: 20px;">
                     Ολοκληρώστε Πρώτα την Τελική Έρευνα
                 </h2>
-                <a href="survey.html?team=${teamCode}&member=${encodeURIComponent(memberName)}&type=post" 
+                <a href="survey.html?team=${teamCode}&member=${encodeURIComponent(memberName)}" 
                    class="btn btn-primary" 
                    style="display: inline-block; text-decoration: none; font-size: clamp(16px, 3.5vw, 18px); padding: clamp(15px, 3vw, 18px) clamp(30px, 6vw, 40px);">
                     📊 ΜΕΤΑΒΑΣΗ ΣΤΗΝ ΤΕΛΙΚΗ ΕΡΕΥΝΑ
@@ -2868,7 +2855,7 @@ function displayResultsLeaderboard(teams) {
                     ${rankEmoji}
                 </td>
                 <td style="padding: 12px 10px; font-weight: bold; color: #1a1a2e; text-transform: uppercase;">
-                    ${team.name.toUpperCase()}${isCurrentTeam ? ' (ΕΣΥ)' : ''}
+                    ${team.name.toUpperCase()}
                 </td>
                 <td style="padding: 12px 10px; font-weight: bold; color: #28a745;">
                     ${solution.score}/${maxScore}
@@ -2903,7 +2890,7 @@ function displayResultsLeaderboard(teams) {
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 2px solid #f0f0f0;">
                     <div class="${rankClass}" style="font-size: 36px; font-weight: bold;">${rankEmoji}</div>
                     <div style="font-size: 18px; font-weight: bold; color: #1a1a2e; text-transform: uppercase; flex: 1; margin: 0 15px;">
-                        ${team.name.toUpperCase()}${isCurrentTeam ? '<br><span style="color: #ffc107; font-size: 14px;">⭐ Η ΟΜΑΔΑ ΣΑΣ</span>' : ''}
+                        ${team.name.toUpperCase()}
                     </div>
                     <div style="font-size: 24px; font-weight: bold; color: #28a745;">
                         ${solution.score}/${maxScore}
