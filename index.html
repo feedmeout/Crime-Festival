@@ -7,7 +7,7 @@
 
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getFirestore, doc, setDoc, getDoc, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        import { getFirestore, doc, setDoc, getDoc, onSnapshot, collection, getDocs } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
         const firebaseConfig = {
             apiKey: "AIzaSyA_9_40aa_wO_19g-1bIrSB6742aMOPwjo",
@@ -26,6 +26,8 @@ window.firebaseDoc = doc;
 window.firebaseSetDoc = setDoc;
 window.firebaseGetDoc = getDoc;
 window.firebaseOnSnapshot = onSnapshot;
+window.firebaseCollection = collection;
+window.firebaseGetDocs = getDocs;
         
         console.log("✅ Firebase connected in index.html!");
     </script>
@@ -1249,12 +1251,10 @@ button:focus-visible,
         </p>
     </div>
 
-
-
 <!-- Tab 7: Results/Leaderboard -->
 <div class="tab-pane" id="tab-results">
     <!-- State 1: Surveys Not Completed -->
-    <div id="surveysIncomplete" style="display: none;">
+	<div id="surveysIncomplete" style="display: none; padding-bottom: 80px;">
         <div class="intro-box" style="text-align: center; padding: 60px 30px;">
             <div style="font-size: clamp(80px, 20vw, 120px); margin-bottom: 30px;">🔒</div>
             <h2 style="color: #1a1a2e; font-size: clamp(20px, 5vw, 28px); margin-bottom: 20px;">
@@ -1277,7 +1277,7 @@ button:focus-visible,
     </div>
 
     <!-- State 2: Surveys Completed, Leaderboard Locked -->
-    <div id="leaderboardLocked" style="display: none;">
+    <div id="leaderboardLocked" style="display: none; padding-bottom: 80px;">
         <div class="intro-box" style="text-align: center; padding: 60px 30px;">
             <div style="font-size: clamp(80px, 20vw, 120px); margin-bottom: 30px; animation: swing 3s ease-in-out infinite;">
                 🔒
@@ -1294,7 +1294,7 @@ button:focus-visible,
             <div style="background: #d4edda; border: 2px solid #28a745; border-radius: 12px; padding: 20px; margin: 30px auto; max-width: 500px;">
                 <div style="font-size: 24px; margin-bottom: 10px;">✅</div>
                 <div style="color: #155724; font-weight: bold;">
-                    Έχετε ολοκληρώσει τις έρευνες!<br>
+                    Τουλάχιστον 2 μέλη της ομάδας σας έχουν ολοκληρώσει και τις δύο έρευνες!<br>
                     Η σελίδα θα ενημερωθεί αυτόματα όταν τα αποτελέσματα ανακοινωθούν.
                 </div>
             </div>
@@ -1305,7 +1305,7 @@ button:focus-visible,
     </div>
 
     <!-- State 3: Surveys Completed, Leaderboard Unlocked -->
-    <div id="leaderboardUnlocked" style="display: none;">
+    <div id="leaderboardUnlocked" style="display: none; padding-bottom: 80px;">
         <div style="background: rgba(40, 167, 69, 0.1); border: 2px solid #28a745; border-radius: 12px; padding: 15px; margin-bottom: 20px; text-align: center;">
             <strong style="color: #28a745; font-size: 16px;">✅ Αποτελέσματα Διαθέσιμα</strong>
         </div>
@@ -2629,6 +2629,7 @@ function logout() {
 
 window.submitSolution = submitSolution;
 window.logout = logout;
+window.switchToSurveyTab = switchToSurveyTab;
 
 let resultsUnsubscribe = null;
 
@@ -2646,24 +2647,59 @@ function switchToSurveyTab() {
 async function checkSurveyCompletion() {
     if (!window.firebaseDB) {
         console.warn('Firebase not ready for survey check');
-        return { pre: false, post: false };
+        return { pre: false, post: false, preCount: 0, postCount: 0, members: [] };
     }
 
     try {
-        const preSurveyDoc = `${teamCode}_pre`;
-        const postSurveyDoc = `${teamCode}_post`;
-        const preDocRef = window.firebaseDoc(window.firebaseDB, 'surveys', preSurveyDoc);
-        const postDocRef = window.firebaseDoc(window.firebaseDB, 'surveys', postSurveyDoc);
-        const preSnap = await window.firebaseGetDoc(preDocRef);
-        const postSnap = await window.firebaseGetDoc(postDocRef);
+        // Get all survey documents
+        const surveysRef = window.firebaseCollection(window.firebaseDB, 'surveys');
+        const querySnapshot = await window.firebaseGetDocs(surveysRef);
+        
+        const preMembers = new Set();
+        const postMembers = new Set();
+        const membersWithBoth = new Set();
+        
+        // Check all documents for this team
+        querySnapshot.forEach((doc) => {
+            const docId = doc.id;
+            
+            // Check for pre-survey pattern: {teamCode}_pre_{memberName}
+            if (docId.startsWith(`${teamCode}_pre_`)) {
+                const memberName = docId.replace(`${teamCode}_pre_`, '');
+                preMembers.add(memberName);
+            }
+            
+            // Check for post-survey pattern: {teamCode}_post_{memberName}
+            if (docId.startsWith(`${teamCode}_post_`)) {
+                const memberName = docId.replace(`${teamCode}_post_`, '');
+                postMembers.add(memberName);
+            }
+        });
+        
+        // Find members who completed BOTH surveys
+        preMembers.forEach(member => {
+            if (postMembers.has(member)) {
+                membersWithBoth.add(member);
+            }
+        });
+        
+        const bothCount = membersWithBoth.size;
+        const meetsRequirement = bothCount >= 2;
+        
+        console.log(`Survey completion check: ${bothCount} member(s) completed both surveys (need 2)`);
+        console.log(`Pre-survey completions: ${preMembers.size}, Post-survey completions: ${postMembers.size}`);
         
         return {
-            pre: preSnap.exists(),
-            post: postSnap.exists()
+            pre: meetsRequirement,
+            post: meetsRequirement,
+            preCount: preMembers.size,
+            postCount: postMembers.size,
+            bothCount: bothCount,
+            members: Array.from(membersWithBoth)
         };
     } catch (error) {
         console.error('Error checking surveys:', error);
-        return { pre: false, post: false };
+        return { pre: false, post: false, preCount: 0, postCount: 0, bothCount: 0, members: [] };
     }
 }
 
@@ -2692,15 +2728,15 @@ async function updateResultsTabState() {
     const postSurveyStatus = document.getElementById('postSurveyStatus');
     
     if (preSurveyStatus) {
-        preSurveyStatus.innerHTML = surveys.pre 
-            ? '✅ <strong>ΠΡΟΚΑΤΑΡΚΤΙΚΗ ΕΡΕΥΝΑ:</strong> ΟΛΟΚΛΗΡΩΘΗΚΕ' 
-            : '❌ <strong>ΠΡΟΚΑΤΑΡΚΤΙΚΗ ΕΡΕΥΝΑ:</strong> ΔΕΝ ΕΧΕΙ ΟΛΟΚΛΗΡΩΘΕΙ';
+        preSurveyStatus.innerHTML = surveys.bothCount >= 2
+            ? `✅ <strong>ΠΡΟΚΑΤΑΡΚΤΙΚΗ ΕΡΕΥΝΑ:</strong> ${surveys.preCount} μέλη την ολοκλήρωσαν` 
+            : `⏳ <strong>ΠΡΟΚΑΤΑΡΚΤΙΚΗ ΕΡΕΥΝΑ:</strong> ${surveys.preCount} μέλη την ολοκλήρωσαν (χρειάζονται 2+)`;
     }
     
     if (postSurveyStatus) {
-        postSurveyStatus.innerHTML = surveys.post 
-            ? '✅ <strong>ΤΕΛΙΚΗ ΕΡΕΥΝΑ:</strong> ΟΛΟΚΛΗΡΩΘΗΚΕ' 
-            : '❌ <strong>ΤΕΛΙΚΗ ΕΡΕΥΝΑ:</strong> ΔΕΝ ΕΧΕΙ ΟΛΟΚΛΗΡΩΘΕΙ';
+        postSurveyStatus.innerHTML = surveys.bothCount >= 2
+            ? `✅ <strong>ΤΕΛΙΚΗ ΕΡΕΥΝΑ:</strong> ${surveys.postCount} μέλη την ολοκλήρωσαν` 
+            : `⏳ <strong>ΤΕΛΙΚΗ ΕΡΕΥΝΑ:</strong> ${surveys.postCount} μέλη την ολοκλήρωσαν (χρειάζονται 2+)`;
     }
     
     if (!surveys.pre || !surveys.post) {
