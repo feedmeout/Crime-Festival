@@ -1648,19 +1648,19 @@ if (promptCount === null || promptCount === undefined || promptCount < 0) {
         maxScore: scoreResult.maxScore,
         breakdown: scoreResult.breakdown,
         correctCount: scoreResult.correctCount,
-        researchData: {
-            evidenceUnlockSequence: Object.keys(teamData.evidenceTimestamps || {}).sort((a, b) => {
-                return new Date(teamData.evidenceTimestamps[a]) - new Date(teamData.evidenceTimestamps[b]);
-            }),
-            totalEvidenceUnlocked: (teamData.unlocked || []).length,
-            firstEvidenceTime: teamData.startTime,
-            lastEvidenceTime: teamData.evidenceTimestamps ? 
-                Object.values(teamData.evidenceTimestamps).sort().pop() : null,
-            timeSpentMinutes: totalTimeMs ? Math.round(totalTimeMs / 60000) : null,
-            strategy: selectedSuspects.includes('suicide') ? 'suicide' : 
-                     (selectedSuspects.length === 5 ? 'shotgun' : 
-                     (selectedSuspects.length === 3 ? 'selective' : 'selective'))
-        }
+researchData: {
+    evidenceUnlockSequence: Object.keys(teamData.evidenceTimestamps || {}).sort((a, b) => {
+        return new Date(teamData.evidenceTimestamps[a]) - new Date(teamData.evidenceTimestamps[b]);
+    }),
+    totalEvidenceUnlocked: (teamData.unlocked || []).length,
+    firstEvidenceTime: teamData.startTime || null,
+    lastEvidenceTime: (teamData.evidenceTimestamps && Object.keys(teamData.evidenceTimestamps).length > 0) ? 
+        Object.values(teamData.evidenceTimestamps).sort().pop() : null,
+    timeSpentMinutes: totalTimeMs ? Math.round(totalTimeMs / 60000) : null,
+    strategy: selectedSuspects.includes('suicide') ? 'suicide' : 
+             (selectedSuspects.length === 5 ? 'shotgun' : 
+             (selectedSuspects.length === 3 ? 'selective' : 'selective'))
+}
     };
     
 try {
@@ -2234,8 +2234,6 @@ window.addEventListener('DOMContentLoaded', async () => {
 	
 try {
         const teamData = await getTeamData();
-        // Don't create new team data - it already exists from admin panel
-        // Just ensure we have the data loaded
         if (!teamData.unlocked) {
             console.warn(`⚠️ Team ${teamCode} has no unlock data, initializing empty array`);
             teamData.unlocked = [];
@@ -2342,7 +2340,6 @@ async function checkForUpdates() {
         }
     }
 
-    // Initialize real-time listener after everything else is set up
     setTimeout(() => {
         setupRealtimeListener();
     }, 500);
