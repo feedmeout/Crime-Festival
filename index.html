@@ -1622,7 +1622,6 @@ async function updateProgress(teamData) {
     const total = teks.length;
     const unlocked = unlockedTeks.length;
     const percentage = Math.round((unlocked / total) * 100);
-
     document.getElementById('progressFill').style.width = percentage + '%';
     document.getElementById('progressFill').textContent = percentage + '%';
     document.getElementById('progressText').textContent = 
@@ -1639,15 +1638,21 @@ async function updateProgress(teamData) {
                 hour: '2-digit',
                 minute: '2-digit'
             });
-        
         if (teamData.completedAt || teamData.solution) {
             document.getElementById('liveTimerLabel').textContent = 'Συνολικός Χρόνος:';
             document.getElementById('liveTimer').textContent = formatElapsedTime(teamData.totalTimeMs || 0);
             stopTimer();
-} else {
+        } else {
+
             document.getElementById('liveTimerLabel').textContent = 'Χρόνος σε Εξέλιξη:';
-            startLiveTimer(teamData.startTime);
+
+            if (!timerInterval) {
+                startLiveTimer(teamData.startTime);
+            }
         }
+    } else {
+        timerSection.style.display = 'none';
+        stopTimer();
     }
 }
 
