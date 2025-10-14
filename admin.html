@@ -1032,27 +1032,23 @@ async function refreshTeams() {
     });
     
     const container = document.getElementById('teamsContainer');
-    const noTeams = document.getElementById('noTeams');
     const sortOrder = document.getElementById('sortOrder').value;
 
     console.log(`📊 Loaded ${teams.length} teams from Firebase/localStorage`);
     teams.forEach(t => console.log(`  - ${t.name}: ${t.unlocked.length} TEKs unlocked, data:`, t.unlocked));
 
-if (teams.length === 0) {
-    container.innerHTML = '';
-    // noTeams.style.display = 'none';  // ← Keep hidden
-    if (window.timerInterval) {
-        clearInterval(window.timerInterval);
+    if (teams.length === 0) {
+        container.innerHTML = '';
+        if (window.timerInterval) {
+            clearInterval(window.timerInterval);
+        }
+        
+        console.log('🔄 === REFRESH TEAMS END ===');
+        return;
     }
     
-    console.log('🔄 === REFRESH TEAMS END ===');
-    return;
-}
-    
     teams = sortTeams(teams, sortOrder);
-    noTeams.style.display = 'none';
-    container.innerHTML = '';
-    
+    container.innerHTML = '';    
     if (window.timerInterval) {
         clearInterval(window.timerInterval);
     }
@@ -1275,7 +1271,7 @@ async function toggleTek(teamName, tekNumber) {
     
 const updatedTeam = {
     password: team.password || null,
-    teamSize: team.teamSize !== undefined ? team.teamSize : null,  // ← FIXED
+    teamSize: team.teamSize !== undefined ? team.teamSize : null,
     unlocked: unlocked,
     timestamps: timestamps,
     evidenceTimestamps: team.evidenceTimestamps || {},
@@ -1317,7 +1313,7 @@ async function unlockAll(teamName) {
     
 const updatedTeam = {
     password: team?.password || null,
-    teamSize: team?.teamSize !== undefined ? team.teamSize : null,  // ← FIXED
+    teamSize: team?.teamSize !== undefined ? team.teamSize : null,
     unlocked: allTeks,
     timestamps: timestamps,
     evidenceTimestamps: team?.evidenceTimestamps || {},
@@ -1343,7 +1339,7 @@ async function resetTeam(teamName) {
         
 await saveTeam(teamName, {
     password: team?.password || null,
-    teamSize: team?.teamSize !== undefined ? team.teamSize : null,  // ← FIXED
+    teamSize: team?.teamSize !== undefined ? team.teamSize : null,
     unlocked: [],
     timestamps: {},
     startTime: null,
@@ -1431,7 +1427,7 @@ async function unlockAllForAll() {
             
 await saveTeam(team.name, {
     password: team.password || null,
-    teamSize: team.teamSize !== undefined ? team.teamSize : null,  // ← FIXED
+    teamSize: team.teamSize !== undefined ? team.teamSize : null,
     unlocked: allTeks,
     timestamps: timestamps,
     startTime: earliestTime,
