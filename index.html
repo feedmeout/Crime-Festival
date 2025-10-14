@@ -1291,12 +1291,14 @@ button:focus-visible,
             <p style="color: #666; font-size: clamp(14px, 3vw, 16px); line-height: 1.6; margin-bottom: 15px;">
                 Παρακαλούμε περιμένετε την ανακοίνωση των οργανωτών.
             </p>
+
             <div style="background: #d4edda; border: 2px solid #28a745; border-radius: 12px; padding: 20px; margin: 30px auto; max-width: 500px;">
                 <div style="font-size: 24px; margin-bottom: 10px;">✅</div>
                 <div style="color: #155724; font-weight: bold;">
-                    Τουλάχιστον 2 μέλη της ομάδας σας έχουν ολοκληρώσει και τις δύο έρευνες!<br>
+                    Όλα τα μέλη της ομάδας σας έχουν ολοκληρώσει και τις δύο έρευνες!<br>
                     Η σελίδα θα ενημερωθεί αυτόματα όταν τα αποτελέσματα ανακοινωθούν.
                 </div>
+
             </div>
             <p style="margin-top: 30px; color: #999; font-size: 14px;">
                 Αναζήτηση ενημερώσεων<span class="loading-dots"><span>.</span><span>.</span><span>.</span></span>
@@ -2461,17 +2463,18 @@ async function initSolutionTab(teamData) {
 }
 
 window.addEventListener('DOMContentLoaded', async () => {
-    const isAuthenticated = sessionStorage.getItem('teamAuth');
-    const storedTeam = sessionStorage.getItem('teamName');
+    const isMemberAuth = sessionStorage.getItem('memberAuth');
+    const storedTeam = sessionStorage.getItem('teamCode');
+    const memberName = sessionStorage.getItem('memberName');
 
-    if (teamCode === 'default' && !isAuthenticated) {
-        console.warn('⚠️ Not authenticated, redirecting to team entry...');
-        window.location.href = 'team_entry.html';
+    if (teamCode === 'default' && !isMemberAuth) {
+        console.warn('⚠️ Not authenticated, redirecting to member entry...');
+        window.location.href = 'team_member_entry.html';
         return;
     }
     
     if (teamCode === 'default' && storedTeam) {
-        console.log('Using stored team name:', storedTeam);
+        console.log('Using stored team:', storedTeam);
         window.location.href = `index.html?team=${storedTeam}`;
         return;
     }
@@ -2621,12 +2624,12 @@ function initTabs() {
 
 function logout() {
     if (confirm('Είστε σίγουροι ότι θέλετε να αποσυνδεθείτε;')) {
-        sessionStorage.removeItem('teamName');
-        sessionStorage.removeItem('teamAuth');
-        window.location.href = 'team_entry.html';
+        sessionStorage.removeItem('teamCode');
+        sessionStorage.removeItem('memberName');
+        sessionStorage.removeItem('memberAuth');
+        window.location.href = 'team_member_entry.html';
     }
 }
-
 window.submitSolution = submitSolution;
 window.logout = logout;
 window.switchToSurveyTab = switchToSurveyTab;
@@ -2647,19 +2650,32 @@ function switchToSurveyTab() {
 async function checkSurveyCompletion() {
     if (!window.firebaseDB) {
         console.warn('Firebase not ready for survey check');
-        return { pre: false, post: false, preCount: 0, postCount: 0, members: [] };
+        return { 
+            pre: false, 
+            post: false, 
+            preCount: 0, 
+            postCount: 0, 
+            bothCount: 0,
+            teamSize: 0,
+            members: [] 
+        };
     }
 
     try {
-        // Get all survey documents
+        const teamDocRef = window.firebaseDoc(window.firebaseDB, 'teams', teamCode);
+        const teamDoc = await window.firebaseGetDoc(teamDocRef);
+        const teamSize = teamDoc.exists() ? (teamDoc.data().teamSize || 0) : 0;
+        
+        if (teamSize === 0) {
+            console.warn(`Team ${teamCode} has no teamSize configured. Please set teamSize in Firebase.`);
+        }
+		
         const surveysRef = window.firebaseCollection(window.firebaseDB, 'surveys');
         const querySnapshot = await window.firebaseGetDocs(surveysRef);
         
         const preMembers = new Set();
         const postMembers = new Set();
         const membersWithBoth = new Set();
-        
-        // Check all documents for this team
         querySnapshot.forEach((doc) => {
             const docId = doc.id;
             
@@ -2684,10 +2700,13 @@ async function checkSurveyCompletion() {
         });
         
         const bothCount = membersWithBoth.size;
-        const meetsRequirement = bothCount >= 2;
+        const meetsRequirement = teamSize > 0 && bothCount >= teamSize;
         
-        console.log(`Survey completion check: ${bothCount} member(s) completed both surveys (need 2)`);
-        console.log(`Pre-survey completions: ${preMembers.size}, Post-survey completions: ${postMembers.size}`);
+        console.log(`Survey check for ${teamCode}:`);
+        console.log(`  Team size: ${teamSize}`);
+        console.log(`  Members completed both: ${bothCount}/${teamSize}`);
+        console.log(`  Pre-survey: ${preMembers.size}, Post-survey: ${postMembers.size}`);
+        console.log(`  Requirement met: ${meetsRequirement}`);
         
         return {
             pre: meetsRequirement,
@@ -2695,11 +2714,20 @@ async function checkSurveyCompletion() {
             preCount: preMembers.size,
             postCount: postMembers.size,
             bothCount: bothCount,
+            teamSize: teamSize,
             members: Array.from(membersWithBoth)
         };
     } catch (error) {
         console.error('Error checking surveys:', error);
-        return { pre: false, post: false, preCount: 0, postCount: 0, bothCount: 0, members: [] };
+        return { 
+            pre: false, 
+            post: false, 
+            preCount: 0, 
+            postCount: 0, 
+            bothCount: 0,
+            teamSize: 0,
+            members: [] 
+        };
     }
 }
 
@@ -2718,25 +2746,73 @@ async function checkLeaderboardUnlocked() {
 }
 
 async function updateResultsTabState() {
+    // Check if current member completed post-survey
+    const memberName = sessionStorage.getItem('memberName');
+    const teamCode = sessionStorage.getItem('teamCode') || new URLSearchParams(window.location.search).get('team');
+    
+    if (!memberName || !teamCode) {
+        console.error('Member or team info missing!');
+        return;
+    }
+    
+    // Check if THIS member completed post-survey
+    const postSurveyDoc = `${teamCode}_post_${memberName}`;
+    const postSurveyRef = window.firebaseDoc(window.firebaseDB, 'surveys', postSurveyDoc);
+    const postSurveySnap = await window.firebaseGetDoc(postSurveyRef);
+    const memberCompletedPost = postSurveySnap.exists();
+    
+    // Check overall team progress
     const surveys = await checkSurveyCompletion();
     const leaderboardUnlocked = await checkLeaderboardUnlocked();
     
     const surveysIncomplete = document.getElementById('surveysIncomplete');
     const leaderboardLocked = document.getElementById('leaderboardLocked');
     const leaderboardUnlockedDiv = document.getElementById('leaderboardUnlocked');
+    
+    // If THIS member hasn't completed post-survey, show redirect
+    if (!memberCompletedPost) {
+        surveysIncomplete.innerHTML = `
+            <div class="intro-box" style="text-align: center; padding: 60px 30px;">
+                <div style="font-size: clamp(80px, 20vw, 120px); margin-bottom: 30px;">📝</div>
+                <h2 style="color: #1a1a2e; font-size: clamp(20px, 5vw, 28px); margin-bottom: 20px;">
+                    Ολοκληρώστε Πρώτα την Τελική Έρευνα
+                </h2>
+                <p style="color: #666; font-size: clamp(14px, 3vw, 16px); line-height: 1.6; margin-bottom: 30px;">
+                    Για να δείτε τα αποτελέσματα, πρέπει να ολοκληρώσετε την τελική έρευνα.
+                </p>
+                <a href="survey.html?team=${teamCode}&member=${encodeURIComponent(memberName)}&type=post" 
+                   class="btn btn-primary" 
+                   style="display: inline-block; text-decoration: none; font-size: clamp(16px, 3.5vw, 18px); padding: clamp(15px, 3vw, 18px) clamp(30px, 6vw, 40px);">
+                    📊 ΜΕΤΑΒΑΣΗ ΣΤΗΝ ΤΕΛΙΚΗ ΕΡΕΥΝΑ
+                </a>
+            </div>
+        `;
+        surveysIncomplete.style.display = 'block';
+        leaderboardLocked.style.display = 'none';
+        leaderboardUnlockedDiv.style.display = 'none';
+        return;
+    }
     const preSurveyStatus = document.getElementById('preSurveyStatus');
     const postSurveyStatus = document.getElementById('postSurveyStatus');
     
     if (preSurveyStatus) {
-        preSurveyStatus.innerHTML = surveys.bothCount >= 2
-            ? `✅ <strong>ΠΡΟΚΑΤΑΡΚΤΙΚΗ ΕΡΕΥΝΑ:</strong> ${surveys.preCount} μέλη την ολοκλήρωσαν` 
-            : `⏳ <strong>ΠΡΟΚΑΤΑΡΚΤΙΚΗ ΕΡΕΥΝΑ:</strong> ${surveys.preCount} μέλη την ολοκλήρωσαν (χρειάζονται 2+)`;
+        if (surveys.teamSize === 0) {
+            preSurveyStatus.innerHTML = '⚠️ <strong>ΠΡΟΚΑΤΑΡΚΤΙΚΗ ΕΡΕΥΝΑ:</strong> Μέγεθος ομάδας δεν έχει οριστεί';
+        } else if (surveys.bothCount >= surveys.teamSize) {
+            preSurveyStatus.innerHTML = `✅ <strong>ΠΡΟΚΑΤΑΡΚΤΙΚΗ ΕΡΕΥΝΑ:</strong> Όλα τα μέλη (${surveys.preCount}/${surveys.teamSize}) την ολοκλήρωσαν`;
+        } else {
+            preSurveyStatus.innerHTML = `⏳ <strong>ΠΡΟΚΑΤΑΡΚΤΙΚΗ ΕΡΕΥΝΑ:</strong> ${surveys.preCount}/${surveys.teamSize} μέλη την ολοκλήρωσαν`;
+        }
     }
     
     if (postSurveyStatus) {
-        postSurveyStatus.innerHTML = surveys.bothCount >= 2
-            ? `✅ <strong>ΤΕΛΙΚΗ ΕΡΕΥΝΑ:</strong> ${surveys.postCount} μέλη την ολοκλήρωσαν` 
-            : `⏳ <strong>ΤΕΛΙΚΗ ΕΡΕΥΝΑ:</strong> ${surveys.postCount} μέλη την ολοκλήρωσαν (χρειάζονται 2+)`;
+        if (surveys.teamSize === 0) {
+            postSurveyStatus.innerHTML = '⚠️ <strong>ΤΕΛΙΚΗ ΕΡΕΥΝΑ:</strong> Μέγεθος ομάδας δεν έχει οριστεί';
+        } else if (surveys.bothCount >= surveys.teamSize) {
+            postSurveyStatus.innerHTML = `✅ <strong>ΤΕΛΙΚΗ ΕΡΕΥΝΑ:</strong> Όλα τα μέλη (${surveys.postCount}/${surveys.teamSize}) την ολοκλήρωσαν`;
+        } else {
+            postSurveyStatus.innerHTML = `⏳ <strong>ΤΕΛΙΚΗ ΕΡΕΥΝΑ:</strong> ${surveys.postCount}/${surveys.teamSize} μέλη την ολοκλήρωσαν`;
+        }
     }
     
     if (!surveys.pre || !surveys.post) {
