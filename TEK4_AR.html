@@ -745,12 +745,12 @@
     <script>
         window.goBackToCaseFile = function() {
             const teamCode = sessionStorage.getItem('teamCode');
-            console.log('🔙 Button clicked! Team:', teamCode);
+            console.log('Button clicked! Team:', teamCode);
             
             if (teamCode) {
-                window.location.href = `index.html?team=${teamCode}&tab=evidence`;
+                window.location.href = 'index.html?team=' + teamCode + '&tab=evidence';
             } else {
-                window.location.href = 'index.html?tab=evidence`;
+                window.location.href = 'index.html?tab=evidence';
             }
         };
 
@@ -760,78 +760,58 @@
             
             canvas.width = 800;
             canvas.height = 400;
-
-            const floorGradient = ctx.createLinearGradient(0, 0, 0, 400);
-            floorGradient.addColorStop(0, '#2c3e50');
-            floorGradient.addColorStop(1, '#1a252f');
-            ctx.fillStyle = floorGradient;
+			
+            const bgGradient = ctx.createLinearGradient(0, 0, 0, 400);
+            bgGradient.addColorStop(0, '#2c3e50');
+            bgGradient.addColorStop(1, '#1a252f');
+            ctx.fillStyle = bgGradient;
             ctx.fillRect(0, 0, 800, 400);
-            ctx.fillStyle = '#4a4a4a';
-            ctx.fillRect(100, 250, 600, 150);
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
-            ctx.fillRect(100, 240, 600, 10);
-            ctx.fillStyle = '#1a1a1a';
-            ctx.fillRect(250, 100, 300, 200);
-            ctx.strokeStyle = '#2d2d2d';
-            ctx.lineWidth = 3;
-            ctx.strokeRect(250, 100, 300, 200);
-            ctx.fillStyle = '#1e3a5f';
-            ctx.fillRect(265, 120, 270, 160);
             ctx.fillStyle = '#e9ecef';
-            ctx.fillRect(275, 130, 250, 140);
+            ctx.fillRect(150, 80, 500, 280);
             ctx.fillStyle = '#6c757d';
-            ctx.fillRect(275, 130, 250, 30);
-            ctx.fillStyle = '#fff';
-            ctx.font = '12px sans-serif';
-            ctx.textAlign = 'left';
-            ctx.fillText('Νέο Μήνυμα', 285, 150);
+            ctx.fillRect(150, 80, 500, 40);
             ctx.fillStyle = '#dc3545';
-            ctx.font = 'bold 11px sans-serif';
-            ctx.fillText('Θέμα: Συγγνώμη', 285, 175);
+            ctx.beginPath();
+            ctx.arc(625, 100, 8, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#fff';
+            ctx.fillRect(170, 140, 460, 30);
+            ctx.fillStyle = '#dc3545';
+            ctx.fillRect(175, 145, 80, 20);
+            ctx.fillStyle = '#fff';
+            ctx.fillRect(170, 180, 460, 160);
             ctx.fillStyle = '#495057';
-            ctx.font = '9px sans-serif';
-            ctx.fillText('Από: dimitrios.petros@...', 285, 195);
-            ctx.fillText('Προς: Πολλαπλοί Παραλήπτες', 285, 210);
-            ctx.fillStyle = '#212529';
-            ctx.font = '8px sans-serif';
-            ctx.fillText('"Δεν μπορώ να συνεχίσω...', 285, 230);
-            ctx.fillText('Η πίεση είναι αβάσταχτη..."', 285, 245);
-            ctx.fillStyle = '#3a3a3a';
-            ctx.fillRect(375, 300, 50, 20);
-            ctx.fillRect(385, 320, 30, 30);
-            ctx.fillStyle = '#2a2a2a';
-            ctx.fillRect(280, 340, 240, 50);
-            ctx.fillStyle = '#3a3a3a';
-            for (let row = 0; row < 4; row++) {
-                for (let col = 0; col < 12; col++) {
-                    ctx.fillRect(288 + col * 19, 348 + row * 10, 16, 8);
-                }
+            for (let i = 0; i < 8; i++) {
+                ctx.fillRect(180, 195 + i * 18, 440, 10);
+                ctx.fillRect(180, 195 + i * 18 + 3, Math.random() * 300 + 100, 4);
             }
 
             ctx.fillStyle = 'rgba(220, 53, 69, 0.9)';
-            ctx.fillRect(50, 320, 180, 60);
+            ctx.fillRect(40, 300, 200, 70);
             ctx.strokeStyle = '#fff';
             ctx.lineWidth = 2;
-            ctx.strokeRect(50, 320, 180, 60);
+            ctx.strokeRect(40, 300, 200, 70);
+            
             ctx.fillStyle = '#fff';
-            ctx.font = 'bold 13px monospace';
+            ctx.font = 'bold 14px monospace';
             ctx.textAlign = 'left';
-            ctx.fillText('IP: 192.168.1.23', 60, 345);
-            ctx.font = '11px monospace';
-            ctx.fillText('7ος Όροφος', 60, 365);
+            ctx.fillText('IP: 192.168.1.23', 50, 330);
+            ctx.font = '12px monospace';
+            ctx.fillText('7th Floor', 50, 350);
+            ctx.fillText('No Password', 50, 365);
             ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
             ctx.fillRect(0, 0, 800, 40);
             
             ctx.fillStyle = '#ff0000';
             ctx.font = 'bold 14px monospace';
             ctx.textAlign = 'left';
-            ctx.fillText('● REC', 10, 25);
+            ctx.fillText('REC', 15, 25);
             
             ctx.fillStyle = '#fff';
-            ctx.fillText('22/09/2025  20:35:42  |  7ΟΣ ΟΡΟΦΟΣ - ΑΙΘΟΥΣΑ ΣΥΣΚΕΨΕΩΝ', 80, 25);
+            ctx.fillText('22/09/2025  20:35:42  |  CONFERENCE ROOM - 7TH FLOOR', 80, 25);
             
             ctx.textAlign = 'right';
-            ctx.fillText('ΤΕΚ #004', 790, 25);
+            ctx.fillText('TEK #004', 790, 25);
         }
 
         window.onload = function() {
@@ -841,38 +821,38 @@
             
             if (modelViewer) {
                 debugInfo.style.display = 'block';
-                debugInfo.innerHTML = '🔍 Προσπάθεια φόρτωσης: email.glb<br>';
+                debugInfo.innerHTML = 'Loading: email.glb<br>';
                 
-                modelViewer.addEventListener('progress', (event) => {
+                modelViewer.addEventListener('progress', function(event) {
                     const percent = Math.round(event.detail.totalProgress * 100);
-                    debugInfo.innerHTML = `⏳ Φόρτωση: ${percent}%<br>`;
+                    debugInfo.innerHTML = 'Loading: ' + percent + '%<br>';
                 });
                 
-                modelViewer.addEventListener('load', () => {
-                    debugInfo.innerHTML = '✅ 3D μοντέλο φορτώθηκε επιτυχώς!<br>';
+                modelViewer.addEventListener('load', function() {
+                    debugInfo.innerHTML = '3D model loaded!<br>';
                     debugInfo.style.background = '#d4edda';
                     debugInfo.style.borderColor = '#28a745';
-                    setTimeout(() => {
+                    setTimeout(function() {
                         debugInfo.style.display = 'none';
                     }, 3000);
                 });
                 
-                modelViewer.addEventListener('error', (event) => {
-                    debugInfo.innerHTML = '❌ ΣΦΑΛΜΑ: Το αρχείο δεν μπορεί να φορτώσει<br>';
-                    debugInfo.innerHTML += 'Ελέγξτε:<br>';
-                    debugInfo.innerHTML += '1. Το αρχείο υπάρχει στον ίδιο φάκελο<br>';
-                    debugInfo.innerHTML += '2. Το όνομα είναι: email.glb<br>';
-                    debugInfo.innerHTML += '3. Το αρχείο είναι έγκυρο .glb<br>';
+                modelViewer.addEventListener('error', function(event) {
+                    debugInfo.innerHTML = 'ERROR: File cannot load<br>';
+                    debugInfo.innerHTML += 'Check:<br>';
+                    debugInfo.innerHTML += '1. File exists in same folder<br>';
+                    debugInfo.innerHTML += '2. Name is: email.glb<br>';
+                    debugInfo.innerHTML += '3. File is valid .glb<br>';
                     debugInfo.style.background = '#f8d7da';
                     debugInfo.style.borderColor = '#dc3545';
                 });
                 
-                setTimeout(() => {
-                    if (debugInfo.innerHTML.includes('Φόρτωση')) {
-                        debugInfo.innerHTML = '⚠️ Το μοντέλο δεν φορτώνει...<br>';
-                        debugInfo.innerHTML += 'Πιθανές αιτίες:<br>';
-                        debugInfo.innerHTML += '• Το αρχείο δεν βρέθηκε<br>';
-                        debugInfo.innerHTML += '• Λάθος όνομα: email.glb<br>';
+                setTimeout(function() {
+                    if (debugInfo.innerHTML.includes('Loading')) {
+                        debugInfo.innerHTML = 'Model not loading...<br>';
+                        debugInfo.innerHTML += 'Possible causes:<br>';
+                        debugInfo.innerHTML += '- File not found<br>';
+                        debugInfo.innerHTML += '- Wrong name: email.glb<br>';
                         debugInfo.style.background = '#fff3cd';
                         debugInfo.style.borderColor = '#ffc107';
                     }
