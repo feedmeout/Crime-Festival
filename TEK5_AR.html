@@ -818,19 +818,20 @@
             canvas.width = 800;
             canvas.height = 400;
 			
-            const deskGradient = ctx.createLinearGradient(0, 0, 0, 400);
-            deskGradient.addColorStop(0, '#3d2817');
-            deskGradient.addColorStop(1, '#2d1810');
-            ctx.fillStyle = deskGradient;
-            ctx.fillRect(0, 0, 800, 400);
-            ctx.strokeStyle = 'rgba(61, 40, 23, 0.3)';
-            ctx.lineWidth = 2;
-            for (let i = 0; i < 400; i += 30) {
-                ctx.beginPath();
-                ctx.moveTo(0, i);
-                ctx.lineTo(800, i + Math.random() * 8);
-                ctx.stroke();
-            }
+const floorGradient = ctx.createLinearGradient(0, 0, 0, 400);
+floorGradient.addColorStop(0, '#8b7355');
+floorGradient.addColorStop(1, '#6b5345');
+ctx.fillStyle = floorGradient;
+ctx.fillRect(0, 0, 800, 400);
+
+ctx.strokeStyle = 'rgba(101, 67, 33, 0.3)';
+ctx.lineWidth = 2;
+for (let i = 0; i < 400; i += 40) {
+    ctx.beginPath();
+    ctx.moveTo(0, i);
+    ctx.lineTo(800, i + Math.random() * 10);
+    ctx.stroke();
+}
 
             ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
             ctx.beginPath();
