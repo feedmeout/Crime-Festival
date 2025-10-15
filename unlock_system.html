@@ -253,6 +253,19 @@
     </div>
 
     <script>
+        (function() {
+            const teamCode = sessionStorage.getItem('teamCode');
+            const memberAuth = sessionStorage.getItem('memberAuth');
+
+            if (!teamCode || memberAuth !== 'true') {
+                console.log('❌ User not logged in - immediate redirect');
+                const redirectUrl = encodeURIComponent(window.location.href);
+                window.location.href = `team_entry.html?redirect=${redirectUrl}`;
+                // Don't execute anything else
+                throw new Error('Redirecting to login...');
+            }
+        })();
+		
         const tekInfo = {
             '1': { name: 'Μπουκάλι Ουίσκι', icon: '🍾', page: 'TEK1_AR.html' },
             '2': { name: 'Κρυστάλλινα Ποτήρια', icon: '🥃', page: 'TEK2_AR.html' },
@@ -397,8 +410,6 @@
 
         async function processUnlock() {
             const container = document.getElementById('unlockContainer');
-
-            // Check if user is logged in via sessionStorage
             const teamCode = sessionStorage.getItem('teamCode');
             const memberAuth = sessionStorage.getItem('memberAuth');
 

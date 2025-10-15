@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🖨️ QR Code Generator - All Evidence</title>
+    
+    <!-- QRCode.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    
+    <style>
+        @media print {
+            body { margin: 0; padding: 0; }
+            .no-print { display: none !important; }
+            .qr-card { 
+                page-break-inside: avoid; 
+                box-shadow: none;
+            }
+            .page-break { page-break-after: always; }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: #f0f0f0;
+            padding: 20px;
+        }
+
+        .controls {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .controls h1 {
+            color: #1a1a2e;
+            margin-bottom: 20px;
+            font-size: 28px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #ff6b00;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255,107,0,0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #ff6b00;
+            border: 2px solid #ff6b00;
+        }
+
+        .btn-secondary:hover {
+            background: #fff5f0;
+        }
+
+        .info-box {
+            background: #e7f3ff;
+            border: 2px solid #2196f3;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .info-box strong {
+            color: #1565c0;
+        }
+
+        .qr-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .qr-card {
+            background: white;
+            border: 4px solid #ff6b00;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .qr-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .qr-card.critical {
+            border-color: #dc3545;
+            border-width: 5px;
+        }
+
+        .qr-card.critical::before {
+            content: '⚠️ ΚΡΙΣΙΜΟ';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #dc3545;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 5px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .tek-number {
+            font-size: 36px;
+            font-weight: bold;
+            font-family: monospace;
+            letter-spacing: 3px;
+            color: #ff6b00;
+            margin-bottom: 10px;
+        }
+
+        .tek-icon {
+            font-size: 60px;
+            margin: 15px 0;
+        }
+
+        .tek-name {
+            font-size: 20px;
+            font-weight: bold;
+            color: #1a1a2e;
+            margin: 15px 0;
+        }
+
+        .qr-container {
+            background: #f8f9fa;
+            border: 3px solid #dee2e6;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            display: inline-block;
+        }
+
+        .qr-code-wrapper {
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .scan-instruction {
+            background: linear-gradient(135deg, #fff5f0 0%, #ffe8db 100%);
+            border: 2px solid #ff6b00;
+            border-radius: 10px;
+            padding: 12px;
+            margin-top: 15px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #ff6b00;
+        }
+
+        .url-display {
+            font-size: 10px;
+            color: #999;
+            margin-top: 10px;
+            word-break: break-all;
+            font-family: monospace;
+            background: #f8f9fa;
+            padding: 8px;
+            border-radius: 5px;
+            max-height: 60px;
+            overflow-y: auto;
+        }
+
+        @media (max-width: 768px) {
+            .qr-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="controls no-print">
+        <h1>
+            🖨️ Γεννήτρια QR Codes Τεκμηρίων
+        </h1>
+        
+        <div class="form-group">
+            <label for="baseUrl">🌐 Base URL της Εφαρμογής:</label>
+            <input 
+                type="text" 
+                id="baseUrl" 
+                value="https://feedmeout.github.io/Crime-Festival/" 
+                placeholder="https://your-domain.com/Crime-Festival/">
+        </div>
+
+        <div class="info-box">
+            <strong>📝 Οδηγίες:</strong><br>
+            1. Βεβαιωθείτε ότι το Base URL είναι σωστό (με trailing slash /)<br>
+            2. Πατήστε "Δημιουργία QR Codes" για να δημιουργηθούν όλα τα codes<br>
+            3. Κάντε κλικ στο "Εκτύπωση" για να εκτυπώσετε τις κάρτες<br>
+            4. Κόψτε κάθε κάρτα και τοποθετήστε την στην αντίστοιχη τοποθεσία
+        </div>
+
+        <div class="btn-group">
+            <button class="btn" onclick="generateAllQRCodes()">
+                📋 Δημιουργία QR Codes
+            </button>
+            <button class="btn btn-secondary" onclick="window.print()">
+                🖨️ Εκτύπωση Καρτών
+            </button>
+        </div>
+    </div>
+
+    <div id="qrContainer" class="qr-grid"></div>
+
+    <script>
+        const tekData = [
+            { id: 1, name: 'Μπουκάλι Ουίσκι', icon: '🍾', critical: true },
+            { id: 2, name: 'Κρυστάλλινα Ποτήρια', icon: '🥃', critical: true },
+            { id: 3, name: 'Κινητό Θύματος', icon: '📱', critical: false },
+            { id: 4, name: 'Email Αυτοκτονίας', icon: '💻', critical: false },
+            { id: 5, name: 'Ιατρική Γνωμάτευση', icon: '🥼', critical: false },
+            { id: 6, name: 'Γάντια Λάτεξ', icon: '🧤', critical: false },
+            { id: 7, name: 'Χειρόγραφο Σημείωμα', icon: '✍️', critical: false },
+            { id: 8, name: 'Φάκελος Εμπιστευτικό', icon: '📂', critical: false },
+            { id: 9, name: 'Απόδειξη Χημικών', icon: '🧪', critical: true },
+            { id: 10, name: 'Κλειδί Χρηματοκιβωτίου', icon: '🔑', critical: false },
+            { id: 11, name: 'Κάμερες Ασφαλείας', icon: '📹', critical: false }
+        ];
+
+        function generateAllQRCodes() {
+            let baseUrl = document.getElementById('baseUrl').value.trim();
+            
+            if (!baseUrl) {
+                alert('⚠️ Παρακαλώ εισάγετε το Base URL!');
+                return;
+            }
+
+            if (!baseUrl.endsWith('/')) {
+                baseUrl += '/';
+            }
+
+            const container = document.getElementById('qrContainer');
+            container.innerHTML = '';
+
+            tekData.forEach((tek, index) => {
+                const url = `${baseUrl}unlock_system.html?tek=${tek.id}`;
+                
+                const cardDiv = document.createElement('div');
+                cardDiv.className = `qr-card ${tek.critical ? 'critical' : ''}`;
+                cardDiv.innerHTML = `
+                    <div class="tek-number">ΤΕΚ #${tek.id.toString().padStart(3, '0')}</div>
+                    <div class="tek-icon">${tek.icon}</div>
+                    <div class="tek-name">${tek.name}</div>
+                    <div class="qr-container">
+                        <div class="qr-code-wrapper" id="qr-${tek.id}"></div>
+                    </div>
+                    <div class="scan-instruction">
+                        📱 ΣΚΑΝΑΡΕΤΕ ΓΙΑ ΞΕΚΛΕΙΔΩΜΑ
+                    </div>
+                    <div class="url-display">${url}</div>
+                `;
+                
+                container.appendChild(cardDiv);
+
+                setTimeout(() => {
+                    new QRCode(document.getElementById(`qr-${tek.id}`), {
+                        text: url,
+                        width: 200,
+                        height: 200,
+                        colorDark: "#000000",
+                        colorLight: "#ffffff",
+                        correctLevel: QRCode.CorrectLevel.H
+                    });
+                }, 100 * index);
+            });
+
+            console.log('✅ All QR codes generated successfully!');
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            generateAllQRCodes();
+        });
+    </script>
+</body>
+</html>
