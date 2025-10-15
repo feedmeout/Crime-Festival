@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Τεκμήριο Ξεκλειδώθηκε</title>
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .animated-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0.1;
+            background-image: repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,107,0,0.5) 35px, rgba(255,107,0,0.5) 70px);
+            animation: slide 20s linear infinite;
+        }
+
+        @keyframes slide {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(70px); }
+        }
+
+        @keyframes unlock {
+            0% { transform: scale(0) rotate(-180deg); opacity: 0; }
+            50% { transform: scale(1.2) rotate(10deg); }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            position: relative;
+            z-index: 10;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .check-icon {
+            width: 32px;
+            height: 32px;
+            color: #fff;
+            animation: unlock 0.6s ease-out;
+        }
+
+        .header h1 {
+            color: #fff;
+            font-size: 24px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            color: #fff;
+            text-align: center;
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 18px;
+            }
+            .check-icon {
+                width: 24px;
+                height: 24px;
+            }
+            .header {
+                padding: 15px 10px;
+            }
+            .header p {
+                font-size: 12px;
+            }
+        }
+
+        .container {
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+        }
+
+        .evidence-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+            border: 3px solid #ff6b00;
+        }
+
+        @media (max-width: 768px) {
+            .evidence-card {
+                border-radius: 10px;
+                border: 2px solid #ff6b00;
+            }
+        }
+
+        .badge-bar {
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .badge-bar {
+                padding: 12px 15px;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        .badge-info {
+            flex: 1;
+        }
+
+        .evidence-id {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ff6b00;
+            font-family: monospace;
+            letter-spacing: 2px;
+        }
+
+        @media (max-width: 768px) {
+            .evidence-id {
+                font-size: 22px;
+                letter-spacing: 1px;
+            }
+        }
+
+        .category {
+            font-size: 12px;
+            color: #aaa;
+            margin-top: 2px;
+        }
+
+        @media (max-width: 768px) {
+            .category {
+                font-size: 10px;
+            }
+        }
+
+        .official-badge {
+            background: rgba(255,107,0,0.2);
+            border: 2px solid #ff6b00;
+            border-radius: 8px;
+            padding: 8px 15px;
+            font-size: 11px;
+            color: #ff6b00;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .official-badge {
+                font-size: 9px;
+                padding: 6px 10px;
+                align-self: flex-start;
+            }
+        }
+
+        .crime-scene-photo {
+            background: #000;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-top: 2px solid #333;
+            border-bottom: 2px solid #333;
+            overflow: hidden;
+        }
+
+        #crimeSceneCanvas {
+            width: 100%;
+            max-width: 800px;
+            height: auto;
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .crime-scene-photo {
+                border-top: 1px solid #333;
+                border-bottom: 1px solid #333;
+            }
+        }
+
+        .confidential-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255,0,0,0.9);
+            color: white;
+            padding: 5px 10px;
+            font-size: 11px;
+            font-weight: bold;
+            border-radius: 5px;
+            border: 1px solid #fff;
+        }
+
+        @media (max-width: 768px) {
+            .confidential-badge {
+                font-size: 9px;
+                padding: 4px 8px;
+                top: 5px;
+                right: 5px;
+            }
+        }
+
+        .ar-container {
+            margin: 20px 0;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(255,107,0,0.05) 0%, rgba(255,136,0,0.05) 100%);
+            border: 2px solid #ff6b00;
+            border-radius: 10px;
+        }
+
+        .ar-title {
+            font-size: 18px;
+            color: #ff6b00;
+            font-weight: bold;
+            margin: 0 0 15px 0;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        model-viewer {
+            width: 100%;
+            height: 450px;
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+        }
+
+        @media (max-width: 768px) {
+            model-viewer {
+                height: 350px;
+            }
+            .ar-title {
+                font-size: 16px;
+            }
+            .ar-container {
+                padding: 15px;
+                margin: 15px 0;
+            }
+        }
+
+        .details {
+            padding: 30px;
+            background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
+        }
+
+        @media (max-width: 768px) {
+            .details {
+                padding: 20px;
+            }
+        }
+
+        .evidence-title {
+            margin: 0 0 25px 0;
+            font-size: 24px;
+            color: #1a1a2e;
+            border-bottom: 3px solid #ff6b00;
+            padding-bottom: 15px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .evidence-title {
+                font-size: 20px;
+                margin: 0 0 20px 0;
+                gap: 10px;
+            }
+        }
+
+        .section {
+            margin-bottom: 25px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        .section-title {
+            font-size: 18px;
+            color: #0f3460;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .section-title {
+                font-size: 16px;
+                gap: 8px;
+            }
+        }
+
+        .section-content {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #333;
+            text-align: justify;
+        }
+
+        .section-content p {
+            margin: 0 0 15px 0;
+        }
+
+        @media (max-width: 768px) {
+            .section-content {
+                font-size: 14px;
+            }
+        }
+
+        ul {
+            padding-left: 25px;
+            line-height: 2;
+        }
+
+        ul li {
+            margin-bottom: 8px;
+        }
+
+        @media (max-width: 768px) {
+            ul {
+                padding-left: 20px;
+                line-height: 1.8;
+            }
+        }
+
+        .document-item {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 12px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .document-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .document-name {
+            font-weight: 700;
+            font-size: 15px;
+            color: #1a1a2e;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .document-details {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .document-details div {
+            margin-bottom: 4px;
+        }
+
+        .document-details strong {
+            color: #0f3460;
+        }
+
+        @media (max-width: 768px) {
+            .document-item {
+                padding: 12px;
+                margin-bottom: 10px;
+            }
+            
+            .document-name {
+                font-size: 14px;
+            }
+            
+            .document-details {
+                font-size: 12px;
+            }
+        }
+
+        .significance-box {
+            background: linear-gradient(135deg, #fff5f0 0%, #ffe8db 100%);
+            border: 2px solid #ff6b00;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 12px rgba(255,107,0,0.1);
+        }
+
+        .significance-title {
+            font-size: 18px;
+            color: #ff6b00;
+            margin: 0 0 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+        }
+
+        @media (max-width: 768px) {
+            .significance-box {
+                padding: 20px;
+                margin-bottom: 20px;
+            }
+            
+            .significance-title {
+                font-size: 16px;
+            }
+        }
+
+        .significance-text {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #1a1a2e;
+            margin: 0;
+            text-align: justify;
+        }
+
+        @media (max-width: 768px) {
+            .significance-text {
+                font-size: 14px;
+            }
+        }
+
+        .handwritten-note {
+            padding: 15px 0;
+            margin: 15px 0;
+            font-style: italic;
+            color: #555;
+            border-top: 1px dashed #ccc;
+            border-bottom: 1px dashed #ccc;
+        }
+
+        .handwritten-note::before {
+            content: "✍️ ";
+            font-style: normal;
+        }
+
+        .missing-alert {
+            background: linear-gradient(135deg, rgba(220,53,69,0.2) 0%, rgba(139,0,0,0.2) 100%);
+            border: 2px dashed #dc3545;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .missing-alert strong {
+            color: #dc3545;
+            font-size: 16px;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .missing-alert p {
+            color: #721c24;
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .missing-alert {
+                padding: 15px;
+            }
+            
+            .missing-alert strong {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-background"></div>
+
+    <div class="header">
+        <div class="header-content">
+            <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+            <h1>ΤΕΚΜΗΡΙΟ ΞΕΚΛΕΙΔΩΘΗΚΕ!</h1>
+        </div>
+        <p>Προστέθηκε στον φάκελο υπόθεσης</p>
+    </div>
+
+    <div class="container">
+        <div class="evidence-card">
+            <div class="badge-bar">
+                <div class="badge-info">
+                    <div class="evidence-id">ΤΕΚ #008</div>
+                </div>
+                <div class="official-badge">ΕΠΙΣΗΜΟ ΤΕΚΜΗΡΙΟ</div>
+            </div>
+
+            <div class="crime-scene-photo">
+                <canvas id="crimeSceneCanvas"></canvas>
+                <div class="confidential-badge">ΑΠΟΡΡΗΤΟ</div>
+            </div>
+
+            <div class="ar-container">
+                <h3 class="ar-title">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M2 16.1A5 5 0 0 1 5.9 20M2 12.05A9 9 0 0 1 9.95 20M2 8V6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-6"></path>
+                        <line x1="2" y1="20" x2="2.01" y2="20"></line>
+                    </svg>
+                    ΠΡΟΒΟΛΗ ΣΕ 3D
+                </h3>
+                
+                <model-viewer
+                    src="confidential.glb"
+                    alt="Αρχειοθήκη Εμπιστευτικών Εγγράφων 3D Model - Evidence"
+                    ar
+                    ar-modes="webxr scene-viewer quick-look"
+                    camera-controls
+                    touch-action="pan-y"
+                    auto-rotate
+                    auto-rotate-delay="1000"
+                    rotation-per-second="30deg"
+                    shadow-intensity="1"
+                    exposure="0.8"
+                    camera-orbit="0deg 75deg 2.5m"
+                    min-camera-orbit="auto 0deg auto"
+                    max-camera-orbit="auto 180deg auto"
+                    loading="eager"
+                    reveal="auto"
+                    ar-scale="fixed">
+                    
+                    <div slot="poster" style="
+                        width: 100%;
+                        height: 100%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        background: #f5f5f5;
+                        flex-direction: column;
+                        gap: 10px;
+                    ">
+                        <div style="
+                            border: 4px solid #f3f3f3;
+                            border-top: 4px solid #ff6b00;
+                            border-radius: 50%;
+                            width: 40px;
+                            height: 40px;
+                            animation: spin 1s linear infinite;
+                        "></div>
+                        <p style="color: #666; font-size: 14px;">Φόρτωση 3D μοντέλου...</p>
+                    </div>
+                    
+                    <div slot="error" style="
+                        width: 100%;
+                        height: 100%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        background: #fff3cd;
+                        flex-direction: column;
+                        gap: 15px;
+                        padding: 20px;
+                    ">
+                        <p style="color: #856404; font-size: 16px; font-weight: bold;">⚠️ Σφάλμα Φόρτωσης</p>
+                        <p style="color: #856404; font-size: 13px; text-align: center;">
+                            Το 3D μοντέλο δεν μπορεί να φορτώσει.<br>
+                            Ελέγξτε το αρχείο: confidential.glb
+                        </p>
+                    </div>
+                </model-viewer>
+            </div>
+
+            <div class="details">
+                <h2 class="evidence-title">📦 ΑΡΧΕΙΟΘΗΚΗ «ΕΜΠΙΣΤΕΥΤΙΚΟ»</h2>
+
+                <div class="section">
+                    <h3 class="section-title">
+                        <span style="font-size: 24px;">📋</span>
+                        Περιγραφή Τεκμηρίου
+                    </h3>
+                    <div class="section-content">
+                        <p><strong>Τοποθεσία Εύρεσης:</strong> Κρυμμένη στο χρηματοκιβώτιο του γραφείου θύματος, πίσω από άλλα έγγραφα και προσωπικά αντικείμενα.</p>
+                        
+                        <p><strong>Φυσική Κατάσταση:</strong> Χάρτινη αρχειοθήκη εγγράφων μεγέθους A4 (κουτί αρχειοθέτησης), παλαιωμένη, με μεγάλη σφραγίδα «ΕΜΠΙΣΤΕΥΤΙΚΟ» και χειρόγραφη ένδειξη «ΜΟΝΟ ΠΡΟΣΩΠΙΚΗ ΧΡΗΣΗ». Περιέχει 23 έγγραφα, 14 φωτογραφίες, και εκτεταμένες χειρόγραφες σημειώσεις του θύματος.</p>
+
+                        <div class="handwritten-note">
+                            Σημείωση θύματος: «Σε ποιόν μπορώ να εμπιστευτώ την αλήθεια;»
+                        </div>
+
+                        <div class="missing-alert">
+                            <strong>ΣΗΜΕΙΩΣΗ: ΠΑΡΑΤΗΡΗΘΗΚΕ ΟΤΙ ΛΕΙΠΟΥΝ ΟΙ ΣΕΛΙΔΕΣ 7-9 ΑΠΟ ΑΡΙΘΜΗΜΕΝΗ ΣΕΙΡΑ ΕΓΓΡΑΦΩΝ.</strong>
+                            <p><em>Άγνωστο αν αφαιρέθηκαν πρόσφατα.</em></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">
+                        <span style="font-size: 24px;">📄</span>
+                        Περιεχόμενα Αρχειοθήκης - Ανάλυση Εγγράφων
+                    </h3>
+                    
+                    <div class="document-item">
+                        <div class="document-name">📋 ΑΝΑΓΝΩΣΤΟΥ ΚΩΝΣΤΑΝΤΙΝΟΣ - ΟΙΚΟΝΟΜΙΚΑ ΕΓΓΡΑΦΑ</div>
+                        <div class="document-details">
+                            <div><strong>Περιεχόμενο:</strong> Αντίγραφα τραπεζικών καταθέσεων σε Ελβετικό τραπεζικό λογαριασμό (Credit Suisse) συνολικού ποσού €1.547.000. Οι καταθέσεις έγιναν σε διάστημα 18 μηνών (Μάρτιος 2023 - Σεπτέμβριος 2024).</div>
+                            <div><strong>Χειρόγραφη σημείωση θύματος:</strong> «Ο Κωστής επιμένει να αγοράσει τις μετοχές μου. Γιατί τόση βιασύνη; Έχει μάθει για την κατάσταση της υγείας μου;"</div>
+                            <div><strong>Συμπληρωματικό έγγραφο:</strong> Email από λογιστή Αναγνώστου προς τον ίδιο (23/08/2024) με θέμα: «Ερώτηση για δήλωση εσόδων» - «αναφορά σε αδήλωτα έσοδα συμβουλευτικών υπηρεσιών στο εξωτερικό».</div>
+                            <div><strong>Εσωτερική έκθεση Αναγνώστου:</strong> Αντίγραφο εσωτερικής έκθεσης που έγραψε ο Αναγνώστου (15/09/2024) με τίτλο «Ανωμαλίες στα λογιστικά βιβλία - Προς διερεύνηση». Σημείωση θύματος: «Προσπαθεί να με καλύψει ή να καλύψει τον εαυτό του; Την έγραψε επειδή κατάλαβε ότι τον ψάχνω;»</div>
+                        </div>
+                    </div>
+
+                    <div class="document-item">
+                        <div class="document-name">💔 ΜΑΥΡΙΔΗ ΕΛΕΝΗ - ΠΡΟΣΩΠΙΚΑ ΕΓΓΡΑΦΑ</div>
+                        <div class="document-details">
+                            <div><strong>Περιεχόμενο:</strong> 8 φωτογραφίες ερωτικού περιεχομένου (θύμα και Μαυρίδη), χρονολογημένες από metadata 2022-2023. Αντίγραφο συμβολαίου εκδοτικής σύμβασης για το βιβλίο της «Ο Έρωτας που Πληγώνει» (αφιερωμένο «Σε αυτόν που με πρόδωσε»).</div>
+                            <div><strong>Χειρόγραφη σημείωση θύματος:</strong> "Η Ελένη με απειλεί να δημοσιεύσει τις φωτογραφίες αν δεν της δώσω €100.000... αλλά... μήπως θέλει απλά να με πληγώσει όπως την πλήγωσα;»</div>
+                            <div><strong>SMS screenshot (εκτυπωμένο):</strong> Από Μαυρίδη: «Ξέρω τι έκανες. Ξέρω ποια είναι η αλήθεια. Μην με αναγκάσεις να μιλήσω.» (20/09/2024, 14:32)</div>
+                            <div><strong>Προσχέδιο επιστολής:</strong> Επιστολή του θύματος προς Μαυρίδη (προσχέδιο, χωρίς ημερομηνία): «Αγαπημένη Ελένη, ξέρω ότι σε πλήγωσα βαθιά. Θέλω να σε βοηθήσω με το βιβλίο σου - μπορώ να το εκδώσω χωρίς κόστος για σένα. Είναι ο τρόπος μου να ζητήσω συγγνώμη...» + σημείωση: «Ποτέ δεν το έστειλα. Γιατί;»</div>
+                        </div>
+                    </div>
+
+                    <div class="document-item">
+                        <div class="document-name">📄 ΝΙΚΟΛΑΟΥ ΑΛΕΞΑΝΔΡΑ - ΕΤΑΙΡΙΚΑ EΓΓΡΑΦΑ</div>
+                        <div class="document-details">
+                            <div><strong>Περιεχόμενο:</strong> Printscreen emails μεταξύ Νικολάου και επαφής από ανταγωνιστικό εκδοτικό οίκο «Εκδόσεις Ψίθυρος». Αναφορές σε υλικό που μπορεί να σας «ενδιαφέρει» και «αμοιβή για πληροφορίες».</div>
+                            <div><strong>Λίστα χειρογράφων:</strong> 7 τίτλοι συγγραφέων που προορίζονταν για έκδοση από την εταιρεία του θύματος αλλά τελικά εκδόθηκαν από τις «Εκδόσεις Ψίθυρος» (2024).</div>
+                            <div><strong>Χειρόγραφη σημείωση θύματος:</strong> «Η Αλεξάνδρα τα ομολόγησε όλα. Κλαίγοντας. Είπε ότι τα χρειαζόταν τα χρήματα για τον άρρωστο πατέρα της. Την πίστεψα - ΔΕΝ την απέλυσα. Της έδωσα δεύτερη ευκαιρία. Μετανιώνω;»</div>
+                            <div><strong>Email:</strong> Γραπτή ενημέρωση της Νικολάου προς το θύμα (01/09/2024): «Κύριε, θέλω να σας ενημερώσω ότι ο Πολίτης (CEO, «Εκδόσεις Ψίθυρος») με προσέγγισε και μου πρόσφερε χρήματα για πληροφορίες. Αρνήθηκα. Νομίζω όμως ότι κάποιος άλλος από το τμήμα μπορεί να δέχτηκε.» Σημείωση θύματος: «Εντιμότητα ή τακτική;»</div>
+                        </div>
+                    </div>
+
+                    <div class="document-item">
+                        <div class="document-name">💊 ΠΑΠΑΔΟΠΟΥΛΟΥ ΜΑΡΙΑ - ΙΑΤΡΙΚΑ & ΟΙΚΟΝΟΜΙΚΑ</div>
+                        <div class="document-details">
+                            <div><strong>Περιεχόμενο:</strong>  Αντίγραφα των ιατρικών εξετάσεων του θύματος (διάγνωση καρκίνου) με χειρόγραφες σημειώσεις της Παπαδοπούλου για προγραμματισμό ραντεβού «Επόμενο ραντεβού με Δρ. Σταυρίδη για τον κύριο - 26/09».</div>
+                            <div><strong>Καταστάσεις μισθοδοσίας:</strong> Επισήμανση με μαρκαδόρο σε 3 μήνες απλήρωτων μισθών (Ιούλιος, Αύγουστος, Σεπτέμβριος) συνολικού ποσού €8.400.</div>
+                            <div><strong>Χειρόγραφη σημείωση θύματος:</strong> «Η Μαρία είναι το μόνο πρόσωπο που μου μένει πιστό. Ξέρει τα πάντα για μένα - την υγεία μου, τα οικονομικά μου, ακόμα και τις αδυναμίες μου. Της χρωστάω και λεφτά και την αξιοπρέπειά της. ΔΕΝ ΜΠΟΡΩ να την προδώσω!»</div>
+                            <div><strong>Απομαγνητοφωνημένη συνομιλία:</strong> Προσωπική συνομιλία θύματος-Παπαδοπούλου (12/09): Παπαδοπούλου: «Κύριε, ξέρω ότι έχετε δυσκολίες. Μην ανησυχείτε για τους μισθούς μου. Θα περιμένω. Δεν θα σας εγκαταλείψω ΠΟΤΕ.» Σημείωση: «Πως μπορεί να υπάρχουν τέτοιοι άνθρωποι;»</div>
+                        </div>
+                    </div>
+
+                    <div class="document-item">
+                        <div class="document-name">🔍 ΠΕΤΡΟΠΟΥΛΟΣ ΓΕΩΡΓΙΟΣ - ΙΣΤΟΡΙΚΟ & ΟΙΚΟΝΟΜΙΚΑ</div>
+                        <div class="document-details">
+                            <div><strong>Περιεχόμενο:</strong> Αντίγραφο ποινικού μητρώου - Κατηγορία για κλοπή χημικών ουσιών από προηγούμενο εργοδότη (2019), αθωώθηκε λόγω έλλειψης αποδείξεων. Δικαστική απόφαση (επισυνάπτεται).</div>
+                            <div><strong>Έρευνα πιστοληπτικής:</strong> Χρέη συνολικού ύψους €58.300 (πιστωτικές κάρτες, δάνεια, ιδιωτικοί δανειστές). Αναφορές σε «πιεστικές επαφές από εισπρακτικές εταιρείες».</div>
+                            <div><strong>Χειρόγραφη σημείωση θύματος:</strong> «Ο Γιώργος ζήτησε προκαταβολή €10.000 την περασμένη εβδομάδα. Αρνήθηκα. Είδα τον πανικό στα μάτια του. Έκανα λάθος;»</div>
+                            <div><strong>Επιστολή:</strong> Γραπτή σύσταση από πρώην συνάδελφο Πετρόπουλου (2020): «Ο Γιώργης είναι ο πιο έντιμος άνθρωπος που γνώρισα. Η κατηγορία ήταν παγίδα από τον προϊστάμενό του που ήθελε να τον διώξει. Τον συστήνω ανεπιφύλακτα.» + σημείωση θύματος: «Τον πρόσελαβα με βάση αυτή την επιστολή.»</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">
+                        <span style="font-size: 24px;">🔬</span>
+                        Γραφολογική & Χρονολογική Ανάλυση
+                    </h3>
+                    <div class="section-content">
+                        <p><strong>Ανάλυση Χειρόγραφων Σημειώσεων:</strong> Οι σημειώσεις του θύματος στην αρχειοθήκη γράφτηκαν σε τουλάχιστον 3 διαφορετικές χρονικές περιόδους με βάση τη γραφική πίεση και το μελάνι:</p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li><strong>Ομάδα Α (παλαιότερες):</strong> Σταθερή γραφή, ήρεμος τόνος, αντικειμενικές παρατηρήσεις (πιθανώς Ιούνιος-Ιούλιος 2024)</li>
+                            <li><strong>Ομάδα Β (μέσες):</strong> Πιο βιαστική γραφή, αυξημένη συναισθηματική φόρτιση, ερωτήματα (πιθανώς Αύγουστος 2024)</li>
+                            <li><strong>Ομάδα Γ (πρόσφατες):</strong> Τρεμάμενη γραφή, διαγραφές, αμφιβολίες - πιθανώς γραμμένες τις τελευταίες 2 εβδομάδες πριν τον θάνατο</li>
+                        </ul>
+
+                        <p style="margin-top: 15px;"><strong>Χρονολογική Συσχέτιση Εγγράφων:</strong></p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>Τα οικονομικά έγγραφα Αναγνώστου είναι τα παλαιότερα στην αρχειοθήκη (Μάρτιος 2023)</li>
+                            <li>Οι φωτογραφίες Μαυρίδη καλύπτουν περίοδο 2022-2023 (πριν τον χωρισμό)</li>
+                            <li>Τα έγγραφα Νικολάου είναι όλα από το 2024 (μετά την πρόσληψή της)</li>
+                            <li>Τα ιατρικά έγγραφα Παπαδοπούλου ξεκινούν από Μάιο 2024 (διάγνωση)</li>
+                            <li>Η έρευνα για Πετρόπουλο έγινε πριν την πρόσληψή του (2020);</li>
+                        </ul>
+
+                        <p style="margin-top: 15px;"><strong>Ασυνήθιστα Ευρήματα:</strong></p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>Κάποια έγγραφα έχουν <strong>διπλά αντίγραφα</strong> - ένα με σημειώσεις και ένα «καθαρό»</li>
+                            <li>Ορισμένες σελίδες φέρουν <strong>δακτυλικά αποτυπώματα ΔΥΟ προσώπων</strong> (θύμα + άγνωστο)</li>
+                            <li>Υπάρχει <strong>κενό</strong> σελίδων 7-9 που δεν μπορούμε να εξακριβώσουμε τι περιείχαν</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="significance-box">
+                    <h3 class="significance-title">
+                        <span style="font-size: 20px;">💡</span>
+                        ΣΗΜΑΣΙΑ ΓΙΑ ΤΗΝ ΕΡΕΥΝΑ
+                    </h3>
+                    <p class="significance-text">
+                        Η αρχειοθήκη αποτελεί ίσως το πιο σημαντικό τεκμήριο της έρευνας - αλλά και το πιο αινιγματικό. Αντί να λύνει το μυστήριο, δημιουργεί περισσότερα ερωτήματα από όσα απαντά. Το θύμα φαίνεται να συγκέντρωνε συστηματικά πληροφορίες για ΟΛΟΥΣ τους ανθρώπους γύρω του - αλλά με ποιο σκοπό; Ως όπλο; Ως προστασία; Ως αρχείο για μελλοντική χρήση; Οι σημειώσεις του αποκαλύπτουν έναν άνθρωπο που ταλαντευόταν ανάμεσα στην καχυποψία και την εμπιστοσύνη, στην αυστηρότητα και τη συγχωρητικότητα. Για κάθε κατηγορητήριο υπάρχει μια ελαφρυντική περίσταση. Για κάθε αμφιβολία υπάρχει ένα γνώρισμα εντιμότητας. Όλοι οι ύποπτοι είχαν λόγο να θυμώσουν, να φοβηθούν ή να απελπιστούν - αλλά όλοι είχαν και λόγο να τον σεβαστούν, να τον εκτιμήσουν ή να τον αγαπήσουν. Το γεγονός ότι η αρχειοθήκη βρισκόταν κρυμμένη στο ντουλάπι αρχείων υποδηλώνει ότι το θύμα ήθελε να την προστατέψει - αλλά από ποιον; ή την κρατούσε ως ασφάλεια για να προστατέψει τον ΕΑΥΤΟ του; Και το κυριότερο: ποιος ήξερε για την ύπαρξη αυτής της αρχειοθήκης; Αν ο δολοφόνος γνώριζε, μήπως ο φόβος αποκάλυψης ήταν το τελικό κίνητρο; Και οι λείπουσες σελίδες 7-9 - αφαιρέθηκαν πριν ή μετά τον θάνατο; Τι περιείχαν που ήταν τόσο σημαντικό ώστε να εξαλειφθούν? Μήπως υπάρχει κάποιος ακόμα που δεν έχει μπει στο ραντάρ μας?
+                    </p>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">
+                        <span style="font-size: 24px;">❓</span>
+                        Βασικά Ερωτήματα Διερεύνησης
+                    </h3>
+                    <ul class="section-content">
+                        <li>Ποιος από τους υπόπτους ΓΝΩΡΙΖΕ για την ύπαρξη αυτής της αρχειοθήκης - και πώς θα μπορούσαν να το μάθουν?</li>
+                        <li>Οι «ελαφρυντικές» πληροφορίες για κάθε ύποπτο είναι γνήσιες - ή μήπως το θύμα χειραγωγούσε ανθρώπους διατηρώντας «αρχείο ασφαλείας» για όλους?</li>
+                        <li>Τι περιείχαν οι λείπουσες σελίδες 7-9 και ποιος θα είχε πρόσβαση στο γραφείο για να τις αφαιρέσει? Μήπως ήταν πληροφορίες για ΑΛΛΟ άτομο που δεν έχει καν αναγνωριστεί ως ύποπτος?</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; padding: 20px; background: rgba(0,0,0,0.05); position: relative; z-index: 100;">
+            <button onclick="window.goBackToCaseFile()" 
+                    style="background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%); 
+                           color: white; 
+                           padding: 15px 40px; 
+                           border: none; 
+                           border-radius: 10px; 
+                           font-size: 16px; 
+                           font-weight: bold; 
+                           cursor: pointer; 
+                           box-shadow: 0 4px 12px rgba(255,107,0,0.3);
+                           position: relative;
+                           z-index: 101;
+                           pointer-events: auto;">
+                ← ΕΠΙΣΤΡΟΦΗ ΣΤΟ ΦΑΚΕΛΟ
+            </button>
+        </div>
+    </div>
+
+    <script>
+        window.goBackToCaseFile = function() {
+            const teamCode = sessionStorage.getItem('teamCode');
+            console.log('🔙 Button clicked! Team:', teamCode);
+            
+            if (teamCode) {
+                window.location.href = `index.html?team=${teamCode}&tab=evidence`;
+            } else {
+                window.location.href = 'index.html?tab=evidence';
+            }
+        };
+
+        function drawCrimeScene() {
+            const canvas = document.getElementById('crimeSceneCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = 800;
+            canvas.height = 400;
+
+            const floorGradient = ctx.createLinearGradient(0, 0, 0, 400);
+            floorGradient.addColorStop(0, '#8b7355');
+            floorGradient.addColorStop(1, '#6b5345');
+            ctx.fillStyle = floorGradient;
+            ctx.fillRect(0, 0, 800, 400);
+            ctx.strokeStyle = 'rgba(101, 67, 33, 0.3)';
+            ctx.lineWidth = 2;
+            for (let i = 0; i < 400; i += 40) {
+                ctx.beginPath();
+                ctx.moveTo(0, i);
+                ctx.lineTo(800, i + Math.random() * 10);
+                ctx.stroke();
+            }
+
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+            ctx.beginPath();
+            ctx.ellipse(400, 345, 200, 25, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            const folderGradient = ctx.createLinearGradient(200, 140, 200, 340);
+            folderGradient.addColorStop(0, '#d4a574');
+            folderGradient.addColorStop(0.5, '#c49563');
+            folderGradient.addColorStop(1, '#b58552');
+            ctx.fillStyle = folderGradient;
+            ctx.fillRect(200, 140, 400, 200);
+            ctx.fillStyle = '#c49563';
+            ctx.beginPath();
+            ctx.moveTo(200, 140);
+            ctx.lineTo(250, 100);
+            ctx.lineTo(550, 100);
+            ctx.lineTo(600, 140);
+            ctx.closePath();
+            ctx.fill();
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+            ctx.fillRect(200, 140, 400, 15);
+            ctx.strokeStyle = 'rgba(101, 67, 33, 0.6)';
+            ctx.lineWidth = 3;
+            ctx.strokeRect(200, 140, 400, 200);
+            ctx.strokeStyle = 'rgba(101, 67, 33, 0.15)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i < 10; i++) {
+                ctx.beginPath();
+                ctx.moveTo(200, 160 + i * 18);
+                ctx.lineTo(600, 160 + i * 18);
+                ctx.stroke();
+            }
+            ctx.save();
+            ctx.translate(400, 240);
+            ctx.rotate(-0.12);
+            ctx.fillStyle = 'rgba(196, 30, 58, 0.1)';
+            ctx.fillRect(-155, -55, 310, 110);
+            ctx.strokeStyle = '#c41e3a';
+            ctx.lineWidth = 10;
+            ctx.strokeRect(-150, -50, 300, 100);
+            ctx.lineWidth = 3;
+            ctx.strokeRect(-140, -40, 280, 80);
+            ctx.font = 'bold 38px Arial';
+            ctx.fillStyle = '#c41e3a';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('ΕΜΠΙΣΤΕΥΤΙΚΟ', 0, 0);
+            ctx.restore();
+            ctx.fillStyle = 'rgba(101, 67, 33, 0.3)';
+            ctx.beginPath();
+            ctx.moveTo(200, 140);
+            ctx.lineTo(220, 140);
+            ctx.lineTo(200, 160);
+            ctx.closePath();
+            ctx.fill();
+            ctx.beginPath();
+            ctx.moveTo(600, 340);
+            ctx.lineTo(580, 340);
+            ctx.lineTo(600, 320);
+            ctx.closePath();
+            ctx.fill();
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+            ctx.fillRect(0, 0, 800, 40);
+            ctx.fillStyle = '#ff0000';
+            ctx.font = 'bold 14px monospace';
+            ctx.textAlign = 'left';
+            ctx.fillText('● REC', 10, 25);
+            ctx.fillStyle = '#fff';
+            ctx.fillText('24/09/2025  22:45:12  |  ΣΚΗΝΗ ΕΓΚΛΗΜΑΤΟΣ - ΓΡΑΦΕΙΟ ΘΥΜΑΤΟΣ', 80, 25);
+            
+            ctx.textAlign = 'right';
+            ctx.fillText('ΤΕΚ #008', 790, 25);
+        }
+
+        window.onload = function() {
+            drawCrimeScene();
+        };
+
+        window.addEventListener('resize', function() {
+            drawCrimeScene();
+        });
+    </script>
+</body>
+</html>
