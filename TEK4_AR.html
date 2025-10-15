@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Τεκμήριο Ξεκλειδώθηκε</title>
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .animated-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0.1;
+            background-image: repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,107,0,0.5) 35px, rgba(255,107,0,0.5) 70px);
+            animation: slide 20s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes slide {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(70px); }
+        }
+
+        @keyframes unlock {
+            0% { transform: scale(0) rotate(-180deg); opacity: 0; }
+            50% { transform: scale(1.2) rotate(10deg); }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            position: relative;
+            z-index: 10;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .check-icon {
+            width: 32px;
+            height: 32px;
+            color: #fff;
+            animation: unlock 0.6s ease-out;
+        }
+
+        .header h1 {
+            color: #fff;
+            font-size: 24px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            color: #fff;
+            text-align: center;
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 18px;
+            }
+            .check-icon {
+                width: 24px;
+                height: 24px;
+            }
+            .header {
+                padding: 15px 10px;
+            }
+            .header p {
+                font-size: 12px;
+            }
+        }
+
+        .container {
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+        }
+
+        .evidence-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+            border: 3px solid #ff6b00;
+        }
+
+        @media (max-width: 768px) {
+            .evidence-card {
+                border-radius: 10px;
+                border: 2px solid #ff6b00;
+            }
+        }
+
+        .badge-bar {
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .badge-bar {
+                padding: 12px 15px;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        .badge-info {
+            flex: 1;
+        }
+
+        .evidence-id {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ff6b00;
+            font-family: monospace;
+            letter-spacing: 2px;
+        }
+
+        @media (max-width: 768px) {
+            .evidence-id {
+                font-size: 22px;
+                letter-spacing: 1px;
+            }
+        }
+
+        .official-badge {
+            background: rgba(255,107,0,0.2);
+            border: 2px solid #ff6b00;
+            border-radius: 8px;
+            padding: 8px 15px;
+            font-size: 11px;
+            color: #ff6b00;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .official-badge {
+                font-size: 9px;
+                padding: 6px 10px;
+                align-self: flex-start;
+            }
+        }
+
+        .crime-scene-photo {
+            background: #000;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-top: 2px solid #333;
+            border-bottom: 2px solid #333;
+            overflow: hidden;
+        }
+
+        #crimeSceneCanvas {
+            width: 100%;
+            max-width: 800px;
+            height: auto;
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .crime-scene-photo {
+                border-top: 1px solid #333;
+                border-bottom: 1px solid #333;
+            }
+        }
+
+        .confidential-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255,0,0,0.9);
+            color: white;
+            padding: 5px 10px;
+            font-size: 11px;
+            font-weight: bold;
+            border-radius: 5px;
+            border: 1px solid #fff;
+        }
+
+        @media (max-width: 768px) {
+            .confidential-badge {
+                font-size: 9px;
+                padding: 4px 8px;
+                top: 5px;
+                right: 5px;
+            }
+        }
+
+        .ar-container {
+            margin: 20px 0;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(255,107,0,0.05) 0%, rgba(255,136,0,0.05) 100%);
+            border: 2px solid #ff6b00;
+            border-radius: 10px;
+        }
+
+        .ar-title {
+            font-size: 18px;
+            color: #ff6b00;
+            font-weight: bold;
+            margin: 0 0 15px 0;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        model-viewer {
+            width: 100%;
+            height: 450px;
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+        }
+
+        @media (max-width: 768px) {
+            model-viewer {
+                height: 350px;
+            }
+            .ar-title {
+                font-size: 16px;
+            }
+            .ar-container {
+                padding: 15px;
+                margin: 15px 0;
+            }
+        }
+
+        .details {
+            padding: 30px;
+            background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
+        }
+
+        @media (max-width: 768px) {
+            .details {
+                padding: 20px;
+            }
+        }
+
+        .evidence-title {
+            margin: 0 0 25px 0;
+            font-size: 24px;
+            color: #1a1a2e;
+            border-bottom: 3px solid #ff6b00;
+            padding-bottom: 15px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .evidence-title {
+                font-size: 20px;
+                margin: 0 0 20px 0;
+                gap: 10px;
+            }
+        }
+
+        .section {
+            margin-bottom: 25px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        .section-title {
+            font-size: 18px;
+            color: #0f3460;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .section-title {
+                font-size: 16px;
+                gap: 8px;
+            }
+        }
+
+        .section-content {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #333;
+        }
+
+        @media (max-width: 768px) {
+            .section-content {
+                font-size: 14px;
+            }
+        }
+
+        ul {
+            padding-left: 25px;
+            line-height: 2;
+        }
+
+        ul li {
+            margin-bottom: 8px;
+        }
+
+        @media (max-width: 768px) {
+            ul {
+                padding-left: 20px;
+                line-height: 1.8;
+            }
+        }
+
+        .email-box {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 2px solid #6c757d;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .email-header {
+            border-bottom: 2px solid #6c757d;
+            padding-bottom: 12px;
+            margin-bottom: 15px;
+        }
+
+        .email-field {
+            display: flex;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+
+        .email-label {
+            font-weight: 700;
+            color: #495057;
+            min-width: 80px;
+        }
+
+        .email-value {
+            color: #212529;
+            font-weight: 600;
+        }
+
+        .email-subject {
+            font-size: 16px;
+            color: #dc3545;
+            font-weight: 700;
+            margin-top: 10px;
+        }
+
+        .email-body {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #dc3545;
+            font-size: 15px;
+            line-height: 1.8;
+            color: #212529;
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .email-box {
+                padding: 15px;
+            }
+            
+            .email-body {
+                padding: 15px;
+                font-size: 14px;
+            }
+        }
+
+        .computer-data {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 12px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .computer-data:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .computer-data.critical {
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe5e5 100%);
+            border-color: #dc3545;
+            border-width: 3px;
+            box-shadow: 0 4px 12px rgba(220,53,69,0.15);
+        }
+
+        .computer-data.critical:hover {
+            box-shadow: 0 6px 16px rgba(220,53,69,0.25);
+        }
+
+        .data-label {
+            font-weight: 700;
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .data-value {
+            font-size: 15px;
+            color: #1a1a2e;
+            font-weight: 600;
+        }
+
+        .computer-data.critical .data-value {
+            color: #dc3545;
+        }
+
+        @media (max-width: 768px) {
+            .computer-data {
+                padding: 12px;
+                margin-bottom: 10px;
+            }
+        }
+
+        .significance-box {
+            background: linear-gradient(135deg, #fff5f0 0%, #ffe8db 100%);
+            border: 2px solid #ff6b00;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 12px rgba(255,107,0,0.1);
+        }
+
+        .significance-title {
+            font-size: 18px;
+            color: #ff6b00;
+            margin: 0 0 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+        }
+
+        @media (max-width: 768px) {
+            .significance-box {
+                padding: 20px;
+                margin-bottom: 20px;
+            }
+            
+            .significance-title {
+                font-size: 16px;
+            }
+        }
+
+        .significance-text {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #1a1a2e;
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .significance-text {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-background"></div>
+
+    <div class="header">
+        <div class="header-content">
+            <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+            <h1>ΤΕΚΜΗΡΙΟ ΞΕΚΛΕΙΔΩΘΗΚΕ!</h1>
+        </div>
+        <p>Προστέθηκε στον φάκελο υπόθεσης</p>
+    </div>
+
+    <div class="container">
+        <div class="evidence-card">
+            <div class="badge-bar">
+                <div class="badge-info">
+                    <div class="evidence-id">ΤΕΚ #004</div>
+                </div>
+                <div class="official-badge">ΕΠΙΣΗΜΟ ΤΕΚΜΗΡΙΟ</div>
+            </div>
+
+            <div class="crime-scene-photo">
+                <canvas id="crimeSceneCanvas"></canvas>
+                <div class="confidential-badge">ΑΠΟΡΡΗΤΟ</div>
+            </div>
+
+            <div class="ar-container">
+                <h3 class="ar-title">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M2 16.1A5 5 0 0 1 5.9 20M2 12.05A9 9 0 0 1 9.95 20M2 8V6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-6"></path>
+                        <line x1="2" y1="20" x2="2.01" y2="20"></line>
+                    </svg>
+                    ΠΡΟΒΟΛΗ ΣΕ 3D
+                </h3>
+                
+                <model-viewer
+                    src="email.glb"
+                    alt="Email 3D Model - Evidence"
+                    ar
+                    ar-modes="webxr scene-viewer quick-look"
+                    camera-controls
+                    touch-action="pan-y"
+                    auto-rotate
+                    auto-rotate-delay="1000"
+                    rotation-per-second="30deg"
+                    shadow-intensity="1"
+                    exposure="0.8"
+                    camera-orbit="0deg 75deg 2.5m"
+                    min-camera-orbit="auto 0deg auto"
+                    max-camera-orbit="auto 180deg auto"
+                    loading="eager"
+                    reveal="auto"
+                    ar-scale="fixed">
+                    
+                    <div slot="poster" style="
+                        width: 100%;
+                        height: 100%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        background: #f5f5f5;
+                        flex-direction: column;
+                        gap: 10px;
+                    ">
+                        <div style="
+                            border: 4px solid #f3f3f3;
+                            border-top: 4px solid #ff6b00;
+                            border-radius: 50%;
+                            width: 40px;
+                            height: 40px;
+                            animation: spin 1s linear infinite;
+                        "></div>
+                        <p style="color: #666; font-size: 14px;">Φόρτωση 3D μοντέλου...</p>
+                    </div>
+                    
+                    <div slot="error" style="
+                        width: 100%;
+                        height: 100%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        background: #fff3cd;
+                        flex-direction: column;
+                        gap: 15px;
+                        padding: 20px;
+                    ">
+                        <p style="color: #856404; font-size: 16px; font-weight: bold;">⚠️ Σφάλμα Φόρτωσης</p>
+                        <p style="color: #856404; font-size: 13px; text-align: center;">
+                            Το 3D μοντέλο δεν μπορεί να φορτώσει.<br>
+                            Ελέγξτε το αρχείο: email.glb
+                        </p>
+                    </div>
+                </model-viewer>
+                
+                <div id="debugInfo" style="
+                    margin-top: 10px;
+                    padding: 10px;
+                    background: #e7f3ff;
+                    border: 1px solid #2196F3;
+                    border-radius: 5px;
+                    font-size: 12px;
+                    font-family: monospace;
+                    display: none;
+                "></div>
+                
+                <p style="text-align: center; color: #666; font-size: 13px; margin-top: 10px; font-style: italic;">
+                    💡 Σύρετε για να περιστρέψετε • Zoom με δύο δάχτυλα
+                </p>
+            </div>
+
+            <div class="details">
+                <h2 class="evidence-title">💻 EMAIL «ΑΥΤΟΚΤΟΝΙΑΣ»</h2>
+
+                <div class="section">
+                    <h3 class="section-title">
+                        <span style="font-size: 24px;">📧</span>
+                        Περιεχόμενο Email
+                    </h3>
+                    
+                    <div class="email-box">
+                        <div class="email-header">
+                            <div class="email-field">
+                                <span class="email-label">Από:</span>
+                                <span class="email-value">dimitrios.petros@company.gr</span>
+                            </div>
+                            <div class="email-field">
+                                <span class="email-label">Προς:</span>
+                                <span class="email-value">Πολλαπλοί Παραλήπτες (Οικογένεια, Συνάδελφοι)</span>
+                            </div>
+                            <div class="email-field">
+                                <span class="email-label">Ημερομηνία:</span>
+                                <span class="email-value">22/09/2025 - 20:35</span>
+                            </div>
+                            <div class="email-subject">
+                                Θέμα: Συγγνώμη
+                            </div>
+                        </div>
+                        <div class="email-body">
+                            "Δεν μπορώ να συνεχίσω άλλο. Η πίεση είναι αβάσταχτη. Συγγνώμη σε όλους για όσα προκάλεσα. Αυτή είναι η μόνη λύση που μου απομένει."
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">
+                        <span style="font-size: 24px;">🔬</span>
+                        Τεχνική Ανάλυση Υπολογιστή
+                    </h3>
+                    <div>
+                        <div class="computer-data critical">
+                            <div class="data-label">IP Διεύθυνση</div>
+                            <div class="data-value">192.168.1.23</div>
+                        </div>
+                        <div class="computer-data critical">
+                            <div class="data-label">Τοποθεσία Υπολογιστή</div>
+                            <div class="data-value">7ος Όροφος - Αίθουσα Συσκέψεων</div>
+                        </div>
+                        <div class="computer-data critical">
+                            <div class="data-label">Τύπος Υπολογιστή</div>
+                            <div class="data-value">Κοινόχρηστος - ΔΕΝ απαιτεί κωδικό πρόσβασης</div>
+                        </div>
+                        <div class="computer-data">
+                            <div class="data-label">Ώρα Αποστολής</div>
+                            <div class="data-value">20:35 - 40 λεπτά πριν τον θάνατο</div>
+                        </div>
+                        <div class="computer-data">
+                            <div class="data-label">Αποτυπώματα Πληκτρολογίου</div>
+                            <div class="data-value">Πολλαπλά αποτυπώματα - Υπό ανάλυση</div>
+                        </div>
+                        <div class="computer-data">
+                            <div class="data-label">Κάμερες Ασφαλείας</div>
+                            <div class="data-value">Η αίθουσα δεν έχει κάμερα</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="significance-box">
+                    <h3 class="significance-title">
+                        <span style="font-size: 20px;">💡</span>
+                        ΣΗΜΑΣΙΑ ΓΙΑ ΤΗΝ ΕΡΕΥΝΑ
+                    </h3>
+                    <p class="significance-text">
+                        Το email στάλθηκε από κοινόχρηστο υπολογιστή που δεν απαιτεί κωδικό - οποιοσδήποτε θα μπορούσε να το χρησιμοποιήσει. Ο 7ος όροφος δεν έχει κάμερες ασφαλείας στην αίθουσα συσκέψεων. Αν το θύμα δεν έγραψε το email, ο δράστης ήξερε ακριβώς πού να πάει για να μην αφήσει ίχνη. Το χρονικό σημείο - 40 λεπτά πριν τον θάνατο - υποδηλώνει προσεκτικό σχεδιασμό.
+                    </p>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">
+                        <span style="font-size: 24px;">❓</span>
+                        Βασικά Ερωτήματα Διερεύνησης
+                    </h3>
+                    <ul class="section-content">
+                        <li>Το θύμα έγραψε πραγματικά αυτό το email;</li>
+                        <li>Ποιος είχε πρόσβαση στον 7ο όροφο εκείνη την ώρα;</li>
+                        <li>Γιατί χρησιμοποιήθηκε ο κοινόχρηστος υπολογιστής αντί του προσωπικού;</li>
+                        <li>Τα αποτυπώματα στο πληκτρολόγιο θα αποκαλύψουν τον πραγματικό συντάκτη;</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="text-align: center; padding: 20px; background: rgba(0,0,0,0.05); position: relative; z-index: 100;">
+        <button onclick="window.goBackToCaseFile()" 
+                style="background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%); 
+                       color: white; 
+                       padding: 15px 40px; 
+                       border: none; 
+                       border-radius: 10px; 
+                       font-size: 16px; 
+                       font-weight: bold; 
+                       cursor: pointer; 
+                       box-shadow: 0 4px 12px rgba(255,107,0,0.3);
+                       position: relative;
+                       z-index: 101;
+                       pointer-events: auto;">
+            ← ΕΠΙΣΤΡΟΦΗ ΣΤΟΝ ΦΑΚΕΛΟ
+        </button>
+    </div>
+
+    <script>
+        window.goBackToCaseFile = function() {
+            const teamCode = sessionStorage.getItem('teamCode');
+            console.log('🔙 Button clicked! Team:', teamCode);
+            
+            if (teamCode) {
+                window.location.href = `index.html?team=${teamCode}&tab=evidence`;
+            } else {
+                window.location.href = 'index.html?tab=evidence`;
+            }
+        };
+
+        function drawCrimeScene() {
+            const canvas = document.getElementById('crimeSceneCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = 800;
+            canvas.height = 400;
+
+            const floorGradient = ctx.createLinearGradient(0, 0, 0, 400);
+            floorGradient.addColorStop(0, '#2c3e50');
+            floorGradient.addColorStop(1, '#1a252f');
+            ctx.fillStyle = floorGradient;
+            ctx.fillRect(0, 0, 800, 400);
+            ctx.fillStyle = '#4a4a4a';
+            ctx.fillRect(100, 250, 600, 150);
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+            ctx.fillRect(100, 240, 600, 10);
+            ctx.fillStyle = '#1a1a1a';
+            ctx.fillRect(250, 100, 300, 200);
+            ctx.strokeStyle = '#2d2d2d';
+            ctx.lineWidth = 3;
+            ctx.strokeRect(250, 100, 300, 200);
+            ctx.fillStyle = '#1e3a5f';
+            ctx.fillRect(265, 120, 270, 160);
+            ctx.fillStyle = '#e9ecef';
+            ctx.fillRect(275, 130, 250, 140);
+            ctx.fillStyle = '#6c757d';
+            ctx.fillRect(275, 130, 250, 30);
+            ctx.fillStyle = '#fff';
+            ctx.font = '12px sans-serif';
+            ctx.textAlign = 'left';
+            ctx.fillText('Νέο Μήνυμα', 285, 150);
+            ctx.fillStyle = '#dc3545';
+            ctx.font = 'bold 11px sans-serif';
+            ctx.fillText('Θέμα: Συγγνώμη', 285, 175);
+            ctx.fillStyle = '#495057';
+            ctx.font = '9px sans-serif';
+            ctx.fillText('Από: dimitrios.petros@...', 285, 195);
+            ctx.fillText('Προς: Πολλαπλοί Παραλήπτες', 285, 210);
+            ctx.fillStyle = '#212529';
+            ctx.font = '8px sans-serif';
+            ctx.fillText('"Δεν μπορώ να συνεχίσω...', 285, 230);
+            ctx.fillText('Η πίεση είναι αβάσταχτη..."', 285, 245);
+            ctx.fillStyle = '#3a3a3a';
+            ctx.fillRect(375, 300, 50, 20);
+            ctx.fillRect(385, 320, 30, 30);
+            ctx.fillStyle = '#2a2a2a';
+            ctx.fillRect(280, 340, 240, 50);
+            ctx.fillStyle = '#3a3a3a';
+            for (let row = 0; row < 4; row++) {
+                for (let col = 0; col < 12; col++) {
+                    ctx.fillRect(288 + col * 19, 348 + row * 10, 16, 8);
+                }
+            }
+
+            ctx.fillStyle = 'rgba(220, 53, 69, 0.9)';
+            ctx.fillRect(50, 320, 180, 60);
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(50, 320, 180, 60);
+            ctx.fillStyle = '#fff';
+            ctx.font = 'bold 13px monospace';
+            ctx.textAlign = 'left';
+            ctx.fillText('IP: 192.168.1.23', 60, 345);
+            ctx.font = '11px monospace';
+            ctx.fillText('7ος Όροφος', 60, 365);
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+            ctx.fillRect(0, 0, 800, 40);
+            
+            ctx.fillStyle = '#ff0000';
+            ctx.font = 'bold 14px monospace';
+            ctx.textAlign = 'left';
+            ctx.fillText('● REC', 10, 25);
+            
+            ctx.fillStyle = '#fff';
+            ctx.fillText('22/09/2025  20:35:42  |  7ΟΣ ΟΡΟΦΟΣ - ΑΙΘΟΥΣΑ ΣΥΣΚΕΨΕΩΝ', 80, 25);
+            
+            ctx.textAlign = 'right';
+            ctx.fillText('ΤΕΚ #004', 790, 25);
+        }
+
+        window.onload = function() {
+            drawCrimeScene();
+            const modelViewer = document.querySelector('model-viewer');
+            const debugInfo = document.getElementById('debugInfo');
+            
+            if (modelViewer) {
+                debugInfo.style.display = 'block';
+                debugInfo.innerHTML = '🔍 Προσπάθεια φόρτωσης: email.glb<br>';
+                
+                modelViewer.addEventListener('progress', (event) => {
+                    const percent = Math.round(event.detail.totalProgress * 100);
+                    debugInfo.innerHTML = `⏳ Φόρτωση: ${percent}%<br>`;
+                });
+                
+                modelViewer.addEventListener('load', () => {
+                    debugInfo.innerHTML = '✅ 3D μοντέλο φορτώθηκε επιτυχώς!<br>';
+                    debugInfo.style.background = '#d4edda';
+                    debugInfo.style.borderColor = '#28a745';
+                    setTimeout(() => {
+                        debugInfo.style.display = 'none';
+                    }, 3000);
+                });
+                
+                modelViewer.addEventListener('error', (event) => {
+                    debugInfo.innerHTML = '❌ ΣΦΑΛΜΑ: Το αρχείο δεν μπορεί να φορτώσει<br>';
+                    debugInfo.innerHTML += 'Ελέγξτε:<br>';
+                    debugInfo.innerHTML += '1. Το αρχείο υπάρχει στον ίδιο φάκελο<br>';
+                    debugInfo.innerHTML += '2. Το όνομα είναι: email.glb<br>';
+                    debugInfo.innerHTML += '3. Το αρχείο είναι έγκυρο .glb<br>';
+                    debugInfo.style.background = '#f8d7da';
+                    debugInfo.style.borderColor = '#dc3545';
+                });
+                
+                setTimeout(() => {
+                    if (debugInfo.innerHTML.includes('Φόρτωση')) {
+                        debugInfo.innerHTML = '⚠️ Το μοντέλο δεν φορτώνει...<br>';
+                        debugInfo.innerHTML += 'Πιθανές αιτίες:<br>';
+                        debugInfo.innerHTML += '• Το αρχείο δεν βρέθηκε<br>';
+                        debugInfo.innerHTML += '• Λάθος όνομα: email.glb<br>';
+                        debugInfo.style.background = '#fff3cd';
+                        debugInfo.style.borderColor = '#ffc107';
+                    }
+                }, 10000);
+            }
+        };
+    </script>
+</body>
+</html>
