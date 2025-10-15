@@ -261,7 +261,6 @@
                 console.log('❌ User not logged in - immediate redirect');
                 const redirectUrl = encodeURIComponent(window.location.href);
                 window.location.href = `team_entry.html?redirect=${redirectUrl}`;
-                // Don't execute anything else
                 throw new Error('Redirecting to login...');
             }
         })();
