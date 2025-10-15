@@ -1558,7 +1558,7 @@ const SCORING = {
         };
 		
         const urlParams = new URLSearchParams(window.location.search);
-        const teamCode = sessionStorage.getItem('teamName') || urlParams.get('team') || 'default';
+        let teamCode = sessionStorage.getItem('teamName') || urlParams.get('team') || 'default';
 
         if (teamCode !== 'default') {
             const teamInfoDiv = document.getElementById('teamInfo');
