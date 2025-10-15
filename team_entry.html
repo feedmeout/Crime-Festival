@@ -247,7 +247,35 @@ button:disabled {
 </p>
     </div>
     
-    <script>
+<script>
+const StorageManager = {
+    saveAuth(teamCode, memberName) {
+        localStorage.setItem('teamCode', teamCode);
+        localStorage.setItem('memberName', memberName);
+        localStorage.setItem('memberAuth', 'true');
+        localStorage.setItem('lastLogin', new Date().toISOString());
+        
+        sessionStorage.setItem('teamCode', teamCode);
+        sessionStorage.setItem('memberName', memberName);
+        sessionStorage.setItem('sessionActive', 'true');
+        sessionStorage.setItem('sessionStart', new Date().toISOString());
+        
+        console.log('✅ Auth saved to both storages');
+    },
+    
+    getAuth() {
+        let teamCode = sessionStorage.getItem('teamCode') || localStorage.getItem('teamCode');
+        let memberName = sessionStorage.getItem('memberName') || localStorage.getItem('memberName');
+        return { teamCode, memberName };
+    },
+    
+    isAuthenticated() {
+        const hasLocalAuth = localStorage.getItem('memberAuth') === 'true';
+        const hasTeamCode = localStorage.getItem('teamCode') !== null;
+        return hasLocalAuth && hasTeamCode;
+    }
+};
+
         function showAlert(message, type = 'error') {
             const alertBox = document.getElementById('alertBox');
             alertBox.innerHTML = `
@@ -326,16 +354,13 @@ button:disabled {
                     document.getElementById('teamPassword').focus();
                     return;
                 }
-				
-localStorage.setItem('teamCode', teamName);
-localStorage.setItem('memberName', memberName);
-localStorage.setItem('memberAuth', 'true');
+
+                StorageManager.saveAuth(teamName, memberName);
 
                 const preSurveyDoc = `${teamName}_pre_${memberName}`;
                 const preSurveyRef = window.firebaseDoc(window.firebaseDB, 'surveys', preSurveyDoc);
                 const preSurveySnap = await window.firebaseGetDoc(preSurveyRef);
 
-                // Check if there's a redirect parameter
                 const urlParams = new URLSearchParams(window.location.search);
                 const redirectUrl = urlParams.get('redirect');
 
@@ -343,7 +368,6 @@ localStorage.setItem('memberAuth', 'true');
                     alert('Πρώτα πρέπει να ολοκληρώσετε την προκαταρκτική έρευνα!');
                     const surveyUrl = `survey.html?team=${teamName}&member=${encodeURIComponent(memberName)}&type=pre`;
                     
-                    // If there was a redirect, append it to the survey URL so we can redirect after
                     if (redirectUrl) {
                         window.location.href = `${surveyUrl}&redirect=${encodeURIComponent(redirectUrl)}`;
                     } else {
@@ -352,7 +376,6 @@ localStorage.setItem('memberAuth', 'true');
                 } else {
                     console.log(`✅ Member authenticated: ${teamName}/${memberName}`);
                     
-                    // If there's a redirect URL, go there; otherwise go to index.html
                     if (redirectUrl) {
                         console.log(`🔄 Redirecting to: ${redirectUrl}`);
                         window.location.href = redirectUrl;
@@ -369,10 +392,8 @@ localStorage.setItem('memberAuth', 'true');
         }
         
         window.addEventListener('DOMContentLoaded', () => {
-const storedTeam = localStorage.getItem('teamCode');
-const isAuthenticated = localStorage.getItem('memberAuth');
-            
-            if (storedTeam && isAuthenticated === 'true') {
+            if (StorageManager.isAuthenticated()) {
+                const { teamCode: storedTeam } = StorageManager.getAuth();
                 console.log('Already authenticated, checking for redirect...');
                 
                 const urlParams = new URLSearchParams(window.location.search);

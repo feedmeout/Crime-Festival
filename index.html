@@ -1331,6 +1331,98 @@ button:focus-visible,
 <script src="suspects.js"></script>
 
 <script>
+const StorageManager = {
+    saveAuth(teamCode, memberName) {
+        localStorage.setItem('teamCode', teamCode);
+        localStorage.setItem('memberName', memberName);
+        localStorage.setItem('memberAuth', 'true');
+        localStorage.setItem('lastLogin', new Date().toISOString());
+        sessionStorage.setItem('teamCode', teamCode);
+        sessionStorage.setItem('memberName', memberName);
+        sessionStorage.setItem('sessionActive', 'true');
+        sessionStorage.setItem('sessionStart', new Date().toISOString());
+        
+        console.log('✅ Auth saved to both storages');
+    },
+
+    getAuth() {
+        let teamCode = sessionStorage.getItem('teamCode') || localStorage.getItem('teamCode');
+        let memberName = sessionStorage.getItem('memberName') || localStorage.getItem('memberName');
+        if (!sessionStorage.getItem('teamCode') && localStorage.getItem('teamCode')) {
+            console.log('🔄 Restoring session from localStorage');
+            this.restoreSession();
+            teamCode = sessionStorage.getItem('teamCode');
+            memberName = sessionStorage.getItem('memberName');
+        }
+        
+        return { teamCode, memberName };
+    },
+    
+    restoreSession() {
+        const teamCode = localStorage.getItem('teamCode');
+        const memberName = localStorage.getItem('memberName');
+        
+        if (teamCode && memberName) {
+            sessionStorage.setItem('teamCode', teamCode);
+            sessionStorage.setItem('memberName', memberName);
+            sessionStorage.setItem('sessionActive', 'true');
+            sessionStorage.setItem('sessionStart', new Date().toISOString());
+            return true;
+        }
+        return false;
+    },
+    
+    isAuthenticated() {
+        const hasLocalAuth = localStorage.getItem('memberAuth') === 'true';
+        const hasTeamCode = localStorage.getItem('teamCode') !== null;
+        return hasLocalAuth && hasTeamCode;
+    },
+    
+    isSessionActive() {
+        return sessionStorage.getItem('sessionActive') === 'true';
+    },
+    
+    clearAuth() {
+        localStorage.removeItem('teamCode');
+        localStorage.removeItem('memberName');
+        localStorage.removeItem('memberAuth');
+        localStorage.removeItem('lastLogin');
+        
+        sessionStorage.removeItem('teamCode');
+        sessionStorage.removeItem('memberName');
+        sessionStorage.removeItem('sessionActive');
+        sessionStorage.removeItem('sessionStart');
+        
+        console.log('🔴 Auth cleared from both storages');
+    },
+    
+    async syncSessionToFirebase() {
+        if (!window.firebaseDB || !this.isSessionActive()) return;
+        
+        const { teamCode, memberName } = this.getAuth();
+        if (!teamCode || !memberName) return;
+        
+        try {
+            const sessionDocRef = window.firebaseDoc(
+                window.firebaseDB, 
+                'activeSessions', 
+                `${teamCode}_${memberName}`
+            );
+            
+            await window.firebaseSetDoc(sessionDocRef, {
+                teamCode,
+                memberName,
+                lastActive: new Date().toISOString(),
+                userAgent: navigator.userAgent,
+                sessionStart: sessionStorage.getItem('sessionStart')
+            });
+            
+            console.log('✅ Session synced to Firebase');
+        } catch (error) {
+            console.error('Error syncing session:', error);
+        }
+    }
+};
     const teks = [
         {
             id: '1',
@@ -2547,14 +2639,29 @@ async function checkLeaderboardUnlocked() {
 }
 
 async function updateResultsTabState() {
-    const memberName = sessionStorage.getItem('memberName');
-    const teamCode = sessionStorage.getItem('teamCode') || new URLSearchParams(window.location.search).get('team');
+    const { teamCode, memberName } = StorageManager.getAuth();
     
-    if (!memberName || !teamCode) {
+    if (!memberName || !teamCode || teamCode === 'default') {
         console.error('Member or team info missing!');
+        const surveysIncomplete = document.getElementById('surveysIncomplete');
+        if (surveysIncomplete) {
+            surveysIncomplete.innerHTML = `
+                <div class="intro-box" style="text-align: center; padding: 60px 30px;">
+                    <div style="font-size: clamp(80px, 20vw, 120px); margin-bottom: 30px;">🔐</div>
+                    <h2 style="color: #1a1a2e; font-size: clamp(20px, 5vw, 28px); margin-bottom: 20px;">
+                        Απαιτείται Σύνδεση
+                    </h2>
+                    <a href="team_member_entry.html" 
+                       class="btn btn-primary" 
+                       style="display: inline-block; text-decoration: none;">
+                        🔑 ΣΥΝΔΕΣΗ
+                    </a>
+                </div>
+            `;
+            surveysIncomplete.style.display = 'block';
+        }
         return;
     }
-
     const postSurveyDoc = `${teamCode}_post_${memberName}`;
     const postSurveyRef = window.firebaseDoc(window.firebaseDB, 'surveys', postSurveyDoc);
     const postSurveySnap = await window.firebaseGetDoc(postSurveyRef);
@@ -2902,30 +3009,49 @@ function initTabsWithResults() {
             }
         });
     });
+
+let activityTimeout;
+
+function trackActivity() {
+    clearTimeout(activityTimeout);
+    activityTimeout = setTimeout(() => {
+        StorageManager.syncSessionToFirebase();
+    }, 30000);
 }
 
+
+['mousedown', 'keydown', 'scroll', 'touchstart'].forEach(event => {
+    document.addEventListener(event, trackActivity, { passive: true });
+});
+
+document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && StorageManager.isSessionActive()) {
+        StorageManager.syncSessionToFirebase();
+    }
+});
+
+window.addEventListener('beforeunload', () => {
+    StorageManager.syncSessionToFirebase();
+});
 window.addEventListener('DOMContentLoaded', async () => {
     console.log('🔄 Initializing tabs...');
     initTabsWithResults();
     console.log('✅ Tabs initialized');
 
-const isMemberAuth = localStorage.getItem('memberAuth');
-const storedTeam = localStorage.getItem('teamCode');
-const memberName = localStorage.getItem('memberName');
-
-    if (teamCode === 'default' && !isMemberAuth) {
+    if (!StorageManager.isAuthenticated()) {
         console.warn('⚠️ Not authenticated, redirecting to member entry...');
         window.location.href = 'team_member_entry.html';
         return;
     }
     
-if (teamCode === 'default' && storedTeam) {
-    teamCode = storedTeam;
-    console.log('Using stored team:', storedTeam);
-    window.location.href = `index.html?team=${storedTeam}`;
-    return;
-}
-	
+    const { teamCode: authTeamCode, memberName } = StorageManager.getAuth();
+    if (authTeamCode) {
+        teamCode = authTeamCode;
+    }
+    
+    console.log(`✅ Authenticated as ${memberName} in team ${teamCode}`);
+    await StorageManager.syncSessionToFirebase();
+
     try {
         const teamData = await getTeamData();
         if (!teamData.unlocked) {
@@ -2937,7 +3063,7 @@ if (teamCode === 'default' && storedTeam) {
     } catch (error) {
         console.error('Error checking/creating team:', error);
     }
-    
+
     try {
         if (typeof SuspectsModule !== 'undefined') {
             SuspectsModule.renderSuspects('suspectsContainer');
