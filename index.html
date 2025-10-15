@@ -2054,7 +2054,7 @@ function displaySolutionResult(solution) {
         headerGradient = 'linear-gradient(135deg, #ffc107 0%, #ff9800 100%)';
         headerShadow = 'rgba(255,193,7,0.3)';
     }
-
+	
     let breakdownHTML = '';
     solution.breakdown.forEach(item => {
         let bgColor = '#f8f9fa';
@@ -2919,13 +2919,12 @@ const memberName = localStorage.getItem('memberName');
         return;
     }
     
-    if (teamCode === 'default' && storedTeam) {
+if (teamCode === 'default' && storedTeam) {
     teamCode = storedTeam;
+    console.log('Using stored team:', storedTeam);
+    window.location.href = `index.html?team=${storedTeam}`;
+    return;
 }
-        console.log('Using stored team:', storedTeam);
-        window.location.href = `index.html?team=${storedTeam}`;
-        return;
-    }
 	
     try {
         const teamData = await getTeamData();
