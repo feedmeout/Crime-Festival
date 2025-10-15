@@ -515,11 +515,12 @@
             }
         }
 
-        .section-content {
-            font-size: 15px;
-            line-height: 1.8;
-            color: #333;
-        }
+.section-content {
+    font-size: 15px;
+    line-height: 1.8;
+    color: #333;
+    text-align: justify;
+}
 
         @media (max-width: 768px) {
             .section-content {
@@ -573,12 +574,13 @@
             }
         }
 
-        .significance-text {
-            font-size: 15px;
-            line-height: 1.8;
-            color: #1a1a2e;
-            margin: 0;
-        }
+.significance-text {
+    font-size: 15px;
+    line-height: 1.8;
+    color: #1a1a2e;
+    margin: 0;
+    text-align: justify;
+}
 
         @media (max-width: 768px) {
             .significance-text {
@@ -704,4 +706,264 @@
                     border: 1px solid #2196F3;
                     border-radius: 5px;
                     font-size: 12px;
-                    font-family
+                    font-family: monospace;
+                    display: none;
+                "></div>
+                
+                <p style="text-align: center; color: #666; font-size: 13px; margin-top: 10px; font-style: italic;">
+                    💡 Σύρετε για να περιστρέψετε • Zoom με δύο δάχτυλα
+                </p>
+            </div>
+
+            <div class="details">
+                <h2 class="evidence-title">🧤 ΙΧΝΗ ΛΑΤΕΞ ΣΤΟ ΠΟΜΟΛΟ</h2>
+
+                <div class="section">
+                    <h3 class="section-title">
+                        <span style="font-size: 24px;">🔬</span>
+                        Περιγραφή Τεκμηρίου
+                    </h3>
+                    <p class="section-content">
+                        Εντοπίστηκαν μικροσκοπικά ίχνη λάτεξ στο εσωτερικό πόμολο της πόρτας του γραφείου του θύματος. Η χημική ανάλυση επιβεβαίωσε ότι πρόκειται για λάτεξ ιατρικού τύπου, συμβατό με γάντια μιας χρήσης που χρησιμοποιούνται σε περιβάλλοντα υγειονομικής φροντίδας και πρώτων βοηθειών.
+                    </p>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">
+                        <span style="font-size: 24px;">🔍</span>
+                        Τεχνική Ανάλυση
+                    </h3>
+                    <p class="section-content">
+                        Τα ίχνη εντοπίστηκαν με χρήση UV φωτισμού και επιβεβαιώθηκαν με φασματοσκοπία. Ο τύπος λάτεξ αντιστοιχεί σε γάντια που διατίθενται στα κουτία πρώτων βοηθειών κάθε ορόφου του κτιρίου. <strong>Πρόσβαση σε αυτά τα κουτιά έχει όλο το προσωπικό</strong> - δεν υπάρχει ειδικός περιορισμός ή καταγραφή χρήσης. Η ποσότητα των ιχνών υποδηλώνει πρόσφατη χρήση (εντός 24-48 ωρών πριν τον θάνατο).
+                    </p>
+                </div>
+
+                <div class="significance-box">
+                    <h3 class="significance-title">
+                        <span style="font-size: 20px;">💡</span>
+                        ΣΗΜΑΣΙΑ ΓΙΑ ΤΗΝ ΕΡΕΥΝΑ
+                    </h3>
+                    <p class="significance-text">
+                        Η παρουσία ιχνών λάτεξ στο πόμολο δείχνει ότι κάποιος φορούσε γάντια όταν άγγιξε την πόρτα. Το εύρημα μπορεί να υποδηλώνει προμελέτη και προσπάθεια απόκρυψης αποτυπωμάτων. Ωστόσο, τα γάντια είναι ευρέως διαθέσιμα σε όλο το κτίριο, καθιστώντας δύσκολο τον εντοπισμό του χρήστη. Το ερώτημα είναι: γιατί κάποιος θα χρησιμοποιούσε γάντια για να μπει στο γραφείο;
+                    </p>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">
+                        <span style="font-size: 24px;">❓</span>
+                        Βασικά Ερωτήματα Διερεύνησης
+                    </h3>
+                    <ul class="section-content">
+                        <li>Ποιος είχε λόγο να χρησιμοποιήσει γάντια για να αποφύγει αποτυπώματα;</li>
+                        <li>Μήπως η χρήση γαντιών ήταν για άλλο λόγο (π.χ. χειρισμός χημικών ουσιών) και όχι για απόκρυψη ταυτότητας;</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="text-align: center; padding: 20px; background: rgba(0,0,0,0.05); position: relative; z-index: 100;">
+        <button onclick="window.goBackToCaseFile()" 
+                style="background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%); 
+                       color: white; 
+                       padding: 15px 40px; 
+                       border: none; 
+                       border-radius: 10px; 
+                       font-size: 16px; 
+                       font-weight: bold; 
+                       cursor: pointer; 
+                       box-shadow: 0 4px 12px rgba(255,107,0,0.3);
+                       position: relative;
+                       z-index: 101;
+                       pointer-events: auto;">
+            ← ΕΠΙΣΤΡΟΦΗ ΣΤΟΝ ΦΑΚΕΛΟ
+        </button>
+    </div>
+
+    <script>
+        window.goBackToCaseFile = function() {
+            const teamCode = sessionStorage.getItem('teamCode');
+            console.log('🔙 Button clicked! Team:', teamCode);
+            
+            if (teamCode) {
+                window.location.href = `index.html?team=${teamCode}&tab=evidence`;
+            } else {
+                window.location.href = 'index.html?tab=evidence';
+            }
+        };
+
+        function drawCrimeScene() {
+            const canvas = document.getElementById('crimeSceneCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = 800;
+            canvas.height = 400;
+			
+            const wallGradient = ctx.createLinearGradient(0, 0, 0, 400);
+            wallGradient.addColorStop(0, '#e8e4d9');
+            wallGradient.addColorStop(1, '#d4cfc0');
+            ctx.fillStyle = wallGradient;
+            ctx.fillRect(0, 0, 800, 400);
+            ctx.fillStyle = '#5a4a3a';
+            ctx.fillRect(260, 60, 280, 300);
+            ctx.fillStyle = '#4a3a2a';
+            ctx.fillRect(275, 75, 250, 270);
+
+            const doorGradient = ctx.createLinearGradient(285, 85, 515, 85);
+            doorGradient.addColorStop(0, '#3d2f1f');
+            doorGradient.addColorStop(0.15, '#5d4e37');
+            doorGradient.addColorStop(0.5, '#6b5645');
+            doorGradient.addColorStop(0.85, '#5d4e37');
+            doorGradient.addColorStop(1, '#3d2f1f');
+            ctx.fillStyle = doorGradient;
+            ctx.fillRect(285, 85, 230, 255);
+            ctx.strokeStyle = '#2d1f0f';
+            ctx.lineWidth = 3;
+            ctx.strokeRect(305, 105, 190, 100);
+            ctx.strokeStyle = '#7d6e57';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(307, 107, 186, 96);
+            ctx.strokeStyle = '#2d1f0f';
+            ctx.lineWidth = 3;
+            ctx.strokeRect(305, 220, 190, 100);
+            ctx.strokeStyle = '#7d6e57';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(307, 222, 186, 96);
+            ctx.strokeStyle = 'rgba(45, 31, 15, 0.15)';
+            ctx.lineWidth = 0.5;
+            for (let i = 0; i < 12; i++) {
+                ctx.beginPath();
+                ctx.moveTo(305, 110 + i * 18);
+                ctx.quadraticCurveTo(400, 111 + i * 18, 495, 110 + i * 18);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(305, 225 + i * 18);
+                ctx.quadraticCurveTo(400, 226 + i * 18, 495, 225 + i * 18);
+                ctx.stroke();
+            }
+            
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+            ctx.beginPath();
+            ctx.ellipse(478, 223, 12, 3, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            const plateGradient = ctx.createRadialGradient(477, 218, 0, 477, 218, 10);
+            plateGradient.addColorStop(0, '#e0e0e0');
+            plateGradient.addColorStop(0.7, '#b0b0b0');
+            plateGradient.addColorStop(1, '#808080');
+            ctx.fillStyle = plateGradient;
+            ctx.beginPath();
+            ctx.arc(477, 218, 10, 0, Math.PI * 2);
+            ctx.fill();
+
+            const knobGradient = ctx.createRadialGradient(475, 216, 2, 477, 218, 12);
+            knobGradient.addColorStop(0, '#ffffff');
+            knobGradient.addColorStop(0.3, '#e8e8e8');
+            knobGradient.addColorStop(0.6, '#c0c0c0');
+            knobGradient.addColorStop(1, '#909090');
+            ctx.fillStyle = knobGradient;
+            ctx.beginPath();
+            ctx.arc(477, 218, 12, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+            ctx.beginPath();
+            ctx.arc(475, 216, 4, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+            ctx.beginPath();
+            ctx.arc(473, 214, 2, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+            ctx.beginPath();
+            ctx.arc(150, 280, 70, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#ff6b00';
+            ctx.lineWidth = 4;
+            ctx.stroke();
+            ctx.fillStyle = '#d4af37';
+            ctx.beginPath();
+            ctx.ellipse(150, 280, 35, 12, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+            ctx.beginPath();
+            ctx.arc(140, 275, 4, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(155, 285, 3, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(145, 290, 3, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = 'rgba(138, 43, 226, 0.3)';
+            ctx.beginPath();
+            ctx.arc(150, 280, 60, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#ff6b00';
+            ctx.font = 'bold 12px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('ΙΧΝΗ ΛΑΤΕΞ', 150, 365);
+            ctx.fillText('(UV ΦΩΤΙΣΜΟΣ)', 150, 380);
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+            ctx.fillRect(0, 0, 800, 40);
+            ctx.fillStyle = '#ff0000';
+            ctx.font = 'bold 14px monospace';
+            ctx.textAlign = 'left';
+            ctx.fillText('● REC', 10, 25);
+            
+            ctx.fillStyle = '#fff';
+            ctx.fillText('23/09/2025  08:45:12  |  ΕΓΚΛΗΜΑΤΟΛΟΓΙΚΟ ΕΡΓΑΣΤΗΡΙΟ - ΑΝΑΛΥΣΗ', 80, 25);
+            
+            ctx.textAlign = 'right';
+            ctx.fillText('ΤΕΚ #006', 790, 25);
+        }
+
+        window.onload = function() {
+            drawCrimeScene();
+
+            const modelViewer = document.querySelector('model-viewer');
+            const debugInfo = document.getElementById('debugInfo');
+            
+            if (modelViewer) {
+                debugInfo.style.display = 'block';
+                debugInfo.innerHTML = '🔍 Προσπάθεια φόρτωσης: latex_glove.glb<br>';
+                
+                modelViewer.addEventListener('progress', (event) => {
+                    const percent = Math.round(event.detail.totalProgress * 100);
+                    debugInfo.innerHTML = `⏳ Φόρτωση: ${percent}%<br>`;
+                });
+
+                modelViewer.addEventListener('load', () => {
+                    debugInfo.innerHTML = '✅ 3D μοντέλο φορτώθηκε επιτυχώς!<br>';
+                    debugInfo.style.background = '#d4edda';
+                    debugInfo.style.borderColor = '#28a745';
+                    setTimeout(() => {
+                        debugInfo.style.display = 'none';
+                    }, 3000);
+                });
+
+                modelViewer.addEventListener('error', (event) => {
+                    debugInfo.innerHTML = '❌ ΣΦΑΛΜΑ: Το αρχείο δεν μπορεί να φορτώσει<br>';
+                    debugInfo.innerHTML += 'Ελέγξτε:<br>';
+                    debugInfo.innerHTML += '1. Το αρχείο υπάρχει στον ίδιο φάκελο<br>';
+                    debugInfo.innerHTML += '2. Το όνομα είναι σωστό (με κεφαλαία/πεζά)<br>';
+                    debugInfo.innerHTML += '3. Το αρχείο είναι έγκυρο .glb<br>';
+                    debugInfo.style.background = '#f8d7da';
+                    debugInfo.style.borderColor = '#dc3545';
+                });
+
+                setTimeout(() => {
+                    if (debugInfo.innerHTML.includes('Φόρτωση')) {
+                        debugInfo.innerHTML = '⚠️ Το μοντέλο δεν φορτώνει...<br>';
+                        debugInfo.innerHTML += 'Πιθανές αιτίες:<br>';
+                        debugInfo.innerHTML += '• Το αρχείο δεν βρέθηκε<br>';
+                        debugInfo.innerHTML += '• Λάθος όνομα αρχείου<br>';
+                        debugInfo.innerHTML += '• Το αρχείο δεν είναι στον σωστό φάκελο<br>';
+                        debugInfo.style.background = '#fff3cd';
+                        debugInfo.style.borderColor = '#ffc107';
+                    }
+                }, 10000);
+            }
+        };
+    </script>
+</body>
+</html>
