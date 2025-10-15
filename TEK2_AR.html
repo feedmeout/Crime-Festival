@@ -534,7 +534,7 @@
                 </h3>
                 
                 <model-viewer
-                    src="glass_dirt.glb"
+                    src="whiskey_glass.glb"
                     alt="Crystal Glasses 3D Model - Evidence"
                     ar
                     ar-modes="webxr scene-viewer quick-look"
@@ -587,7 +587,7 @@
                         <p style="color: #856404; font-size: 16px; font-weight: bold;">⚠️ Σφάλμα Φόρτωσης</p>
                         <p style="color: #856404; font-size: 13px; text-align: center;">
                             Το 3D μοντέλο δεν μπορεί να φορτώσει.<br>
-                            Ελέγξτε το αρχείο: glass_dirt.glb
+                            Ελέγξτε το αρχείο: whiskey_glass.glb
                         </p>
                     </div>
                 </model-viewer>
@@ -879,7 +879,7 @@
             
             if (modelViewer) {
                 debugInfo.style.display = 'block';
-                debugInfo.innerHTML = '🔍 Προσπάθεια φόρτωσης: glass_dirt.glb<br>';
+                debugInfo.innerHTML = '🔍 Προσπάθεια φόρτωσης: whiskey_glass.glb<br>';
                 
                 modelViewer.addEventListener('progress', (event) => {
                     const percent = Math.round(event.detail.totalProgress * 100);
@@ -899,7 +899,7 @@
                     debugInfo.innerHTML = '❌ ΣΦΑΛΜΑ: Το αρχείο δεν μπορεί να φορτώσει<br>';
                     debugInfo.innerHTML += 'Ελέγξτε:<br>';
                     debugInfo.innerHTML += '1. Το αρχείο υπάρχει στον ίδιο φάκελο<br>';
-                    debugInfo.innerHTML += '2. Το όνομα είναι: glass_dirt.glb<br>';
+                    debugInfo.innerHTML += '2. Το όνομα είναι: whiskey_glass.glb<br>';
                     debugInfo.innerHTML += '3. Το αρχείο είναι έγκυρο .glb<br>';
                     debugInfo.style.background = '#f8d7da';
                     debugInfo.style.borderColor = '#dc3545';
@@ -910,7 +910,7 @@
                         debugInfo.innerHTML = '⚠️ Το μοντέλο δεν φορτώνει...<br>';
                         debugInfo.innerHTML += 'Πιθανές αιτίες:<br>';
                         debugInfo.innerHTML += '• Το αρχείο δεν βρέθηκε<br>';
-                        debugInfo.innerHTML += '• Λάθος όνομα: glass_dirt.glb<br>';
+                        debugInfo.innerHTML += '• Λάθος όνομα: whiskey_glass.glb<br>';
                         debugInfo.style.background = '#fff3cd';
                         debugInfo.style.borderColor = '#ffc107';
                     }

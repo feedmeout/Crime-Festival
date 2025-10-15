@@ -709,7 +709,7 @@
                 </h3>
                 
                 <model-viewer
-                    src="jack_daniels_whiskey_no.7_bottle.glb"
+                    src="whiskey_bottle.glb"
                     alt="Jack Daniels Whiskey Bottle 3D Model - Evidence"
                     ar
                     ar-modes="webxr scene-viewer quick-look"
@@ -762,7 +762,7 @@
                         <p style="color: #856404; font-size: 16px; font-weight: bold;">⚠️ Σφάλμα Φόρτωσης</p>
                         <p style="color: #856404; font-size: 13px; text-align: center;">
                             Το 3D μοντέλο δεν μπορεί να φορτώσει.<br>
-                            Ελέγξτε το αρχείο: jack_daniels_whiskey_no.7_bottle.glb
+                            Ελέγξτε το αρχείο: whiskey_bottle.glb
                         </p>
                     </div>
                 </model-viewer>
@@ -991,7 +991,7 @@
             
             if (modelViewer) {
                 debugInfo.style.display = 'block';
-                debugInfo.innerHTML = '🔍 Προσπάθεια φόρτωσης: jack_daniels_whiskey_no.7_bottle.glb<br>';
+                debugInfo.innerHTML = '🔍 Προσπάθεια φόρτωσης: whiskey_bottle.glb<br>';
                 modelViewer.addEventListener('progress', (event) => {
                     const percent = Math.round(event.detail.totalProgress * 100);
                     debugInfo.innerHTML = `⏳ Φόρτωση: ${percent}%<br>`;
