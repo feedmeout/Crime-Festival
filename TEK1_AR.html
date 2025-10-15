@@ -834,7 +834,7 @@
                     </p>
                 </div>
 
-                <div class="section">
+<div class="section">
                     <h3 class="section-title">
                         <span style="font-size: 24px;">❓</span>
                         Βασικά Ερωτήματα Διερεύνησης
@@ -851,8 +851,33 @@
         </div>
     </div>
 
+    <div style="text-align: center; padding: 20px; background: rgba(0,0,0,0.05);">
+        <button onclick="goBackToCaseFile()" 
+                style="background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%); 
+                       color: white; 
+                       padding: 15px 40px; 
+                       border: none; 
+                       border-radius: 10px; 
+                       font-size: 16px; 
+                       font-weight: bold; 
+                       cursor: pointer; 
+                       box-shadow: 0 4px 12px rgba(255,107,0,0.3);">
+            ← ΕΠΙΣΤΡΟΦΗ ΣΤΟΝ ΦΑΚΕΛΟ
+        </button>
+    </div>
+
     <script>
+        function goBackToCaseFile() {
+            const teamCode = sessionStorage.getItem('teamCode');
+            if (teamCode) {
+                window.location.href = `index.html?team=${teamCode}`;
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+
         function drawCrimeScene() {
+		
             const canvas = document.getElementById('crimeSceneCanvas');
             const ctx = canvas.getContext('2d');
             
