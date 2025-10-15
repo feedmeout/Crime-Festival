@@ -244,7 +244,6 @@
             }
         }
 
-        /* AR Viewer Styles */
         .ar-container {
             margin: 20px 0;
             padding: 20px;
@@ -524,7 +523,6 @@
                 <div class="confidential-badge">ΑΠΟΡΡΗΤΟ</div>
             </div>
 
-            <!-- AR 3D VIEWER SECTION -->
             <div class="ar-container">
                 <h3 class="ar-title">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -553,7 +551,6 @@
                     reveal="auto"
                     ar-scale="fixed">
                     
-                    <!-- Loading indicator -->
                     <div slot="poster" style="
                         width: 100%;
                         height: 100%;
@@ -575,7 +572,6 @@
                         <p style="color: #666; font-size: 14px;">Φόρτωση 3D μοντέλου...</p>
                     </div>
                     
-                    <!-- Error fallback -->
                     <div slot="error" style="
                         width: 100%;
                         height: 100%;
@@ -651,16 +647,45 @@
                         Βασικά Ερωτήματα Διερεύνησης
                     </h3>
                     <ul class="section-content">
-                        <li>Γιατί μόνο το Ποτήρι Α έχει κυάνιο;</li>
+                        <li>Διατί μόνο το Ποτήρι Α έχει κυάνιο;</li>
                         <li>Πότε και γιατί σβήστηκαν τα αποτυπώματα από το Ποτήρι Β;</li>
-						<li>Το δεύτερο άτομο είναι θύμα, μάρτυρας ή δράστης;</li>
+                        <li>Το δεύτερο άτομο είναι θύμα, μάρτυρας ή δράστης;</li>
                     </ul>
                 </div>
             </div>
         </div>
     </div>
 
+    <div style="text-align: center; padding: 20px; background: rgba(0,0,0,0.05); position: relative; z-index: 100;">
+        <button onclick="window.goBackToCaseFile()" 
+                style="background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%); 
+                       color: white; 
+                       padding: 15px 40px; 
+                       border: none; 
+                       border-radius: 10px; 
+                       font-size: 16px; 
+                       font-weight: bold; 
+                       cursor: pointer; 
+                       box-shadow: 0 4px 12px rgba(255,107,0,0.3);
+                       position: relative;
+                       z-index: 101;
+                       pointer-events: auto;">
+            ← ΕΠΙΣΤΡΟΦΗ ΣΤΟΝ ΦΑΚΕΛΟ
+        </button>
+    </div>
+
     <script>
+        window.goBackToCaseFile = function() {
+            const teamCode = sessionStorage.getItem('teamCode');
+            console.log('🔙 Button clicked! Team:', teamCode);
+            
+            if (teamCode) {
+                window.location.href = `index.html?team=${teamCode}&tab=evidence`;
+            } else {
+                window.location.href = 'index.html?tab=evidence';
+            }
+        };
+
         function drawCrimeScene() {
             const canvas = document.getElementById('crimeSceneCanvas');
             const ctx = canvas.getContext('2d');
