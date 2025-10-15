@@ -851,8 +851,8 @@
         </div>
     </div>
 
-    <div style="text-align: center; padding: 20px; background: rgba(0,0,0,0.05);">
-        <button onclick="goBackToCaseFile()" 
+<div style="text-align: center; padding: 20px; background: rgba(0,0,0,0.05); position: relative; z-index: 100;">
+        <button onclick="window.goBackToCaseFile()" 
                 style="background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%); 
                        color: white; 
                        padding: 15px 40px; 
@@ -861,7 +861,10 @@
                        font-size: 16px; 
                        font-weight: bold; 
                        cursor: pointer; 
-                       box-shadow: 0 4px 12px rgba(255,107,0,0.3);">
+                       box-shadow: 0 4px 12px rgba(255,107,0,0.3);
+                       position: relative;
+                       z-index: 101;
+                       pointer-events: auto;">
             ← ΕΠΙΣΤΡΟΦΗ ΣΤΟΝ ΦΑΚΕΛΟ
         </button>
     </div>
