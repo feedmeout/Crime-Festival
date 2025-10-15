@@ -2939,9 +2939,9 @@ window.addEventListener('DOMContentLoaded', async () => {
     initTabsWithResults();
     console.log('✅ Tabs initialized');
 
-    const isMemberAuth = sessionStorage.getItem('memberAuth');
-    const storedTeam = sessionStorage.getItem('teamCode');
-    const memberName = sessionStorage.getItem('memberName');
+const isMemberAuth = localStorage.getItem('memberAuth');
+const storedTeam = localStorage.getItem('teamCode');
+const memberName = localStorage.getItem('memberName');
 
     if (teamCode === 'default' && !isMemberAuth) {
         console.warn('⚠️ Not authenticated, redirecting to member entry...');
@@ -2950,6 +2950,8 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
     
     if (teamCode === 'default' && storedTeam) {
+    teamCode = storedTeam;
+}
         console.log('Using stored team:', storedTeam);
         window.location.href = `index.html?team=${storedTeam}`;
         return;

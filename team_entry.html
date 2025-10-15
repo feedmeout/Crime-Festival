@@ -327,9 +327,9 @@ button:disabled {
                     return;
                 }
 				
-                sessionStorage.setItem('teamCode', teamName);
-                sessionStorage.setItem('memberName', memberName);
-                sessionStorage.setItem('memberAuth', 'true');
+localStorage.setItem('teamCode', teamName);
+localStorage.setItem('memberName', memberName);
+localStorage.setItem('memberAuth', 'true');
 
                 const preSurveyDoc = `${teamName}_pre_${memberName}`;
                 const preSurveyRef = window.firebaseDoc(window.firebaseDB, 'surveys', preSurveyDoc);
@@ -369,8 +369,8 @@ button:disabled {
         }
         
         window.addEventListener('DOMContentLoaded', () => {
-            const storedTeam = sessionStorage.getItem('teamCode');
-            const isAuthenticated = sessionStorage.getItem('memberAuth');
+const storedTeam = localStorage.getItem('teamCode');
+const isAuthenticated = localStorage.getItem('memberAuth');
             
             if (storedTeam && isAuthenticated === 'true') {
                 console.log('Already authenticated, checking for redirect...');

@@ -254,8 +254,8 @@
 
     <script>
         (function() {
-            const teamCode = sessionStorage.getItem('teamCode');
-            const memberAuth = sessionStorage.getItem('memberAuth');
+const teamCode = localStorage.getItem('teamCode');
+const memberAuth = localStorage.getItem('memberAuth');
 
             if (!teamCode || memberAuth !== 'true') {
                 console.log('❌ User not logged in - immediate redirect');
@@ -409,8 +409,8 @@
 
         async function processUnlock() {
             const container = document.getElementById('unlockContainer');
-            const teamCode = sessionStorage.getItem('teamCode');
-            const memberAuth = sessionStorage.getItem('memberAuth');
+const teamCode = localStorage.getItem('teamCode');
+const memberAuth = localStorage.getItem('memberAuth');
 
             if (!teamCode || memberAuth !== 'true') {
                 console.log('⚠️ User not logged in, redirecting to login page');
