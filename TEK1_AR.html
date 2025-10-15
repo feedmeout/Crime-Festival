@@ -867,14 +867,14 @@
     </div>
 
     <script>
-        function goBackToCaseFile() {
-            const teamCode = sessionStorage.getItem('teamCode');
-            if (teamCode) {
-                window.location.href = `index.html?team=${teamCode}`;
-            } else {
-                window.location.href = 'index.html';
-            }
-        }
+function goBackToCaseFile() {
+    const teamCode = sessionStorage.getItem('teamCode');
+    if (teamCode) {
+        window.location.href = `index.html?team=${teamCode}&tab=evidence`;
+    } else {
+        window.location.href = 'index.html?tab=evidence';
+    }
+}
 
         function drawCrimeScene() {
 		

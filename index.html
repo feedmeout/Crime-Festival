@@ -3034,10 +3034,25 @@ document.addEventListener('visibilitychange', () => {
 window.addEventListener('beforeunload', () => {
     StorageManager.syncSessionToFirebase();
 });
+
 window.addEventListener('DOMContentLoaded', async () => {
     console.log('🔄 Initializing tabs...');
     initTabsWithResults();
     console.log('✅ Tabs initialized');
+    const urlParams = new URLSearchParams(window.location.search);
+    const requestedTab = urlParams.get('tab');
+    if (requestedTab) {
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabPanes = document.querySelectorAll('.tab-pane');
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+        tabPanes.forEach(pane => pane.classList.remove('active'));
+        const targetButton = document.querySelector(`[data-tab="${requestedTab}"]`);
+        const targetPane = document.getElementById(`tab-${requestedTab}`);
+        if (targetButton && targetPane) {
+            targetButton.classList.add('active');
+            targetPane.classList.add('active');
+        }
+    }
 
     if (!StorageManager.isAuthenticated()) {
         console.warn('⚠️ Not authenticated, redirecting to member entry...');
