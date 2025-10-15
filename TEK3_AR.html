@@ -749,7 +749,6 @@
             
             canvas.width = 800;
             canvas.height = 400;
-
             const floorGradient = ctx.createLinearGradient(0, 0, 0, 400);
             floorGradient.addColorStop(0, '#8b7355');
             floorGradient.addColorStop(1, '#6b5345');
@@ -763,63 +762,50 @@
                 ctx.lineTo(800, i + Math.random() * 10);
                 ctx.stroke();
             }
-
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
-            ctx.beginPath();
-            ctx.ellipse(400, 280, 80, 25, 0, 0, Math.PI * 2);
-            ctx.fill();
-
-            const phoneGradient = ctx.createLinearGradient(330, 150, 470, 150);
+	
+            const phoneGradient = ctx.createLinearGradient(330, 100, 470, 100);
             phoneGradient.addColorStop(0, '#1a1a1a');
             phoneGradient.addColorStop(0.5, '#2d2d2d');
             phoneGradient.addColorStop(1, '#1a1a1a');
             ctx.fillStyle = phoneGradient;
-            ctx.fillRect(330, 150, 140, 260);
+            ctx.fillRect(330, 100, 140, 260);
             ctx.beginPath();
-            ctx.roundRect(330, 150, 140, 260, 15);
+            ctx.roundRect(330, 100, 140, 260, 15);
             ctx.fill();
 
-            const screenGradient = ctx.createLinearGradient(340, 170, 460, 170);
+            const screenGradient = ctx.createLinearGradient(340, 120, 460, 120);
             screenGradient.addColorStop(0, '#0a4d6e');
             screenGradient.addColorStop(0.5, '#0d5f8a');
             screenGradient.addColorStop(1, '#0a4d6e');
             ctx.fillStyle = screenGradient;
-            ctx.fillRect(340, 170, 120, 220);
+            ctx.fillRect(340, 120, 120, 220);
             ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
-            ctx.fillRect(345, 175, 50, 100);
+            ctx.fillRect(345, 125, 50, 100);
             ctx.fillStyle = '#fff';
             ctx.font = 'bold 16px sans-serif';
             ctx.textAlign = 'center';
-            ctx.fillText('💬', 400, 210);
+            ctx.fillText('💬', 400, 160);
             ctx.fillStyle = '#fff';
             ctx.font = '11px sans-serif';
-            ctx.fillText('Νέο Μήνυμα', 400, 235);
-            ctx.fillText('20:45', 400, 250);
+            ctx.fillText('Νέο Μήνυμα', 400, 185);
+            ctx.fillText('20:45', 400, 200);
             ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
             ctx.font = 'bold 10px sans-serif';
-            ctx.fillText('"Θα τελειώσει απόψε"', 400, 270);
+            ctx.fillText('"Θα τελειώσει απόψε"', 400, 220);
             ctx.fillStyle = '#333';
             ctx.beginPath();
-            ctx.arc(400, 395, 10, 0, Math.PI * 2);
+            ctx.arc(400, 345, 10, 0, Math.PI * 2);
             ctx.fill();
             ctx.fillStyle = '#1a5f7a';
-            ctx.beginPath();
-            ctx.arc(400, 165, 4, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.fillStyle = '#1a5f7a';
-            ctx.fillRect(390, 162, 20, 2);
-
+            ctx.fillRect(390, 112, 20, 2);
             ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
             ctx.fillRect(0, 0, 800, 40);
-            
             ctx.fillStyle = '#ff0000';
             ctx.font = 'bold 14px monospace';
             ctx.textAlign = 'left';
             ctx.fillText('● REC', 10, 25);
-            
             ctx.fillStyle = '#fff';
             ctx.fillText('22/09/2025  22:25:10  |  ΣΚΗΝΗ ΕΓΚΛΗΜΑΤΟΣ - ΓΡΑΦΕΙΟ', 80, 25);
-            
             ctx.textAlign = 'right';
             ctx.fillText('ΤΕΚ #003', 790, 25);
         }
