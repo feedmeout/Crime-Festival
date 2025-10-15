@@ -866,15 +866,17 @@
         </button>
     </div>
 
-    <script>
-function goBackToCaseFile() {
-    const teamCode = sessionStorage.getItem('teamCode');
-    if (teamCode) {
-        window.location.href = `index.html?team=${teamCode}&tab=evidence`;
-    } else {
-        window.location.href = 'index.html?tab=evidence';
-    }
-}
+<script>
+        window.goBackToCaseFile = function() {
+            const teamCode = sessionStorage.getItem('teamCode');
+            console.log('🔙 Button clicked! Team:', teamCode);
+            
+            if (teamCode) {
+                window.location.href = `index.html?team=${teamCode}&tab=evidence`;
+            } else {
+                window.location.href = 'index.html?tab=evidence';
+            }
+        };
 
         function drawCrimeScene() {
 		
