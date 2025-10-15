@@ -418,6 +418,56 @@
             color: #0f3460;
         }
 
+        .document-list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+            gap: 10px;
+        }
+
+        .document-list-item-text {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .document-list-item-date {
+            flex-shrink: 0;
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #4caf50;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .document-list-item-date.gray {
+            background: #f5f5f5;
+            color: #666;
+            border: 1px solid #ddd;
+        }
+
+        .handwritten-note {
+            padding: 8px;
+            margin-top: 8px;
+            border-left: 3px solid #ffa500;
+            font-style: italic;
+            position: relative;
+        }
+
+        .handwritten-note-date {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            flex-shrink: 0;
+        }
+
+        .handwritten-note-text {
+            padding-right: 120px;
+        }
+
         @media (max-width: 768px) {
             .document-item {
                 padding: 12px;
@@ -430,6 +480,17 @@
             
             .document-details {
                 font-size: 12px;
+            }
+
+            .handwritten-note-text {
+                padding-right: 0;
+                padding-bottom: 30px;
+            }
+
+            .handwritten-note-date {
+                position: static;
+                display: block;
+                margin-top: 8px;
             }
         }
 
@@ -475,20 +536,6 @@
             .significance-text {
                 font-size: 14px;
             }
-        }
-
-        .handwritten-note {
-            padding: 15px 0;
-            margin: 15px 0;
-            font-style: italic;
-            color: #555;
-            border-top: 1px dashed #ccc;
-            border-bottom: 1px dashed #ccc;
-        }
-
-        .handwritten-note::before {
-            content: "✍️ ";
-            font-style: normal;
         }
 
         .missing-alert {
@@ -619,7 +666,7 @@
                 </model-viewer>
             </div>
 
-<div class="details">
+            <div class="details">
                 <h2 class="evidence-title">📦 ΑΡΧΕΙΟΘΗΚΗ «ΕΜΠΙΣΤΕΥΤΙΚΟ»</h2>
 
                 <div class="section">
@@ -636,62 +683,383 @@
                         </div>
                     </div>
                 </div>
-                <div class="section">
-                    <h3 class="section-title">
-                        <span style="font-size: 24px;">📄</span>
-                        Περιεχόμενα Αρχειοθήκης - Ανάλυση Εγγράφων
-                    </h3>
-                    
-                    <div class="document-item">
-                        <div class="document-name">📋 ΑΝΑΓΝΩΣΤΟΥ ΚΩΝΣΤΑΝΤΙΝΟΣ - ΟΙΚΟΝΟΜΙΚΑ ΕΓΓΡΑΦΑ</div>
-                        <div class="document-details">
-                            <div><strong>Περιεχόμενο:</strong> Αντίγραφα τραπεζικών καταθέσεων σε Ελβετικό τραπεζικό λογαριασμό (Credit Suisse) συνολικού ποσού €1.547.000. Οι καταθέσεις έγιναν σε διάστημα 18 μηνών (Μάρτιος 2024 - Σεπτέμβριος 2025).</div>
-                            <div><strong>Χειρόγραφη σημείωση:</strong> «Ο Κώστης επιμένει να αγοράσει τις μετοχές μου. Διατί τόση βιασύνη; Έχει μάθει για την κατάσταση της υγείας μου;»</div>
-                            <div><strong>Email:</strong> Email από λογιστή Αναγνώστου προς τον ίδιο (23/08/2025) με θέμα: «Ερώτηση για δήλωση εσόδων» - «αναφορά σε αδήλωτα έσοδα συμβουλευτικών υπηρεσιών στο εξωτερικό».</div>
-                            <div><strong>Εσωτερική έκθεση:</strong> Αντίγραφο εσωτερικής έκθεσης που έγραψε ο Αναγνώστου (15/09/2025) με τίτλο «Ανωμαλίες στα λογιστικά βιβλία - Προς διερεύνηση». Σημείωση θύματος: «Προσπαθεί να με καλύψει ή να καλύψει τον εαυτό του; Την έγραψε επειδή κατάλαβε ότι τον ψάχνω;»</div>
-                        </div>
-                    </div>
 
-                    <div class="document-item">
-                        <div class="document-name">💔 ΜΑΥΡΙΔΗ ΕΛΕΝΗ - ΠΡΟΣΩΠΙΚΑ ΕΓΓΡΑΦΑ</div>
-                        <div class="document-details">
-                            <div><strong>Περιεχόμενο:</strong> 8 φωτογραφίες ερωτικού περιεχομένου (θύμα και Μαυρίδη), χρονολογημένες από metadata 2022-2023. Αντίγραφο συμβολαίου εκδοτικής σύμβασης για το βιβλίο της «Ο Έρωτας που Πληγώνει» (αφιερωμένο «Σε αυτόν που με πρόδωσε»).</div>
-                            <div><strong>Χειρόγραφη σημείωση θύματος:</strong> "Η Ελένη με απειλεί να δημοσιεύσει τις φωτογραφίες αν δεν της δώσω €100.000... αλλά... μήπως θέλει απλά να με πληγώσει όπως την πλήγωσα;"</div>
-                            <div><strong>SMS screenshot (εκτυπωμένο):</strong> Από Μαυρίδη: «Ξέρω τι έκανες. Ξέρω ποια είναι η αλήθεια. Μην με αναγκάσεις να μιλήσω.» (20/09/2025, 14:32)</div>
-                            <div><strong>Προσχέδιο επιστολής:</strong> Επιστολή του θύματος προς Μαυρίδη (προσχέδιο, χωρίς ημερομηνία): «Αγαπημένη Ελένη, ξέρω ότι σε πλήγωσα βαθιά. Θέλω να σε βοηθήσω με το βιβλίο σου - μπορώ να το εκδώσω χωρίς κόστος για σένα. Είναι ο τρόπος μου να ζητήσω συγγνώμη...» + σημείωση: «Ποτέ δεν το έστειλα. Διατί;»</div>
-                        </div>
-                    </div>
-
-                    <div class="document-item">
-                        <div class="document-name">📄 ΝΙΚΟΛΑΟΥ ΑΛΕΞΑΝΔΡΑ - ΕΤΑΙΡΙΚΑ ΕΓΓΡΑΦΑ</div>
-                        <div class="document-details">
-                            <div><strong>Περιεχόμενο:</strong> Printscreen emails μεταξύ Νικολάου και επαφής από ανταγωνιστικό εκδοτικό οίκο «Εκδόσεις Ψίθυρος». Αναφορές σε υλικό που μπορεί να σας «ενδιαφέρει» και «αμοιβή για πληροφορίες».</div>
-                            <div><strong>Λίστα χειρογράφων:</strong> 7 τίτλοι συγγραφέων που προορίζονταν για έκδοση από την εταιρεία του θύματος αλλά τελικά εκδόθηκαν από τις «Εκδόσεις Ψίθυρος» (2025).</div>
-                            <div><strong>Χειρόγραφη σημείωση θύματος:</strong> «Η Αλεξάνδρα τα ομολόγησε όλα. Κλαίγοντας. Είπε ότι τα χρειαζόταν τα χρήματα για τον άρρωστο πατέρα της. Την πίστεψα - ΔΕΝ την απέλυσα. Της έδωσα δεύτερη ευκαιρία. Μετανιώνω;»</div>
-                            <div><strong>Email:</strong> Γραπτή ενημέρωση της Νικολάου προς το θύμα (01/09/2025): «Κύριε, θέλω να σας ενημερώσω ότι ο Πολίτης (CEO, «Εκδόσεις Ψίθυρος») με προσέγγισε και μου πρόσφερε χρήματα για πληροφορίες. Αρνήθηκα. Νομίζω όμως ότι κάποιος άλλος από το τμήμα μπορεί να δέχτηκε.» Σημείωση θύματος: «Εντιμότητα ή τακτική;»</div>
-                        </div>
-                    </div>
-
-                    <div class="document-item">
-                        <div class="document-name">💊 ΠΑΠΑΔΟΠΟΥΛΟΥ ΜΑΡΙΑ - ΙΑΤΡΙΚΑ & ΟΙΚΟΝΟΜΙΚΑ</div>
-                        <div class="document-details">
-                            <div><strong>Περιεχόμενο:</strong>  Αντίγραφα των ιατρικών εξετάσεων του θύματος (διάγνωση καρκίνου) με χειρόγραφες σημειώσεις της Παπαδοπούλου για προγραμματισμό ραντεβού «Επόμενο ραντεβού με Δρ. Σταυρίδη για τον κύριο - 26/09».</div>
-                            <div><strong>Καταστάσεις μισθοδοσίας:</strong> Επισήμανση με μαρκαδόρο σε 3 μήνες απλήρωτων μισθών (Ιούλιος, Αύγουστος, Σεπτέμβριος) συνολικού ποσού €8.400.</div>
-                            <div><strong>Χειρόγραφη σημείωση θύματος:</strong> «Η Μαρία είναι το μόνο πρόσωπο που μου μένει πιστό. Ξέρει τα πάντα για μένα - την υγεία μου, τα οικονομικά μου, ακόμα και τις αδυναμίες μου. Της χρωστάω και λεφτά και την αξιοπρέπειά της. ΔΕΝ ΜΠΟΡΩ να την προδώσω!»</div>
-                            <div><strong>Απομαγνητοφωνημένη συνομιλία:</strong> Προσωπική συνομιλία θύματος-Παπαδοπούλου (12/09): Παπαδοπούλου: «Κύριε, ξέρω ότι έχετε δυσκολίες. Μην ανησυχείτε για τους μισθούς μου. Θα περιμένω. Δεν θα σας εγκαταλείψω ΠΟΤΕ.» Σημείωση: «Πως μπορεί να υπάρχουν τέτοιοι άνθρωποι;»</div>
-                        </div>
-                    </div>
-
-                    <div class="document-item">
-                        <div class="document-name">🔒 ΠΕΤΡΟΠΟΥΛΟΣ ΓΕΩΡΓΙΟΣ - ΙΣΤΟΡΙΚΟ & ΟΙΚΟΝΟΜΙΚΑ</div>
-                        <div class="document-details">
-                            <div><strong>Περιεχόμενο:</strong> Αντίγραφο ποινικού μητρώου - Κατηγορία για κλοπή χημικών ουσιών από προηγούμενο εργοδότη (2019), αθωώθηκε λόγω έλλειψης αποδείξεων. Δικαστική απόφαση (επισυνάπτεται).</div>
-                            <div><strong>Έρευνα πιστωληπτικής:</strong> Χρέη συνολικού ύψους €58.300 (πιστωτικές κάρτες, δάνεια, ιδιωτικοί δανειστές). Αναφορές σε «πιεστικές επαφές από εισπρακτικές εταιρείες».</div>
-                            <div><strong>Χειρόγραφη σημείωση θύματος:</strong> «Ο Γιώργος ζήτησε προκαταβολή €10.000 την περασμένη εβδομάδα. Αρνήθηκα. Είδα τον πανικό στα μάτια του. Έκανα λάθος;»</div>
-                            <div><strong>Επιστολή:</strong> Γραπτή σύσταση από πρώην συνάδελφο Πετρόπουλου (2020): «Ο Γιώργης είναι ο πιο έντιμος άνθρωπος που γνώρισα. Η κατηγορία ήταν παγίδα από τον προϊστάμενό του που ήθελε να τον διώξει. Τον συστήνω ανεπιφύλακτα.» + σημείωση θύματος: «Τον προσέλαβα με βάση αυτή την επιστολή.»</div>
-                        </div>
-                    </div>
+<div class="section">
+    <h3 class="section-title">
+        <span style="font-size: 24px;">📄</span>
+        Περιεχόμενα Αρχειοθήκης - Ανάλυση Εγγράφων
+    </h3>
+    
+    <div class="document-item">
+        <div class="document-name">📋 ΑΝΑΓΝΩΣΤΟΥ ΚΩΝΣΤΑΝΤΙΝΟΣ - ΟΙΚΟΝΟΜΙΚΑ ΕΓΓΡΑΦΑ</div>
+        <div class="document-details">
+            <div><strong>Πρωτότυπα Έγγραφα:</strong></div>
+            
+            <div class="handwritten-note">
+                <div class="handwritten-note-date">
+                    <span style="background: #e8f5e9; color: #2e7d32; border: 1px solid #4caf50; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">Μάρτιος 2024 - Σεπτέμβριος 2025</span>
                 </div>
+                <div class="handwritten-note-text">
+                    Αντίγραφα τραπεζικών καταθέσεων σε Ελβετικό λογαριασμό (Credit Suisse) συνολικού ποσού €1.547.000
+                </div>
+            </div>
+            <div class="handwritten-note">
+                <div class="handwritten-note-date">
+                    <span style="background: #e8f5e9; color: #2e7d32; border: 1px solid #4caf50; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">23/08/2025</span>
+                </div>
+                <div class="handwritten-note-text">
+                    Email από λογιστή Αναγνώστου: «Ερώτηση για δήλωση εσόδων» - αναφορά σε αδήλωτα έσοδα συμβουλευτικών υπηρεσιών
+                </div>
+            </div>
+            <div class="handwritten-note">
+                <div class="handwritten-note-date">
+                    <span style="background: #e8f5e9; color: #2e7d32; border: 1px solid #4caf50; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">15/09/2025</span>
+                </div>
+                <div class="handwritten-note-text">
+                    Εσωτερική έκθεση από Αναγνώστου: «Ανωμαλίες στα λογιστικά βιβλία - Προς διερεύνηση»
+                </div>
+            </div>
+            
+            <div style="margin-top: 12px;"><strong>Χειρόγραφες Σημειώσεις Θύματος:</strong></div>
+            <div class="handwritten-note">
+                <div class="handwritten-note-date">
+                    <span style="background: #fff3e0; color: #e65100; border: 1px solid #ff9800; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">Αύγουστος 2025</span>
+                </div>
+                <div class="handwritten-note-text">
+                    <em>«Ο Κώστης επιμένει να αγοράσει τις μετοχές μου. Διατί τόση βιασύνη; Έχει μάθει για την κατάσταση της υγείας μου;»</em>
+                </div>
+            </div>
+            <div class="handwritten-note">
+                <div class="handwritten-note-date">
+                    <span style="background: #ffebee; color: #c62828; border: 1px solid #f44336; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">Σεπτέμβριος 2025</span>
+                </div>
+                <div class="handwritten-note-text">
+                    <em>«Προσπαθεί να με καλύψει ή να καλύψει τον εαυτό του; Την έγραψε επειδή κατάλαβε ότι τον ψάχνω;»</em>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="document-item">
+        <div class="document-name">💔 ΜΑΥΡΙΔΗ ΕΛΕΝΗ - ΠΡΟΣΩΠΙΚΑ ΕΓΓΡΑΦΑ</div>
+        <div class="document-details">
+            <div><strong>Πρωτότυπα Έγγραφα:</strong></div>
+            
+            <div class="handwritten-note">
+                <div class="handwritten-note-date">
+                    <span style="background: #e8f5e9; color: #2e7d32; border: 1px solid #4caf50; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">2022-2023</span>
+                </div>
+                <div class="handwritten-note-text">
+                    8 φωτογραφίες ερωτικού περιεχομένου (θύμα και Μαυρίδη)
+                </div>
+            </div>
+            <div class="handwritten-note">
+                <div class="handwritten-note-date">
+                    <span style="background: #e8f5e9; color: #2e7d32; border: 1px solid #4caf50; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">2023</span>
+                </div>
+                <div class="handwritten-note-text">
+                    Συμβόλαιο εκδοτικής σύμβασης για βιβλίο «Ο Έρωτας που Πληγώνει» - Αφιερωμένο: «Σε αυτόν που με πρόδωσε»
+                </div>
+            </div>
+            <div class="handwritten-note">
+                <div class="handwritten-note-date">
+                    <span style="background: #e8f5e9; color: #2e7d32; border: 1px solid #4caf50; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">20/09/2025</span>
+                </div>
+                <div class="handwritten-note-text">
+                    SMS screenshot από Μαυρίδη: «Ξέρω τι έκανες. Ξέρω ποια είναι η αλήθεια. Μην με αναγκάσεις να μιλήσω.»
+                </div>
+            </div>
+            <div class="handwritten-note">
+                <div class="handwritten-note-date">
+                    <span style="background: #f5f5f5; color: #666; border: 1px solid #ddd; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">Χωρίς ημερομηνία</span>
+                </div>
+                <div class="handwritten-note-text">
+                    Προσχέδιο επιστολής θύματος προς Μαυρίδη (ποτέ δεν στάλθηκε): «Αγαπημένη Ελένη, Ξέρω ότι σε πλήγωσα βαθιά. Θέλω να σε βοηθήσω με το βιβλίο σου...»
+                </div>
+            </div>
+            
+            <div style="margin-top: 12px;"><strong>Χειρόγραφες Σημειώσεις Θύματος:</strong></div>
+            <div class="handwritten-note">
+                <div class="handwritten-note-date">
+                    <span style="background: #fff3e0; color: #e65100; border: 1px solid #ff9800; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">Αύγουστος 2025</span>
+                </div>
+                <div class="handwritten-note-text">
+                    <em>"Η Ελένη με απειλεί να δημοσιεύσει τις φωτογραφίες αν δεν της δώσω €100.000... αλλά... μήπως θέλει απλά να με πληγώσει όπως την πλήγωσα;"</em>
+                </div>
+            </div>
+            <div class="handwritten-note">
+                <div class="handwritten-note-date">
+                    <span style="background: #ffebee; color: #c62828; border: 1px solid #f44336; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">Σεπτέμβριος 2025</span>
+                </div>
+                <div class="handwritten-note-text">
+                    <em>«Ποτέ δεν το έστειλα. Διατί;»</em>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="document-item">
+        <div class="document-name">📄 ΝΙΚΟΛΑΟΥ ΑΛΕΞΑΝΔΡΑ - ΕΤΑΙΡΙΚΑ ΕΓΓΡΑΦΑ</div>
+        <div class="document-details">
+            <div><strong>Πρωτότυπα Έγγραφα:</strong></div>
+            
+            <div class="handwritten-note">
+                <div class="handwritten-note-date">
+                    <span style="background: #e8f5e9; color: #2e7d32; border: 1px solid #4caf50; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">2025</span>
+                </div>
+                <div class="handwritten-note-text">
+                    Printscreen emails μεταξύ Νικολάου και «Εκδόσεις Ψίθυρος» - Αναφορές σε «αμοιβή για πληροφορίες»
+                </div>
+            </div>
+            <div class="handwritten-note">
+                <div class="handwritten-note-date">
+                    <span style="background: #e8f5e9; color: #2e7d32; border: 1px solid #4caf50; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">2025</span>
+                </div>
+                <div class="handwritten-note-text">
+                    Λίστα 7 χειρογράφων που κλάπηκαν και εκδόθηκαν από ανταγωνιστές
+                </div>
+            </div>
+            <div class="handwritten-note">
+                <div class="handwritten-note-date">
+                    <span style="background: #e8f5e9; color: #2e7d32; border: 1px solid #4caf50; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">01/09/2025</span>
+                </div>
+                <div class="handwritten-note-text">
+                    Email Νικολάου προς θύμα: «Ο Πολίτης με προσέγγισε και μου πρόσφερε χρήματα. Αρνήθηκα. Νομίζω όμως ότι κάποιος άλλος δέχτηκε.»
+                </div>
+            </div>
+            
+            <div style="margin-top: 12px;"><strong>Χειρόγραφες Σημειώσεις Θύματος:</strong></div>
+            <div class="handwritten-note">
+                <div class="handwritten-note-date">
+                    <span style="background: #e8f5e9; color: #2e7d32; border: 1px solid #4caf50; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">Ιούνιος 2025</span>
+                </div>
+                <div class="handwritten-note-text">
+                    <em>«Η Αλεξάνδρα τα ομολόγησε όλα. Κλαίγοντας. Είπε ότι τα χρειαζόταν τα χρήματα για τον άρρωστο πατέρα της. Την πίστεψα - ΔΕΝ την απέλυσα. Της έδωσα δεύτερη ευκαιρία. Μετανιώνω;»</em>
+                </div>
+            </div>
+            <div class="handwritten-note">
+                <div class="handwritten-note-date">
+                    <span style="background: #ffebee; color: #c62828; border: 1px solid #f44336; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">Σεπτέμβριος 2025</span>
+                </div>
+                <div class="handwritten-note-text">
+                    <em>«Εντιμότητα ή τακτική;»</em>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="document-item">
+        <div class="document-name">💊 ΠΑΠΑΔΟΠΟΥΛΟΥ ΜΑΡΙΑ - ΙΑΤΡΙΚΑ & ΟΙΚΟΝΟΜΙΚΑ</div>
+        <div class="document-details">
+            <div><strong>Πρωτότυπα Έγγραφα:</strong></div>
+            
+            <div class="handwritten-note">
+                <div class="handwritten-note-date">
+                    <span style="background: #e8f5e9; color: #2e7d32; border: 1px solid #4caf50; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">Μάιος 2025</span>
+                </div>
+                <div class="handwritten-note-text">
+                    Αντίγραφα ιατρικών εξετάσεων θύματος - Διάγνωση καρκίνου
+                </div>
+            </div>
+            <div class="handwritten-note">
+                <div class="handwritten-note-date">
+                    <span style="background: #e8f5e9; color: #2e7d32; border: 1px solid #4caf50; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">Ιούλιος-Σεπτέμβριος 2025</span>
+                </div>
+                <div class="handwritten-note-text">
+                    Καταστάσεις μισθοδοσίας με επισήμανση: 3 μήνες απλήρωτων μισθών - Σύνολο: €8.400
+                </div>
+            </div>
+            <div class="handwritten-note">
+                <div class="handwritten-note-date">
+                    <span style="background: #e8f5e9; color: #2e7d32; border: 1px solid #4caf50; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">12/09/2025</span>
+                </div>
+                <div class="handwritten-note-text">
+                    Απομαγνητοφωνημένη συνομιλία: Παπαδοπούλου: «Κύριε, ξέρω ότι έχετε δυσκολίες. Μην ανησυχείτε για τους μισθούς μου. Θα περιμένω. Δεν θα σας εγκαταλείψω ΠΟΤΕ.»
+                </div>
+            </div>
+            
+            <div style="margin-top: 12px;"><strong>Χειρόγραφες Σημειώσεις Θύματος:</strong></div>
+            <div class="handwritten-note">
+                <div class="handwritten-note-date">
+                    <span style="background: #e8f5e9; color: #2e7d32; border: 1px solid #4caf50; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">Ιούνιος-Ιούλιος 2025</span>
+                </div>
+                <div class="handwritten-note-text">
+                    <em>«Η Μαρία είναι το μόνο πρόσωπο που μου μένει πιστό. Ξέρει τα πάντα για μένα - την υγεία μου, τα οικονομικά μου, ακόμα και τις αδυναμίες μου. Της χρωστάω λεφτά και την αξιοπρέπειά της. ΔΕΝ ΜΠΟΡΩ να την προδώσω!»</em>
+                </div>
+            </div>
+            <div class="handwritten-note">
+                <div class="handwritten-note-date">
+                    <span style="background: #ffebee; color: #c62828; border: 1px solid #f44336; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">Σεπτέμβριος 2025</span>
+                </div>
+                <div class="handwritten-note-text">
+                    <em>«Πως μπορεί να υπάρχουν τέτοιοι άνθρωποι;»</em>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="document-item">
+        <div class="document-name">🔒 ΠΕΤΡΟΠΟΥΛΟΣ ΓΕΩΡΓΙΟΣ - ΙΣΤΟΡΙΚΟ & ΟΙΚΟΝΟΜΙΚΑ</div>
+        <div class="document-details">
+            <div><strong>Πρωτότυπα Έγγραφα:</strong></div>
+            
+            <div class="handwritten-note">
+                <div class="handwritten-note-date">
+                    <span style="background: #e8f5e9; color: #2e7d32; border: 1px solid #4caf50; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">2019</span>
+                </div>
+                <div class="handwritten-note-text">
+                    Αντίγραφο ποινικού μητρώου: Κατηγορία για κλοπή χημικών ουσιών - Αθωώθηκε λόγω έλλειψης αποδείξεων
+                </div>
+            </div>
+            <div class="handwritten-note">
+                <div class="handwritten-note-date">
+                    <span style="background: #e8f5e9; color: #2e7d32; border: 1px solid #4caf50; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">2020</span>
+                </div>
+                <div class="handwritten-note-text">
+                    Έρευνα πιστωληπτικής: Χρέη €58.300 (πιστωτικές κάρτες, δάνεια, ιδιωτικοί δανειστές)
+                </div>
+            </div>
+            <div class="handwritten-note">
+                <div class="handwritten-note-date">
+                    <span style="background: #e8f5e9; color: #2e7d32; border: 1px solid #4caf50; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">2020</span>
+                </div>
+                <div class="handwritten-note-text">
+                    Επιστολή σύστασης από πρώην συνάδελφο: «Ο Γιώργης είναι ο πιο έντιμος άνθρωπος που γνώρισα. Η κατηγορία ήταν παγίδα...»
+                </div>
+            </div>
+            <div class="handwritten-note">
+                <div class="handwritten-note-date">
+                    <span style="background: #e8f5e9; color: #2e7d32; border: 1px solid #4caf50; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">Σεπτέμβριος 2025</span>
+                </div>
+                <div class="handwritten-note-text">
+                    Πρόσφατη αίτηση: Προκαταβολή €10.000 (περίπου 1 εβδομάδα πριν τη δολοφονία)
+                </div>
+            </div>
+            
+            <div style="margin-top: 12px;"><strong>Χειρόγραφες Σημειώσεις Θύματος:</strong></div>
+            <div class="handwritten-note">
+                <div class="handwritten-note-date">
+                    <span style="background: #e8f5e9; color: #2e7d32; border: 1px solid #4caf50; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">Ιούνιος 2020</span>
+                </div>
+                <div class="handwritten-note-text">
+                    <em>«Τον προσέλαβα με βάση αυτή την επιστολή.»</em>
+                </div>
+            </div>
+            <div class="handwritten-note">
+                <div class="handwritten-note-date">
+                    <span style="background: #fff3e0; color: #e65100; border: 1px solid #ff9800; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;">Αύγουστος 2025</span>
+                </div>
+                <div class="handwritten-note-text">
+                    <em>«Ο Γιώργος ζήτησε προκαταβολή €10.000 την περασμένη εβδομάδα. Αρνήθηκα. Είδα τον πανικό στα μάτια του. Έκανα λάθος;»</em>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.document-item {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border: 2px solid #dee2e6;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 12px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.document-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.document-name {
+    font-weight: 700;
+    font-size: 15px;
+    color: #1a1a2e;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.document-details {
+    font-size: 13px;
+    color: #666;
+    line-height: 1.6;
+}
+
+.document-details div {
+    margin-bottom: 4px;
+}
+
+.document-details strong {
+    color: #0f3460;
+}
+
+.document-list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+    gap: 10px;
+}
+
+.document-list-item-text {
+    flex: 1;
+    min-width: 0;
+}
+
+.document-list-item-date {
+    flex-shrink: 0;
+    background: #e8f5e9;
+    color: #2e7d32;
+    border: 1px solid #4caf50;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.document-list-item-date.gray {
+    background: #f5f5f5;
+    color: #666;
+    border: 1px solid #ddd;
+}
+
+.handwritten-note {
+    padding: 8px;
+    margin-top: 8px;
+    border-left: 3px solid #ffa500;
+    font-style: italic;
+    position: relative;
+}
+
+.handwritten-note-date {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    flex-shrink: 0;
+}
+
+.handwritten-note-text {
+    padding-right: 120px;
+}
+
+@media (max-width: 768px) {
+    .handwritten-note-text {
+        padding-right: 0;
+        padding-bottom: 30px;
+    }
+    
+    .handwritten-note-date {
+        position: static;
+        display: block;
+        margin-top: 8px;
+    }
+}
+</style>
 
                 <div class="section">
                     <h3 class="section-title">
@@ -699,111 +1067,63 @@
                         Γραφολογική & Χρονολογική Ανάλυση
                     </h3>
                     
-                    <!-- CHRONOLOGICAL ANALYSIS - Gray Boxes Style -->
                     <div style="margin-bottom: 25px;">
-                        <p class="section-content" style="margin-bottom: 15px;"><strong style="color: #0f3460; font-size: 16px;">🔍 Ανάλυση Χειρόγραφων Σημειώσεων</strong></p>
-                        <p class="section-content" style="margin-bottom: 15px;">Οι σημειώσεις του θύματος γράφτηκαν σε τουλάχιστον 3 διαφορετικές χρονικές περιόδους με βάση τη γραφική πίεση και το μελάνι.</p>
+                        <p class="section-content" style="margin-bottom: 15px;"><strong style="color: #0f3460; font-size: 16px;">🖊️ Ανάλυση Χειρόγραφων Σημειώσεων Θύματος</strong></p>
+                        <p class="section-content" style="margin-bottom: 15px;">Οι σημειώσεις του θύματος γράφτηκαν σε τουλάχιστον 3 διαφορετικές χρονικές περιόδους με βάση τη γραφική πίεση και το μελάνι. Η ψυχολογική εξέλιξη είναι εμφανής:</p>
                         
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-top: 15px;">
-                            <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border: 2px solid #dee2e6; border-radius: 10px; padding: 18px;">
-                                <div style="font-weight: 700; font-size: 15px; color: #0f3460; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-                                    <span style="font-size: 20px;">📅</span> ΠΕΡΙΟΔΟΣ Α (ΠΑΛΑΙΟΤΕΡΕΣ)
+                            <div style="background: #f8f9fa; border: 2px solid #dee2e6; border-radius: 10px; padding: 18px;">
+                                <div style="font-weight: 700; font-size: 15px; color: #495057; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between;">
+                                    <span><span style="font-size: 20px;">📅</span> ΠΕΡΙΟΔΟΣ Α (ΠΑΛΑΙΟΤΕΡΗ)</span>
                                 </div>
-                                <div style="font-size: 13px; color: #495057; line-height: 1.6;">
-                                    <div style="margin-bottom: 8px;"><strong>Χρονολόγηση:</strong> Ιούνιος-Ιούλιος 2025</div>
-                                    <div style="margin-bottom: 8px;"><strong>Χαρακτηριστικά:</strong> Σταθερή γραφή, ήρεμος τόνος</div>
-                                    <div><strong>Περιεχόμενο:</strong> Αντικειμενικές παρατηρήσεις</div>
-                                </div>
-                            </div>
-
-                            <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border: 2px solid #dee2e6; border-radius: 10px; padding: 18px;">
-                                <div style="font-weight: 700; font-size: 15px; color: #0f3460; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-                                    <span style="font-size: 20px;">📅</span> ΠΕΡΙΟΔΟΣ Β (ΜΕΣΕΣ)
-                                </div>
-                                <div style="font-size: 13px; color: #495057; line-height: 1.6;">
-                                    <div style="margin-bottom: 8px;"><strong>Χρονολόγηση:</strong> Αύγουστος 2025</div>
-                                    <div style="margin-bottom: 8px;"><strong>Χαρακτηριστικά:</strong> Πιο βιαστική γραφή, αυξημένη συναισθηματική φόρτιση</div>
-                                    <div><strong>Περιεχόμενο:</strong> Ερωτήματα και αμφιβολίες</div>
+                                <div style="font-size: 13px; color: #6c757d; line-height: 1.6;">
+                                    <div style="margin-bottom: 8px;"><strong>Χρονολόγηση:</strong> <span style="background: #e8f5e9; color: #2e7d32; border: 1px solid #4caf50; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">Ιούνιος 2020 - Ιούλιος 2025</span></div>
+                                    <div style="margin-bottom: 8px;"><strong>Χαρακτηριστικά:</strong> Σταθερή γραφή, ήρεμος τόνος, μελάνι σκούρο μπλε</div>
+                                    <div style="margin-bottom: 8px;"><strong>Περιεχόμενο:</strong> Αντικειμενικές παρατηρήσεις, θετικές σκέψεις</div>
+                                    <div><strong>Παραδείγματα:</strong> Σημειώσεις για Παπαδοπούλου (εκτίμηση), αρχική πρόσληψη Πετρόπουλου (2020), ομολογία Νικολάου (Ιούνιος 2025)</div>
                                 </div>
                             </div>
 
-                            <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border: 2px solid #dee2e6; border-radius: 10px; padding: 18px;">
-                                <div style="font-weight: 700; font-size: 15px; color: #0f3460; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-                                    <span style="font-size: 20px;">📅</span> ΠΕΡΙΟΔΟΣ Γ (ΠΡΟΣΦΑΤΕΣ)
+                            <div style="background: #f8f9fa; border: 2px solid #dee2e6; border-radius: 10px; padding: 18px;">
+                                <div style="font-weight: 700; font-size: 15px; color: #495057; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between;">
+                                    <span><span style="font-size: 20px;">📅</span> ΠΕΡΙΟΔΟΣ Β (ΕΝΔΙΑΜΕΣΗ)</span>
                                 </div>
-                                <div style="font-size: 13px; color: #495057; line-height: 1.6;">
-                                    <div style="margin-bottom: 8px;"><strong>Χρονολόγηση:</strong> Σεπτέμβριος 2025 (τελευταίες 2 εβδομάδες)</div>
-                                    <div style="margin-bottom: 8px;"><strong>Χαρακτηριστικά:</strong> Τρεμάμενη γραφή, διαγραφές</div>
-                                    <div><strong>Περιεχόμενο:</strong> Έντονες αμφιβολίες και φόβος</div>
+                                <div style="font-size: 13px; color: #6c757d; line-height: 1.6;">
+                                    <div style="margin-bottom: 8px;"><strong>Χρονολόγηση:</strong> <span style="background: #fff3e0; color: #e65100; border: 1px solid #ff9800; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">Αύγουστος 2025</span></div>
+                                    <div style="margin-bottom: 8px;"><strong>Χαρακτηριστικά:</strong> Πιο βιαστική γραφή, αυξημένη πίεση, μελάνι μαύρο</div>
+                                    <div style="margin-bottom: 8px;"><strong>Περιεχόμενο:</strong> Ερωτήματα, αμφιβολίες, ανησυχία</div>
+                                    <div><strong>Παραδείγματα:</strong> Σημειώσεις για Αναγνώστου (χρήματα Ελβετία), Μαυρίδη (απειλές), Πετρόπουλο (αίτημα προκαταβολής)</div>
+                                </div>
+                            </div>
+
+                            <div style="background: #f8f9fa; border: 2px solid #dee2e6; border-radius: 10px; padding: 18px;">
+                                <div style="font-weight: 700; font-size: 15px; color: #495057; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between;">
+                                    <span><span style="font-size: 20px;">📅</span> ΠΕΡΙΟΔΟΣ Γ (ΠΡΟΣΦΑΤΗ)</span>
+                                </div>
+                                <div style="font-size: 13px; color: #6c757d; line-height: 1.6;">
+                                    <div style="margin-bottom: 8px;"><strong>Χρονολόγηση:</strong> <span style="background: #ffebee; color: #c62828; border: 1px solid #f44336; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-weight: bold;">Σεπτέμβριος 2025</span> (τελευταίες 2 εβδομάδες)</div>
+                                    <div style="margin-bottom: 8px;"><strong>Χαρακτηριστικά:</strong> Τρεμάμενη γραφή, διαγραφές, μελάνι ασταθές</div>
+                                    <div style="margin-bottom: 8px;"><strong>Περιεχόμενο:</strong> Έντονες αμφιβολίες, φόβος, παράνοια</div>
+                                    <div><strong>Παραδείγματα:</strong> Τελευταίες σημειώσεις για όλους - Αναγνώστου (προσπάθεια κάλυψης;), Μαυρίδη (γιατί δεν έστειλε επιστολή), Νικολάου (εντιμότητα ή τακτική;), Παπαδοπούλου (δεν πιστεύει σε τέτοια πίστη)</div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div style="margin-bottom: 25px;">
-                        <p class="section-content" style="margin-bottom: 15px;"><strong style="color: #0f3460; font-size: 16px;">⏰ Χρονολογική Συσχέτιση Εγγράφων</strong></p>
-                        
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px;">
-                            <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border: 2px solid #dee2e6; border-radius: 10px; padding: 18px;">
-                                <div style="font-weight: 700; font-size: 14px; color: #0f3460; margin-bottom: 10px;">
-                                    📊 ΑΝΑΓΝΩΣΤΟΥ - ΟΙΚΟΝΟΜΙΚΑ
-                                </div>
-                                <div style="font-size: 13px; color: #495057; line-height: 1.7;">
-                                    Παλαιότερα έγγραφα (Μάρτιος 2024 - Σεπτέμβριος 2025). Σταδιακή συσσώρευση χρημάτων στην Ελβετία.
-                                </div>
-                            </div>
 
-                            <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border: 2px solid #dee2e6; border-radius: 10px; padding: 18px;">
-                                <div style="font-weight: 700; font-size: 14px; color: #0f3460; margin-bottom: 10px;">
-                                    💔 ΜΑΥΡΙΔΗ - ΦΩΤΟΓΡΑΦΙΕΣ
-                                </div>
-                                <div style="font-size: 13px; color: #495057; line-height: 1.7;">
-                                    Περίοδος σχέσης 2022-2023. Χωρισμός Μάρτιος 2025 (6 μήνες πριν).
-                                </div>
-                            </div>
-
-                            <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border: 2px solid #dee2e6; border-radius: 10px; padding: 18px;">
-                                <div style="font-weight: 700; font-size: 14px; color: #0f3460; margin-bottom: 10px;">
-                                    📄 ΝΙΚΟΛΑΟΥ - ΚΛΟΠΕΣ
-                                </div>
-                                <div style="font-size: 13px; color: #495057; line-height: 1.7;">
-                                    Πρόσληψη Ιούνιος 2025. Όλα τα έγγραφα από το 2025.
-                                </div>
-                            </div>
-
-                            <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border: 2px solid #dee2e6; border-radius: 10px; padding: 18px;">
-                                <div style="font-weight: 700; font-size: 14px; color: #0f3460; margin-bottom: 10px;">
-                                    💊 ΠΑΠΑΔΟΠΟΥΛΟΥ - ΙΑΤΡΙΚΑ
-                                </div>
-                                <div style="font-size: 13px; color: #495057; line-height: 1.7;">
-                                    Διάγνωση καρκίνου Μάιος 2025. Απλήρωτοι μισθοί Ιούλιος-Σεπτέμβριος 2025.
-                                </div>
-                            </div>
-
-                            <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border: 2px solid #dee2e6; border-radius: 10px; padding: 18px;">
-                                <div style="font-weight: 700; font-size: 14px; color: #0f3460; margin-bottom: 10px;">
-                                    🔒 ΠΕΤΡΟΠΟΥΛΟΣ - ΙΣΤΟΡΙΚΟ
-                                </div>
-                                <div style="font-size: 13px; color: #495057; line-height: 1.7;">
-                                    Έρευνα πριν πρόσληψη (2020). Χρέη €58.300 - πρόσφατες πιέσεις Σεπτέμβριος 2025.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border: 2px solid #dee2e6; border-radius: 10px; padding: 20px; margin-bottom: 20px;">
-                        <p class="section-content" style="margin-bottom: 15px;"><strong style="color: #0f3460; font-size: 16px;">ΑΣΥΝΗΘΙΣΤΑ ΕΥΡΗΜΑΤΑ</strong></p>
-                        <ul style="list-style: none; padding-left: 0; margin: 0;">
-                            <li style="padding: 8px 0; border-bottom: 1px solid rgba(15,52,96,0.2); color: #495057;">
-                                Κάποια έγγραφα έχουν <strong>διπλά αντίγραφα</strong> - ένα με σημειώσεις και ένα «καθαρό»
-                            </li>
-                            <li style="padding: 8px 0; border-bottom: 1px solid rgba(15,52,96,0.2); color: #495057;">
-                                Ορισμένες σελίδες φέρουν <strong>δακτυλικά αποτυπώματα ΔΥΟ προσώπων</strong> (θύμα + άγνωστο)
-                            </li>
-                            <li style="padding: 8px 0; color: #495057;">
-                                Υπάρχει <strong>κενό</strong> σελίδων 7-9 που δεν μπορούμε να εξακριβώσουμε τι περιείχαν
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+<div style="background: #f8f9fa; border-left: 4px solid #ff9800; border-radius: 6px; padding: 15px; margin: 15px 0;">
+    <p style="margin: 0 0 8px 0; font-weight: 700; color: #e65100; font-size: 14px;">ΑΣΥΝΗΘΙΣΤΑ ΕΥΡΗΜΑΤΑ</p>
+    <ul style="list-style: none; padding-left: 0; margin: 0; font-size: 13px; color: #666;">
+        <li style="padding: 4px 0; line-height: 1.5;">
+            • Κάποια έγγραφα έχουν <strong style="color: #333;">διπλά αντίγραφα</strong> - ένα με σημειώσεις και ένα «καθαρό»
+        </li>
+        <li style="padding: 4px 0; line-height: 1.5;">
+            • Ορισμένες σελίδες φέρουν <strong style="color: #333;">δακτυλικά αποτυπώματα ΔΥΟ προσώπων</strong> (θύμα + άγνωστο)
+        </li>
+        <li style="padding: 4px 0; line-height: 1.5;">
+            • Υπάρχει <strong style="color: #333;">κενό σελίδων 7-9</strong> που δεν μπορούμε να εξακριβώσουμε τι περιείχαν
+        </li>
+    </ul>
+</div>
 
                 <div class="significance-box">
                     <h3 class="significance-title">
