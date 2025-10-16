@@ -778,11 +778,9 @@
 function drawCrimeScene() {
     const canvas = document.getElementById('crimeSceneCanvas');
     const ctx = canvas.getContext('2d');
-    
     canvas.width = 800;
     canvas.height = 400;
-
-    // Rich wooden desk background with multiple tones
+	
     const floorGradient = ctx.createLinearGradient(0, 0, 0, 400);
     floorGradient.addColorStop(0, '#9d8569');
     floorGradient.addColorStop(0.3, '#8b7355');
@@ -790,8 +788,6 @@ function drawCrimeScene() {
     floorGradient.addColorStop(1, '#4a3525');
     ctx.fillStyle = floorGradient;
     ctx.fillRect(0, 0, 800, 400);
-
-    // Enhanced wood grain texture with variation
     ctx.strokeStyle = 'rgba(101, 67, 33, 0.25)';
     ctx.lineWidth = 1.5;
     for (let i = 0; i < 400; i += 35) {
@@ -802,7 +798,6 @@ function drawCrimeScene() {
         ctx.stroke();
     }
 
-    // Additional fine grain
     ctx.strokeStyle = 'rgba(80, 50, 25, 0.15)';
     ctx.lineWidth = 1;
     for (let i = 0; i < 400; i += 20) {
@@ -812,7 +807,6 @@ function drawCrimeScene() {
         ctx.stroke();
     }
 
-    // Subtle vignette for photographic effect
     const vignette = ctx.createRadialGradient(400, 200, 150, 400, 200, 550);
     vignette.addColorStop(0, 'rgba(0,0,0,0)');
     vignette.addColorStop(0.7, 'rgba(0,0,0,0.1)');
@@ -820,9 +814,6 @@ function drawCrimeScene() {
     ctx.fillStyle = vignette;
     ctx.fillRect(0, 0, 800, 400);
 
-    // === SHADOWS - Draw these FIRST, before the key ===
-    
-    // Shadow for the entire key (drawn before key so it appears behind)
     const keyShadow = ctx.createRadialGradient(400, 240, 0, 400, 240, 90);
     keyShadow.addColorStop(0, 'rgba(0, 0, 0, 0.4)');
     keyShadow.addColorStop(0.6, 'rgba(0, 0, 0, 0.2)');
@@ -832,9 +823,6 @@ function drawCrimeScene() {
     ctx.ellipse(400, 240, 90, 20, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // === KEY HEAD - HOLLOW CIRCULAR DESIGN ===
-    
-    // Outer ring with metallic gradient
     const headOuterGradient = ctx.createRadialGradient(354, 194, 5, 360, 200, 28);
     headOuterGradient.addColorStop(0, '#ffd700');
     headOuterGradient.addColorStop(0.2, '#f4d03f');
@@ -842,21 +830,14 @@ function drawCrimeScene() {
     headOuterGradient.addColorStop(0.6, '#c9a629');
     headOuterGradient.addColorStop(0.8, '#b8860b');
     headOuterGradient.addColorStop(1, '#8b6914');
-    
-    // Draw outer circle (filled)
     ctx.fillStyle = headOuterGradient;
     ctx.beginPath();
     ctx.arc(360, 200, 26, 0, Math.PI * 2);
     ctx.fill();
-    
-    // Outer edge
     ctx.strokeStyle = '#5a4010';
     ctx.lineWidth = 2;
     ctx.stroke();
-
-    // === LIGHTING EFFECTS ON KEY HEAD (drawn BEFORE hollow is cut) ===
-    
-    // Main highlight on outer edge (top-left)
+	
     const mainHighlight = ctx.createRadialGradient(353, 193, 0, 353, 193, 8);
     mainHighlight.addColorStop(0, 'rgba(255, 255, 255, 0.9)');
     mainHighlight.addColorStop(0.5, 'rgba(255, 255, 255, 0.6)');
@@ -865,50 +846,36 @@ function drawCrimeScene() {
     ctx.beginPath();
     ctx.arc(353, 193, 8, 0, Math.PI * 2);
     ctx.fill();
-    
-    // Secondary highlight
     ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
     ctx.beginPath();
     ctx.arc(356, 195, 3, 0, Math.PI * 2);
     ctx.fill();
-
-    // Outer decorative ring
     ctx.strokeStyle = '#f4d03f';
     ctx.lineWidth = 1.2;
     ctx.beginPath();
     ctx.arc(360, 200, 24, 0, Math.PI * 2);
     ctx.stroke();
-
-    // Middle decorative ring
     ctx.strokeStyle = 'rgba(218, 165, 32, 0.6)';
     ctx.lineWidth = 0.8;
     ctx.beginPath();
     ctx.arc(360, 200, 20, 0, Math.PI * 2);
     ctx.stroke();
-
-    // Create TRUE hollow center - completely transparent
     ctx.save();
     ctx.globalCompositeOperation = 'destination-out';
     ctx.beginPath();
     ctx.arc(360, 200, 16, 0, Math.PI * 2);
     ctx.fill();
     ctx.restore();
-
-    // Draw the inner edge stroke without filling
     ctx.strokeStyle = '#3d2415';
     ctx.lineWidth = 2.5;
     ctx.beginPath();
     ctx.arc(360, 200, 16, 0, Math.PI * 2);
     ctx.stroke();
-
-    // Inner edge highlight (top-left, catching light)
     ctx.strokeStyle = 'rgba(100, 80, 40, 0.5)';
     ctx.lineWidth = 1.5;
     ctx.beginPath();
     ctx.arc(360, 200, 16.5, Math.PI * 1.2, Math.PI * 1.8);
     ctx.stroke();
-
-    // === KEY SHAFT ===
     
     const shaftGradient = ctx.createLinearGradient(380, 184, 380, 216);
     shaftGradient.addColorStop(0, '#8b6914');
@@ -920,10 +887,8 @@ function drawCrimeScene() {
     shaftGradient.addColorStop(0.75, '#b8860b');
     shaftGradient.addColorStop(0.9, '#9d7518');
     shaftGradient.addColorStop(1, '#7a5d12');
-    
     ctx.fillStyle = shaftGradient;
     ctx.fillRect(386, 186, 100, 28);
-    
     ctx.strokeStyle = '#5a4010';
     ctx.lineWidth = 2.5;
     ctx.strokeRect(386, 186, 100, 28);
@@ -933,7 +898,6 @@ function drawCrimeScene() {
     topHighlight.addColorStop(1, 'rgba(255, 245, 200, 0)');
     ctx.fillStyle = topHighlight;
     ctx.fillRect(388, 188, 96, 5);
-    
     ctx.fillStyle = 'rgba(255, 235, 150, 0.5)';
     ctx.fillRect(388, 191, 96, 2);
 
@@ -943,8 +907,6 @@ function drawCrimeScene() {
     ctx.fillStyle = bottomShadow;
     ctx.fillRect(388, 207, 96, 5);
 
-    // === KEY TEETH - 10 TEETH HIGH SECURITY PATTERN ===
-    
     const teeth = [
         {x: 486, y: 189, h: 7, w: 3.5},
         {x: 490.5, y: 187, h: 10, w: 3.5},
@@ -959,7 +921,7 @@ function drawCrimeScene() {
     ];
     
     teeth.forEach((tooth, index) => {
-        // Deep groove shadow with gradient
+
         const grooveGradient = ctx.createLinearGradient(tooth.x, tooth.y, tooth.x + tooth.w, tooth.y);
         grooveGradient.addColorStop(0, '#0d0a08');
         grooveGradient.addColorStop(0.3, '#1a1410');
@@ -968,29 +930,21 @@ function drawCrimeScene() {
         
         ctx.fillStyle = grooveGradient;
         ctx.fillRect(tooth.x, tooth.y, tooth.w, tooth.h);
-        
-        // Left edge highlight
         ctx.fillStyle = 'rgba(220, 180, 100, 0.6)';
         ctx.fillRect(tooth.x, tooth.y, 0.7, tooth.h);
-        
-        // Right edge shadow
         ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
         ctx.fillRect(tooth.x + tooth.w - 0.7, tooth.y, 0.7, tooth.h);
-        
-        // Bottom shadow (deeper for center teeth)
+
         const bottomDarkness = index >= 3 && index <= 6 ? 0.7 : 0.5;
         ctx.fillStyle = `rgba(0, 0, 0, ${bottomDarkness})`;
         ctx.fillRect(tooth.x, tooth.y + tooth.h - 1, tooth.w, 1.5);
-        
-        // Top micro-highlight for deeper teeth
+
         if (tooth.h > 12) {
             ctx.fillStyle = 'rgba(180, 140, 70, 0.3)';
             ctx.fillRect(tooth.x + 0.5, tooth.y, tooth.w - 1, 0.8);
         }
     });
 
-    // === KEY TIP ===
-    
     ctx.beginPath();
     ctx.moveTo(486, 186);
     ctx.lineTo(531, 186);
@@ -1007,15 +961,11 @@ function drawCrimeScene() {
     tipGradient.addColorStop(0.7, '#c9a629');
     tipGradient.addColorStop(0.85, '#b8860b');
     tipGradient.addColorStop(1, '#8b6914');
-    
     ctx.fillStyle = tipGradient;
     ctx.fill();
-    
     ctx.strokeStyle = '#5a4010';
     ctx.lineWidth = 2.5;
     ctx.stroke();
-
-    // Top highlight on tip
     ctx.beginPath();
     ctx.moveTo(488, 188);
     ctx.lineTo(529, 188);
@@ -1025,8 +975,6 @@ function drawCrimeScene() {
     ctx.closePath();
     ctx.fillStyle = 'rgba(255, 245, 200, 0.6)';
     ctx.fill();
-
-    // Sharp point highlight
     ctx.beginPath();
     ctx.moveTo(531, 188);
     ctx.lineTo(540, 200);
@@ -1035,8 +983,6 @@ function drawCrimeScene() {
     ctx.closePath();
     ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
     ctx.fill();
-
-    // Bottom shadow on tip
     ctx.beginPath();
     ctx.moveTo(488, 207);
     ctx.lineTo(529, 207);
@@ -1046,10 +992,8 @@ function drawCrimeScene() {
     ctx.closePath();
     ctx.fillStyle = 'rgba(60, 45, 15, 0.4)';
     ctx.fill();
-
-    // === FORENSIC EVIDENCE - Talc powder ===
-    
     ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+	
     for (let i = 0; i < 30; i++) {
         const x = 375 + i * 5 + (Math.random() * 5 - 2.5);
         const y = 195 + (Math.random() * 12 - 6);
@@ -1059,7 +1003,6 @@ function drawCrimeScene() {
         ctx.fill();
     }
 
-    // Talc particles around the hollow key head
     ctx.fillStyle = 'rgba(245, 245, 255, 0.5)';
     for (let i = 0; i < 18; i++) {
         const angle = (Math.PI * 2 / 18) * i;
@@ -1079,12 +1022,9 @@ function drawCrimeScene() {
         ctx.arc(x, y, 0.5, 0, Math.PI * 2);
         ctx.fill();
     }
-
-    // === MEASUREMENT SCALE ===
     
     ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
-    ctx.fillRect(570, 350, 110, 2);
-    
+    ctx.fillRect(570, 350, 110, 2); 
     ctx.fillRect(570, 345, 2, 12);
     ctx.fillRect(678, 345, 2, 12);
     
@@ -1096,20 +1036,14 @@ function drawCrimeScene() {
     ctx.font = 'bold 11px monospace';
     ctx.textAlign = 'center';
     ctx.fillText('5.2 cm', 624, 372);
-
-    // === TOP INFO BAR ===
-    
     ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
     ctx.fillRect(0, 0, 800, 40);
-    
     ctx.fillStyle = '#ff0000';
     ctx.font = 'bold 14px monospace';
     ctx.textAlign = 'left';
     ctx.fillText('● REC', 10, 25);
-    
     ctx.fillStyle = '#ffffff';
     ctx.fillText('22/09/2025  22:35:42  |  ΣΚΗΝΗ ΕΓΚΛΗΜΑΤΟΣ - ΓΡΑΦΕΙΟ ΘΥΜΑΤΟΣ', 80, 25);
-    
     ctx.textAlign = 'right';
     ctx.fillText('ΤΕΚ #010', 790, 25);
 }
