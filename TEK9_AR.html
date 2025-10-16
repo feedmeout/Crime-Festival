@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Τεκμήριο Ξεκλειδώθηκε</title>
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
     
     <style>
         * {
@@ -41,11 +40,6 @@
             0% { transform: scale(0) rotate(-180deg); opacity: 0; }
             50% { transform: scale(1.2) rotate(10deg); }
             100% { transform: scale(1) rotate(0deg); opacity: 1; }
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
         }
 
         .header {
@@ -167,18 +161,6 @@
             }
         }
 
-        .category {
-            font-size: 12px;
-            color: #aaa;
-            margin-top: 2px;
-        }
-
-        @media (max-width: 768px) {
-            .category {
-                font-size: 10px;
-            }
-        }
-
         .official-badge {
             background: rgba(255,107,0,0.2);
             border: 2px solid #ff6b00;
@@ -264,18 +246,7 @@
             gap: 8px;
         }
 
-        model-viewer {
-            width: 100%;
-            height: 450px;
-            background-color: #f5f5f5;
-            border-radius: 8px;
-            border: 2px solid #ddd;
-        }
-
         @media (max-width: 768px) {
-            model-viewer {
-                height: 350px;
-            }
             .ar-title {
                 font-size: 16px;
             }
@@ -555,165 +526,95 @@
 
             <div class="ar-container">
                 <h3 class="ar-title">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M2 16.1A5 5 0 0 1 5.9 20M2 12.05A9 9 0 0 1 9.95 20M2 8V6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-6"></path>
-                        <line x1="2" y1="20" x2="2.01" y2="20"></line>
-                    </svg>
-                    ΠΡΟΒΟΛΗ ΣΕ 3D
+                    <span style="font-size: 24px;">🧾</span>
+                    ΑΠΟΔΕΙΞΗ ΑΓΟΡΑΣ ΧΗΜΙΚΩΝ
                 </h3>
                 
-                <model-viewer
-                    src="invoice.glb"
-                    alt="Chemical Purchase Receipt 3D Model - Evidence"
-                    ar
-                    ar-modes="webxr scene-viewer quick-look"
-                    camera-controls
-                    touch-action="pan-y"
-                    auto-rotate
-                    auto-rotate-delay="1000"
-                    rotation-per-second="30deg"
-                    shadow-intensity="1"
-                    exposure="0.8"
-                    camera-orbit="0deg 75deg 2.5m"
-                    min-camera-orbit="auto 0deg auto"
-                    max-camera-orbit="auto 180deg auto"
-                    loading="eager"
-                    reveal="auto"
-                    ar-scale="fixed">
-                    
-                    <div slot="poster" style="
-                        width: 100%;
-                        height: 100%;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        background: #f5f5f5;
-                        flex-direction: column;
-                        gap: 10px;
-                    ">
-                        <div style="
-                            border: 4px solid #f3f3f3;
-                            border-top: 4px solid #ff6b00;
-                            border-radius: 50%;
-                            width: 40px;
-                            height: 40px;
-                            animation: spin 1s linear infinite;
-                        "></div>
-                        <p style="color: #666; font-size: 14px;">Φόρτωση 3D μοντέλου...</p>
+                <div class="receipt-box">
+                    <div class="receipt-header">
+                        <div class="receipt-company">ΧΗΜΙΚΑ PLUS Α.Ε.</div>
+                        <div class="receipt-details">
+                            Λεωφ. Κηφισίας 247, Χαλάνδρι 152 32<br>
+                            ΑΦΜ: 094523871 | ΔΟΥ: Χαλανδρίου<br>
+                            Τηλ: 210-6847321
+                        </div>
                     </div>
-                    
-                    <div slot="error" style="
-                        width: 100%;
-                        height: 100%;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        background: #fff3cd;
-                        flex-direction: column;
-                        gap: 15px;
-                        padding: 20px;
-                    ">
-                        <p style="color: #856404; font-size: 16px; font-weight: bold;">⚠️ Σφάλμα Φόρτωσης</p>
-                        <p style="color: #856404; font-size: 13px; text-align: center;">
-                            Το 3D μοντέλο δεν μπορεί να φορτώσει.<br>
-                            Ελέγξτε το αρχείο: invoice.glb
-                        </p>
+
+                    <div class="receipt-item">
+                        <span class="receipt-label">Αριθμός Απόδειξης:</span>
+                        <span class="receipt-value">#CH-2025-09847-KCN</span>
                     </div>
-                </model-viewer>
-                
-                <div id="debugInfo" style="
-                    margin-top: 10px;
-                    padding: 10px;
-                    background: #e7f3ff;
-                    border: 1px solid #2196F3;
-                    border-radius: 5px;
-                    font-size: 12px;
-                    font-family: monospace;
-                    display: none;
-                "></div>
+
+                    <div class="receipt-item">
+                        <span class="receipt-label">Ημερομηνία:</span>
+                        <span class="receipt-value">19/09/2025 - 14:30</span>
+                    </div>
+
+                    <div class="receipt-item">
+                        <span class="receipt-label">Πωλητής:</span>
+                        <span class="receipt-value">Α. Κωνσταντινίδης</span>
+                    </div>
+
+                    <div style="margin: 20px 0; padding: 15px 0; border-top: 2px dashed #333; border-bottom: 2px dashed #333;">
+                        <div class="receipt-item critical">
+                            <span class="receipt-label">ΠΡΟΪΟΝ:</span>
+                            <span class="receipt-value">Κυανιούχο Κάλιο (KCN)</span>
+                        </div>
+
+                        <div class="receipt-item">
+                            <span class="receipt-label">Ποσότητα:</span>
+                            <span class="receipt-value">500g</span>
+                        </div>
+
+                        <div class="receipt-item">
+                            <span class="receipt-label">Τιμή Μονάδας:</span>
+                            <span class="receipt-value">€42.00</span>
+                        </div>
+
+                        <div class="receipt-item">
+                            <span class="receipt-label">Κωδικός Προϊόντος:</span>
+                            <span class="receipt-value">KCN-500-IND</span>
+                        </div>
+
+                        <div class="receipt-item">
+                            <span class="receipt-label">Κατηγορία Άδειας:</span>
+                            <span class="receipt-value">Απεντόμωση Επαγγελματική</span>
+                        </div>
+                    </div>
+
+                    <div class="receipt-total">
+                        <span>ΣΥΝΟΛΟ:</span>
+                        <span>€42.00</span>
+                    </div>
+
+                    <div class="receipt-item" style="margin-top: 10px;">
+                        <span class="receipt-label">Μέθοδος Πληρωμής:</span>
+                        <span class="receipt-value">Μετρητά</span>
+                    </div>
+
+                    <div class="signature-box">
+                        <div class="signature-label">Υπογραφή Αγοραστή:</div>
+                        <div class="signature-name">Γ. Πετρόπουλος</div>
+                        <div style="margin-top: 10px; font-size: 11px; color: #999;">
+                            Άδεια Απεντόμωσης: ΑΠ-2024-15873<br>
+                            Εταιρεία: SecureGuard Υπηρεσίες Ασφαλείας
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 20px; padding: 15px; background: rgba(220,53,69,0.05); border: 2px solid #dc3545; border-radius: 8px;">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                        <span style="font-size: 24px;"></span>
+                        <strong style="color: #dc3545; font-size: 15px;">ΠΑΡΑΤΗΡΗΣΗ</strong>
+                    </div>
+                    <p style="font-size: 14px; color: #666; margin: 0; line-height: 1.6;">
+                        Η αγορά έγινε 3 ημέρες πριν τον θάνατο του Δημητρίου. Η γραφολογική ανάλυση δείχνει <strong style="color: #dc3545;">78% ταύτιση</strong> με την υπογραφή του Πετρόπουλου, αλλά εντοπίστηκαν μικροδιαφορές που μπορεί να υποδηλώνουν άγχος ή προσπάθεια μίμησης.
+                    </p>
+                </div>
             </div>
 
             <div class="details">
                 <h2 class="evidence-title">🧾 ΑΠΟΔΕΙΞΗ ΑΓΟΡΑΣ ΧΗΜΙΚΩΝ</h2>
-
-                <div class="section">
-                    <h3 class="section-title">
-                        <span style="font-size: 24px;">📄</span>
-                        Λεπτομέρειες Εγγράφου
-                    </h3>
-                    
-                    <div class="receipt-box">
-                        <div class="receipt-header">
-                            <div class="receipt-company">ΧΗΜΙΚΑ PLUS Α.Ε.</div>
-                            <div class="receipt-details">
-                                Λεωφ. Κηφισίας 247, Χαλάνδρι 152 32<br>
-                                ΑΦΜ: 094523871 | ΔΟΥ: Χαλανδρίου<br>
-                                Τηλ: 210-6847321
-                            </div>
-                        </div>
-
-                        <div class="receipt-item">
-                            <span class="receipt-label">Αριθμός Απόδειξης:</span>
-                            <span class="receipt-value">#CH-2025-09847-KCN</span>
-                        </div>
-
-                        <div class="receipt-item">
-                            <span class="receipt-label">Ημερομηνία:</span>
-                            <span class="receipt-value">19/09/2025 - 14:30</span>
-                        </div>
-
-                        <div class="receipt-item">
-                            <span class="receipt-label">Πωλητής:</span>
-                            <span class="receipt-value">Β. Κωνσταντινίδης</span>
-                        </div>
-
-                        <div style="margin: 20px 0; padding: 15px 0; border-top: 2px dashed #333; border-bottom: 2px dashed #333;">
-                            <div class="receipt-item critical">
-                                <span class="receipt-label">ΠΡΟΪΟΝ:</span>
-                                <span class="receipt-value">Κυανιούχο Κάλιο (KCN)</span>
-                            </div>
-
-                            <div class="receipt-item">
-                                <span class="receipt-label">Ποσότητα:</span>
-                                <span class="receipt-value">500g</span>
-                            </div>
-
-                            <div class="receipt-item">
-                                <span class="receipt-label">Τιμή Μονάδας:</span>
-                                <span class="receipt-value">€42.00</span>
-                            </div>
-
-                            <div class="receipt-item">
-                                <span class="receipt-label">Κωδικός Προϊόντος:</span>
-                                <span class="receipt-value">KCN-500-IND</span>
-                            </div>
-
-                            <div class="receipt-item">
-                                <span class="receipt-label">Κατηγορία Άδειας:</span>
-                                <span class="receipt-value">Απεντόμωση Επαγγελματική</span>
-                            </div>
-                        </div>
-
-                        <div class="receipt-total">
-                            <span>ΣΥΝΟΛΟ:</span>
-                            <span>€42.00</span>
-                        </div>
-
-                        <div class="receipt-item" style="margin-top: 10px;">
-                            <span class="receipt-label">Μέθοδος Πληρωμής:</span>
-                            <span class="receipt-value">Μετρητά</span>
-                        </div>
-
-                        <div class="signature-box">
-                            <div class="signature-label">Υπογραφή Αγοραστή:</div>
-                            <div class="signature-name">Γ. Πετρόπουλος</div>
-                            <div style="margin-top: 10px; font-size: 11px; color: #999;">
-                                Άδεια Απεντόμωσης: ΑΠ-2024-15873<br>
-                                Εταιρεία: SecureGuard Υπηρεσίες Ασφαλείας
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
                 <div class="section">
                     <h3 class="section-title">
@@ -749,7 +650,7 @@
                             <strong>Διαδικασία Επαλήθευσης:</strong> Σύμφωνα με τις καταστατικές υποχρεώσεις του «ΧημικάPlus», ο πωλητής θα έπρεπε να επαληθεύσει την άδεια, να καταγράψει τα στοιχεία ταυτότητας του αγοραστή, και να κρατήσει αντίγραφο της άδειας στο αρχείο. Ο καταναλωτής επίσης υπογράφει δήλωση σκοπού χρήσης. Επικοινωνήσαμε με το κατάστημα και επιβεβαίωσαν ότι ακολουθήθηκαν όλες οι διαδικασίες. Ωστόσο, η δήλωση σκοπού χρήσης αναφέρει γενικά «απεντόμωση χώρων εταιρείας» χωρίς περαιτέρω λεπτομέρειες.
                         </p>
                         <p>
-                            <strong>Ιστορικό Αγορών:</strong> Έλεγχος στα αρχεία του καταστήματος αποκάλυψε ότι ο Πετρόπουλος είχε πραγματοποιήσει δύο προηγούμενες αγορές χημικών απεντόμωσης τους τελευταίους 18 μήνες - μία τον Απρίλιο 2024 (διάφορα εντομοκτόνα) και μία τον Νοέμβριο 2024 (ποντικοφάρμακα). Το ιστορικό ενισχύει την εικόνα συνήθους επαγγελματικής χρήσης, αλλά είναι η πρώτη φορά που αγοράζει KCN συγκεκριμένα.
+                            <strong>Ιστορικό Αγορών:</strong> Έλεγχος στα αρχεία του καταστήματος αποκάλυψε ότι ο Πετρόπουλος είχε πραγματοποιήσει δυο προηγούμενες αγορές χημικών απεντόμωσης τους τελευταίους 18 μήνες - μία τον Απρίλιο 2024 (διάφορα εντομοκτόνα) και μία τον Νοέμβριο 2024 (ποντικοφάρμακα). Το ιστορικό ενισχύει την εικόνα συνήθους επαγγελματικής χρήσης, αλλά είναι η πρώτη φορά που αγοράζει KCN συγκεκριμένα.
                         </p>
                     </div>
                 </div>
@@ -793,7 +694,7 @@
                        position: relative;
                        z-index: 101;
                        pointer-events: auto;">
-            ← ΕΠΙΣΤΡΟΦΗ ΣΤΟΝ ΦΑΚΕΛΟ
+            ← ΕΠΙΣΤΡΟΦΗ ΣΤΟ ΦΑΚΕΛΟ
         </button>
     </div>
 
@@ -809,294 +710,266 @@
             }
         };
 
-function drawCrimeScene() {
-    const canvas = document.getElementById('crimeSceneCanvas');
-    const ctx = canvas.getContext('2d');
-    
-    canvas.width = 800;
-    canvas.height = 600;
-	
-    const floorGradient = ctx.createLinearGradient(0, 0, 0, 600);
-    floorGradient.addColorStop(0, '#8b7355');
-    floorGradient.addColorStop(0.5, '#7a6348');
-    floorGradient.addColorStop(1, '#6b5345');
-    ctx.fillStyle = floorGradient;
-    ctx.fillRect(0, 0, 800, 600);
-    ctx.strokeStyle = 'rgba(101, 67, 33, 0.2)';
-    ctx.lineWidth = 1.5;
-    for (let i = 0; i < 600; i += 35) {
-        ctx.beginPath();
-        ctx.moveTo(0, i);
-        ctx.bezierCurveTo(200, i + Math.random() * 8, 600, i - Math.random() * 8, 800, i + Math.random() * 5);
-        ctx.stroke();
-    }
+        function drawCrimeScene() {
+            const canvas = document.getElementById('crimeSceneCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = 800;
+            canvas.height = 600;
+            
+            const floorGradient = ctx.createLinearGradient(0, 0, 0, 600);
+            floorGradient.addColorStop(0, '#8b7355');
+            floorGradient.addColorStop(0.5, '#7a6348');
+            floorGradient.addColorStop(1, '#6b5345');
+            ctx.fillStyle = floorGradient;
+            ctx.fillRect(0, 0, 800, 600);
+            
+            ctx.strokeStyle = 'rgba(101, 67, 33, 0.2)';
+            ctx.lineWidth = 1.5;
+            for (let i = 0; i < 600; i += 35) {
+                ctx.beginPath();
+                ctx.moveTo(0, i);
+                ctx.bezierCurveTo(200, i + Math.random() * 8, 600, i - Math.random() * 8, 800, i + Math.random() * 5);
+                ctx.stroke();
+            }
 
-    for (let i = 0; i < 5; i++) {
-        const x = Math.random() * 800;
-        const y = Math.random() * 600;
-        ctx.fillStyle = 'rgba(80, 50, 30, 0.15)';
-        ctx.beginPath();
-        ctx.ellipse(x, y, 15 + Math.random() * 10, 8 + Math.random() * 5, Math.random() * Math.PI, 0, Math.PI * 2);
-        ctx.fill();
-    }
+            for (let i = 0; i < 5; i++) {
+                const x = Math.random() * 800;
+                const y = Math.random() * 600;
+                ctx.fillStyle = 'rgba(80, 50, 30, 0.15)';
+                ctx.beginPath();
+                ctx.ellipse(x, y, 15 + Math.random() * 10, 8 + Math.random() * 5, Math.random() * Math.PI, 0, Math.PI * 2);
+                ctx.fill();
+            }
 
-    const receiptX = 100;
-    const receiptY = 50;
-    const receiptWidth = 600;
-    const receiptHeight = 540;
+            const receiptX = 100;
+            const receiptY = 50;
+            const receiptWidth = 600;
+            const receiptHeight = 540;
 
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
-    ctx.beginPath();
-    ctx.roundRect(receiptX + 8, receiptY + 8, receiptWidth, receiptHeight, 4);
-    ctx.fill();
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
-    ctx.beginPath();
-    ctx.roundRect(receiptX + 5, receiptY + 5, receiptWidth, receiptHeight, 4);
-    ctx.fill();
-	
-    const paperGradient = ctx.createLinearGradient(receiptX, receiptY, receiptX + receiptWidth, receiptY);
-    paperGradient.addColorStop(0, '#fafafa');
-    paperGradient.addColorStop(0.5, '#ffffff');
-    paperGradient.addColorStop(1, '#f8f8f8');
-    ctx.fillStyle = paperGradient;
-    ctx.beginPath();
-    ctx.roundRect(receiptX, receiptY, receiptWidth, receiptHeight, 4);
-    ctx.fill();
-    ctx.strokeStyle = '#e0e0e0';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.roundRect(receiptX, receiptY, receiptWidth, receiptHeight, 4);
-    ctx.stroke();
-    ctx.setLineDash([4, 4]);
-    ctx.strokeStyle = '#bbb';
-    ctx.lineWidth = 1.5;
-    ctx.beginPath();
-    ctx.moveTo(receiptX + 20, receiptY + 20);
-    ctx.lineTo(receiptX + receiptWidth - 20, receiptY + 20);
-    ctx.stroke();
-    ctx.setLineDash([]);
-	
-    const logoGradient = ctx.createLinearGradient(receiptX + 30, receiptY + 30, receiptX + receiptWidth - 30, receiptY + 30);
-    logoGradient.addColorStop(0, '#ff6b00');
-    logoGradient.addColorStop(1, '#ff8800');
-    ctx.fillStyle = logoGradient;
-    ctx.beginPath();
-    ctx.roundRect(receiptX + 30, receiptY + 35, receiptWidth - 60, 55, 6);
-    ctx.fill();
-    ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 24px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillText('ΧΗΜΙΚΑ PLUS Α.Ε.', receiptX + receiptWidth / 2, receiptY + 65);
-    ctx.font = '11px Arial';
-    ctx.fillText('Λεωφ. Κηφισίας 247, Χαλάνδρι 152 32', receiptX + receiptWidth / 2, receiptY + 82);
-    ctx.fillStyle = '#555';
-    ctx.font = '10px Arial';
-    ctx.fillText('ΑΦΜ: 094523871 | ΔΟΥ: Χαλανδρίου | Τηλ: 210-6847321', receiptX + receiptWidth / 2, receiptY + 105);
-    ctx.strokeStyle = '#ddd';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(receiptX + 30, receiptY + 115);
-    ctx.lineTo(receiptX + receiptWidth - 30, receiptY + 115);
-    ctx.stroke();
-    ctx.fillStyle = '#333';
-    ctx.font = '11px monospace';
-    ctx.textAlign = 'left';
-    
-    let yPos = receiptY + 135;
-    ctx.fillText('Αριθμός Απόδειξης: #CH-2025-09847', receiptX + 40, yPos);
-    yPos += 18;
-    ctx.fillText('Ημερομηνία: 19/09/2025 - 14:30', receiptX + 40, yPos);
-    yPos += 18;
-    ctx.fillText('Πωλητής: Β. Κωνσταντινίδης', receiptX + 40, yPos);
-    yPos += 18;
-	
-    ctx.setLineDash([2, 2]);
-    ctx.strokeStyle = '#ccc';
-    ctx.beginPath();
-    ctx.moveTo(receiptX + 30, yPos + 5);
-    ctx.lineTo(receiptX + receiptWidth - 30, yPos + 5);
-    ctx.stroke();
-    ctx.setLineDash([]);
-    yPos += 20;
-    ctx.fillStyle = 'rgba(220, 53, 69, 0.08)';
-    ctx.beginPath();
-    ctx.roundRect(receiptX + 25, yPos - 10, receiptWidth - 50, 90, 6);
-    ctx.fill();
-    ctx.strokeStyle = 'rgba(220, 53, 69, 0.3)';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.roundRect(receiptX + 25, yPos - 10, receiptWidth - 50, 90, 6);
-    ctx.stroke();
-    ctx.fillStyle = '#dc3545';
-    ctx.font = 'bold 20px Arial';
-    ctx.textAlign = 'left';
-    ctx.fillText('⚠', receiptX + 35, yPos + 10);
-    ctx.fillStyle = '#c00';
-    ctx.font = 'bold 15px Arial';
-    ctx.textAlign = 'left';
-    ctx.fillText('ΚΥΑΝΙΟΥΧΟ ΚΑΛΙΟ (KCN)', receiptX + 60, yPos + 10);
-    yPos += 25;
-    ctx.fillStyle = '#333';
-    ctx.font = '11px monospace';
-    ctx.fillText('Ποσότητα:', receiptX + 60, yPos);
-    ctx.font = 'bold 11px monospace';
-    ctx.textAlign = 'right';
-    ctx.fillText('500g', receiptX + receiptWidth - 60, yPos);
-    yPos += 18;
-    ctx.textAlign = 'left';
-    ctx.font = '11px monospace';
-    ctx.fillText('Τιμή Μονάδας:', receiptX + 60, yPos);
-    ctx.font = 'bold 11px monospace';
-    ctx.textAlign = 'right';
-    ctx.fillText('€42.00', receiptX + receiptWidth - 60, yPos);
-    yPos += 18;
-    ctx.textAlign = 'left';
-    ctx.font = '10px monospace';
-    ctx.fillStyle = '#666';
-    ctx.fillText('Κωδικός: KCN-500-IND', receiptX + 60, yPos);
-    yPos += 20;
-    ctx.setLineDash([2, 2]);
-    ctx.strokeStyle = '#ccc';
-    ctx.beginPath();
-    ctx.moveTo(receiptX + 30, yPos);
-    ctx.lineTo(receiptX + receiptWidth - 30, yPos);
-    ctx.stroke();
-    ctx.setLineDash([]);
-    yPos += 20;
-    ctx.fillStyle = '#1a1a2e';
-    ctx.font = 'bold 14px Arial';
-    ctx.textAlign = 'left';
-    ctx.fillText('ΣΥΝΟΛΟ:', receiptX + 40, yPos);
-    ctx.textAlign = 'right';
-    ctx.font = 'bold 16px Arial';
-    ctx.fillText('€42.00', receiptX + receiptWidth - 40, yPos);
-    yPos += 25;
-    ctx.fillStyle = '#555';
-    ctx.font = '10px Arial';
-    ctx.textAlign = 'left';
-    ctx.fillText('Μέθοδος Πληρωμής: Μετρητά', receiptX + 40, yPos);
-    yPos += 25;
-    ctx.fillStyle = 'rgba(255, 107, 0, 0.12)';
-    ctx.fillRect(receiptX + 30, yPos, receiptWidth - 60, 50);
-    ctx.strokeStyle = '#ff8800';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(receiptX + 30, yPos, receiptWidth - 60, 50);
-    yPos += 18;
-    ctx.fillStyle = '#444';
-    ctx.font = 'bold 11px Arial';
-    ctx.textAlign = 'left';
-    ctx.fillText('Άδεια Απεντόμωσης: ΑΠ-2024-15873', receiptX + 40, yPos);
-    yPos += 16;
-    ctx.font = '10px Arial';
-    ctx.fillStyle = '#555';
-    ctx.fillText('Εταιρεία: SecureGuard Υπηρεσίες Ασφαλείας', receiptX + 40, yPos);
-    yPos += 30;
-    ctx.setLineDash([3, 3]);
-    ctx.strokeStyle = '#ddd';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(receiptX + 30, yPos);
-    ctx.lineTo(receiptX + receiptWidth - 30, yPos);
-    ctx.stroke();
-    ctx.setLineDash([]);
-    yPos += 20;
-    ctx.strokeStyle = '#333';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(receiptX + 80, yPos);
-    ctx.lineTo(receiptX + receiptWidth - 80, yPos);
-    ctx.stroke();
-    ctx.fillStyle = '#1a1a2e';
-    ctx.font = 'italic bold 20px cursive';
-    ctx.textAlign = 'center';
-    ctx.fillText('Γ. Πετρόπουλος', receiptX + receiptWidth / 2, yPos - 8);
-    yPos += 15;
-    ctx.fillStyle = '#777';
-    ctx.font = '9px Arial';
-    ctx.fillText('Υπογραφή Αγοραστή', receiptX + receiptWidth / 2, yPos);
-    yPos += 25;
-	
-    const barcodeWidth = 300;
-    const barcodeX = receiptX + (receiptWidth - barcodeWidth) / 2;
-    ctx.fillStyle = '#000';
-    ctx.fillRect(barcodeX, yPos, barcodeWidth, 2);
-    yPos += 4;
-	
-    const seed = 12345;
-    let random = seed;
-    for (let i = 0; i < 60; i++) {
-        random = (random * 9301 + 49297) % 233280;
-        const barWidth = (random % 3) + 1;
-        const spacing = i * 5;
-        ctx.fillRect(barcodeX + spacing, yPos, barWidth, 25);
-    }
-    
-    yPos += 32;
-    ctx.fillStyle = '#666';
-    ctx.font = '10px monospace';
-    ctx.textAlign = 'center';
-    ctx.fillText('CH-2025-09847-KCN', receiptX + receiptWidth / 2, yPos);
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
-    ctx.fillRect(0, 0, 800, 45);
-    ctx.fillStyle = '#ff0000';
-    ctx.beginPath();
-    ctx.arc(25, 22, 6, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = '#fff';
-    ctx.font = 'bold 15px monospace';
-    ctx.textAlign = 'left';
-    ctx.fillText('REC', 40, 27);
-    ctx.font = '13px monospace';
-    ctx.fillText('19/09/2025  17:45:12  |  ΣΚΗΝΗ ΕΓΚΛΗΜΑΤΟΣ - ΛΟΓΙΣΤΗΡΙΟ', 100, 27);
-    ctx.textAlign = 'right';
-    ctx.fillText('ΤΕΚ #009', 780, 27);
-}
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
+            ctx.beginPath();
+            ctx.roundRect(receiptX + 8, receiptY + 8, receiptWidth, receiptHeight, 4);
+            ctx.fill();
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+            ctx.beginPath();
+            ctx.roundRect(receiptX + 5, receiptY + 5, receiptWidth, receiptHeight, 4);
+            ctx.fill();
+            
+            const paperGradient = ctx.createLinearGradient(receiptX, receiptY, receiptX + receiptWidth, receiptY);
+            paperGradient.addColorStop(0, '#fafafa');
+            paperGradient.addColorStop(0.5, '#ffffff');
+            paperGradient.addColorStop(1, '#f8f8f8');
+            ctx.fillStyle = paperGradient;
+            ctx.beginPath();
+            ctx.roundRect(receiptX, receiptY, receiptWidth, receiptHeight, 4);
+            ctx.fill();
+            ctx.strokeStyle = '#e0e0e0';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.roundRect(receiptX, receiptY, receiptWidth, receiptHeight, 4);
+            ctx.stroke();
+            
+            ctx.setLineDash([4, 4]);
+            ctx.strokeStyle = '#bbb';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.moveTo(receiptX + 20, receiptY + 20);
+            ctx.lineTo(receiptX + receiptWidth - 20, receiptY + 20);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            const logoGradient = ctx.createLinearGradient(receiptX + 30, receiptY + 30, receiptX + receiptWidth - 30, receiptY + 30);
+            logoGradient.addColorStop(0, '#ff6b00');
+            logoGradient.addColorStop(1, '#ff8800');
+            ctx.fillStyle = logoGradient;
+            ctx.beginPath();
+            ctx.roundRect(receiptX + 30, receiptY + 35, receiptWidth - 60, 55, 6);
+            ctx.fill();
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 24px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('ΧΗΜΙΚΑ PLUS Α.Ε.', receiptX + receiptWidth / 2, receiptY + 65);
+            ctx.font = '11px Arial';
+            ctx.fillText('Λεωφ. Κηφισίας 247, Χαλάνδρι 152 32', receiptX + receiptWidth / 2, receiptY + 82);
+            ctx.fillStyle = '#555';
+            ctx.font = '10px Arial';
+            ctx.fillText('ΑΦΜ: 094523871 | ΔΟΥ: Χαλανδρίου | Τηλ: 210-6847321', receiptX + receiptWidth / 2, receiptY + 105);
+            
+            ctx.strokeStyle = '#ddd';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(receiptX + 30, receiptY + 115);
+            ctx.lineTo(receiptX + receiptWidth - 30, receiptY + 115);
+            ctx.stroke();
+            
+            ctx.fillStyle = '#333';
+            ctx.font = '11px monospace';
+            ctx.textAlign = 'left';
+            
+            let yPos = receiptY + 135;
+            ctx.fillText('Αριθμός Απόδειξης: #CH-2025-09847', receiptX + 40, yPos);
+            yPos += 18;
+            ctx.fillText('Ημερομηνία: 19/09/2025 - 14:30', receiptX + 40, yPos);
+            yPos += 18;
+            ctx.fillText('Πωλητής: Α. Κωνσταντινίδης', receiptX + 40, yPos);
+            yPos += 18;
+            
+            ctx.setLineDash([2, 2]);
+            ctx.strokeStyle = '#ccc';
+            ctx.beginPath();
+            ctx.moveTo(receiptX + 30, yPos + 5);
+            ctx.lineTo(receiptX + receiptWidth - 30, yPos + 5);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            yPos += 20;
+            
+            ctx.fillStyle = 'rgba(220, 53, 69, 0.08)';
+            ctx.beginPath();
+            ctx.roundRect(receiptX + 25, yPos - 10, receiptWidth - 50, 90, 6);
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(220, 53, 69, 0.3)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.roundRect(receiptX + 25, yPos - 10, receiptWidth - 50, 90, 6);
+            ctx.stroke();
+            
+            ctx.fillStyle = '#dc3545';
+            ctx.font = 'bold 20px Arial';
+            ctx.textAlign = 'left';
+            ctx.fillText('⚠️', receiptX + 35, yPos + 10);
+            ctx.fillStyle = '#c00';
+            ctx.font = 'bold 15px Arial';
+            ctx.textAlign = 'left';
+            ctx.fillText('ΚΥΑΝΙΟΥΧΟ ΚΑΛΙΟ (KCN)', receiptX + 60, yPos + 10);
+            yPos += 25;
+            
+            ctx.fillStyle = '#333';
+            ctx.font = '11px monospace';
+            ctx.fillText('Ποσότητα:', receiptX + 60, yPos);
+            ctx.font = 'bold 11px monospace';
+            ctx.textAlign = 'right';
+            ctx.fillText('500g', receiptX + receiptWidth - 60, yPos);
+            yPos += 18;
+            ctx.textAlign = 'left';
+            ctx.font = '11px monospace';
+            ctx.fillText('Τιμή Μονάδας:', receiptX + 60, yPos);
+            ctx.font = 'bold 11px monospace';
+            ctx.textAlign = 'right';
+            ctx.fillText('€42.00', receiptX + receiptWidth - 60, yPos);
+            yPos += 18;
+            ctx.textAlign = 'left';
+            ctx.font = '10px monospace';
+            ctx.fillStyle = '#666';
+            ctx.fillText('Κωδικός: KCN-500-IND', receiptX + 60, yPos);
+            yPos += 20;
+            
+            ctx.setLineDash([2, 2]);
+            ctx.strokeStyle = '#ccc';
+            ctx.beginPath();
+            ctx.moveTo(receiptX + 30, yPos);
+            ctx.lineTo(receiptX + receiptWidth - 30, yPos);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            yPos += 20;
+            
+            ctx.fillStyle = '#1a1a2e';
+            ctx.font = 'bold 14px Arial';
+            ctx.textAlign = 'left';
+            ctx.fillText('ΣΥΝΟΛΟ:', receiptX + 40, yPos);
+            ctx.textAlign = 'right';
+            ctx.font = 'bold 16px Arial';
+            ctx.fillText('€42.00', receiptX + receiptWidth - 40, yPos);
+            yPos += 25;
+            
+            ctx.fillStyle = '#555';
+            ctx.font = '10px Arial';
+            ctx.textAlign = 'left';
+            ctx.fillText('Μέθοδος Πληρωμής: Μετρητά', receiptX + 40, yPos);
+            yPos += 25;
+            
+            ctx.fillStyle = 'rgba(255, 107, 0, 0.12)';
+            ctx.fillRect(receiptX + 30, yPos, receiptWidth - 60, 50);
+            ctx.strokeStyle = '#ff8800';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(receiptX + 30, yPos, receiptWidth - 60, 50);
+            yPos += 18;
+            
+            ctx.fillStyle = '#444';
+            ctx.font = 'bold 11px Arial';
+            ctx.textAlign = 'left';
+            ctx.fillText('Άδεια Απεντόμωσης: ΑΠ-2024-15873', receiptX + 40, yPos);
+            yPos += 16;
+            ctx.font = '10px Arial';
+            ctx.fillStyle = '#555';
+            ctx.fillText('Εταιρεία: SecureGuard Υπηρεσίες Ασφαλείας', receiptX + 40, yPos);
+            yPos += 30;
+            
+            ctx.setLineDash([3, 3]);
+            ctx.strokeStyle = '#ddd';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(receiptX + 30, yPos);
+            ctx.lineTo(receiptX + receiptWidth - 30, yPos);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            yPos += 20;
+            
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(receiptX + 80, yPos);
+            ctx.lineTo(receiptX + receiptWidth - 80, yPos);
+            ctx.stroke();
+            ctx.fillStyle = '#1a1a2e';
+            ctx.font = 'italic bold 20px cursive';
+            ctx.textAlign = 'center';
+            ctx.fillText('Γ. Πετρόπουλος', receiptX + receiptWidth / 2, yPos - 8);
+            yPos += 15;
+            ctx.fillStyle = '#777';
+            ctx.font = '9px Arial';
+            ctx.fillText('Υπογραφή Αγοραστή', receiptX + receiptWidth / 2, yPos);
+            yPos += 25;
+            
+            const barcodeWidth = 300;
+            const barcodeX = receiptX + (receiptWidth - barcodeWidth) / 2;
+            ctx.fillStyle = '#000';
+            ctx.fillRect(barcodeX, yPos, barcodeWidth, 2);
+            yPos += 4;
+            
+            const seed = 12345;
+            let random = seed;
+            for (let i = 0; i < 60; i++) {
+                random = (random * 9301 + 49297) % 233280;
+                const barWidth = (random % 3) + 1;
+                const spacing = i * 5;
+                ctx.fillRect(barcodeX + spacing, yPos, barWidth, 25);
+            }
+            
+            yPos += 32;
+            ctx.fillStyle = '#666';
+            ctx.font = '10px monospace';
+            ctx.textAlign = 'center';
+            ctx.fillText('CH-2025-09847-KCN', receiptX + receiptWidth / 2, yPos);
+            
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
+            ctx.fillRect(0, 0, 800, 45);
+            ctx.fillStyle = '#ff0000';
+            ctx.beginPath();
+            ctx.arc(25, 22, 6, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#fff';
+            ctx.font = 'bold 15px monospace';
+            ctx.textAlign = 'left';
+            ctx.fillText('REC', 40, 27);
+            ctx.font = '13px monospace';
+            ctx.fillText('19/09/2025  17:45:12  |  ΣΚΗΝΗ ΕΓΚΛΗΜΑΤΟΣ - ΛΟΓΙΣΤΗΡΙΟ', 100, 27);
+            ctx.textAlign = 'right';
+            ctx.fillText('ΤΕΚ #009', 780, 27);
+        }
 
         window.onload = function() {
             drawCrimeScene();
-
-            const modelViewer = document.querySelector('model-viewer');
-            const debugInfo = document.getElementById('debugInfo');
-            
-            if (modelViewer) {
-                debugInfo.style.display = 'block';
-                debugInfo.innerHTML = '🔍 Προσπάθεια φόρτωσης: invoice.glb<br>';
-                
-                modelViewer.addEventListener('progress', (event) => {
-                    const percent = Math.round(event.detail.totalProgress * 100);
-                    debugInfo.innerHTML = `⏳ Φόρτωση: ${percent}%<br>`;
-                });
-                
-                modelViewer.addEventListener('load', () => {
-                    debugInfo.innerHTML = '✅ 3D μοντέλο φορτώθηκε επιτυχώς!<br>';
-                    debugInfo.style.background = '#d4edda';
-                    debugInfo.style.borderColor = '#28a745';
-                    setTimeout(() => {
-                        debugInfo.style.display = 'none';
-                    }, 3000);
-                });
-                
-                modelViewer.addEventListener('error', (event) => {
-                    debugInfo.innerHTML = '❌ ΣΦΑΛΜΑ: Το αρχείο δεν μπορεί να φορτώσει<br>';
-                    debugInfo.innerHTML += 'Ελέγξτε:<br>';
-                    debugInfo.innerHTML += '1. Το αρχείο υπάρχει στον ίδιο φάκελο<br>';
-                    debugInfo.innerHTML += '2. Το όνομα είναι: invoice.glb<br>';
-                    debugInfo.innerHTML += '3. Το αρχείο είναι έγκυρο .glb<br>';
-                    debugInfo.style.background = '#f8d7da';
-                    debugInfo.style.borderColor = '#dc3545';
-                });
-                
-                setTimeout(() => {
-                    if (debugInfo.innerHTML.includes('Φόρτωση')) {
-                        debugInfo.innerHTML = '⚠️ Το μοντέλο δεν φορτώνει...<br>';
-                        debugInfo.innerHTML += 'Πιθανές αιτίες:<br>';
-                        debugInfo.innerHTML += '• Το αρχείο δεν βρέθηκε<br>';
-                        debugInfo.innerHTML += '• Λάθος όνομα: invoice.glb<br>';
-                        debugInfo.style.background = '#fff3cd';
-                        debugInfo.style.borderColor = '#ffc107';
-                    }
-                }, 10000);
-            }
         };
     </script>
 </body>
