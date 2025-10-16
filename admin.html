@@ -2,7 +2,8 @@
 <html lang="el">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="description" content="Crime Festival 2025 - Admin Management Panel">
     <title>Admin Panel - TEK Management</title>
 
     <script type="module">
@@ -18,7 +19,7 @@
         };
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-		window.firebaseDB = db;
+        window.firebaseDB = db;
         window.firebaseDoc = doc;
         window.firebaseSetDoc = setDoc;
         window.firebaseGetDoc = getDoc;
@@ -26,7 +27,6 @@
         window.firebaseCollection = collection;
         window.firebaseDeleteDoc = deleteDoc;
         window.firebaseOnSnapshot = onSnapshot;
-        
         console.log("✅ Firebase connected!");
     </script>
 
@@ -37,88 +37,136 @@
     box-sizing: border-box;
 }
 
+:root {
+    --primary-gradient: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
+    --bg-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    --primary-color: #ff6b00;
+    --primary-light: #ff8800;
+    --success-color: #28a745;
+    --danger-color: #dc3545;
+    --info-color: #17a2b8;
+    --secondary-color: #6c757d;
+    --text-dark: #1a1a2e;
+    --text-medium: #333;
+    --text-light: #666;
+    --text-lighter: #999;
+    --border-color: #ddd;
+    --border-light: #dee2e6;
+    --bg-light: #f8f9fa;
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.1);
+    --shadow-md: 0 4px 15px rgba(0,0,0,0.15);
+    --shadow-lg: 0 10px 40px rgba(0,0,0,0.3);
+    --shadow-xl: 0 20px 60px rgba(0,0,0,0.5);
+    --radius-sm: 5px;
+    --radius-md: 8px;
+    --radius-lg: 10px;
+    --radius-xl: 12px;
+    --transition: all 0.2s ease;
+    --min-touch-target: 44px;
+}
+
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg-gradient);
     min-height: 100vh;
-    padding: 20px;
+    padding: clamp(10px, 3vw, 20px);
     overflow-x: hidden;
-    max-width: 100vw;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 .container {
     max-width: 1400px;
     margin: 0 auto;
-    overflow-x: hidden;
-}
-
-.header {
-    background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
-    padding: 20px;
-    border-radius: 12px;
-    text-align: center;
-    margin-bottom: 20px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-}
-
-.header h1 {
-    color: white;
-    font-size: clamp(20px, 5vw, 32px);
-    margin-bottom: 8px;
-}
-
-.header p {
-    color: rgba(255,255,255,0.9);
-    font-size: clamp(12px, 3vw, 16px);
+    width: 100%;
 }
 
 .section {
     background: white;
-    border-radius: 12px;
-    padding: 15px;
-    margin-bottom: 20px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    border-radius: var(--radius-xl);
+    padding: clamp(15px, 4vw, 30px);
+    margin-bottom: clamp(15px, 3vw, 20px);
+    box-shadow: var(--shadow-lg);
+}
+
+.header {
+    background: var(--primary-gradient);
+    padding: clamp(15px, 4vw, 30px);
+    border-radius: var(--radius-xl);
+    text-align: center;
+    margin-bottom: clamp(15px, 3vw, 20px);
+    box-shadow: var(--shadow-lg);
+}
+
+.header h1 {
+    color: white;
+    font-size: clamp(18px, 5vw, 32px);
+    margin-bottom: 8px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.header p {
+    color: rgba(255,255,255,0.95);
+    font-size: clamp(12px, 3vw, 16px);
+    font-weight: 500;
 }
 
 .section h2 {
-    color: #1a1a2e;
+    color: var(--text-dark);
     font-size: clamp(18px, 4vw, 24px);
     margin-bottom: 15px;
     padding-bottom: 12px;
-    border-bottom: 3px solid #ff6b00;
+    border-bottom: 3px solid var(--primary-color);
+    font-weight: 700;
+}
+
+.section h3 {
+    color: var(--text-medium);
+    font-size: clamp(16px, 3.5vw, 20px);
+    margin: clamp(15px, 3vw, 20px) 0 10px;
+    font-weight: 600;
 }
 
 .team-input {
     display: flex;
-    gap: 8px;
-    margin-bottom: 15px;
     flex-direction: column;
+    gap: clamp(8px, 2vw, 12px);
+    margin-bottom: 15px;
 }
 
-.team-input input {
+.team-input input,
+.sort-controls select {
     width: 100%;
-    padding: 14px 16px;
-    border: 2px solid #ddd;
-    border-radius: 8px;
-    font-size: 16px;
-    transition: border-color 0.2s ease;
+    padding: clamp(12px, 3vw, 16px);
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-size: clamp(14px, 3vw, 16px);
+    transition: var(--transition);
+    min-height: var(--min-touch-target);
 }
 
-.team-input input:focus {
+.team-input input:focus,
+.sort-controls select:focus {
     outline: none;
-    border-color: #ff6b00;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(255, 107, 0, 0.1);
 }
 
 .btn {
-    padding: 14px 20px;
+    padding: clamp(12px, 3vw, 16px) clamp(16px, 4vw, 24px);
     border: none;
-    border-radius: 8px;
-    font-size: 15px;
-    font-weight: bold;
+    border-radius: var(--radius-md);
+    font-size: clamp(14px, 3vw, 15px);
+    font-weight: 700;
     cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: var(--transition);
     width: 100%;
-    min-height: 44px;
+    min-height: var(--min-touch-target);
+    text-align: center;
+    display: inline-block;
+    line-height: 1.4;
 }
 
 .btn:hover {
@@ -130,7 +178,7 @@ body {
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
+    background: var(--primary-gradient);
     color: white;
     box-shadow: 0 4px 15px rgba(255,107,0,0.3);
 }
@@ -140,46 +188,66 @@ body {
 }
 
 .btn-danger {
-    background: #dc3545;
+    background: var(--danger-color);
     color: white;
     box-shadow: 0 4px 15px rgba(220,53,69,0.3);
 }
 
 .btn-success {
-    background: #28a745;
+    background: var(--success-color);
     color: white;
     box-shadow: 0 4px 15px rgba(40,167,69,0.3);
 }
 
 .btn-secondary {
-    background: #6c757d;
+    background: var(--secondary-color);
     color: white;
+}
+
+.sort-controls {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(8px, 2vw, 10px);
+    margin-bottom: 15px;
+    align-items: stretch;
+}
+
+.sort-controls label {
+    font-weight: 700;
+    color: var(--text-medium);
+    font-size: clamp(13px, 3vw, 14px);
+}
+
+.quick-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(8px, 2vw, 10px);
+    margin-bottom: 15px;
 }
 
 .team-list {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 15px;
+    gap: clamp(12px, 3vw, 20px);
     margin-top: 15px;
 }
 
 .team-card {
-    background: #f8f9fa;
-    border: 2px solid #dee2e6;
-    border-radius: 10px;
-    padding: 15px;
-    transition: transform 0.2s ease;
+    background: var(--bg-light);
+    border: 2px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    padding: clamp(12px, 3vw, 20px) clamp(10px, 2.5vw, 15px);
+    transition: var(--transition);
     overflow: hidden;
-    max-width: 100%;
 }
 
 .team-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    box-shadow: var(--shadow-md);
 }
 
 .team-card.completed {
-    border: 3px solid #28a745;
+    border: 3px solid var(--success-color);
     background: linear-gradient(135deg, #f0fff4 0%, #d4edda 100%);
 }
 
@@ -191,15 +259,14 @@ body {
     align-items: center;
     gap: 8px;
     flex-wrap: wrap;
+    line-height: 1.3;
 }
 
 .tek-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
-    gap: 6px;
+    grid-template-columns: repeat(auto-fit, minmax(max(40px, 8vw), 1fr));
+    gap: clamp(4px, 1.5vw, 6px);
     margin: 12px 0;
-    max-width: 100%;
-    overflow: hidden;
     width: 100%;
 }
 
@@ -208,20 +275,20 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 5px;
-    font-size: clamp(10px, 2vw, 12px);
-    font-weight: bold;
-    border: 2px solid #ddd;
+    border-radius: var(--radius-sm);
+    font-size: clamp(10px, 2.5vw, 12px);
+    font-weight: 700;
+    border: 2px solid var(--border-color);
     background: white;
-    min-height: 44px;
-    min-width: 44px;
+    min-height: var(--min-touch-target);
+    min-width: var(--min-touch-target);
     padding: 4px;
-    transition: all 0.2s ease;
+    transition: var(--transition);
 }
 
 .tek-box.unlocked {
     background: #d4edda;
-    border-color: #28a745;
+    border-color: var(--success-color);
     color: #155724;
 }
 
@@ -231,7 +298,7 @@ body {
 
 .tek-box.clickable:hover {
     transform: scale(1.1);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    box-shadow: var(--shadow-sm);
 }
 
 .tek-box.clickable:active {
@@ -254,101 +321,65 @@ body {
 }
 
 .team-actions {
-    display: flex;
-    gap: 8px;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(6px, 1.5vw, 8px);
+    margin-top: 12px;
 }
 
 .team-actions .btn {
-    font-size: 14px;
-    padding: 12px 16px;
-}
-
-.quick-actions {
-    display: flex;
-    gap: 10px;
-    flex-direction: column;
-    margin-bottom: 15px;
-}
-
-.sort-controls {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 15px;
-    align-items: stretch;
-    flex-direction: column;
-}
-
-.sort-controls label {
-    font-weight: bold;
-    color: #333;
-    font-size: 14px;
-}
-
-.sort-controls select {
-    padding: 12px 15px;
-    border: 2px solid #ddd;
-    border-radius: 8px;
-    font-size: 15px;
-    cursor: pointer;
-    width: 100%;
-    transition: border-color 0.2s ease;
-}
-
-.sort-controls select:focus {
-    outline: none;
-    border-color: #ff6b00;
+    font-size: clamp(13px, 3vw, 14px);
+    padding: clamp(10px, 2.5vw, 14px) clamp(12px, 3vw, 16px);
 }
 
 .progress-bar {
     background: #e0e0e0;
-    height: 30px;
-    border-radius: 12px;
+    height: clamp(25px, 6vw, 30px);
+    border-radius: var(--radius-xl);
     overflow: hidden;
     margin-bottom: 10px;
 }
 
 .progress-fill {
-    background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
+    background: var(--primary-gradient);
     height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
-    font-weight: bold;
-    font-size: 13px;
+    font-weight: 700;
+    font-size: clamp(11px, 2.5vw, 13px);
     transition: width 0.3s ease;
 }
 
 .team-stats {
     font-size: clamp(12px, 2.5vw, 14px);
-    color: #666;
+    color: var(--text-light);
     margin-bottom: 8px;
     line-height: 1.5;
 }
 
-.timing-info strong {
-    display: block;
-    margin-bottom: 3px;
-    color: #333;
+.team-stats strong {
+    color: var(--text-medium);
 }
 
 .completion-badge {
-    background: #28a745;
+    background: var(--success-color);
     color: white;
     padding: 4px 8px;
-    border-radius: 5px;
-    font-size: 10px;
-    font-weight: bold;
+    border-radius: var(--radius-sm);
+    font-size: clamp(9px, 2vw, 10px);
+    font-weight: 700;
     display: inline-block;
     margin-left: 5px;
 }
 
 .alert {
-    padding: 15px 20px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    font-size: 14px;
+    padding: clamp(12px, 3vw, 15px) clamp(15px, 4vw, 20px);
+    border-radius: var(--radius-md);
+    margin-bottom: clamp(15px, 3vw, 20px);
+    font-size: clamp(13px, 3vw, 14px);
+    line-height: 1.5;
 }
 
 .alert-success {
@@ -369,39 +400,6 @@ body {
     color: #856404;
 }
 
-.url-generator {
-    background: #f8f9fa;
-    padding: 15px;
-    border-radius: 10px;
-    margin-top: 15px;
-}
-
-.url-generator h3 {
-    color: #0f3460;
-    margin-bottom: 15px;
-}
-
-.url-list {
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 12px;
-    font-family: monospace;
-    font-size: 11px;
-    max-height: 200px;
-    overflow-y: auto;
-    word-break: break-all;
-}
-
-.url-list div {
-    padding: 5px;
-    border-bottom: 1px solid #eee;
-}
-
-.url-list div:last-child {
-    border-bottom: none;
-}
-
 .modal {
     display: none;
     position: fixed;
@@ -412,7 +410,7 @@ body {
     height: 100%;
     background: rgba(0,0,0,0.7);
     overflow: auto;
-    padding: 10px;
+    padding: clamp(10px, 3vw, 20px);
 }
 
 .modal.active {
@@ -423,13 +421,13 @@ body {
 
 .modal-content {
     background: white;
-    padding: 20px;
-    border-radius: 12px;
+    padding: clamp(15px, 4vw, 30px);
+    border-radius: var(--radius-xl);
     max-width: 700px;
     width: 100%;
     max-height: 90vh;
     overflow-y: auto;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    box-shadow: var(--shadow-xl);
 }
 
 .modal-header {
@@ -438,32 +436,41 @@ body {
     align-items: center;
     margin-bottom: 15px;
     padding-bottom: 12px;
-    border-bottom: 2px solid #ff6b00;
+    border-bottom: 2px solid var(--primary-color);
 }
 
 .modal-header h2 {
-    color: #1a1a2e;
+    color: var(--text-dark);
     font-size: clamp(18px, 4vw, 24px);
+    margin: 0;
+    padding: 0;
+    border: none;
 }
 
 .close-modal {
-    font-size: 28px;
+    font-size: clamp(24px, 6vw, 28px);
     cursor: pointer;
-    color: #999;
+    color: var(--text-lighter);
     line-height: 1;
     padding: 5px 10px;
-    transition: color 0.2s ease;
+    transition: var(--transition);
+    min-width: var(--min-touch-target);
+    min-height: var(--min-touch-target);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .close-modal:hover {
-    color: #333;
+    color: var(--text-medium);
 }
 
 .info-box {
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 20px;
+    padding: clamp(12px, 3vw, 15px);
+    border-radius: var(--radius-md);
+    margin-bottom: clamp(15px, 3vw, 20px);
     font-size: clamp(12px, 2.5vw, 14px);
+    line-height: 1.6;
 }
 
 .info-box-start {
@@ -473,12 +480,13 @@ body {
 
 .info-box-complete {
     background: #d4edda;
-    border-left: 3px solid #28a745;
+    border-left: 3px solid var(--success-color);
 }
 
 .info-box strong {
     display: block;
     margin-bottom: 5px;
+    font-weight: 700;
 }
 
 .timestamp-list {
@@ -487,11 +495,11 @@ body {
 }
 
 .timestamp-item {
-    padding: 12px;
+    padding: clamp(10px, 3vw, 12px);
     margin-bottom: 8px;
-    background: #f8f9fa;
-    border-left: 3px solid #ff6b00;
-    border-radius: 5px;
+    background: var(--bg-light);
+    border-left: 3px solid var(--primary-color);
+    border-radius: var(--radius-sm);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -500,34 +508,35 @@ body {
 }
 
 .timestamp-item .tek-label {
-    font-weight: bold;
+    font-weight: 700;
     color: #0f3460;
+    font-size: clamp(13px, 3vw, 14px);
 }
 
 .timestamp-item .time {
-    color: #666;
-    font-size: 13px;
+    color: var(--text-light);
+    font-size: clamp(12px, 2.5vw, 13px);
 }
 
 #firebaseStatus {
     position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background: #28a745;
+    bottom: clamp(15px, 3vw, 20px);
+    right: clamp(15px, 3vw, 20px);
+    background: var(--success-color);
     color: white;
-    padding: 12px 20px;
-    border-radius: 8px;
-    font-size: 11px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    padding: clamp(10px, 3vw, 12px) clamp(15px, 4vw, 20px);
+    border-radius: var(--radius-md);
+    font-size: clamp(10px, 2.5vw, 11px);
+    box-shadow: var(--shadow-md);
     display: none;
-    max-width: 250px;
+    max-width: min(250px, calc(100vw - 40px));
     line-height: 1.4;
     z-index: 9999;
-    transition: all 0.3s ease;
+    transition: var(--transition);
 }
 
 #firebaseStatus.syncing {
-    background: #17a2b8;
+    background: var(--info-color);
     animation: pulse 1.5s ease-in-out infinite;
 }
 
@@ -536,46 +545,34 @@ body {
     50% { opacity: 0.7; }
 }
 
-@media (min-width: 576px) {
-    body {
-        padding: 20px;
-    }
-
-    .section {
-        padding: 20px;
-    }
-
-    .header {
-        padding: 25px;
-    }
-
+@media (min-width: 480px) {
     .team-input {
-        flex-direction: row;
-    }
-
-    .team-input input {
-        min-width: 200px;
-    }
-
-    .quick-actions {
         flex-direction: row;
         flex-wrap: wrap;
     }
-
+    
+    .team-input input {
+        flex: 1;
+        min-width: min(200px, 100%);
+    }
+    
     .btn {
         width: auto;
     }
-
-    .team-actions {
-        flex-direction: row;
-        flex-wrap: wrap;
+    
+    .quick-actions {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     }
-
+    
+    .team-actions {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    }
+    
     .sort-controls {
         flex-direction: row;
         align-items: center;
     }
-
+    
     .sort-controls select {
         width: auto;
         min-width: 200px;
@@ -583,25 +580,11 @@ body {
 }
 
 @media (min-width: 768px) {
-    .section {
-        padding: 25px;
-    }
-
-    .header {
-        padding: 30px;
-    }
-
-    .team-card {
-        padding: 15px 10px;
-    }
-
     .tek-grid {
         grid-template-columns: repeat(11, minmax(0, 1fr));
-        gap: 5px;
-        width: 100%;
-        max-width: 100%;
+        gap: clamp(5px, 1vw, 6px);
     }
-
+    
     .tek-box {
         font-size: clamp(9px, 1vw, 11px);
         min-width: 38px;
@@ -609,48 +592,41 @@ body {
         border-width: 1px;
         padding: 3px;
     }
-
+    
     .team-list {
-        grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
-    }
-
-    .modal-content {
-        padding: 30px;
+        grid-template-columns: repeat(auto-fill, minmax(min(420px, 100%), 1fr));
     }
 }
 
 @media (min-width: 1024px) {
-    .section {
-        padding: 30px;
-    }
-
     .team-list {
         grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
-        gap: 20px;
-    }
-
-    .team-card {
-        padding: 20px 15px;
-    }
-
-    .tek-grid {
-        gap: 6px;
     }
 }
 
 @media (max-height: 600px) and (orientation: landscape) {
     .header {
-        padding: 15px;
-        margin-bottom: 15px;
+        padding: clamp(10px, 2vw, 15px);
+        margin-bottom: clamp(10px, 2vw, 15px);
     }
-
+    
     .section {
-        padding: 15px;
-        margin-bottom: 15px;
+        padding: clamp(12px, 3vw, 15px);
+        margin-bottom: clamp(10px, 2vw, 15px);
     }
-
+    
     .modal-content {
         max-height: 85vh;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
     }
 }
 </style>
@@ -659,18 +635,18 @@ body {
 <body>
     <div class="container">
         <div class="header">
-            <h1>🔐 CRIME MANAGEMENT - ADMIN PANEL</h1>
+            <h1>🔒 CRIME MANAGEMENT - ADMIN PANEL</h1>
             <p>ΔΙΑΧΕΙΡΙΣΗ ΟΜΑΔΩΝ & ΠΑΡΑΚΟΛΟΥΘΗΣΗ ΠΡΟΟΔΟΥ</p>
         </div>
-	
+    
         <div class="section">
             <h2>➕ ΠΡΟΣΘΗΚΗ ΟΜΑΔΑΣ</h2>
-<div class="team-input">
-    <input type="text" id="newTeamName" placeholder="ΟΝΟΜΑ" />
-    <input type="text" id="newTeamPassword" placeholder="ΚΩΔΙΚΟΣ" />
-    <input type="number" id="newTeamSize" placeholder="ΜΕΛΗ (1-10)" min="1" max="10" />
-    <button class="btn btn-primary" onclick="addTeam()">ΠΡΟΣΘΗΚΗ ΟΜΑΔΑΣ</button>
-</div>
+            <div class="team-input">
+                <input type="text" id="newTeamName" placeholder="ΟΝΟΜΑ" />
+                <input type="text" id="newTeamPassword" placeholder="ΚΩΔΙΚΟΣ" />
+                <input type="number" id="newTeamSize" placeholder="ΜΕΛΗ (1-10)" min="1" max="10" />
+                <button class="btn btn-primary" onclick="addTeam()">ΠΡΟΣΘΗΚΗ ΟΜΑΔΑΣ</button>
+            </div>
             <div id="addTeamAlert"></div>
         </div>
 
@@ -679,12 +655,12 @@ body {
             <div class="quick-actions">
                 <button class="btn" style="background: #17a2b8; color: white;" onclick="exportAllData()">💾 EXPORT DATA (GAME)</button>
                 <button class="btn" style="background: #6c757d; color: white;" onclick="importData()">📥 IMPORT DATA (GAME)</button>
-				<button class="btn" style="background: #ffc107; color: #000;" onclick="window.location.href='leaderboard.html'">🏆 LEADERBOARD (ADMIN)</button>
-				<button class="btn" id="leaderboardToggleBtn" style="background: #dc3545; color: white;" onclick="toggleLeaderboard()">
-					🔒 LOADING...
-				</button>
-                <button class="btn btn-secondary" onclick="unlockAllForAll()">🔓 ΞΕΚΛΕΙΔΩΜΑ ΤΕΚΜΗΡΙΩΝ</button>
-                <button class="btn btn-danger" onclick="resetAll()">🗑️ ΔΙΑΓΡΑΦΗ ΟΛΩΝ (ΟΜΑΔΕΣ)</button>
+                <button class="btn" style="background: #ffc107; color: #000;" onclick="window.location.href='leaderboard.html'">🏆 LEADERBOARD (ADMIN)</button>
+                <button class="btn" id="leaderboardToggleBtn" style="background: #dc3545; color: white;" onclick="toggleLeaderboard()">
+                    🔒 LOADING...
+                </button>
+                <button class="btn btn-secondary" onclick="unlockAllForAll()">🔓 ΤΕΚΜΗΡΙΑ (ΟΛΑ)</button>
+                <button class="btn btn-danger" onclick="resetAll()">🗑️ ΔΙΑΓΡΑΦΗ ΟΜΑΔΩΝ (ΟΛΕΣ)</button>
             </div>
             
             <div class="sort-controls">
@@ -697,18 +673,7 @@ body {
                 </select>
             </div>
             
-<div id="teamsContainer" class="team-list"></div>
-
-        <div class="section">
-            <h2>🔗 QR CODES (URL GENERATOR)</h2>
-            <div class="team-input">
-                <button class="btn btn-primary" onclick="generateUrls()">Δημιουργία URLs</button>
-            </div>
-            <div class="url-generator" id="urlOutput" style="display: none;">
-                <h3> QR CODES:</h3>
-                <div class="url-list" id="urlList"></div>
-                <button class="btn btn-secondary" style="margin-top: 15px;" onclick="copyAllUrls()">📋 Αντιγραφή Όλων</button>
-            </div>
+            <div id="teamsContainer" class="team-list"></div>
         </div>
     </div>
 
@@ -1092,7 +1057,7 @@ async function refreshTeams() {
     teams.forEach(t => console.log(`  - ${t.name}: ${t.unlocked.length} TEKs unlocked, data:`, t.unlocked));
 
 if (teams.length === 0) {
-        container.innerHTML = '<div style="text-align: center; padding: 40px; color: #999;">  </div>';
+        container.innerHTML = '<div style="text-align: center; padding: 40px; color: #999;"></div>';
         if (window.timerInterval) {
             clearInterval(window.timerInterval);
         }
@@ -1112,7 +1077,7 @@ window.timerInterval = setInterval(() => {
     document.querySelectorAll('.team-card').forEach(teamCard => {
         const teamName = teamCard.dataset.teamId;
         const team = teamsData[teamName];
-		
+        
         if (team && team.startTime && !team.completedAt && !team.solution) {
             const elapsed = Date.now() - new Date(team.startTime).getTime();
             const timerStats = Array.from(teamCard.querySelectorAll('.team-stats')).find(
@@ -1247,7 +1212,7 @@ async function showTimestamps(teamName) {
         }
         
         html += '</div>';
-		
+        
         if (team.completedAt && team.totalTimeMs) {
             html += `<div><strong>⏱️ Συνολικός Χρόνος:</strong> ${formatTime(team.totalTimeMs)}</div>`;
         }
@@ -1442,7 +1407,7 @@ async function deleteTeam(teamName) {
                     await Promise.all(deletePromises);
                     console.log(`✅ All surveys deleted successfully`);
                 }
-				
+                
                 await window.firebaseDeleteDoc(
                     window.firebaseDoc(window.firebaseDB, 'teams', teamName)
                 );
@@ -1514,7 +1479,7 @@ async function resetAll() {
                     );
                     console.log(`✅ Deleted team: ${team.name}`);
                 }
-				
+                
                 const surveysRef = window.firebaseCollection(window.firebaseDB, 'surveys');
                 const querySnapshot = await window.firebaseGetDocs(surveysRef);
                 
@@ -1627,7 +1592,7 @@ let firestoreUnsubscribe = null;
             setInterval(refreshTeams, 2000);
         }
     }
-	
+    
     window.addEventListener('storage', (e) => {
         if (e.key && e.key.startsWith('unlocked_teks_')) {
             console.log('💾 localStorage change detected from another tab');
@@ -1681,7 +1646,7 @@ function showSyncStatus(message, type = 'success') {
             }, 3000);
         }
     }
-	
+    
 async function checkLeaderboardStatus() {
     if (!window.firebaseDB) {
         console.warn('Firebase not ready');
@@ -1708,10 +1673,10 @@ async function updateLeaderboardButton() {
     
     if (btn) {
         if (isUnlocked) {
-            btn.innerHTML = '🔓 ΚΛΕΙΔΩΜΑ LEADERBOARD (ΟΜΑΔΕΣ)';
+            btn.innerHTML = '🔓 LEADERBOARD (ΟΜΑΔΕΣ)';
             btn.style.background = '#28a745';
         } else {
-            btn.innerHTML = '🔒 ΞΕΚΛΕΙΔΩΜΑ LEADERBOARD (ΟΜΑΔΕΣ)';
+            btn.innerHTML = '🔒 LEADERBOARD (ΟΜΑΔΕΣ)';
             btn.style.background = '#dc3545';
         }
     }
@@ -1737,7 +1702,7 @@ async function toggleLeaderboard() {
 await updateLeaderboardButton();
         
     } catch (error) {
-	
+    
         console.error('Error toggling leaderboard:', error);
         alert('❌ Σφάλμα! Δοκιμάστε ξανά.');
     }
