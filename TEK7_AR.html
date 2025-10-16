@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Τεκμήριο Ξεκλειδώθηκε</title>
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
     
     <style>
         * {
@@ -167,18 +166,6 @@
             }
         }
 
-        .category {
-            font-size: 12px;
-            color: #aaa;
-            margin-top: 2px;
-        }
-
-        @media (max-width: 768px) {
-            .category {
-                font-size: 10px;
-            }
-        }
-
         .official-badge {
             background: rgba(255,107,0,0.2);
             border: 2px solid #ff6b00;
@@ -264,18 +251,7 @@
             gap: 8px;
         }
 
-        model-viewer {
-            width: 100%;
-            height: 450px;
-            background-color: #f5f5f5;
-            border-radius: 8px;
-            border: 2px solid #ddd;
-        }
-
         @media (max-width: 768px) {
-            model-viewer {
-                height: 350px;
-            }
             .ar-title {
                 font-size: 16px;
             }
@@ -416,7 +392,7 @@
         }
 
         .analysis-name::before {
-            content: "📝";
+            content: "🔍";
             font-size: 20px;
         }
 
@@ -494,6 +470,108 @@
                 font-size: 14px;
             }
         }
+
+        .handwritten-note {
+            background: linear-gradient(135deg, #fffef8 0%, #fdfcf5 100%);
+            border: 3px solid #ddd;
+            border-radius: 8px;
+            padding: 40px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15), inset 0 0 30px rgba(0,0,0,0.02);
+            position: relative;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .handwritten-note::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 31px,
+                rgba(200,200,200,0.15) 31px,
+                rgba(200,200,200,0.15) 32px
+            );
+            pointer-events: none;
+        }
+
+        .fold-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, 
+                transparent 0%, 
+                rgba(0,0,0,0.05) 5%, 
+                rgba(0,0,0,0.1) 50%, 
+                rgba(0,0,0,0.05) 95%, 
+                transparent 100%
+            );
+            transform: translateX(-50%);
+        }
+
+        .note-text {
+            font-family: 'Brush Script MT', 'Lucida Handwriting', cursive;
+            font-size: 42px;
+            color: #1a3a8a;
+            text-align: center;
+            font-style: italic;
+            position: relative;
+            z-index: 1;
+            text-shadow: 1px 1px 1px rgba(26,58,138,0.1);
+            letter-spacing: 2px;
+        }
+
+        .ink-bleed {
+            position: absolute;
+            width: 200px;
+            height: 3px;
+            background: rgba(26,58,138,0.08);
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 120px;
+        }
+
+        .evidence-tag {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            background: rgba(220,53,69,0.1);
+            border: 2px solid #dc3545;
+            border-radius: 5px;
+            padding: 6px 12px;
+            font-size: 11px;
+            color: #dc3545;
+            font-weight: bold;
+            font-family: monospace;
+        }
+
+        @media (max-width: 768px) {
+            .handwritten-note {
+                padding: 30px 20px;
+                min-height: 250px;
+            }
+
+            .note-text {
+                font-size: 32px;
+            }
+
+            .evidence-tag {
+                font-size: 9px;
+                padding: 4px 8px;
+            }
+
+            .ink-bleed {
+                width: 150px;
+                bottom: 100px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -526,82 +604,26 @@
 
             <div class="ar-container">
                 <h3 class="ar-title">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M2 16.1A5 5 0 0 1 5.9 20M2 12.05A9 9 0 0 1 9.95 20M2 8V6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-6"></path>
-                        <line x1="2" y1="20" x2="2.01" y2="20"></line>
-                    </svg>
-                    ΠΡΟΒΟΛΗ ΣΕ 3D
+                    <span style="font-size: 24px;">✍️</span>
+                    ΧΕΙΡΟΓΡΑΦΟ ΣΗΜΕΙΩΜΑ
                 </h3>
                 
-                <model-viewer
-                    src="letter.glb"
-                    alt="Handwritten Note 3D Model - Evidence"
-                    ar
-                    ar-modes="webxr scene-viewer quick-look"
-                    camera-controls
-                    touch-action="pan-y"
-                    auto-rotate
-                    auto-rotate-delay="1000"
-                    rotation-per-second="30deg"
-                    shadow-intensity="1"
-                    exposure="0.8"
-                    camera-orbit="0deg 75deg 2.5m"
-                    min-camera-orbit="auto 0deg auto"
-                    max-camera-orbit="auto 180deg auto"
-                    loading="eager"
-                    reveal="auto"
-                    ar-scale="fixed">
-                    
-                    <div slot="poster" style="
-                        width: 100%;
-                        height: 100%;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        background: #f5f5f5;
-                        flex-direction: column;
-                        gap: 10px;
-                    ">
-                        <div style="
-                            border: 4px solid #f3f3f3;
-                            border-top: 4px solid #ff6b00;
-                            border-radius: 50%;
-                            width: 40px;
-                            height: 40px;
-                            animation: spin 1s linear infinite;
-                        "></div>
-                        <p style="color: #666; font-size: 14px;">Φόρτωση 3D μοντέλου...</p>
+                <div class="handwritten-note">
+                    <div class="fold-line"></div>
+                    <div class="note-text">Συγχώρεσέ με Μ.</div>
+                    <div class="ink-bleed"></div>
+                    <div class="evidence-tag">ΑΜΦΙΣΒΗΤΗΣΙΜΗ ΓΡΑΦΗ</div>
+                </div>
+
+                <div style="margin-top: 20px; padding: 15px; background: rgba(220,53,69,0.05); border: 2px solid #dc3545; border-radius: 8px;">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                        <span style="font-size: 24px;"></span>
+                        <strong style="color: #dc3545; font-size: 15px;">ΠΑΡΑΤΗΡΗΣΗ</strong>
                     </div>
-                    
-                    <div slot="error" style="
-                        width: 100%;
-                        height: 100%;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        background: #fff3cd;
-                        flex-direction: column;
-                        gap: 15px;
-                        padding: 20px;
-                    ">
-                        <p style="color: #856404; font-size: 16px; font-weight: bold;">⚠️ Σφάλμα Φόρτωσης</p>
-                        <p style="color: #856404; font-size: 13px; text-align: center;">
-                            Το 3D μοντέλο δεν μπορεί να φορτώσει.<br>
-                            Ελέγξτε το αρχείο: letter.glb
-                        </p>
-                    </div>
-                </model-viewer>
-                
-                <div id="debugInfo" style="
-                    margin-top: 10px;
-                    padding: 10px;
-                    background: #e7f3ff;
-                    border: 1px solid #2196F3;
-                    border-radius: 5px;
-                    font-size: 12px;
-                    font-family: monospace;
-                    display: none;
-                "></div>
+                    <p style="font-size: 14px; color: #666; margin: 0; line-height: 1.6;">
+                        Η γραφολογική ανάλυση δείχνει <strong style="color: #dc3545;">68% ομοιότητα</strong> με τη γραφή του Δημητρίου, αλλά η ασυνεπής πίεση στυλό και οι μικρές διαφορές στην κλίση των γραμμάτων εγείρουν σοβαρές αμφιβολίες.
+                    </p>
+                </div>
             </div>
 
             <div class="details">
@@ -629,7 +651,7 @@
                     </div>
 
                     <div style="margin-top: 25px;">
-                        <p class="section-content" style="margin-bottom: 15px;"><strong style="color: #0f3460; font-size: 16px;">🔍 Φυσική Κατάσταση</strong></p>
+                        <p class="section-content" style="margin-bottom: 15px;"><strong style="color: #0f3460; font-size: 16px;">📦 Φυσική Κατάσταση</strong></p>
                         <p class="section-content" style="margin-bottom: 10px;">
                             <strong>Χαρτί:</strong> Λευκό Α4, χωρίς λογότυπο ή υδατογράφημα
                         </p>
@@ -743,14 +765,12 @@
             canvas.width = 800;
             canvas.height = 400;
 
-            // Wood desk background
             const floorGradient = ctx.createLinearGradient(0, 0, 0, 400);
             floorGradient.addColorStop(0, '#8b7355');
             floorGradient.addColorStop(1, '#6b5345');
             ctx.fillStyle = floorGradient;
             ctx.fillRect(0, 0, 800, 400);
 
-            // Wood texture
             ctx.strokeStyle = 'rgba(101, 67, 33, 0.3)';
             ctx.lineWidth = 2;
             for (let i = 0; i < 400; i += 40) {
@@ -760,11 +780,9 @@
                 ctx.stroke();
             }
 
-// Paper - white A4
             ctx.fillStyle = '#ffffff';
             ctx.fillRect(300, 100, 200, 260);
 
-            // Fold line in middle
             ctx.strokeStyle = 'rgba(0, 0, 0, 0.15)';
             ctx.lineWidth = 1;
             ctx.beginPath();
@@ -772,17 +790,14 @@
             ctx.lineTo(400, 360);
             ctx.stroke();
 
-            // Text on paper - "Συγχώρεσέ με Μ."
             ctx.fillStyle = '#1a3a8a';
             ctx.font = 'italic 24px Georgia, serif';
             ctx.textAlign = 'center';
             ctx.fillText('Συγχώρεσέ με Μ.', 400, 235);
 
-            // Some ink bleeding effect
             ctx.fillStyle = 'rgba(26, 58, 138, 0.1)';
             ctx.fillRect(340, 227, 120, 2);
 
-            // Recording overlay
             ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
             ctx.fillRect(0, 0, 800, 40);
             
@@ -800,49 +815,6 @@
 
         window.onload = function() {
             drawCrimeScene();
-            
-            const modelViewer = document.querySelector('model-viewer');
-            const debugInfo = document.getElementById('debugInfo');
-            
-            if (modelViewer) {
-                debugInfo.style.display = 'block';
-                debugInfo.innerHTML = '🔍 Προσπάθεια φόρτωσης: letter.glb<br>';
-                
-                modelViewer.addEventListener('progress', (event) => {
-                    const percent = Math.round(event.detail.totalProgress * 100);
-                    debugInfo.innerHTML = `⏳ Φόρτωση: ${percent}%<br>`;
-                });
-                
-                modelViewer.addEventListener('load', () => {
-                    debugInfo.innerHTML = '✅ 3D μοντέλο φορτώθηκε επιτυχώς!<br>';
-                    debugInfo.style.background = '#d4edda';
-                    debugInfo.style.borderColor = '#28a745';
-                    setTimeout(() => {
-                        debugInfo.style.display = 'none';
-                    }, 3000);
-                });
-                
-                modelViewer.addEventListener('error', (event) => {
-                    debugInfo.innerHTML = '❌ ΣΦΑΛΜΑ: Το αρχείο δεν μπορεί να φορτώσει<br>';
-                    debugInfo.innerHTML += 'Ελέγξτε:<br>';
-                    debugInfo.innerHTML += '1. Το αρχείο υπάρχει στον ίδιο φάκελο<br>';
-                    debugInfo.innerHTML += '2. Το όνομα είναι: letter.glb<br>';
-                    debugInfo.innerHTML += '3. Το αρχείο είναι έγκυρο .glb<br>';
-                    debugInfo.style.background = '#f8d7da';
-                    debugInfo.style.borderColor = '#dc3545';
-                });
-                
-                setTimeout(() => {
-                    if (debugInfo.innerHTML.includes('Φόρτωση')) {
-                        debugInfo.innerHTML = '⚠️ Το μοντέλο δεν φορτώνει...<br>';
-                        debugInfo.innerHTML += 'Πιθανές αιτίες:<br>';
-                        debugInfo.innerHTML += '• Το αρχείο δεν βρέθηκε<br>';
-                        debugInfo.innerHTML += '• Λάθος όνομα: letter.glb<br>';
-                        debugInfo.style.background = '#fff3cd';
-                        debugInfo.style.borderColor = '#ffc107';
-                    }
-                }, 10000);
-            }
         };
     </script>
 </body>
