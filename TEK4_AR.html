@@ -30,7 +30,6 @@
             opacity: 0.1;
             background-image: repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,107,0,0.5) 35px, rgba(255,107,0,0.5) 70px);
             animation: slide 20s linear infinite;
-            pointer-events: none;
         }
 
         @keyframes slide {
@@ -335,12 +334,16 @@
             }
         }
 
-.section-content {
-    font-size: 15px;
-    line-height: 1.8;
-    color: #333;
-    text-align: justify;
-}
+        .section-content {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #333;
+            text-align: justify;
+        }
+
+        .section-content p {
+            margin: 0;
+        }
 
         @media (max-width: 768px) {
             .section-content {
@@ -364,117 +367,46 @@
             }
         }
 
-        .email-box {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border: 2px solid #6c757d;
-            border-radius: 10px;
+        .email-display {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border: 3px solid #dc3545;
+            border-radius: 12px;
             padding: 20px;
-            margin: 15px 0;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin: 20px 0;
+            box-shadow: 0 4px 12px rgba(220,53,69,0.15);
         }
 
         .email-header {
-            border-bottom: 2px solid #6c757d;
-            padding-bottom: 12px;
+            border-bottom: 2px solid #dee2e6;
+            padding-bottom: 15px;
             margin-bottom: 15px;
         }
 
         .email-field {
             display: flex;
             margin-bottom: 8px;
-            font-size: 13px;
+            font-size: 14px;
         }
 
-        .email-label {
+        .email-field-label {
             font-weight: 700;
-            color: #495057;
+            color: #0f3460;
             min-width: 80px;
         }
 
-        .email-value {
-            color: #212529;
-            font-weight: 600;
-        }
-
-        .email-subject {
-            font-size: 16px;
-            color: #dc3545;
-            font-weight: 700;
-            margin-top: 10px;
+        .email-field-value {
+            color: #333;
         }
 
         .email-body {
             background: white;
             padding: 20px;
             border-radius: 8px;
-            border-left: 4px solid #dc3545;
+            border: 1px solid #dee2e6;
+            font-family: Georgia, serif;
             font-size: 15px;
             line-height: 1.8;
-            color: #212529;
-            font-style: italic;
-        }
-
-        @media (max-width: 768px) {
-            .email-box {
-                padding: 15px;
-            }
-            
-            .email-body {
-                padding: 15px;
-                font-size: 14px;
-            }
-        }
-
-        .computer-data {
-            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-            border: 2px solid #dee2e6;
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 12px;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-
-        .computer-data:hover {
-            transform: translateX(5px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-
-        .computer-data.critical {
-            background: linear-gradient(135deg, #fff5f5 0%, #ffe5e5 100%);
-            border-color: #dc3545;
-            border-width: 3px;
-            box-shadow: 0 4px 12px rgba(220,53,69,0.15);
-        }
-
-        .computer-data.critical:hover {
-            box-shadow: 0 6px 16px rgba(220,53,69,0.25);
-        }
-
-        .data-label {
-            font-weight: 700;
-            font-size: 13px;
-            color: #666;
-            margin-bottom: 5px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .data-value {
-            font-size: 15px;
             color: #1a1a2e;
-            font-weight: 600;
-        }
-
-        .computer-data.critical .data-value {
-            color: #dc3545;
-        }
-
-        @media (max-width: 768px) {
-            .computer-data {
-                padding: 12px;
-                margin-bottom: 10px;
-            }
         }
 
         .significance-box {
@@ -507,17 +439,67 @@
             }
         }
 
-.significance-text {
-    font-size: 15px;
-    line-height: 1.8;
-    color: #1a1a2e;
-    margin: 0;
-    text-align: justify;
-}
+        .significance-text {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #1a1a2e;
+            margin: 0;
+            text-align: justify;
+        }
 
         @media (max-width: 768px) {
             .significance-text {
                 font-size: 14px;
+            }
+            .email-display {
+                padding: 15px;
+            }
+            .email-body {
+                padding: 15px;
+                font-size: 14px;
+            }
+        }
+
+        .metadata-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .metadata-box {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .metadata-box:hover {
+            border-color: #0f3460;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(15,52,96,0.1);
+        }
+
+        .metadata-box-label {
+            font-size: 11px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .metadata-box-value {
+            font-size: 14px;
+            color: #1a1a2e;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .metadata-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
             }
         }
     </style>
@@ -552,215 +534,186 @@
 
             <div class="ar-container">
                 <h3 class="ar-title">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M2 16.1A5 5 0 0 1 5.9 20M2 12.05A9 9 0 0 1 9.95 20M2 8V6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-6"></path>
-                        <line x1="2" y1="20" x2="2.01" y2="20"></line>
-                    </svg>
-                    ΠΡΟΒΟΛΗ ΣΕ 3D
+                    <span style="font-size: 24px;">📧</span>
+                    ΨΗΦΙΑΚΟ ΜΗΝΥΜΑ
                 </h3>
                 
-                <model-viewer
-                    src="email.glb"
-                    alt="Email 3D Model - Evidence"
-                    ar
-                    ar-modes="webxr scene-viewer quick-look"
-                    camera-controls
-                    touch-action="pan-y"
-                    auto-rotate
-                    auto-rotate-delay="1000"
-                    rotation-per-second="30deg"
-                    shadow-intensity="1"
-                    exposure="0.8"
-                    camera-orbit="0deg 75deg 2.5m"
-                    min-camera-orbit="auto 0deg auto"
-                    max-camera-orbit="auto 180deg auto"
-                    loading="eager"
-                    reveal="auto"
-                    ar-scale="fixed">
-                    
-                    <div slot="poster" style="
-                        width: 100%;
-                        height: 100%;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        background: #f5f5f5;
-                        flex-direction: column;
-                        gap: 10px;
-                    ">
-                        <div style="
-                            border: 4px solid #f3f3f3;
-                            border-top: 4px solid #ff6b00;
-                            border-radius: 50%;
-                            width: 40px;
-                            height: 40px;
-                            animation: spin 1s linear infinite;
-                        "></div>
-                        <p style="color: #666; font-size: 14px;">Φόρτωση 3D μοντέλου...</p>
+                <div class="email-display">
+                    <div class="email-header">
+                        <div class="email-field">
+                            <span class="email-field-label">Από:</span>
+                            <span class="email-field-value">dimitriou.petros@logospublishing.gr</span>
+                        </div>
+                        <div class="email-field">
+                            <span class="email-field-label">Προς:</span>
+                            <span class="email-field-value">Οικογένεια, Προσωπικό, Φίλοι</span>
+                        </div>
+                        <div class="email-field">
+                            <span class="email-field-label">Θέμα:</span>
+                            <span class="email-field-value" style="color: #dc3545; font-weight: bold;">Αποχαιρετισμός</span>
+                        </div>
+                        <div class="email-field">
+                            <span class="email-field-label">Ημερομηνία: </span>
+                            <span class="email-field-value"> 22 Σεπτεμβρίου 2025, 20:35</span>
+                        </div>
                     </div>
                     
-                    <div slot="error" style="
-                        width: 100%;
-                        height: 100%;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        background: #fff3cd;
-                        flex-direction: column;
-                        gap: 15px;
-                        padding: 20px;
-                    ">
-                        <p style="color: #856404; font-size: 16px; font-weight: bold;">⚠️ Σφάλμα Φόρτωσης</p>
-                        <p style="color: #856404; font-size: 13px; text-align: center;">
-                            Το 3D μοντέλο δεν μπορεί να φορτώσει.<br>
-                            Ελέγξτε το αρχείο: email.glb
+                    <div class="email-body">
+                        Αγαπημένοι μου,<br><br>
+                        
+                        Όταν διαβάσετε αυτό το γράμμα, θα έχω ήδη φύγει. Ξέρω ότι θα είναι δύσκολο να το κατανοήσετε, αλλά παρακαλώ μην με κρίνετε αυστηρά.<br><br>
+                        
+                        Ο καρκίνος κέρδισε. Οι γιατροί μου έδωσαν λίγους μήνες ζωής, αλλά δεν μπορώ να περιμένω να γίνω βάρος για όλους εσάς.<br><br>
+						
+						Έχω ζήσει μια πλούσια ζωή, και θέλω να φύγω με αξιοπρέπεια, με τους δικούς μου όρους.<br><br>
+                        
+                        Η εταιρεία είναι σε καλά χέρια με τον Κωνσταντίνο. Εμπιστευτείτε τον. Τα οικονομικά είναι σε τάξη. Μην ανησυχείτε για τίποτα.<br><br>
+                        
+                        Συγχωρέστε με που επέλεξα αυτόν τον δρόμο. Είναι η μόνη λύση που έχει νόημα γι' αυτά που αντιμετωπίζω.<br><br>
+                        
+                        Σας αγαπώ όλους πολύ.<br><br>
+                        
+                        Πέτρος
+                    </div>
+                </div>
+            </div>
+
+            <div class="details">
+                <h2 class="evidence-title">📧 ΨΗΦΙΑΚΟ EMAIL ΑΥΤΟΚΤΟΝΙΑΣ</h2>
+
+                <div class="section">
+                    <h3 class="section-title">
+                        <span style="font-size: 24px;">🔬</span>
+                        Ψηφιακή Εγκληματολογική Ανάλυση
+                    </h3>
+                    <p class="section-content">
+                        Το email εντοπίστηκε στον εξυπηρετητή της εταιρείας Logos Publishing και στάλθηκε από τον λογαριασμό του θύματος στις 20:35, περίπου 40 λεπτά πριν την εκτιμώμενη ώρα θανάτου. Η ψηφιακή ανάλυση αποκαλύπτει ότι το μήνυμα στάλθηκε από κοινόχρηστο υπολογιστή στην αίθουσα συσκέψεων του 7ου ορόφου. Το σύστημα καταγράφει αυτόματη σύνδεση μέσω Outlook Web Access που ήταν ανοικτό σε session από τις 19:45.
+                    </p>
+
+                    <div class="metadata-grid">
+                        <div class="metadata-box">
+                            <div class="metadata-box-label">IP Διεύθυνση</div>
+                            <div class="metadata-box-value">192.168.1.23</div>
+                        </div>
+                        <div class="metadata-box">
+                            <div class="metadata-box-label">Συσκευή</div>
+                            <div class="metadata-box-value">Desktop PC - Αίθουσα Συσκέψεων (7ος Όροφος)</div>
+                        </div>
+                        <div class="metadata-box">
+                            <div class="metadata-box-label">Πρόγραμμα</div>
+                            <div class="metadata-box-value">Outlook 2021</div>
+                        </div>
+                        <div class="metadata-box">
+                            <div class="metadata-box-label">Σύνδεση</div>
+                            <div class="metadata-box-value">19:45 (Auto)</div>
+                        </div>
+                        <div class="metadata-box">
+                            <div class="metadata-box-label">Αποστολή</div>
+                            <div class="metadata-box-value">20:35:00</div>
+                        </div>
+                        <div class="metadata-box">
+                            <div class="metadata-box-label">Παραλήπτες</div>
+                            <div class="metadata-box-value">Οικογένεια, Προσωπικό, Φίλοι</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">
+                        <span style="font-size: 24px;">📝</span>
+                        Γραφολογική & Ψυχολογική Ανάλυση
+                    </h3>
+                    
+                    <p class="section-content" style="margin-bottom: 15px;">
+                        <strong style="color: #0f3460; font-size: 16px;">Ανάλυση Γλώσσας & Ύφους</strong>
+                    </p>
+                    
+                    <p class="section-content" style="margin-bottom: 10px;">
+                        <strong>Τόνος:</strong> Συναισθηματικός και προσωπικός - απευθύνεται στους αγαπημένους του με οικειότητα
+                    </p>
+                    <p class="section-content" style="margin-bottom: 10px;">
+                        <strong>Σύνταξη:</strong> Οργανωμένες παράγραφοι με λογική δομή - όχι τυπικό για άτομο σε ακραία κρίση
+                    </p>
+                    <p class="section-content" style="margin-bottom: 10px;">
+                        <strong>Περιεχόμενο:</strong> Συγκεκριμένες αναφορές αλλά υπερβολικά "καθαρό" για τελευταίο μήνυμα
+                    </p>
+                    <p class="section-content">
+                        <strong>Χρονοσήμανση:</strong> Αποστολή περίπου 40 λεπτά πριν τον εκτιμώμενο θάνατο
+                    </p>
+                    
+                    <div style="margin-top: 25px;">
+                        <p class="section-content" style="margin-bottom: 15px;">
+                            <strong style="color: #0f3460; font-size: 16px;">🔐 Πρόσβαση Συστήματος</strong>
+                        </p>
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong>Σύνδεση:</strong> Αυτόματη είσοδος με εταιρικό λογαριασμό
+                        </p>
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong>Email Client:</strong> Outlook Web Access - Ανοικτό σε session από 19:45
+                        </p>
+                        <p class="section-content">
+                            <strong>Ιστορικό:</strong> Καμία άλλη δραστηριότητα στον υπολογιστή μετά της 20:35
                         </p>
                     </div>
-                </model-viewer>
-                
-                <div id="debugInfo" style="
-                    margin-top: 10px;
-                    padding: 10px;
-                    background: #e7f3ff;
-                    border: 1px solid #2196F3;
-                    border-radius: 5px;
-                    font-size: 12px;
-                    font-family: monospace;
-                    display: none;
-                "></div>
-                
-                <p style="text-align: center; color: #666; font-size: 13px; margin-top: 10px; font-style: italic;">
-                    💡 Σύρετε για να περιστρέψετε • Zoom με δύο δάχτυλα
-                </p>
-            </div>
+                </div>
 
-<div class="details">
-    <h2 class="evidence-title">💻 EMAIL «ΑΥΤΟΚΤΟΝΙΑΣ»</h2>
+                <div class="section">
+                    <h3 class="section-title">
+                        <span style="font-size: 24px;">🔬</span>
+                        Τεχνική Ανάλυση Υπολογιστή
+                    </h3>
+                    
+                    <div class="metadata-grid">
+                        <div class="metadata-box">
+                            <div class="metadata-box-label">IP Διεύθυνση</div>
+                            <div class="metadata-box-value">192.168.1.23</div>
+                        </div>
+                        <div class="metadata-box">
+                            <div class="metadata-box-label">Τοποθεσία Υπολογιστή</div>
+                            <div class="metadata-box-value">7ος Όροφος - Αίθουσα Συσκέψεων</div>
+                        </div>
+                        <div class="metadata-box">
+                            <div class="metadata-box-label">Τύπος Υπολογιστή</div>
+                            <div class="metadata-box-value">Κοινόχρηστος - ΔΕΝ απαιτείται κωδικός πρόσβασης</div>
+                        </div>
+                        <div class="metadata-box">
+                            <div class="metadata-box-label">Ώρα Αποστολής</div>
+                            <div class="metadata-box-value">20:35 - 40 λεπτά πριν τον θάνατο</div>
+                        </div>
+                        <div class="metadata-box">
+                            <div class="metadata-box-label">Αποτυπώματα Πληκτρολογίου</div>
+                            <div class="metadata-box-value">Πολλαπλά αποτυπώματα - Υπό ανάλυση</div>
+                        </div>
+                        <div class="metadata-box">
+                            <div class="metadata-box-label">Κάμερες Ασφαλείας</div>
+                            <div class="metadata-box-value">Η αίθουσα δεν έχει κάμερα</div>
+                        </div>
+                    </div>
+                </div>
 
-    <div class="section">
-        <h3 class="section-title">
-            <span style="font-size: 24px;">📧</span>
-            Περιεχόμενο Email
-        </h3>
-        
-<div class="email-box">
-    <div class="email-header">
-        <div class="email-field">
-            <span class="email-label">Από:</span>
-            <span class="email-value">petros.dimitriou@ekdoseis-logos.gr</span>
-        </div>
-        <div class="email-field">
-            <span class="email-label">Προς:</span>
-            <span class="email-value">Οικογένεια, Προσωπικό, Φίλοι</span>
-        </div>
-        <div class="email-field">
-            <span class="email-label">Ημερομηνία:</span>
-            <span class="email-value">22/09/2025 - 20:35</span>
-        </div>
-        <div class="email-subject">
-            Θέμα: Συγγνώμη
-        </div>
-    </div>
-    <div style="padding: 20px 0 10px 0; font-size: 15px; line-height: 1.8; color: #212529; font-style: italic;">
-        «Δεν μπορώ να συνεχίσω άλλο. Η πίεση είναι αβάσταχτη. Συγγνώμη σε όλους για όσα προκάλεσα. Αυτή είναι η μόνη λύση που μου απομένει.»
-    </div>
-</div>
-    </div>
+                <div class="significance-box">
+                    <h3 class="significance-title">
+                        <span style="font-size: 20px;">💡</span>
+                        ΣΗΜΑΣΙΑ ΓΙΑ ΤΗΝ ΕΡΕΥΝΑ
+                    </h3>
+                    <p class="significance-text">
+                        Το email στάλθηκε από κοινόχρηστο υπολογιστή στην αίθουσα συσκέψεων του 7ου ορόφου - ΟΧΙ από το προσωπικό γραφείο του θύματος. Ο υπολογιστής δεν απαιτεί κωδικό πρόσβασης, οπότε οποιοσδήποτε υπάλληλος μπορούσε να τον χρησιμοποιήσει. Το email στάλθηκε στις 20:35, 40 λεπτά πριν την εκτιμώμενη ώρα θανάτου (21:00-21:15). Γιατί κάποιος να στείλει "τελευταίο μήνυμα" 40 λεπτά ΠΡΙΝ αυτοκτονήσει; Συνήθως τέτοια μηνύματα στέλνονται λίγα λεπτά ή ακριβώς πριν την πράξη. Επιπλέον, η αίθουσα δεν έχει κάμερες ασφαλείας - ιδανική τοποθεσία για κάποιον που θέλει να στείλει email ανώνυμα χωρίς να καταγραφεί. Το Outlook Web Access ήταν ανοικτό από τις 19:45, υποδηλώνοντας ότι κάποιος είχε προσυνδεθεί νωρίτερα. Το περιεχόμενο του email είναι πολύ οργανωμένο και συγκεντρωμένο για κάποιον που υποτίθεται βρίσκεται σε απόγνωση - δεν υπάρχουν ορθογραφικά λάθη, διορθώσεις, ή συναισθηματικές εκρήξεις. Το μήνυμα ακολουθεί τέλεια δομή: χαιρετισμός, εξήγηση, οδηγίες για την εταιρεία, συγγνώμη, κλείσιμο. Η αναφορά στα οικονομικά ("είναι σε τάξη") και η σύσταση εμπιστοσύνης προς συγκεκριμένο πρόσωπο είναι ασυνήθιστα συγκεκριμένες για ένα τελευταίο μήνυμα. Επιπλέον, γιατί κάποιος να στείλει τέτοιο email 40 λεπτά πριν την πράξη από κοινόχρηστο υπολογιστή σε χώρο χωρίς κάμερες, αντί από το προσωπικό του γραφείο; 
+                    </p>
+                </div>
 
-    <div class="section">
-        <h3 class="section-title">
-            <span style="font-size: 24px;">🔬</span>
-            Τεχνική Ανάλυση Υπολογιστή
-        </h3>
-        <div>
-            <div class="computer-data critical">
-                <div class="data-label">IP Διεύθυνση</div>
-                <div class="data-value">192.168.1.23</div>
-            </div>
-            <div class="computer-data critical">
-                <div class="data-label">Τοποθεσία Υπολογιστή</div>
-                <div class="data-value">7ος Όροφος - Αίθουσα Συσκέψεων</div>
-            </div>
-            <div class="computer-data critical">
-                <div class="data-label">Τύπος Υπολογιστή</div>
-                <div class="data-value">Κοινόχρηστος - ΔΕΝ απαιτείται κωδικός πρόσβασης</div>
-            </div>
-            <div class="computer-data">
-                <div class="data-label">Ώρα Αποστολής</div>
-                <div class="data-value">20:35 - 40 λεπτά πριν τον θάνατο</div>
-            </div>
-            <div class="computer-data">
-                <div class="data-label">Αποτυπώματα Πληκτρολογίου</div>
-                <div class="data-value">Πολλαπλά αποτυπώματα - Υπό ανάλυση</div>
-            </div>
-            <div class="computer-data">
-                <div class="data-label">Κάμερες Ασφαλείας</div>
-                <div class="data-value">Η αίθουσα δεν έχει κάμερα</div>
-            </div>
-        </div>
-    </div>
+                <div class="section">
+                    <h3 class="section-title">
+                        <span style="font-size: 24px;">❓</span>
+                        Βασικά Ερωτήματα Διερεύνησης
+                    </h3>
+                    <ul class="section-content">
+                        <li>Γιατί το email στάλθηκε 40 λεπτά ΠΡΙΝ την εκτιμώμενη ώρα θανάτου και όχι λίγο πριν ή κατά τη στιγμή της πράξης;</li>
+                        <li>Ποιος είχε πρόσβαση στον κοινόχρηστο υπολογιστή της αίθουσας συσκέψεων μεταξύ 19:45-20:35;</li>
+                        <li>Γιατί επιλέχθηκε η αίθουσα συσκέψεων που ΔΕΝ έχει κάμερες ασφαλείας;</li>
+                    </ul>
+                </div>
 
-    <div class="section">
-        <h3 class="section-title">
-            <span style="font-size: 24px;">📝</span>
-            Γραφολογική & Ψυχολογική Ανάλυση
-        </h3>
-        <div class="section-content">
-            <p style="margin-bottom: 15px;">
-                <strong style="color: #0f3460; font-size: 16px;">Ανάλυση Γλώσσας & Ύφους</strong>
-            </p>
-            <p style="margin-bottom: 10px;">
-                <strong>Τόνος:</strong> Απρόσωπος και γενικός - χωρίς συγκεκριμένες αναφορές σε γεγονότα ή πρόσωπα
-            </p>
-            <p style="margin-bottom: 10px;">
-                <strong>Σύνταξη:</strong> Σύντομες προτάσεις, βιαστικό ύφος
-            </p>
-            <p style="margin-bottom: 10px;">
-                <strong>Περιεχόμενο:</strong> Ασαφείς αναφορές σε «πίεση» χωρίς λεπτομέρειες
-            </p>
-            <p style="margin-bottom: 10px;">
-                <strong>Χρονοσήμανση:</strong> Αποστολή 40' πριν τον εκτιμώμενο θάνατο
-            </p>
-        </div>
-
-        <div style="margin-top: 25px;">
-            <p class="section-content" style="margin-bottom: 15px;">
-                <strong style="color: #0f3460; font-size: 16px;">🔐 Πρόσβαση Συστήματος</strong>
-            </p>
-            <p class="section-content" style="margin-bottom: 10px;">
-                <strong>Σύνδεση:</strong> Αυτόματη είσοδος με εταιρικό λογαριασμό
-            </p>
-            <p class="section-content" style="margin-bottom: 10px;">
-                <strong>Email Client:</strong> Outlook Web Access - Ανοικτό σε session από 19:45
-            </p>
-            <p class="section-content">
-                <strong>Ιστορικό:</strong> Καμία άλλη δραστηριότητα στον υπολογιστή μετά το 20:35
-            </p>
-        </div>
-    </div>
-
-    <div class="significance-box">
-        <h3 class="significance-title">
-            <span style="font-size: 20px;">💡</span>
-            ΣΗΜΑΣΙΑ ΓΙΑ ΤΗΝ ΕΡΕΥΝΑ
-        </h3>
-        <p class="significance-text">
-            Το email στάλθηκε από κοινόχρηστο υπολογιστή που δεν απαιτεί κωδικό - οποιοσδήποτε θα μπορούσε να το χρησιμοποιήσει. Ο 7ος όροφος δεν έχει κάμερες ασφαλείας στην αίθουσα συσκέψεων. Αν το θύμα δεν έγραψε το email, ο δράστης ήξερε ακριβώς πού να πάει για να μην αφήσει ίχνη. Το περιεχόμενο είναι υπερβολικά γενικό - δεν αναφέρει συγκεκριμένα γεγονότα, άτομα, ή λόγους. Από την άλλη, ίσως ένας άνθρωπος που αποφασίζει να αυτοκτονήσει να μην θέλει να μπει σε λεπτομέρειες. Η αποστολή 40 λεπτά πριν δίνει χρόνο για σκέψη - ή για κάποιον άλλον να ενεργήσει.
-        </p>
-    </div>
-
-    <div class="section">
-        <h3 class="section-title">
-            <span style="font-size: 24px;">❓</span>
-            Βασικά Ερωτήματα Διερεύνησης
-        </h3>
-        <ul class="section-content">
-            <li>Έγραψε πραγματικά το θύμα αυτό το email;</li>
-            <li>Ποιος είχε πρόσβαση στον 7ο όροφο εκείνη την ώρα;</li>
-            <li>Διατί χρησιμοποιήθηκε ο κοινόχρηστος υπολογιστής αντί του προσωπικού;</li>
-        </ul>
-    </div>
-</div>
+            </div>
         </div>
     </div>
 
@@ -785,10 +738,10 @@
     <script>
         window.goBackToCaseFile = function() {
             const teamCode = sessionStorage.getItem('teamCode');
-            console.log('Button clicked! Team:', teamCode);
+            console.log('🔙 Button clicked! Team:', teamCode);
             
             if (teamCode) {
-                window.location.href = 'index.html?team=' + teamCode + '&tab=evidence';
+                window.location.href = `index.html?team=${teamCode}&tab=evidence`;
             } else {
                 window.location.href = 'index.html?tab=evidence';
             }
@@ -798,106 +751,55 @@
             const canvas = document.getElementById('crimeSceneCanvas');
             const ctx = canvas.getContext('2d');
             
-            canvas.width = 800;
+			canvas.width = 800;
             canvas.height = 400;
 			
-            const bgGradient = ctx.createLinearGradient(0, 0, 0, 400);
-            bgGradient.addColorStop(0, '#2c3e50');
-            bgGradient.addColorStop(1, '#1a252f');
-            ctx.fillStyle = bgGradient;
+            const deskGradient = ctx.createLinearGradient(0, 0, 0, 400);
+            deskGradient.addColorStop(0, '#2d2d2d');
+            deskGradient.addColorStop(1, '#1a1a1a');
+            ctx.fillStyle = deskGradient;
             ctx.fillRect(0, 0, 800, 400);
-            ctx.fillStyle = '#e9ecef';
-            ctx.fillRect(150, 80, 500, 280);
-            ctx.fillStyle = '#6c757d';
-            ctx.fillRect(150, 80, 500, 40);
-            ctx.fillStyle = '#dc3545';
-            ctx.beginPath();
-            ctx.arc(625, 100, 8, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.fillStyle = '#fff';
-            ctx.fillRect(170, 140, 460, 30);
-            ctx.fillStyle = '#dc3545';
-            ctx.fillRect(175, 145, 80, 20);
-            ctx.fillStyle = '#fff';
-            ctx.fillRect(170, 180, 460, 160);
-            ctx.fillStyle = '#495057';
-            for (let i = 0; i < 8; i++) {
-                ctx.fillRect(180, 195 + i * 18, 440, 10);
-                ctx.fillRect(180, 195 + i * 18 + 3, Math.random() * 300 + 100, 4);
+            ctx.fillStyle = '#1a1a1a';
+            ctx.fillRect(150, 80, 500, 300);
+			
+            const screenGradient = ctx.createRadialGradient(400, 230, 50, 400, 230, 250);
+            screenGradient.addColorStop(0, '#4a90e2');
+            screenGradient.addColorStop(1, '#2c5f8d');
+            ctx.fillStyle = screenGradient;
+            ctx.fillRect(170, 100, 460, 260);
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(190, 120, 420, 35);
+            ctx.fillStyle = '#000';
+            ctx.font = 'bold 14px Arial';
+            ctx.fillText('Outlook - Αποστολή Μηνύματος', 200, 143);
+            ctx.fillStyle = 'rgba(255,255,255,0.9)';
+            ctx.fillRect(190, 165, 420, 2);
+            ctx.fillRect(190, 185, 420, 2);
+            ctx.fillRect(190, 205, 420, 2);
+
+            for(let i = 0; i < 6; i++) {
+                ctx.fillRect(190, 225 + i*18, 420, 2);
             }
 
-            ctx.fillStyle = 'rgba(220, 53, 69, 0.9)';
-            ctx.fillRect(40, 300, 200, 70);
-            ctx.strokeStyle = '#fff';
-            ctx.lineWidth = 2;
-            ctx.strokeRect(40, 300, 200, 70);
-            
+            ctx.fillStyle = '#ff6b00';
+            ctx.fillRect(505, 330, 105, 25);
             ctx.fillStyle = '#fff';
-            ctx.font = 'bold 14px monospace';
-            ctx.textAlign = 'left';
-            ctx.fillText('IP: 192.168.1.23', 50, 330);
-            ctx.font = '12px monospace';
-            ctx.fillText('7ος Όροφος', 50, 350);
-            ctx.fillText('Χωρίς κωδικό πρόσβασης', 50, 365);
+            ctx.font = 'bold 13px Arial';
+            ctx.fillText('ΑΠΟΣΤΟΛΗ', 520, 347);
             ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
             ctx.fillRect(0, 0, 800, 40);
-            
             ctx.fillStyle = '#ff0000';
             ctx.font = 'bold 14px monospace';
             ctx.textAlign = 'left';
-            ctx.fillText('REC', 15, 25);
-            
+            ctx.fillText('● REC', 10, 25);
             ctx.fillStyle = '#fff';
-            ctx.fillText('22/09/2025  20:35:42  |  ΑΙΘΟΥΣΑ ΣΥΝΕΔΡΙΩΝ - 7ος ΟΡΟΦΟΣ', 80, 25);
-            
+            ctx.fillText('22/09/2025  20:35:00  |  ΨΗΦΙΑΚΗ ΚΑΤΑΓΡΑΦΗ - ΑΙΘΟΥΣΑ ΣΥΣΚΕΨΕΩΝ', 80, 25);
             ctx.textAlign = 'right';
-            ctx.fillText('TEK #004', 790, 25);
+            ctx.fillText('ΤΕΚ #004', 790, 25);
         }
 
         window.onload = function() {
             drawCrimeScene();
-            const modelViewer = document.querySelector('model-viewer');
-            const debugInfo = document.getElementById('debugInfo');
-            
-            if (modelViewer) {
-                debugInfo.style.display = 'block';
-                debugInfo.innerHTML = 'Loading: email.glb<br>';
-                
-                modelViewer.addEventListener('progress', function(event) {
-                    const percent = Math.round(event.detail.totalProgress * 100);
-                    debugInfo.innerHTML = 'Loading: ' + percent + '%<br>';
-                });
-                
-                modelViewer.addEventListener('load', function() {
-                    debugInfo.innerHTML = '3D model loaded!<br>';
-                    debugInfo.style.background = '#d4edda';
-                    debugInfo.style.borderColor = '#28a745';
-                    setTimeout(function() {
-                        debugInfo.style.display = 'none';
-                    }, 3000);
-                });
-                
-                modelViewer.addEventListener('error', function(event) {
-                    debugInfo.innerHTML = 'ERROR: File cannot load<br>';
-                    debugInfo.innerHTML += 'Check:<br>';
-                    debugInfo.innerHTML += '1. File exists in same folder<br>';
-                    debugInfo.innerHTML += '2. Name is: email.glb<br>';
-                    debugInfo.innerHTML += '3. File is valid .glb<br>';
-                    debugInfo.style.background = '#f8d7da';
-                    debugInfo.style.borderColor = '#dc3545';
-                });
-                
-                setTimeout(function() {
-                    if (debugInfo.innerHTML.includes('Loading')) {
-                        debugInfo.innerHTML = 'Model not loading...<br>';
-                        debugInfo.innerHTML += 'Possible causes:<br>';
-                        debugInfo.innerHTML += '- File not found<br>';
-                        debugInfo.innerHTML += '- Wrong name: email.glb<br>';
-                        debugInfo.style.background = '#fff3cd';
-                        debugInfo.style.borderColor = '#ffc107';
-                    }
-                }, 10000);
-            }
         };
     </script>
 </body>
