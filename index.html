@@ -2,7 +2,8 @@
 <html lang="el">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="theme-color" content="#1a1a2e">
     <title>Φάκελος Υπόθεσης - Φεστιβάλ Αστυνομικής Λογοτεχνίας 2025</title>
 
     <script type="module">
@@ -21,18 +22,56 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-window.firebaseDB = db;
-window.firebaseDoc = doc;
-window.firebaseSetDoc = setDoc;
-window.firebaseGetDoc = getDoc;
-window.firebaseOnSnapshot = onSnapshot;
-window.firebaseCollection = collection;
-window.firebaseGetDocs = getDocs;
+        window.firebaseDB = db;
+        window.firebaseDoc = doc;
+        window.firebaseSetDoc = setDoc;
+        window.firebaseGetDoc = getDoc;
+        window.firebaseOnSnapshot = onSnapshot;
+        window.firebaseCollection = collection;
+        window.firebaseGetDocs = getDocs;
         
         console.log("✅ Firebase connected in index.html!");
     </script>
 
 <style>
+
+:root {
+    --color-primary: #ff6b00;
+    --color-primary-light: #ff8800;
+    --color-primary-dark: #e66000;
+    --color-bg-dark: #1a1a2e;
+    --color-bg-darker: #16213e;
+    --color-success: #28a745;
+    --color-success-light: #20c997;
+    --color-danger: #dc3545;
+    --color-danger-dark: #c82333;
+    --color-warning: #ffc107;
+    --color-info: #2196f3;
+    --color-text-dark: #1a1a2e;
+    --color-text-light: #fff;
+    --color-text-gray: #666;
+    --color-border: #ddd;
+    
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 1.5rem;
+    --spacing-lg: 2rem;
+    --spacing-xl: 3rem;
+    
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 12px;
+    --radius-xl: 15px;
+    
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.1);
+    --shadow-md: 0 4px 15px rgba(0,0,0,0.2);
+    --shadow-lg: 0 10px 40px rgba(0,0,0,0.3);
+    --shadow-primary: 0 4px 15px rgba(255,107,0,0.3);
+    
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -42,20 +81,25 @@ window.firebaseGetDocs = getDocs;
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     min-height: 100vh;
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    background: linear-gradient(135deg, var(--color-bg-dark) 0%, var(--color-bg-darker) 100%);
     position: relative;
     overflow-x: hidden;
+    line-height: 1.6;
 }
 
 .animated-background {
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    inset: 0;
     opacity: 0.1;
-    background-image: repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,107,0,0.5) 35px, rgba(255,107,0,0.5) 70px);
+    background-image: repeating-linear-gradient(
+        45deg, 
+        transparent, 
+        transparent 35px, 
+        rgba(255,107,0,0.5) 35px, 
+        rgba(255,107,0,0.5) 70px
+    );
     animation: slide 20s linear infinite;
+    pointer-events: none;
 }
 
 @keyframes slide {
@@ -63,10 +107,32 @@ body {
     100% { transform: translateX(70px); }
 }
 
+@keyframes swing {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-10deg); }
+    75% { transform: rotate(10deg); }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes blink {
+    0%, 80%, 100% { opacity: 0; }
+    40% { opacity: 1; }
+}
+
 .header {
-    background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
-    padding: clamp(20px, 4vw, 30px);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+    padding: clamp(1.25rem, 4vw, 1.875rem);
+    box-shadow: var(--shadow-lg);
     position: relative;
     z-index: 10;
     text-align: center;
@@ -74,51 +140,50 @@ body {
 
 .header h1 {
     color: #000;
-    font-size: clamp(18px, 5vw, 32px);
+    font-size: clamp(1.125rem, 5vw, 2rem);
     font-weight: bold;
     letter-spacing: clamp(1px, 0.3vw, 2px);
     text-shadow: 2px 2px 4px rgba(255,255,255,0.3);
-    margin-bottom: 10px;
+    margin-bottom: 0.625rem;
     word-wrap: break-word;
 }
 
 .header p {
     color: #1a1a1a;
-    font-size: clamp(13px, 3vw, 16px);
+    font-size: clamp(0.8125rem, 3vw, 1rem);
     font-weight: bold;
 }
 
 .team-info {
     background: rgba(0,0,0,0.2);
-    padding: clamp(8px, 2vw, 10px) clamp(15px, 3vw, 20px);
-    border-radius: 8px;
-    margin-top: 15px;
+    padding: clamp(0.5rem, 2vw, 0.625rem) clamp(0.9375rem, 3vw, 1.25rem);
+    border-radius: var(--radius-md);
+    margin-top: 0.9375rem;
     display: block;
     max-width: 96%;
-    margin-left: auto;
-    margin-right: auto;
+    margin-inline: auto;
 }
 
 .team-info strong {
-    color: #fff;
-    font-size: clamp(12px, 2.5vw, 14px);
+    color: var(--color-text-light);
+    font-size: clamp(0.75rem, 2.5vw, 0.875rem);
     text-transform: uppercase;
 }
 
 .logout-btn {
     position: absolute;
-    top: clamp(15px, 3vw, 20px);
-    right: clamp(10px, 2vw, 20px);
-    padding: clamp(10px, 2vw, 12px) clamp(12px, 2.5vw, 20px);
-    background: #dc3545;
+    top: clamp(0.9375rem, 3vw, 1.25rem);
+    right: clamp(0.625rem, 2vw, 1.25rem);
+    padding: clamp(0.625rem, 2vw, 0.75rem) clamp(0.75rem, 2.5vw, 1.25rem);
+    background: var(--color-danger);
     color: white;
     border: none;
-    border-radius: 8px;
+    border-radius: var(--radius-md);
     cursor: pointer;
-    font-size: clamp(11px, 2vw, 14px);
+    font-size: clamp(0.6875rem, 2vw, 0.875rem);
     font-weight: bold;
     box-shadow: 0 2px 8px rgba(220,53,69,0.3);
-    transition: all 0.2s ease;
+    transition: all var(--transition-fast);
     min-width: 44px;
     min-height: 44px;
     display: flex;
@@ -133,7 +198,7 @@ body {
 }
 
 .container {
-    padding: clamp(20px, 4vw, 40px) clamp(15px, 3vw, 20px);
+    padding: clamp(1.25rem, 4vw, 2.5rem) clamp(0.9375rem, 3vw, 1.25rem);
     max-width: 1400px;
     margin: 0 auto;
     position: relative;
@@ -142,35 +207,35 @@ body {
 
 .timer-section {
     background: rgba(255, 255, 255, 0.95);
-    border: 3px solid #17a2b8;
-    border-radius: 12px;
-    padding: clamp(15px, 3vw, 20px);
-    margin-bottom: 20px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    border: 3px solid var(--color-info);
+    border-radius: var(--radius-lg);
+    padding: clamp(0.9375rem, 3vw, 1.25rem);
+    margin-bottom: 1.25rem;
+    box-shadow: var(--shadow-lg);
     display: none;
 }
 
 .timer-section h2 {
-    color: #1a1a2e;
-    font-size: clamp(14px, 3vw, 16px);
-    margin-bottom: 15px;
+    color: var(--color-text-dark);
+    font-size: clamp(0.875rem, 3vw, 1rem);
+    margin-bottom: 0.9375rem;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 0.5rem;
     flex-wrap: wrap;
 }
 
 .timer-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 10px;
+    gap: 0.625rem;
 }
 
 .timer-box {
     background: #f8f9fa;
-    padding: clamp(12px, 2.5vw, 15px);
-    border-radius: 8px;
-    border-left: 4px solid #17a2b8;
+    padding: clamp(0.75rem, 2.5vw, 0.9375rem);
+    border-radius: var(--radius-md);
+    border-left: 4px solid var(--color-info);
     min-height: 70px;
     display: flex;
     flex-direction: column;
@@ -180,44 +245,44 @@ body {
 .timer-box strong {
     display: block;
     color: #0f3460;
-    font-size: clamp(10px, 2vw, 11px);
+    font-size: clamp(0.625rem, 2vw, 0.6875rem);
     margin-bottom: 6px;
     text-transform: uppercase;
 }
 
 .timer-box .value {
-    font-size: clamp(18px, 4vw, 20px);
+    font-size: clamp(1.125rem, 4vw, 1.25rem);
     font-weight: bold;
-    color: #17a2b8;
+    color: var(--color-info);
     font-family: monospace;
 }
 
 .tabs-container {
-    margin-bottom: clamp(25px, 5vw, 40px);
+    margin-bottom: clamp(1.5625rem, 5vw, 2.5rem);
 }
 
 .tabs-nav {
     display: flex;
-    gap: 8px;
-    margin-bottom: 25px;
+    gap: 0.5rem;
+    margin-bottom: 1.5625rem;
     flex-wrap: wrap;
     background: rgba(0, 0, 0, 0.2);
-    padding: clamp(12px, 2.5vw, 15px);
-    border-radius: 12px;
+    padding: clamp(0.75rem, 2.5vw, 0.9375rem);
+    border-radius: var(--radius-lg);
 }
 
 .tab-button {
     flex: 1 1 auto;
     min-width: clamp(120px, 30%, 150px);
-    padding: clamp(12px, 2.5vw, 15px) clamp(15px, 3vw, 20px);
+    padding: clamp(0.75rem, 2.5vw, 0.9375rem) clamp(0.9375rem, 3vw, 1.25rem);
     background: rgba(255, 255, 255, 0.1);
     border: 2px solid rgba(255, 107, 0, 0.3);
-    border-radius: 10px;
-    color: #fff;
-    font-size: clamp(11px, 2.5vw, 14px);
+    border-radius: var(--radius-md);
+    color: var(--color-text-light);
+    font-size: clamp(0.6875rem, 2.5vw, 0.875rem);
     font-weight: bold;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all var(--transition-normal);
     text-transform: uppercase;
     letter-spacing: 0.5px;
     min-height: 48px;
@@ -236,10 +301,23 @@ body {
 }
 
 .tab-button.active {
-    background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
-    border-color: #ff6b00;
-    box-shadow: 0 4px 15px rgba(255, 107, 0, 0.4);
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+    border-color: var(--color-primary);
+    box-shadow: var(--shadow-primary);
     color: #000;
+}
+
+.tabs-content {
+    position: relative;
+}
+
+.tab-pane {
+    display: none;
+    animation: fadeIn var(--transition-normal);
+}
+
+.tab-pane.active {
+    display: block;
 }
 
 .intro-box,
@@ -247,15 +325,15 @@ body {
 .timeline-box,
 .story-box {
     background: rgba(255, 255, 255, 0.95);
-    border: 3px solid #ff6b00;
-    border-radius: 12px;
-    padding: clamp(20px, 4vw, 30px);
-    margin-bottom: clamp(25px, 5vw, 40px);
-    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    border: 3px solid var(--color-primary);
+    border-radius: var(--radius-lg);
+    padding: clamp(1.25rem, 4vw, 1.875rem);
+    margin-bottom: clamp(1.5625rem, 5vw, 2.5rem);
+    box-shadow: var(--shadow-lg);
 }
 
 .forensic-box {
-    border-color: #28a745;
+    border-color: var(--color-success);
 }
 
 .timeline-box,
@@ -267,12 +345,12 @@ body {
 .forensic-box h2,
 .timeline-box h2,
 .story-box h2 {
-    color: #1a1a2e;
-    font-size: clamp(16px, 3.5vw, 18px);
+    color: var(--color-text-dark);
+    font-size: clamp(1rem, 3.5vw, 1.125rem);
     text-transform: uppercase;
     border-bottom: 2px solid #000;
-    padding-bottom: 8px;
-    margin-bottom: clamp(15px, 3vw, 20px);
+    padding-bottom: 0.5rem;
+    margin-bottom: clamp(0.9375rem, 3vw, 1.25rem);
     letter-spacing: 1px;
 }
 
@@ -282,8 +360,8 @@ body {
 .story-box p {
     color: #333;
     line-height: 1.7;
-    font-size: clamp(13px, 2.8vw, 14px);
-    margin: 12px 0;
+    font-size: clamp(0.8125rem, 2.8vw, 0.875rem);
+    margin: 0.75rem 0;
     text-align: justify;
     word-wrap: break-word;
 }
@@ -294,7 +372,7 @@ body {
 }
 
 .red-highlight {
-    color: #dc3545;
+    color: var(--color-danger);
     font-weight: bold;
     background: rgba(220,53,69,0.1);
     padding: 2px 6px;
@@ -302,11 +380,11 @@ body {
 }
 
 .timeline-item {
-    margin: 8px 0;
-    padding-left: clamp(18px, 4vw, 20px);
+    margin: 0.5rem 0;
+    padding-left: clamp(1.125rem, 4vw, 1.25rem);
     position: relative;
     color: #333;
-    font-size: clamp(12px, 2.8vw, 13px);
+    font-size: clamp(0.75rem, 2.8vw, 0.8125rem);
     line-height: 1.6;
     text-align: justify;
     word-wrap: break-word;
@@ -316,17 +394,17 @@ body {
     content: "◉";
     position: absolute;
     left: 0;
-    font-size: 11px;
+    font-size: 0.6875rem;
     color: #000;
 }
 
 .timeline-item strong {
-    color: #1a1a2e;
+    color: var(--color-text-dark);
     font-weight: 600;
 }
 
 .timeline-critical {
-    color: #dc3545;
+    color: var(--color-danger);
     font-weight: bold;
     background: rgba(220,53,69,0.1);
     padding: 2px 6px;
@@ -335,31 +413,31 @@ body {
 
 .progress-bar-container {
     background: rgba(255, 255, 255, 0.95);
-    border: 3px solid #ff6b00;
-    border-radius: 12px;
-    padding: clamp(20px, 4vw, 25px);
-    margin-bottom: clamp(25px, 5vw, 40px);
-    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    border: 3px solid var(--color-primary);
+    border-radius: var(--radius-lg);
+    padding: clamp(1.25rem, 4vw, 1.5625rem);
+    margin-bottom: clamp(1.5625rem, 5vw, 2.5rem);
+    box-shadow: var(--shadow-lg);
 }
 
 .progress-title {
-    color: #1a1a2e;
-    font-size: clamp(16px, 4vw, 20px);
-    margin-bottom: 15px;
+    color: var(--color-text-dark);
+    font-size: clamp(1rem, 4vw, 1.25rem);
+    margin-bottom: 0.9375rem;
     font-weight: bold;
 }
 
 .progress-bar {
     background: #e0e0e0;
-    height: clamp(25px, 5vw, 30px);
-    border-radius: 15px;
+    height: clamp(1.5625rem, 5vw, 1.875rem);
+    border-radius: var(--radius-xl);
     overflow: hidden;
     position: relative;
-    margin-bottom: 10px;
+    margin-bottom: 0.625rem;
 }
 
 .progress-fill {
-    background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
     height: 100%;
     transition: width 0.5s ease;
     display: flex;
@@ -367,23 +445,23 @@ body {
     justify-content: center;
     color: white;
     font-weight: bold;
-    font-size: clamp(12px, 3vw, 14px);
+    font-size: clamp(0.75rem, 3vw, 0.875rem);
 }
 
 .progress-text {
-    color: #666;
-    font-size: clamp(13px, 3vw, 16px);
+    color: var(--color-text-gray);
+    font-size: clamp(0.8125rem, 3vw, 1rem);
     text-align: center;
 }
 
 .section-title {
-    color: #fff;
-    margin-bottom: 25px;
-    font-size: clamp(18px, 4vw, 24px);
+    color: var(--color-text-light);
+    margin-bottom: 1.5625rem;
+    font-size: clamp(1.125rem, 4vw, 1.5rem);
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding-bottom: 10px;
+    gap: 0.625rem;
+    padding-bottom: 0.625rem;
     border-bottom: 2px solid rgba(255, 107, 0, 0.5);
     flex-wrap: wrap;
 }
@@ -391,17 +469,17 @@ body {
 .evidence-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
-    gap: clamp(15px, 3vw, 25px);
-    margin-bottom: clamp(25px, 5vw, 40px);
+    gap: clamp(0.9375rem, 3vw, 1.5625rem);
+    margin-bottom: clamp(1.5625rem, 5vw, 2.5rem);
 }
 
 .evidence-card {
     background: rgba(255, 255, 255, 0.95);
-    border: 3px solid #ff6b00;
-    border-radius: 12px;
-    padding: clamp(18px, 4vw, 25px);
-    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 3px solid var(--color-primary);
+    border-radius: var(--radius-lg);
+    padding: clamp(1.125rem, 4vw, 1.5625rem);
+    box-shadow: var(--shadow-lg);
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal);
     position: relative;
     min-height: 200px;
     display: flex;
@@ -422,20 +500,20 @@ body {
 .evidence-header {
     display: flex;
     align-items: center;
-    gap: clamp(10px, 2vw, 15px);
-    margin-bottom: 15px;
+    gap: clamp(0.625rem, 2vw, 0.9375rem);
+    margin-bottom: 0.9375rem;
 }
 
 .evidence-icon {
     width: clamp(50px, 10vw, 60px);
     height: clamp(50px, 10vw, 60px);
-    background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
-    border-radius: 12px;
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+    border-radius: var(--radius-lg);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: clamp(24px, 5vw, 30px);
-    box-shadow: 0 4px 15px rgba(255, 107, 0, 0.3);
+    font-size: clamp(1.5rem, 5vw, 1.875rem);
+    box-shadow: var(--shadow-primary);
     flex-shrink: 0;
 }
 
@@ -445,8 +523,8 @@ body {
 }
 
 .evidence-info h3 {
-    color: #1a1a2e;
-    font-size: clamp(16px, 3.5vw, 20px);
+    color: var(--color-text-dark);
+    font-size: clamp(1rem, 3.5vw, 1.25rem);
     margin-bottom: 5px;
     font-family: monospace;
     letter-spacing: 1px;
@@ -454,20 +532,20 @@ body {
 }
 
 .evidence-card.locked .evidence-info h3 {
-    color: #666;
+    color: var(--color-text-gray);
 }
 
 .evidence-info p {
-    color: #666;
-    font-size: clamp(12px, 2.5vw, 14px);
+    color: var(--color-text-gray);
+    font-size: clamp(0.75rem, 2.5vw, 0.875rem);
     line-height: 1.4;
 }
 
 .evidence-description {
     color: #333;
     line-height: 1.6;
-    margin-bottom: 20px;
-    font-size: clamp(12px, 2.8vw, 14px);
+    margin-bottom: 1.25rem;
+    font-size: clamp(0.75rem, 2.8vw, 0.875rem);
     flex-grow: 1;
 }
 
@@ -477,65 +555,39 @@ body {
 
 .evidence-actions {
     display: flex;
-    gap: 10px;
+    gap: 0.625rem;
     flex-wrap: wrap;
     margin-top: auto;
 }
 
-.btn {
-    padding: clamp(12px, 2.5vw, 14px) clamp(20px, 4vw, 24px);
-    border-radius: 8px;
-    font-weight: bold;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    font-size: clamp(12px, 2.8vw, 14px);
-    border: 2px solid transparent;
-    cursor: pointer;
-    min-height: 48px;
-    min-width: 48px;
-    text-align: center;
-}
-
-.btn:hover:not(:disabled),
-.btn:focus:not(:disabled) {
-    transform: translateY(-2px);
-    outline: none;
-}
-
-.btn-ar {
-    background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
+.critical-tag {
+    position: absolute;
+    top: clamp(0.75rem, 2.5vw, 0.9375rem);
+    right: clamp(0.75rem, 2.5vw, 0.9375rem);
+    background: var(--color-danger);
     color: white;
-    box-shadow: 0 4px 15px rgba(255, 107, 0, 0.3);
-}
-
-.btn-ar:hover:not(:disabled) {
-    box-shadow: 0 6px 20px rgba(255, 107, 0, 0.5);
-}
-
-.btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    background: #ccc;
-    color: #666;
-}
-
-.btn-primary {
-    background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
-    color: #000;
+    padding: clamp(3px, 1vw, 4px) clamp(6px, 1.5vw, 8px);
+    border-radius: 4px;
+    font-size: clamp(0.5625rem, 2vw, 0.6875rem);
     font-weight: bold;
+}
+
+.lock-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: clamp(2.25rem, 8vw, 3rem);
+    opacity: 0.3;
 }
 
 .status-badge {
     display: inline-block;
-    padding: clamp(5px, 1.5vw, 6px) clamp(10px, 2vw, 12px);
-    border-radius: 6px;
-    font-size: clamp(11px, 2.2vw, 12px);
+    padding: clamp(5px, 1.5vw, 6px) clamp(0.625rem, 2vw, 0.75rem);
+    border-radius: var(--radius-sm);
+    font-size: clamp(0.6875rem, 2.2vw, 0.75rem);
     font-weight: bold;
-    margin-top: 10px;
+    margin-top: 0.625rem;
 }
 
 .status-unlocked {
@@ -550,42 +602,20 @@ body {
     border: 1px solid #dee2e6;
 }
 
-.critical-tag {
-    position: absolute;
-    top: clamp(12px, 2.5vw, 15px);
-    right: clamp(12px, 2.5vw, 15px);
-    background: #dc3545;
-    color: white;
-    padding: clamp(3px, 1vw, 4px) clamp(6px, 1.5vw, 8px);
-    border-radius: 4px;
-    font-size: clamp(9px, 2vw, 11px);
-    font-weight: bold;
-}
-
-.lock-overlay {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: clamp(36px, 8vw, 48px);
-    opacity: 0.3;
-}
-
-
 .suspects-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
-    gap: clamp(18px, 4vw, 25px);
-    margin-top: 20px;
+    gap: clamp(1.125rem, 4vw, 1.5625rem);
+    margin-top: 1.25rem;
 }
 
 .suspect-card {
     background: rgba(255, 255, 255, 0.95);
-    border: 3px solid #dc3545;
-    border-radius: 12px;
-    padding: clamp(15px, 3vw, 20px);
+    border: 3px solid var(--color-danger);
+    border-radius: var(--radius-lg);
+    padding: clamp(0.9375rem, 3vw, 1.25rem);
     box-shadow: 0 10px 40px rgba(220, 53, 69, 0.3);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal);
 }
 
 .suspect-card:hover {
@@ -598,7 +628,7 @@ body {
     width: 100%;
     display: flex;
     justify-content: center;
-    margin-bottom: 15px;
+    margin-bottom: 0.9375rem;
 }
 
 .suspect-canvas {
@@ -614,32 +644,32 @@ body {
     position: absolute;
     top: -10px;
     right: 10px;
-    background: #dc3545;
+    background: var(--color-danger);
     color: white;
-    padding: clamp(4px, 1vw, 5px) clamp(10px, 2vw, 12px);
-    border-radius: 6px;
-    font-size: clamp(10px, 2vw, 11px);
+    padding: clamp(4px, 1vw, 5px) clamp(0.625rem, 2vw, 0.75rem);
+    border-radius: var(--radius-sm);
+    font-size: clamp(0.625rem, 2vw, 0.6875rem);
     font-weight: bold;
     box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
 }
 
 .suspect-details {
-    font-size: clamp(12px, 2.8vw, 13px);
+    font-size: clamp(0.75rem, 2.8vw, 0.8125rem);
     line-height: 1.6;
 }
 
 .suspect-details h3 {
-    color: #1a1a2e;
-    font-size: clamp(14px, 3vw, 16px);
-    margin-bottom: 12px;
-    padding-bottom: 8px;
-    border-bottom: 2px solid #dc3545;
+    color: var(--color-text-dark);
+    font-size: clamp(0.875rem, 3vw, 1rem);
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--color-danger);
     font-family: monospace;
     letter-spacing: 0.5px;
 }
 
 .suspect-field {
-    margin-bottom: 10px;
+    margin-bottom: 0.625rem;
     padding: clamp(6px, 1.5vw, 8px);
     background: rgba(0,0,0,0.02);
     border-radius: 4px;
@@ -648,39 +678,39 @@ body {
 }
 
 .suspect-field strong {
-    color: #dc3545;
+    color: var(--color-danger);
     display: block;
     margin-bottom: 3px;
-    font-size: clamp(10px, 2.2vw, 11px);
+    font-size: clamp(0.625rem, 2.2vw, 0.6875rem);
     letter-spacing: 0.5px;
 }
 
 .solution-form {
     background: white;
-    padding: clamp(20px, 4vw, 25px);
-    border-radius: 10px;
-    margin: 20px 0;
+    padding: clamp(1.25rem, 4vw, 1.5625rem);
+    border-radius: var(--radius-md);
+    margin: 1.25rem 0;
 }
 
 .solution-form h3 {
-    color: #1a1a2e;
-    margin-bottom: 20px;
-    font-size: clamp(16px, 3.5vw, 20px);
+    color: var(--color-text-dark);
+    margin-bottom: 1.25rem;
+    font-size: clamp(1rem, 3.5vw, 1.25rem);
 }
 
 .suspect-options {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr));
-    gap: clamp(12px, 2.5vw, 15px);
-    margin: 20px 0;
+    gap: clamp(0.75rem, 2.5vw, 0.9375rem);
+    margin: 1.25rem 0;
 }
 
 .suspect-option {
     background: #f8f9fa;
-    border: 2px solid #ddd;
-    border-radius: 10px;
-    padding: clamp(12px, 2.5vw, 15px);
-    transition: all 0.3s ease;
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: clamp(0.75rem, 2.5vw, 0.9375rem);
+    transition: all var(--transition-normal);
     cursor: pointer;
     min-height: 56px;
     display: flex;
@@ -688,7 +718,7 @@ body {
 }
 
 .suspect-option:hover {
-    border-color: #ff6b00;
+    border-color: var(--color-primary);
     background: #fff5f0;
     transform: translateY(-2px);
 }
@@ -696,7 +726,7 @@ body {
 .suspect-option input[type="checkbox"] {
     width: clamp(20px, 4vw, 24px);
     height: clamp(20px, 4vw, 24px);
-    margin-right: clamp(10px, 2vw, 12px);
+    margin-right: clamp(0.625rem, 2vw, 0.75rem);
     cursor: pointer;
     flex-shrink: 0;
 }
@@ -706,34 +736,34 @@ body {
     display: flex;
     align-items: center;
     font-weight: bold;
-    color: #1a1a2e;
-    font-size: clamp(13px, 2.8vw, 14px);
+    color: var(--color-text-dark);
+    font-size: clamp(0.8125rem, 2.8vw, 0.875rem);
     flex-grow: 1;
 }
 
 .suspect-option input[type="checkbox"]:checked + label {
-    color: #ff6b00;
+    color: var(--color-primary);
 }
 
 .form-group {
-    margin: clamp(18px, 4vw, 20px) 0;
+    margin: clamp(1.125rem, 4vw, 1.25rem) 0;
 }
 
 .form-group label {
     display: block;
     font-weight: bold;
-    color: #1a1a2e;
-    margin-bottom: 10px;
-    font-size: clamp(13px, 2.8vw, 14px);
+    color: var(--color-text-dark);
+    margin-bottom: 0.625rem;
+    font-size: clamp(0.8125rem, 2.8vw, 0.875rem);
 }
 
 .form-group textarea {
     width: 100%;
     min-height: clamp(120px, 25vw, 150px);
-    padding: clamp(12px, 2.5vw, 15px);
-    border: 2px solid #ddd;
-    border-radius: 8px;
-    font-size: clamp(13px, 2.8vw, 14px);
+    padding: clamp(0.75rem, 2.5vw, 0.9375rem);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-md);
+    font-size: clamp(0.8125rem, 2.8vw, 0.875rem);
     font-family: inherit;
     resize: vertical;
 }
@@ -741,30 +771,77 @@ body {
 .form-group input[type="number"] {
     width: 100%;
     max-width: 200px;
-    padding: clamp(10px, 2vw, 12px);
-    border: 2px solid #ddd;
-    border-radius: 8px;
-    font-size: clamp(14px, 3vw, 16px);
+    padding: clamp(0.625rem, 2vw, 0.75rem);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-md);
+    font-size: clamp(0.875rem, 3vw, 1rem);
     min-height: 48px;
 }
 
 .form-group textarea:focus,
 .form-group input:focus {
     outline: none;
-    border-color: #ff6b00;
+    border-color: var(--color-primary);
+}
+
+.btn {
+    padding: clamp(0.75rem, 2.5vw, 0.875rem) clamp(1.25rem, 4vw, 1.5rem);
+    border-radius: var(--radius-md);
+    font-weight: bold;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+    font-size: clamp(0.75rem, 2.8vw, 0.875rem);
+    border: 2px solid transparent;
+    cursor: pointer;
+    min-height: 48px;
+    min-width: 48px;
+    text-align: center;
+}
+
+.btn:hover:not(:disabled),
+.btn:focus:not(:disabled) {
+    transform: translateY(-2px);
+    outline: none;
+}
+
+.btn-ar {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+    color: white;
+    box-shadow: var(--shadow-primary);
+}
+
+.btn-ar:hover:not(:disabled) {
+    box-shadow: 0 6px 20px rgba(255, 107, 0, 0.5);
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #ccc;
+    color: var(--color-text-gray);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+    color: #000;
+    font-weight: bold;
 }
 
 .submit-btn {
-    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    background: linear-gradient(135deg, var(--color-success) 0%, var(--color-success-light) 100%);
     color: white;
-    padding: clamp(14px, 3vw, 16px) clamp(30px, 6vw, 40px);
+    padding: clamp(0.875rem, 3vw, 1rem) clamp(1.875rem, 6vw, 2.5rem);
     border: none;
-    border-radius: 10px;
-    font-size: clamp(15px, 3.5vw, 18px);
+    border-radius: var(--radius-md);
+    font-size: clamp(0.9375rem, 3.5vw, 1.125rem);
     font-weight: bold;
     cursor: pointer;
     box-shadow: 0 4px 15px rgba(40,167,69,0.3);
-    transition: all 0.2s ease;
+    transition: all var(--transition-fast);
     width: 100%;
     min-height: 56px;
 }
@@ -776,65 +853,112 @@ body {
 
 .info-box {
     background: #e3f2fd;
-    border-left: 4px solid #2196f3;
-    padding: clamp(12px, 2.5vw, 15px);
-    border-radius: 8px;
-    margin: 15px 0;
-    font-size: clamp(12px, 2.5vw, 13px);
+    border-left: 4px solid var(--color-info);
+    padding: clamp(0.75rem, 2.5vw, 0.9375rem);
+    border-radius: var(--radius-md);
+    margin: 0.9375rem 0;
+    font-size: clamp(0.75rem, 2.5vw, 0.8125rem);
     color: #0d47a1;
     line-height: 1.6;
 }
 
+.survey-tab-content {
+    text-align: center;
+    padding: clamp(1.875rem, 8vw, 3.75rem) clamp(1.25rem, 5vw, 2.5rem);
+}
+
+.survey-icon {
+    font-size: clamp(3.125rem, 15vw, 5rem);
+    margin-bottom: clamp(1.25rem, 5vw, 1.875rem);
+}
+
+.survey-title {
+    font-size: clamp(1.125rem, 4vw, 1.75rem) !important;
+    margin-bottom: clamp(0.9375rem, 4vw, 1.25rem) !important;
+}
+
+.intro-box .survey-btn.btn.btn-primary {
+    font-size: clamp(1rem, 3.5vw, 1.25rem);
+    padding: clamp(0.9375rem, 3vw, 1.25rem) clamp(1.875rem, 6vw, 3.125rem);
+}
+
+.stat-card {
+    background: white;
+    padding: 1.25rem 0.9375rem;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    text-align: center;
+}
+
+.stat-card h3 {
+    color: var(--color-text-gray);
+    font-size: clamp(0.6875rem, 2.5vw, 0.875rem);
+    margin-bottom: 0.625rem;
+    text-transform: uppercase;
+}
+
+.stat-card .value {
+    font-size: clamp(1.5rem, 6vw, 2rem);
+    font-weight: bold;
+    color: var(--color-primary);
+}
+
+.loading-dots {
+    display: inline-block;
+    margin-left: 5px;
+}
+
+.loading-dots span {
+    animation: blink 1.4s infinite;
+    animation-fill-mode: both;
+}
+
+.loading-dots span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.loading-dots span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
 .footer {
     background: rgba(255, 255, 255, 0.1);
-    padding: clamp(15px, 3vw, 20px);
+    padding: clamp(0.9375rem, 3vw, 1.25rem);
     text-align: center;
-    color: #fff;
+    color: var(--color-text-light);
     border-top: 2px solid rgba(255, 107, 0, 0.3);
-    margin-top: clamp(30px, 6vw, 40px);
+    margin-top: clamp(1.875rem, 6vw, 2.5rem);
 }
 
 .footer p {
     margin: 5px 0;
-    font-size: clamp(12px, 2.5vw, 14px);
+    font-size: clamp(0.75rem, 2.5vw, 0.875rem);
     opacity: 0.9;
 }
 
-.tabs-content {
-    position: relative;
+*:focus-visible {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
 }
 
-.tab-pane {
-    display: none;
-    animation: fadeIn 0.3s ease;
-}
-
-.tab-pane.active {
-    display: block;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+button:focus-visible,
+.btn:focus-visible,
+.tab-button:focus-visible {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
 }
 
 @media (min-width: 576px) {
     .header {
-        padding: 25px 20px;
+        padding: 1.5625rem 1.25rem;
     }
     
     .header h1 {
-        font-size: clamp(24px, 5vw, 28px);
+        font-size: clamp(1.5rem, 5vw, 1.75rem);
     }
     
     .tabs-nav {
-        gap: 10px;
+        gap: 0.625rem;
     }
     
     .tab-button {
@@ -858,19 +982,19 @@ body {
 
 @media (min-width: 768px) {
     .header {
-        padding: 30px 20px;
+        padding: 1.875rem 1.25rem;
     }
     
     .header h1 {
-        font-size: 32px;
+        font-size: 2rem;
     }
     
     .header p {
-        font-size: 16px;
+        font-size: 1rem;
     }
     
     .container {
-        padding: 40px 20px;
+        padding: 2.5rem 1.25rem;
     }
     
     .tabs-nav {
@@ -923,57 +1047,23 @@ body {
     }
 }
 
-
 @media (max-width: 768px) and (orientation: landscape) {
     .header {
-        padding: 15px 20px;
+        padding: 0.9375rem 1.25rem;
     }
     
     .container {
-        padding: 20px 15px;
+        padding: 1.25rem 0.9375rem;
     }
     
     .timer-section h2 {
-        font-size: 14px;
+        font-size: 0.875rem;
     }
     
     .tab-button {
-        padding: 10px 15px;
+        padding: 0.625rem 0.9375rem;
         min-height: 42px;
     }
-}
-
-
-*:focus-visible {
-    outline: 3px solid #ff6b00;
-    outline-offset: 2px;
-}
-
-button:focus-visible,
-.btn:focus-visible,
-.tab-button:focus-visible {
-    outline: 3px solid #ff6b00;
-    outline-offset: 2px;
-}
-
-.survey-tab-content {
-    text-align: center;
-    padding: clamp(30px, 8vw, 60px) clamp(20px, 5vw, 40px);
-}
-
-.survey-icon {
-    font-size: clamp(50px, 15vw, 80px);
-    margin-bottom: clamp(20px, 5vw, 30px);
-}
-
-.survey-title {
-    font-size: clamp(18px, 4vw, 28px) !important;
-    margin-bottom: clamp(15px, 4vw, 20px) !important;
-}
-
-.intro-box .survey-btn.btn.btn-primary {
-    font-size: clamp(16px, 3.5vw, 20px);
-    padding: clamp(15px, 3vw, 20px) clamp(30px, 6vw, 50px);
 }
 
 @media print {
@@ -986,63 +1076,13 @@ button:focus-visible,
     
     .container {
         max-width: 100%;
-        padding: 20px;
+        padding: 1.25rem;
     }
     
     .tab-pane {
         display: block !important;
     }
 }
-@keyframes swing {
-    0%, 100% { transform: rotate(0deg); }
-    25% { transform: rotate(-10deg); }
-    75% { transform: rotate(10deg); }
-}
-
-.loading-dots {
-    display: inline-block;
-    margin-left: 5px;
-}
-
-.loading-dots span {
-    animation: blink 1.4s infinite;
-    animation-fill-mode: both;
-}
-
-.loading-dots span:nth-child(2) {
-    animation-delay: 0.2s;
-}
-
-.loading-dots span:nth-child(3) {
-    animation-delay: 0.4s;
-}
-
-@keyframes blink {
-    0%, 80%, 100% { opacity: 0; }
-    40% { opacity: 1; }
-}
-
-.stat-card {
-    background: white;
-    padding: 20px 15px;
-    border-radius: 10px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-    text-align: center;
-}
-
-.stat-card h3 {
-    color: #666;
-    font-size: clamp(11px, 2.5vw, 14px);
-    margin-bottom: 10px;
-    text-transform: uppercase;
-}
-
-.stat-card .value {
-    font-size: clamp(24px, 6vw, 32px);
-    font-weight: bold;
-    color: #ff6b00;
-}
-
 </style>
 
 </head>
@@ -1050,7 +1090,7 @@ button:focus-visible,
 <body>
     <div class="animated-background"></div>
 
-<div class="header">
+    <div class="header">
         <h1>⚠️ ΦΑΚΕΛΟΣ ΥΠΟΘΕΣΗΣ ⚠️</h1>
         <div class="team-info" id="teamInfo" style="display: none;">
             <strong id="teamName"></strong>
@@ -1072,16 +1112,16 @@ button:focus-visible,
             </div>
         </div>
 
-<div class="tabs-container">
-    <div class="tabs-nav">
-        <button class="tab-button active" data-tab="intro">📋 ΠΕΡΙΣΤΑΤΙΚΟ</button>
-        <button class="tab-button" data-tab="forensics">🥼 ΙΑΤΡΟΔΙΚΑΣΤΙΚΗ & ΧΡΟΝΟΛΟΓΙΟ</button>
-        <button class="tab-button" data-tab="suspects">👥 ΚΑΤΑΛΟΓΟΣ ΥΠΟΠΤΩΝ</button>
-        <button class="tab-button" data-tab="evidence">📦 ΤΕΚΜΗΡΙΑ</button>
-        <button class="tab-button" data-tab="solution">✅ ΛΥΣΗ</button>
-        <button class="tab-button" data-tab="survey">📊 ΕΡΕΥΝΑ</button>
-        <button class="tab-button" data-tab="results">🏆 ΚΑΤΑΤΑΞΗ</button>
-    </div>
+        <div class="tabs-container">
+            <div class="tabs-nav">
+                <button class="tab-button active" data-tab="intro">📋 ΠΕΡΙΣΤΑΤΙΚΟ</button>
+                <button class="tab-button" data-tab="forensics">🥼 ΙΑΤΡΟΔΙΚΑΣΤΙΚΗ & ΧΡΟΝΟΛΟΓΙΟ</button>
+                <button class="tab-button" data-tab="suspects">👥 ΚΑΤΑΛΟΓΟΣ ΥΠΟΠΤΩΝ</button>
+                <button class="tab-button" data-tab="evidence">📦 ΤΕΚΜΗΡΙΑ</button>
+                <button class="tab-button" data-tab="solution">✅ ΛΥΣΗ</button>
+                <button class="tab-button" data-tab="survey">📊 ΕΡΕΥΝΑ</button>
+                <button class="tab-button" data-tab="results">🏆 ΚΑΤΑΤΑΞΗ</button>
+            </div>
 
             <div class="tabs-content">
                 <div class="tab-pane active" id="tab-intro">
@@ -1102,6 +1142,7 @@ button:focus-visible,
                         <p>Ωστόσο, η εξέταση της σκηνής και η ανάκριση του προσωπικού αποκάλυψαν ανωμαλίες που προκαλούν υποψίες...</p>
                     </div>
                 </div>
+
                 <div class="tab-pane" id="tab-forensics">
                     <div class="forensic-box">
                         <h2>🥼 ΙΑΤΡΟΔΙΚΑΣΤΙΚΗ ΕΚΘΕΣΗ</h2>
@@ -1112,6 +1153,7 @@ button:focus-visible,
                         <p><strong>ΤΡΑΥΜΑΤΑ:</strong> Κανένα αμυντικό τραύμα - το θύμα δεν αντιστάθηκε</p>
                         <p><strong>ΠΑΘΟΛΟΓΙΚΗ:</strong> <span class="red-highlight">Καρκίνος παγκρέατος τελικού σταδίου - προσδόκιμο ζωής 2-3 μήνες</span></p>
                     </div>
+
                     <div class="timeline-box">
                         <h2>🕐 ΧΡΟΝΟΛΟΓΙΟ ΣΥΜΒΑΝΤΩΝ</h2>
                         <div class="timeline-item"><strong>17:30-18:30</strong> - Οι περισσότεροι υπάλληλοι αποχωρούν από το κτίριο</div>
@@ -1139,8 +1181,7 @@ button:focus-visible,
 
                     <h2 class="section-title">📦 ΤΕΚΜΗΡΙΑ ΑΠΟ ΤΟ ΚΤΗΡΙΟ</h2>
 
-                    <div class="evidence-grid" id="evidenceGrid">
-                    </div>
+                    <div class="evidence-grid" id="evidenceGrid"></div>
                 </div>
 
                 <div class="tab-pane" id="tab-solution">
@@ -1204,7 +1245,7 @@ button:focus-visible,
                                 required
                             >
                             <p style="font-size: 12px; color: #666; margin-top: 5px;">
-                                Να γίνει υπό την επίβλεψη ενός Game Master.
+                                Θα γίνει υπό την επίβλεψη ενός Game Master.
                             </p>
                         </div>
 
@@ -1215,118 +1256,118 @@ button:focus-visible,
 
                     <div id="solutionResult" style="display: none;"></div>
                 </div>
-<div class="tab-pane" id="tab-survey">
-    <div class="intro-box survey-tab-content">
-        <div class="survey-icon">📊</div>
-        <h2 class="survey-title">ΕΡΕΥΝΑ ΑΞΙΟΛΟΓΗΣΗΣ ΑΠΟΨΕΩΝ & ΕΜΠΕΙΡΙΩΝ</h2>                     
-        <a href="#" 
-           onclick="openSurvey(); return false;" 
-           class="btn btn-primary" 
-           style="margin-top: 20px; font-size: clamp(16px, 3.5vw, 18px); padding: clamp(15px, 3vw, 18px) clamp(30px, 6vw, 40px);">
-            📊 ΜΕΤΑΒΑΣΗ ΣΤΟ ΕΡΩΤΗΜΑΤΟΛΟΓΙΟ
-        </a>
-    </div>
-</div>
 
-<div class="tab-pane" id="tab-results">
-    <div id="surveysIncomplete" style="display: none; padding-bottom: 80px;">
-        <div class="intro-box" style="text-align: center; padding: 60px 30px;">
-            <div style="font-size: clamp(80px, 20vw, 120px); margin-bottom: 30px;">🔒</div>
-            <h2 style="color: #1a1a2e; font-size: clamp(20px, 5vw, 28px); margin-bottom: 20px;">
-                Ολοκληρώστε Πρώτα τις Έρευνες
-            </h2>
-            <div style="background: #fff3cd; border: 2px solid #ffc107; border-radius: 12px; padding: 20px; margin: 20px auto; max-width: 500px;">
-                <div style="font-size: 24px; margin-bottom: 10px;">📝</div>
-                <div style="color: #856404; font-weight: bold; margin-bottom: 10px;">ΚΑΤΑΣΤΑΣΗ ΕΡΕΥΝΩΝ:</div>
-                <div id="surveyStatus" style="color: #666; font-size: 14px; line-height: 1.8;">
-                    <div id="preSurveyStatus">⏳ Έλεγχος...</div>
-                    <div id="postSurveyStatus">⏳ Έλεγχος...</div>
+                <div class="tab-pane" id="tab-survey">
+                    <div class="intro-box survey-tab-content">
+                        <div class="survey-icon">📊</div>
+                        <h2 class="survey-title">ΕΡΕΥΝΑ ΑΞΙΟΛΟΓΗΣΗΣ ΑΠΟΨΕΩΝ & ΕΜΠΕΙΡΙΩΝ</h2>                     
+                        <a href="#" 
+                           onclick="openSurvey(); return false;" 
+                           class="btn btn-primary" 
+                           style="margin-top: 20px; font-size: clamp(16px, 3.5vw, 18px); padding: clamp(15px, 3vw, 18px) clamp(30px, 6vw, 40px);">
+                            📊 ΜΕΤΑΒΑΣΗ ΣΤΟ ΕΡΩΤΗΜΑΤΟΛΟΓΙΟ
+                        </a>
+                    </div>
+                </div>
+
+                <div class="tab-pane" id="tab-results">
+                    <div id="surveysIncomplete" style="display: none; padding-bottom: 80px;">
+                        <div class="intro-box" style="text-align: center; padding: 60px 30px;">
+                            <div style="font-size: clamp(80px, 20vw, 120px); margin-bottom: 30px;">🔒</div>
+                            <h2 style="color: #1a1a2e; font-size: clamp(20px, 5vw, 28px); margin-bottom: 20px;">
+                                Ολοκληρώστε Πρώτα τις Έρευνες
+                            </h2>
+                            <div style="background: #fff3cd; border: 2px solid #ffc107; border-radius: 12px; padding: 20px; margin: 20px auto; max-width: 500px;">
+                                <div style="font-size: 24px; margin-bottom: 10px;">📋</div>
+                                <div style="color: #856404; font-weight: bold; margin-bottom: 10px;">ΚΑΤΑΣΤΑΣΗ ΕΡΕΥΝΩΝ:</div>
+                                <div id="surveyStatus" style="color: #666; font-size: 14px; line-height: 1.8;">
+                                    <div id="preSurveyStatus">⏳ Έλεγχος...</div>
+                                    <div id="postSurveyStatus">⏳ Έλεγχος...</div>
+                                </div>
+                            </div>
+                            <a href="#" 
+                               onclick="window.location.href='survey.html?team=' + encodeURIComponent(sessionStorage.getItem('teamCode')) + '&member=' + encodeURIComponent(sessionStorage.getItem('memberName')); return false;"
+                               class="btn btn-primary" 
+                               style="margin-top: 20px; font-size: clamp(16px, 3.5vw, 18px); padding: clamp(15px, 3vw, 18px) clamp(30px, 6vw, 40px);">
+                                📊 ΜΕΤΑΒΑΣΗ ΣΤΟ ΕΡΩΤΗΜΑΤΟΛΟΓΙΟ
+                            </a>
+                        </div>
+                    </div>
+
+                    <div id="leaderboardLocked" style="display: none; padding-bottom: 80px;">
+                        <div class="intro-box" style="text-align: center; padding: 60px 30px;">
+                            <div style="font-size: clamp(80px, 20vw, 120px); margin-bottom: 30px; animation: swing 3s ease-in-out infinite;">
+                                🔒
+                            </div>
+                            <h2 style="color: #1a1a2e; font-size: clamp(20px, 5vw, 28px); margin-bottom: 20px;">
+                                ΤΑ ΑΠΟΤΕΛΕΣΜΑΤΑ ΔΕΙΝΑΙ ΑΚΟΜΑ ΔΙΑΘΕΣΙΜΑ
+                            </h2>
+                            <div style="background: #d4edda; border: 2px solid #28a745; border-radius: 12px; padding: 20px; margin: 30px auto; max-width: 500px;">
+                                <div style="font-size: 24px; margin-bottom: 10px;">✓</div>
+                                <div style="color: #155724; font-weight: bold;">
+                                    Η ΣΕΛΙΔΑ ΘΑ ΑΝΑΝΕΩΘΕΙ ΟΤΑΝ ΟΛΕΣ ΟΙ ΟΜΑΔΕΣ ΟΛΟΚΛΗΡΩΣΟΥΝ ΤΗΝ ΕΡΕΥΝΑ ΤΟΥΣ!!<br>
+                                </div>
+                            </div>
+                            <p style="margin-top: 30px; color: #999; font-size: 14px;">
+                                Έλεγχος ενημερώσεων<span class="loading-dots"><span>.</span><span>.</span><span>.</span></span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div id="leaderboardUnlocked" style="display: none; padding-bottom: 80px;">
+                        <div class="stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 25px;">
+                            <div class="stat-card">
+                                <h3>Σύνολο Υποβολών</h3>
+                                <div class="value" id="totalTeams">-</div>
+                            </div>
+                            <div class="stat-card">
+                                <h3>Τέλειες Λύσεις</h3>
+                                <div class="value" id="perfectScores">-</div>
+                            </div>
+                            <div class="stat-card">
+                                <h3>Μέσος Όρος Βαθμών</h3>
+                                <div class="value" id="avgScore">-</div>
+                            </div>
+                            <div class="stat-card">
+                                <h3>Μέσος Χρόνος</h3>
+                                <div class="value" id="avgTime">-</div>
+                            </div>
+                        </div>
+
+                        <div style="background: white; border-radius: 15px; padding: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); overflow-x: auto;">
+                            <h2 style="color: #1a1a2e; font-size: clamp(18px, 4vw, 24px); margin-bottom: 20px; padding-bottom: 15px; border-bottom: 3px solid #ff6b00;">
+                                🏆 ΚΑΤΑΤΑΞΗ ΟΜΑΔΩΝ
+                            </h2>
+                            <table id="resultsTable" style="width: 100%; border-collapse: collapse; min-width: 650px; display: none;">
+                                <thead>
+                                    <tr style="background: linear-gradient(135deg, #0f3460 0%, #16213e 100%); color: white;">
+                                        <th style="padding: 12px 10px; text-align: left; font-size: clamp(11px, 2vw, 13px); text-transform: uppercase;">Θέση</th>
+                                        <th style="padding: 12px 10px; text-align: left; font-size: clamp(11px, 2vw, 13px); text-transform: uppercase;">Ομάδα</th>
+                                        <th style="padding: 12px 10px; text-align: left; font-size: clamp(11px, 2vw, 13px); text-transform: uppercase;">Βαθμολογία</th>
+                                        <th style="padding: 12px 10px; text-align: left; font-size: clamp(11px, 2vw, 13px); text-transform: uppercase;">Τίτλος</th>
+                                        <th style="padding: 12px 10px; text-align: left; font-size: clamp(11px, 2vw, 13px); text-transform: uppercase;">Χρόνος</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="resultsTableBody">
+                                    <tr>
+                                        <td colspan="5" style="text-align: center; padding: 40px; color: #666;">Φόρτωση...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div id="resultsCards" style="display: none;"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <a href="#" 
-               onclick="window.location.href='survey.html?team=' + encodeURIComponent(sessionStorage.getItem('teamCode')) + '&member=' + encodeURIComponent(sessionStorage.getItem('memberName')); return false;"
-               class="btn btn-primary" 
-               style="margin-top: 20px; font-size: clamp(16px, 3.5vw, 18px); padding: clamp(15px, 3vw, 18px) clamp(30px, 6vw, 40px);">
-                📊 ΜΕΤΑΒΑΣΗ ΣΤΟ ΕΡΩΤΗΜΑΤΟΛΟΓΙΟ
-            </a>
         </div>
-    </div>
 
-    <div id="leaderboardLocked" style="display: none; padding-bottom: 80px;">
-        <div class="intro-box" style="text-align: center; padding: 60px 30px;">
-            <div style="font-size: clamp(80px, 20vw, 120px); margin-bottom: 30px; animation: swing 3s ease-in-out infinite;">
-                🔒
-            </div>
-            <h2 style="color: #1a1a2e; font-size: clamp(20px, 5vw, 28px); margin-bottom: 20px;">
-                ΤΑ ΑΠΟΤΕΛΕΣΜΑΤΑ ΔΕΝ ΕΙΝΑΙ ΑΚΟΜΑ ΔΙΑΘΕΣΙΜΑ
-            </h2>
-            <div style="background: #d4edda; border: 2px solid #28a745; border-radius: 12px; padding: 20px; margin: 30px auto; max-width: 500px;">
-                <div style="font-size: 24px; margin-bottom: 10px;"></div>
-                <div style="color: #155724; font-weight: bold;">
-                    Η ΣΕΛΙΔΑ ΘΑ ΑΝΑΝΕΩΘΕΙ ΟΤΑΝ ΟΛΕΣ ΟΙ ΟΜΑΔΕΣ ΟΛΟΚΛΗΡΩΣΟΥΝ ΤΗΝ ΕΡΕΥΝΑ ΤΟΥΣ!!<br>
-                </div>
-            </div>
-            <p style="margin-top: 30px; color: #999; font-size: 14px;">
-                Έλεγχος ενημερώσεων<span class="loading-dots"><span>.</span><span>.</span><span>.</span></span>
+        <div class="footer">
+            <p><strong>ΦΕΣΤΙΒΑΛ ΑΣΤΥΝΟΜΙΚΗΣ ΛΟΓΟΤΕΧΝΙΑΣ 2025</strong></p>
+            <p style="margin-top: 10px; opacity: 0.7; font-size: 12px;">
+                11 ΤΕΚΜΗΡΙΑ | 5 ΥΠΟΠΤΟΙ | 1 ΑΛΗΘΕΙΑ
             </p>
         </div>
     </div>
-    <div id="leaderboardUnlocked" style="display: none; padding-bottom: 80px;">
-        <div class="stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 25px;">
-            <div class="stat-card" style="background: white; padding: 20px 15px; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); text-align: center;">
-                <h3 style="color: #666; font-size: clamp(11px, 2.5vw, 14px); margin-bottom: 10px; text-transform: uppercase;">Σύνολο Υποβολών</h3>
-                <div class="value" id="totalTeams" style="font-size: clamp(24px, 6vw, 32px); font-weight: bold; color: #ff6b00;">-</div>
-            </div>
-            <div class="stat-card" style="background: white; padding: 20px 15px; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); text-align: center;">
-                <h3 style="color: #666; font-size: clamp(11px, 2.5vw, 14px); margin-bottom: 10px; text-transform: uppercase;">Τέλειες Λύσεις</h3>
-                <div class="value" id="perfectScores" style="font-size: clamp(24px, 6vw, 32px); font-weight: bold; color: #ff6b00;">-</div>
-            </div>
-            <div class="stat-card" style="background: white; padding: 20px 15px; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); text-align: center;">
-                <h3 style="color: #666; font-size: clamp(11px, 2.5vw, 14px); margin-bottom: 10px; text-transform: uppercase;">Μέσος Όρος Βαθμών</h3>
-                <div class="value" id="avgScore" style="font-size: clamp(24px, 6vw, 32px); font-weight: bold; color: #ff6b00;">-</div>
-            </div>
-            <div class="stat-card" style="background: white; padding: 20px 15px; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); text-align: center;">
-                <h3 style="color: #666; font-size: clamp(11px, 2.5vw, 14px); margin-bottom: 10px; text-transform: uppercase;">Μέσος Χρόνος</h3>
-                <div class="value" id="avgTime" style="font-size: clamp(16px, 4vw, 20px); font-weight: bold; color: #ff6b00;">-</div>
-            </div>
-        </div>
-
-        <div style="background: white; border-radius: 15px; padding: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); overflow-x: auto;">
-            <h2 style="color: #1a1a2e; font-size: clamp(18px, 4vw, 24px); margin-bottom: 20px; padding-bottom: 15px; border-bottom: 3px solid #ff6b00;">
-                🏆 ΚΑΤΑΤΑΞΗ ΟΜΑΔΩΝ
-            </h2>
-            <table id="resultsTable" style="width: 100%; border-collapse: collapse; min-width: 650px; display: none;">
-                <thead>
-                    <tr style="background: linear-gradient(135deg, #0f3460 0%, #16213e 100%); color: white;">
-                        <th style="padding: 12px 10px; text-align: left; font-size: clamp(11px, 2vw, 13px); text-transform: uppercase;">Θέση</th>
-                        <th style="padding: 12px 10px; text-align: left; font-size: clamp(11px, 2vw, 13px); text-transform: uppercase;">Ομάδα</th>
-                        <th style="padding: 12px 10px; text-align: left; font-size: clamp(11px, 2vw, 13px); text-transform: uppercase;">Βαθμολογία</th>
-                        <th style="padding: 12px 10px; text-align: left; font-size: clamp(11px, 2vw, 13px); text-transform: uppercase;">Τίτλος</th>
-                        <th style="padding: 12px 10px; text-align: left; font-size: clamp(11px, 2vw, 13px); text-transform: uppercase;">Χρόνος</th>
-                    </tr>
-                </thead>
-                <tbody id="resultsTableBody">
-                    <tr>
-                        <td colspan="5" style="text-align: center; padding: 40px; color: #666;">Φόρτωση...</td>
-                    </tr>
-                </tbody>
-            </table>
-            <div id="resultsCards" style="display: none;"></div>
-        </div>
-    </div>
-</div>
-
-</div> 
-
-<div class="footer">
-    <p><strong>ΦΕΣΤΙΒΑΛ ΑΣΤΥΝΟΜΙΚΗΣ ΛΟΓΟΤΕΧΝΙΑΣ 2025</strong></p>
-    <p style="margin-top: 10px; opacity: 0.7; font-size: 12px;">
-        11 ΤΕΚΜΗΡΙΑ | 5 ΥΠΟΠΤΟΙ | 1 ΑΛΗΘΕΙΑ
-    </p>
-</div>
-
-</div>
-</div>
 
 <script src="suspects.js"></script>
 
@@ -1423,157 +1464,158 @@ const StorageManager = {
         }
     }
 };
-    const teks = [
-        {
-            id: '1',
-            name: 'Μπουκάλι Ουίσκι',
-            subtitle: 'Μπουκάλι Jack Daniels',
-            icon: '🍾',
-            description: '<strong>Τοποθεσία:</strong> Γραφείο θύματος<br><strong>Ευρήματα:</strong> Κυάνιο στον πάτο<strong>Αποτυπώματα:</strong> Δημητρίου, Παπαδοπούλου, Αναγνώστου, Πετρόπουλου',
-            page: 'TEK1_AR.html',
-            critical: true
-        },
-            {
-                id: '2',
-                name: 'Κρυστάλλινα Ποτήρια',
-                subtitle: 'Κρυστάλλινα Ποτήρια',
-                icon: '🥃',
-                description: '<strong>Ποτήρι Α:</strong> DNA / Αποτυπώματα Δημητρίου + κυάνιο <br><strong>Ποτήρι Β:</strong> Μερικό DNA (υπό ανάλυση) + ουίσκι + αποτυπώματα μερικώς σβησμένα',
-                page: 'TEK2_AR.html',
-                critical: true
-            },
-            {
-                id: '3',
-                name: 'Κινητό Θύματος',
-                subtitle: 'Κινητό Θύματος',
-                icon: '📱',
-                description: '<strong>SMS 20:45:</strong> «Θα τελειώσει απόψε»<br><strong>Προέλευση:</strong> Προπληρωμένη κάρτα, εντοπισμένη σε ακτίνα 250m από το κτίριο',
-                page: 'TEK3_AR.html',
-                critical: false,
-                threat: true
-            },
-            {
-                id: '4',
-                name: 'Email Αυτοκτονίας',
-                subtitle: 'Email «Αυτοκτονίας»',
-                icon: '💻',
-                description: '<strong>IP:</strong> 192.168.1.23 - 7ος όροφος<br><strong>Προέλευση:</strong> Κοινόχρηστος υπολογιστής αίθουσας συσκέψεων (δεν απαιτεί κωδικό)',
-                page: 'TEK4_AR.html',
-                critical: false,
-                forgery: true
-            },
-            {
-                id: '5',
-                name: 'Ιατρική Γνωμάτευση',
-                subtitle: 'Ιατρική Γνωμάτευση (Κρυφή)',
-                icon: '🥼',
-                description: '<strong>Διάγνωση:</strong> Καρκίνος παγκρέατος σταδίου IV<br><strong>Ημερομηνία:</strong> 28/08/2025<br><strong>Πρόγνωση:</strong> 2-3 μήνες ζωής<br><strong>Γιατρός:</strong> Δρ. Σταυρίδης',
-                page: 'TEK5_AR.html',
-                critical: false,
-                secret: true
-            },
-            {
-                id: '6',
-                name: 'Γάντια Λάτεξ',
-                subtitle: 'Ίχνη Γαντιών Λάτεξ',
-                icon: '🧤',
-                description: '<strong>Τοποθεσία:</strong> Πόμολο πόρτας (εσωτερικά)<br><strong>Τύπος:</strong> Γάντια ιατρικού τύπου<br><strong>Πρόσβαση:</strong> Όλο το προσωπικό',
-                page: 'TEK6_AR.html',
-                critical: false,
-                clue: true
-            },
-            {
-                id: '7',
-                name: 'Χειρόγραφο Σημείωμα',
-                subtitle: 'Χειρόγραφο Σημείωμα',
-                icon: '✍️',
-                description: '<strong>Κείμενο:</strong> «Συγχώρεσέ με Μ.»<br><strong>Ανάλυση:</strong> Μίμηση γραφικού χαρακτήρα (68% ταύτιση, πίεση ασυνεπής)',
-                page: 'TEK7_AR.html',
-                critical: false,
-                forgery: true
-            },
-			{
-				id: '8',
-				name: 'Φάκελος Εμπιστευτικό',
-				subtitle: 'Φάκελος «ΕΜΠΙΣΤΕΥΤΙΚΟ»',
-				icon: '📂',
-				description: '<strong>Περιεχόμενα:</strong><br>• Υποψίες υπεξαίρεσης (Αναγνώστου)<br>• Ερωτικές φωτογραφίες (Μαυρίδη)<br>• Κλοπή χειρογράφων (Νικολάου)<br>• Απλήρωτοι μισθοί (Παπαδοπούλου)<br>• Χρέη (Πετρόπουλος)',
-				page: 'TEK8_AR.html',
-				critical: false,
-				blackmail: true
-			},
-            {
-                id: '9',
-                name: 'Απόδειξη Χημικών',
-                subtitle: 'Απόδειξη Αγοράς Χημικών',
-                icon: '🧪',
-                description: '<strong>Ημερομηνία:</strong> 19/09, 14:30<br><strong>Αγορά:</strong> Κυανιούχο κάλιο από «ΧημικάPlus»<br><strong>Άδεια:</strong> Επαγγελματική<br><strong>Υπογραφή:</strong> Γ. Πετρόπουλος (υπό γραφολογική εξέταση)',
-                page: 'TEK9_AR.html',
-                critical: true
-            },
-            {
-                id: '10',
-                name: 'Κλειδί Χρηματοκιβωτίου',
-                subtitle: 'Κλειδί Χρηματοκιβωτίου',
-                icon: '🔑',
-                description: '<strong>Αποτυπώματα:</strong> Δημητρίου, Αναγνώστου<br><strong>Ίχνη:</strong> Σκόνη ταλκ (από latex γάντια)',
-                page: 'TEK10_AR.html',
-                critical: false,
-                financial: true
-            },
-            {
-                id: '11',
-                name: 'Κάμερες Ασφαλείας',
-                subtitle: 'Κάμερες Ασφαλείας',
-                icon: '📹',
-                description: '<strong>Απενεργοποίηση:</strong> 20:55<br><strong>Τετράδιο Συμβάντων:</strong> «20:58 - Τεχνική βλάβη CCTV»<br><strong>Υπογραφή:</strong> ΠΕΤΡΟΠΟΥΛΟΣ Γ. (γνησιότητα υπό εξέταση)',
-                page: 'TEK11_AR.html',
-                critical: false,
-                sabotage: true
-            }
-        ];
 
-        const CORRECT_SUSPECTS = ['konstantinos', 'georgios', 'eleni'];
-        const SUSPECT_NAMES = {
-            'maria': 'Παπαδοπούλου Μαρία',
-            'konstantinos': 'Αναγνώστου Κωνσταντίνος',
-            'eleni': 'Μαυρίδη Ελένη',
-            'georgios': 'Πετρόπουλος Γεώργιος',
-            'alexandra': 'Νικολάου Αλεξάνδρα',
-            'suicide': 'Αυτοκτονία'
-        };
+const teks = [
+    {
+        id: '1',
+        name: 'Μπουκάλι Ουίσκι',
+        subtitle: 'Μπουκάλι Jack Daniels',
+        icon: '🥾',
+        description: '<strong>Τοποθεσία:</strong> Γραφείο θύματος<br><strong>Ευρήματα:</strong> Κυάνιο στον πάτο<br><strong>Αποτυπώματα:</strong> Δημητρίου, Παπαδοπούλου, Αναγνώστου, Πετρόπουλου',
+        page: 'TEK1_AR.html',
+        critical: true
+    },
+    {
+        id: '2',
+        name: 'Κρυστάλλινα Ποτήρια',
+        subtitle: 'Κρυστάλλινα Ποτήρια',
+        icon: '🥃',
+        description: '<strong>Ποτήρι Α:</strong> DNA / Αποτυπώματα Δημητρίου + κυάνιο <br><strong>Ποτήρι Β:</strong> Μερικό DNA (υπό ανάλυση) + ουίσκι + αποτυπώματα μερικώς σβησμένα',
+        page: 'TEK2_AR.html',
+        critical: true
+    },
+    {
+        id: '3',
+        name: 'Κινητό Θύματος',
+        subtitle: 'Κινητό Θύματος',
+        icon: '📱',
+        description: '<strong>SMS 20:45:</strong> «Θα τελειώσει απόψε»<br><strong>Προέλευση:</strong> Προπληρωμένη κάρτα, εντοπισμένη σε ακτίνα 250m από το κτίριο',
+        page: 'TEK3_AR.html',
+        critical: false,
+        threat: true
+    },
+    {
+        id: '4',
+        name: 'Email Αυτοκτονίας',
+        subtitle: 'Email «Αυτοκτονίας»',
+        icon: '💻',
+        description: '<strong>IP:</strong> 192.168.1.23 - 7ος όροφος<br><strong>Προέλευση:</strong> Κοινόχρηστος υπολογιστής αίθουσας συσκέψεων (δεν απαιτείται κωδικός)',
+        page: 'TEK4_AR.html',
+        critical: false,
+        forgery: true
+    },
+    {
+        id: '5',
+        name: 'Ιατρική Γνωμάτευση',
+        subtitle: 'Ιατρική Γνωμάτευση (Κρυφή)',
+        icon: '🥼',
+        description: '<strong>Διάγνωση:</strong> Καρκίνος παγκρέατος σταδίου IV<br><strong>Ημερομηνία:</strong> 28/08/2025<br><strong>Πρόγνωση:</strong> 2-3 μήνες ζωής<br><strong>Διατρός:</strong> Δρ. Σταυρίδης',
+        page: 'TEK5_AR.html',
+        critical: false,
+        secret: true
+    },
+    {
+        id: '6',
+        name: 'Γάντια Λάτεξ',
+        subtitle: 'Ίχνη Γαντιών Λάτεξ',
+        icon: '🧤',
+        description: '<strong>Τοποθεσία:</strong> Πόμολο πόρτας (εσωτερικά)<br><strong>Τύπος:</strong> Γάντια ιατρικού τύπου<br><strong>Πρόσβαση:</strong> Όλο το προσωπικό',
+        page: 'TEK6_AR.html',
+        critical: false,
+        clue: true
+    },
+    {
+        id: '7',
+        name: 'Χειρόγραφο Σημείωμα',
+        subtitle: 'Χειρόγραφο Σημείωμα',
+        icon: '✍️',
+        description: '<strong>Κείμενο:</strong> «Συγχώρεσέ με Μ.»<br><strong>Ανάλυση:</strong> Μίμηση γραφικού χαρακτήρα (68% ταύτιση, πίεση ασυνεπής)',
+        page: 'TEK7_AR.html',
+        critical: false,
+        forgery: true
+    },
+    {
+        id: '8',
+        name: 'Φάκελος Εμπιστευτικό',
+        subtitle: 'Φάκελος «ΕΜΠΙΣΤΕΥΤΙΚΟ»',
+        icon: '📂',
+        description: '<strong>Περιεχόμενα:</strong><br>• Υποψίες υπεξαίρεσης (Αναγνώστου)<br>• Ερωτικές φωτογραφίες (Μαυρίδη)<br>• Κλοπή χειρογράφων (Νικολάου)<br>• Απλήρωτοι μισθοί (Παπαδοπούλου)<br>• Χρέη (Πετρόπουλος)',
+        page: 'TEK8_AR.html',
+        critical: false,
+        blackmail: true
+    },
+    {
+        id: '9',
+        name: 'Απόδειξη Χημικών',
+        subtitle: 'Απόδειξη Αγοράς Χημικών',
+        icon: '🧪',
+        description: '<strong>Ημερομηνία:</strong> 19/09, 14:30<br><strong>Αγορά:</strong> Κυανιούχο κάλιο από «ΧημικάPlus»<br><strong>Άδεια:</strong> Επαγγελματική<br><strong>Υπογραφή:</strong> Γ. Πετρόπουλος (υπό γραφολογική εξέταση)',
+        page: 'TEK9_AR.html',
+        critical: true
+    },
+    {
+        id: '10',
+        name: 'Κλειδί Χρηματοκιβωτίου',
+        subtitle: 'Κλειδί Χρηματοκιβωτίου',
+        icon: '🔑',
+        description: '<strong>Αποτυπώματα:</strong> Δημητρίου, Αναγνώστου<br><strong>Ίχνη:</strong> Σκόνη ταλκ (από latex γάντια)',
+        page: 'TEK10_AR.html',
+        critical: false,
+        financial: true
+    },
+    {
+        id: '11',
+        name: 'Κάμερες Ασφαλείας',
+        subtitle: 'Κάμερες Ασφαλείας',
+        icon: '📹',
+        description: '<strong>Απενεργοποίηση:</strong> 20:55<br><strong>Τετράδιο Συμβάντων:</strong> «20:58 - Τεχνική βλάβη CCTV»<br><strong>Υπογραφή:</strong> ΠΕΤΡΟΠΟΥΛΟΣ Γ. (γνησιότητα υπό εξέταση)',
+        page: 'TEK11_AR.html',
+        critical: false,
+        sabotage: true
+    }
+];
+
+const CORRECT_SUSPECTS = ['konstantinos', 'georgios', 'eleni'];
+const SUSPECT_NAMES = {
+    'maria': 'Παπαδοπούλου Μαρία',
+    'konstantinos': 'Αναγνώστου Κωνσταντίνος',
+    'eleni': 'Μαυρίδη Ελένη',
+    'georgios': 'Πετρόπουλος Γεώργιος',
+    'alexandra': 'Νικολάου Αλεξάνδρα',
+    'suicide': 'Αυτοκτονία'
+};
 
 const SCORING = {
-            murder_diagnosis: 25,
-            cooperation: 20,
-            perpetrator: 15,
-            perfect_solution_bonus: 20,
-            evidence_use: 5,
-            prompts_1_5: 15,
-            prompts_6_10: 10,
-            prompts_11_15: 5,
-            time_under_30: 15,
-            time_30_45: 10,
-            time_45_60: 5
-        };
-		
-        const urlParams = new URLSearchParams(window.location.search);
-        let teamCode = sessionStorage.getItem('teamName') || urlParams.get('team') || 'default';
+    murder_diagnosis: 25,
+    cooperation: 20,
+    perpetrator: 15,
+    perfect_solution_bonus: 20,
+    evidence_use: 5,
+    prompts_1_5: 15,
+    prompts_6_10: 10,
+    prompts_11_15: 5,
+    time_under_30: 15,
+    time_30_45: 10,
+    time_45_60: 5
+};
 
-        if (teamCode !== 'default') {
-            const teamInfoDiv = document.getElementById('teamInfo');
-            const teamNameSpan = document.getElementById('teamName');
-            if (teamInfoDiv && teamNameSpan) {
-                teamInfoDiv.style.display = 'block';
-                teamNameSpan.textContent = `ΟΜΑΔΑ: ${teamCode.toUpperCase()}`;
-            }
-        }
+const urlParams = new URLSearchParams(window.location.search);
+let teamCode = sessionStorage.getItem('teamName') || urlParams.get('team') || 'default';
 
-        let timerInterval = null;
+if (teamCode !== 'default') {
+    const teamInfoDiv = document.getElementById('teamInfo');
+    const teamNameSpan = document.getElementById('teamName');
+    if (teamInfoDiv && teamNameSpan) {
+        teamInfoDiv.style.display = 'block';
+        teamNameSpan.textContent = `ΟΜΑΔΑ: ${teamCode.toUpperCase()}`;
+    }
+}
 
-        function getStorageKey() {
-            return `unlocked_teks_${teamCode}`;
-        }
+let timerInterval = null;
+
+function getStorageKey() {
+    return `unlocked_teks_${teamCode}`;
+}
 
 function openSurvey() {
     const teamCode = sessionStorage.getItem('teamCode');
@@ -1598,7 +1640,7 @@ function getUnlockedTeks() {
         if (data && typeof data === 'object' && !Array.isArray(data) && data.unlocked) {
             return Array.isArray(data.unlocked) ? data.unlocked : [];
         }
-		
+        
         if (Array.isArray(data)) {
             return data;
         }
@@ -1679,7 +1721,7 @@ async function getTeamData() {
                     evidenceTimestamps: parsed.evidenceTimestamps || {}
                 };
             }
-			
+            
             if (Array.isArray(parsed)) {
                 return {
                     password: null,
@@ -1735,9 +1777,7 @@ async function updateProgress(teamData) {
             document.getElementById('liveTimer').textContent = formatElapsedTime(teamData.totalTimeMs || 0);
             stopTimer();
         } else {
-
             document.getElementById('liveTimerLabel').textContent = 'Χρόνος σε Εξέλιξη:';
-
             if (!timerInterval) {
                 startLiveTimer(teamData.startTime);
             }
@@ -1760,7 +1800,7 @@ function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
             correctCount: 0
         };
     }
-	
+    
     const hasSuicide = selectedSuspects.includes('suicide');
     const hasKiller = selectedSuspects.some(s => s !== 'suicide');
     
@@ -1813,22 +1853,22 @@ function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
         }
     });
         
-    breakdown.push('✔ ΘΕΤΙΚΑ ΣΤΟΙΧΕΙΑ:');    
+    breakdown.push('✓ ΘΕΤΙΚΑ ΣΤΟΙΧΕΙΑ:');    
     
     score += SCORING.murder_diagnosis;
-    breakdown.push(`✔ Διάγνωση Δολοφονίας: +${SCORING.murder_diagnosis}`);
+    breakdown.push(`✓ Διάγνωση Δολοφονίας: +${SCORING.murder_diagnosis}`);
     
     if (correctCount > 0) {
         const points = correctCount * SCORING.perpetrator;
         score += points;
-        breakdown.push(`✔ Σωστοί Δράστες (${correctCount}/3): +${points}`);
+        breakdown.push(`✓ Σωστοί Δράστες (${correctCount}/3): +${points}`);
     } else {
         breakdown.push(`✗ Σωστοί Δράστες (0/3): +0`);
     }
     
     if (correctCount >= 2) {
         score += SCORING.cooperation;
-        breakdown.push(`✔ Εντοπισμός Συνεργασίας: +${SCORING.cooperation}`);
+        breakdown.push(`✓ Εντοπισμός Συνεργασίας: +${SCORING.cooperation}`);
     } else {
         breakdown.push(`✗ Εντοπισμός Συνεργασίας: +0 (απαιτούνται 2+ σωστοί)`);
     }
@@ -1837,16 +1877,16 @@ function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
     
     if (isPerfect) {
         score += SCORING.perfect_solution_bonus;
-        breakdown.push(`✔ Τέλεια Λύση (μόνο οι 3 σωστοί): +${SCORING.perfect_solution_bonus}`);
+        breakdown.push(`✓ Τέλεια Λύση (μόνο οι 3 σωστοί): +${SCORING.perfect_solution_bonus}`);
     } else if (correctCount >= 2) {
         score += SCORING.evidence_use;
-        breakdown.push(`✔ Χρήση Τεκμηρίων: +${SCORING.evidence_use}`);
+        breakdown.push(`✓ Χρήση Τεκμηρίων: +${SCORING.evidence_use}`);
     }
     
     if (wrongSuspects.length === 0 && correctCount > 0 && correctCount < 3) {
         const precisionBonus = correctCount * 15;
         score += precisionBonus;
-        breakdown.push(`✔ Bonus Ακρίβειας (0 λάθη, ${correctCount} σωστοί): +${precisionBonus}`);
+        breakdown.push(`✓ Bonus Ακρίβειας (0 λάθη, ${correctCount} σωστοί): +${precisionBonus}`);
     }
     
     if (totalTimeMs && correctCount >= 2) {
@@ -1880,7 +1920,7 @@ function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
         breakdown.push('');
         breakdown.push('✗ ΑΡΝΗΤΙΚΑ ΣΤΟΙΧΕΙΑ:');
     }
-	
+    
     if (wrongSuspects.length > 0) {
         let multiplier = 1.0;
         if (wrongSuspects.length === 1) {
@@ -1935,10 +1975,10 @@ async function submitSolution() {
         return;
     }
 
-if (promptCount === null || promptCount === undefined || promptCount < 0) {
-    alert('Παρακαλώ εισάγετε έγκυρο αριθμό prompts!');
-    return;
-}
+    if (promptCount === null || promptCount === undefined || promptCount < 0) {
+        alert('Παρακαλώ εισάγετε έγκυρο αριθμό prompts!');
+        return;
+    }
     
     const teamData = await getTeamData();
     if (teamData.unlocked.length < 6) {
@@ -1971,29 +2011,29 @@ if (promptCount === null || promptCount === undefined || promptCount < 0) {
         maxScore: scoreResult.maxScore,
         breakdown: scoreResult.breakdown,
         correctCount: scoreResult.correctCount,
-researchData: {
-    evidenceUnlockSequence: Object.keys(teamData.evidenceTimestamps || {}).sort((a, b) => {
-        return new Date(teamData.evidenceTimestamps[a]) - new Date(teamData.evidenceTimestamps[b]);
-    }),
-    totalEvidenceUnlocked: (teamData.unlocked || []).length,
-    firstEvidenceTime: teamData.startTime || null,
-    lastEvidenceTime: (teamData.evidenceTimestamps && Object.keys(teamData.evidenceTimestamps).length > 0) ? 
-        Object.values(teamData.evidenceTimestamps).sort().pop() : null,
-    timeSpentMinutes: totalTimeMs ? Math.round(totalTimeMs / 60000) : null,
-    strategy: selectedSuspects.includes('suicide') ? 'suicide' : 
-             (selectedSuspects.length === 5 ? 'shotgun' : 
-             (selectedSuspects.length === 3 ? 'selective' : 'selective'))
-}
+        researchData: {
+            evidenceUnlockSequence: Object.keys(teamData.evidenceTimestamps || {}).sort((a, b) => {
+                return new Date(teamData.evidenceTimestamps[a]) - new Date(teamData.evidenceTimestamps[b]);
+            }),
+            totalEvidenceUnlocked: (teamData.unlocked || []).length,
+            firstEvidenceTime: teamData.startTime || null,
+            lastEvidenceTime: (teamData.evidenceTimestamps && Object.keys(teamData.evidenceTimestamps).length > 0) ? 
+                Object.values(teamData.evidenceTimestamps).sort().pop() : null,
+            timeSpentMinutes: totalTimeMs ? Math.round(totalTimeMs / 60000) : null,
+            strategy: selectedSuspects.includes('suicide') ? 'suicide' : 
+                     (selectedSuspects.length === 5 ? 'shotgun' : 
+                     (selectedSuspects.length === 3 ? 'selective' : 'selective'))
+        }
     };
     
-try {
-    const updatedData = {
-        ...teamData,
-        solution: solution,
-        completedAt: solution.submittedAt,
-        totalTimeMs: totalTimeMs,
-        lastUpdate: new Date().toISOString()
-    };
+    try {
+        const updatedData = {
+            ...teamData,
+            solution: solution,
+            completedAt: solution.submittedAt,
+            totalTimeMs: totalTimeMs,
+            lastUpdate: new Date().toISOString()
+        };
         
         localStorage.setItem(getStorageKey(), JSON.stringify(updatedData));
         
@@ -2063,7 +2103,7 @@ function displaySubmissionConfirmation() {
                 <div style="background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 25px; backdrop-filter: blur(5px);">
                     <div style="text-align: center; margin-bottom: 20px;">
                         <div style="display: inline-flex; align-items: center; gap: 10px; background: rgba(255, 107, 0, 0.2); padding: 10px 20px; border-radius: 25px; border: 1px solid rgba(255, 107, 0, 0.4);">
-                            <span style="font-size: 20px;">🔑</span>
+                            <span style="font-size: 20px;">🔓</span>
                             <span style="color: #ff6b00; font-weight: bold; font-size: 15px; text-transform: uppercase; letter-spacing: 1px;">Έχετε τον κωδικό πρόσβασης;</span>
                         </div>
                     </div>
@@ -2110,19 +2150,19 @@ function displaySolutionResult(solution) {
     let grade = '';
     let gradeColor = '';
     if (percentage >= 90) {
-        grade = 'ΑΡΧΙ-ΝΤΕΤΕΚΤΙΒΣ 🕵️';
+        grade = 'ΑΡΧΙ-ΝΤΕΤΕΚΤΙΒΑΣ 🕵️';
         gradeColor = '#00d4ff';
     } else if (percentage >= 80) {
         grade = 'ΑΝΩΤΕΡΟΙ ΑΝΑΚΡΙΤΕΣ 🎖️';
         gradeColor = '#ffd700';
     } else if (percentage >= 70) {
-        grade = 'ΝΤΕΤΕΚΤΙΒΣ 🔎';
+        grade = 'ΝΤΕΤΕΚΤΙΒΑΣ 🔎';
         gradeColor = '#c0c0c0';
     } else if (percentage >= 60) {
         grade = 'ΑΣΤΥΝΟΜΟΙ 👮';
         gradeColor = '#cd7f32';
     } else if (percentage >= 50) {
-        grade = 'ΕΡΕΥΝΗΤΕΣ 📝';
+        grade = 'ΕΡΕΥΝΗΤΕΣ 🔍';
         gradeColor = '#ffcc00';
     } else if (percentage >= 40) {
         grade = 'ΑΣΚΟΥΜΕΝΟΙ 🎓';
@@ -2146,7 +2186,7 @@ function displaySolutionResult(solution) {
         headerGradient = 'linear-gradient(135deg, #ffc107 0%, #ff9800 100%)';
         headerShadow = 'rgba(255,193,7,0.3)';
     }
-	
+    
     let breakdownHTML = '';
     solution.breakdown.forEach(item => {
         let bgColor = '#f8f9fa';
@@ -2159,7 +2199,7 @@ function displaySolutionResult(solution) {
             borderColor = '#dc3545';
             textColor = '#721c24';
             fontWeight = 'bold';
-        } else if (item.includes('✔') || item.includes('+')) {
+        } else if (item.includes('✓') || item.includes('+')) {
             bgColor = '#d4edda';
             borderColor = '#28a745';
             textColor = '#155724';
@@ -2187,14 +2227,14 @@ function displaySolutionResult(solution) {
             breakdownHTML += '<div style="height: 5px;"></div>';
             return;
         }
-		
+        
         if (item.startsWith('   ')) {
             breakdownHTML += '<div style="padding: 4px 4px 4px 30px; margin: 2px 0; color: ' + textColor + '; font-size: 13px;">' + item + '</div>';
         } else {
             breakdownHTML += '<div style="padding: 10px 15px; margin: 5px 0; background: ' + bgColor + '; border-left: 4px solid ' + borderColor + '; border-radius: 4px; color: ' + textColor + '; font-weight: ' + fontWeight + ';">' + item + '</div>';
         }
     });
-	
+    
     let statsHTML = '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-top: 20px; max-width: 600px; margin-left: auto; margin-right: auto;">';
     
     statsHTML += '<div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: 10px; border: 2px solid rgba(255,255,255,0.3);">';
@@ -2217,9 +2257,9 @@ function displaySolutionResult(solution) {
     statsHTML += '</div>';
     resultDiv.innerHTML = 
         '<div style="background: ' + headerGradient + '; color: white; padding: 30px; border-radius: 15px; margin: 20px 0; text-align: center; box-shadow: 0 10px 40px ' + headerShadow + ';">' +
-		
+        
         '<h2 style="font-size: 32px; margin-bottom: 15px;">' +
-        (isPerfect ? '🎉 ΤΕΛΕΙΑ ΛΥΣΗ!' : isContradiction ? '❌ ΛΟΓΙΚΗ ΑΝΤΙΦΑΣΗ' : solution.score === 0 ? '❌ ΛΑΘΟΣ ΑΠΑΝΤΗΣΗ' : '✔ ΛΥΣΗ ΥΠΟΒΛΗΘΗΚΕ') +
+        (isPerfect ? '🎉 ΤΕΛΕΙΑ ΛΥΣΗ!' : isContradiction ? '❌ ΛΟΓΙΚΗ ΑΝΤΙΦΑΣΗ' : solution.score === 0 ? '❌ ΛΑΘΟΣ ΑΠΑΝΤΗΣΗ' : '✓ ΛΥΣΗ ΥΠΟΒΛΗΘΗΚΕ') +
         '</h2>' +
         '<div style="font-size: 64px; font-weight: bold; margin: 20px 0;">' + solution.score + '/' + solution.maxScore + '</div>' +
         '<div style="font-size: 28px; margin-bottom: 20px; color: ' + gradeColor + '; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">' + grade + '</div>' +
@@ -2255,7 +2295,7 @@ function displaySolutionResult(solution) {
         '<span style="background: #ff6b00; color: white; padding: 2px 8px; border-radius: 12px; font-size: 10px; font-weight: bold;">ΣΥΝΕΡΓΟΣ</span>' +
         '</div>' +
         '<div style="color: #666; font-size: 13px; line-height: 1.5;">' +
-        '<div style="margin-bottom: 4px;"><strong style="color: #333;">Ρόλος:</strong> Φρύλακας κτιρίου • Πρόσβαση παντού</div>' +
+        '<div style="margin-bottom: 4px;"><strong style="color: #333;">Ρόλος:</strong> Φύλακας κτιρίου • Πρόσβαση παντού</div>' +
         '<div style="margin-bottom: 4px;"><strong style="color: #333;">Κίνητρο:</strong> Χρέη €60k στους τοκογλύφους</div>' +
         '<div><strong style="color: #333;">Συμβολή:</strong> Προμήθευσε το κυάνιο • Απενεργοποίησε κάμερες 20:55</div>' +
         '</div>' +
@@ -2300,7 +2340,7 @@ function displaySolutionResult(solution) {
         '</div>' +
         '</div>' +
         '<h5 style="color: #1a1a2e; margin: 20px 0 10px 0; font-size: 15px; display: flex; align-items: center; gap: 8px;">' +
-        '📝 ΑΝΑΛΥΣΗ ΑΛΛΟΘΙ' +
+        '🔎 ΑΝΑΛΥΣΗ ΑΛΛΟΘΙ' +
         '<span style="background: #dc3545; color: white; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-left: 10px;">ΩΡΑ ΔΟΛΟΦΟΝΙΑΣ: 21:30-21:50</span>' +
         '</h5>' +
         
@@ -2309,12 +2349,12 @@ function displaySolutionResult(solution) {
         '<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">' +
         '<span style="font-size: 18px;">👩</span>' +
         '<strong style="color: #155724; font-size: 13px;">Παπαδοπούλου Μαρία</strong>' +
-        '<span style="background: #28a745; color: white; padding: 2px 6px; border-radius: 8px; font-size: 9px; font-weight: bold; margin-left: auto;">✔ ΙΣΧΥΡΟ</span>' +
+        '<span style="background: #28a745; color: white; padding: 2px 6px; border-radius: 8px; font-size: 9px; font-weight: bold; margin-left: auto;">✓ ΙΣΧΥΡΟ</span>' +
         '</div>' +
         '<div style="font-size: 11px; color: #155724; line-height: 1.5;">' +
-        '<div>• Γιατρός 18:30-19:30 (επιβεβαιωμένο)</div>' +
+        '<div>• Διατρός 18:30-19:30 (επιβεβαιωμένο)</div>' +
         '<div>• Δείπνο με αδελφή 19:45-22:30</div>' +
-        '<div style="margin-top: 4px; padding: 4px 6px; background: rgba(40,167,69,0.1); border-radius: 3px;">✔ Κάλυψε όλο το κρίσιμο χρονικό παράθυρο!</div>' +
+        '<div style="margin-top: 4px; padding: 4px 6px; background: rgba(40,167,69,0.1); border-radius: 3px;">✓ Κάλυψε όλο το κρίσιμο χρονικό παράθυρο!</div>' +
         '</div>' +
         '</div>' +
         '<div style="background: #f8d7da; padding: 12px; border-radius: 6px; border-left: 4px solid #dc3545;">' +
@@ -2396,7 +2436,7 @@ window.revealSolution = async function() {
         document.getElementById('solutionPassword').value = '';
         return;
     }
-	
+    
     const teamData = await getTeamData();
     const solution = teamData.solution;
     
@@ -2419,7 +2459,7 @@ window.revealSolution = async function() {
         correctCount: scoreResult.correctCount,
         wrongCount: solution.suspects.length - scoreResult.correctCount
     };
-	
+    
     const submissionHeader = document.getElementById('submissionHeader');
     const passwordSection = document.getElementById('passwordSection');
     if (submissionHeader) submissionHeader.style.display = 'none';
@@ -2492,7 +2532,7 @@ async function initSolutionTab(teamData) {
         if (solutionForm) {
             solutionForm.style.display = 'none';
         }
-		
+        
         displaySubmissionConfirmation();
     }
 }
@@ -2566,7 +2606,7 @@ async function checkSurveyCompletion() {
         if (teamSize === 0) {
             console.warn(`Team ${teamCode} has no teamSize configured. Please set teamSize in Firebase.`);
         }
-		
+        
         const surveysRef = window.firebaseCollection(window.firebaseDB, 'surveys');
         const querySnapshot = await window.firebaseGetDocs(surveysRef);
         
@@ -2579,7 +2619,7 @@ async function checkSurveyCompletion() {
                 const memberName = docId.replace(`${teamCode}_pre_`, '');
                 preMembers.add(memberName);
             }
-			
+            
             if (docId.startsWith(`${teamCode}_post_`)) {
                 const memberName = docId.replace(`${teamCode}_post_`, '');
                 postMembers.add(memberName);
@@ -2654,7 +2694,7 @@ async function updateResultsTabState() {
                     <a href="team_member_entry.html" 
                        class="btn btn-primary" 
                        style="display: inline-block; text-decoration: none;">
-                        🔑 ΣΥΝΔΕΣΗ
+                        🔐 ΣΥΝΔΕΣΗ
                     </a>
                 </div>
             `;
@@ -2676,7 +2716,7 @@ async function updateResultsTabState() {
     if (!memberCompletedPost) {
         surveysIncomplete.innerHTML = `
             <div class="intro-box" style="text-align: center; padding: 60px 30px;">
-                <div style="font-size: clamp(80px, 20vw, 120px); margin-bottom: 30px;">📝</div>
+                <div style="font-size: clamp(80px, 20vw, 120px); margin-bottom: 30px;">🔐</div>
                 <h2 style="color: #1a1a2e; font-size: clamp(20px, 5vw, 28px); margin-bottom: 20px;">
                     Ολοκληρώστε Πρώτα την Τελική Έρευνα
                 </h2>
@@ -2732,9 +2772,9 @@ async function updateResultsTabState() {
 }
 
 function getResultsGrade(percentage) {
-    if (percentage >= 90) return { name: 'ΑΡΧΙ-ΝΤΕΤΕΚΤΙΒΣ 🕵️', color: '#00d4ff' };
+    if (percentage >= 90) return { name: 'ΑΡΧΙ-ΝΤΕΤΕΚΤΙΒΑΣ 🕵️', color: '#00d4ff' };
     if (percentage >= 80) return { name: 'ΑΝΩΤΕΡΟΙ ΑΝΑΚΡΙΤΕΣ 🎖️', color: '#ffd700' };
-    if (percentage >= 70) return { name: 'ΝΤΕΤΕΚΤΙΒΣ 🔎', color: '#c0c0c0' };
+    if (percentage >= 70) return { name: 'ΝΤΕΤΕΚΤΙΒΑΣ 🔎', color: '#c0c0c0' };
     if (percentage >= 60) return { name: 'ΑΣΤΥΝΟΜΟΙ 👮', color: '#cd7f32' };
     if (percentage >= 50) return { name: 'ΕΡΕΥΝΗΤΕΣ 📋', color: '#ffcc00' };
     if (percentage >= 40) return { name: 'ΑΣΚΟΥΜΕΝΟΙ 🎓', color: '#28a745' };
@@ -2776,7 +2816,7 @@ async function loadLeaderboardData() {
 
         console.log(`${teams.length} teams have submitted solutions`);
 
-if (teams.length === 0) {
+        if (teams.length === 0) {
             displayLeaderboardError('Δεν υπάρχουν ομάδες που έχουν υποβάλει λύση ακόμα!');
             return;
         }
@@ -2791,6 +2831,7 @@ if (teams.length === 0) {
         displayLeaderboardError(`Σφάλμα φόρτωσης: ${error.message}`);
     }
 }
+
 function displayLeaderboardError(message) {
     const tableBody = document.getElementById('resultsTableBody');
     const cardsContainer = document.getElementById('resultsCards');
@@ -3020,7 +3061,6 @@ function trackActivity() {
     }, 30000);
 }
 
-
 ['mousedown', 'keydown', 'scroll', 'touchstart'].forEach(event => {
     document.addEventListener(event, trackActivity, { passive: true });
 });
@@ -3086,7 +3126,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         } else {
             console.error('SuspectsModule not loaded! Make sure suspects.js is included before this script.');
         }
-		
+        
         renderEvidence();
         const teamData = await getTeamData();
         await updateProgress(teamData);
@@ -3200,15 +3240,13 @@ window.addEventListener('resize', () => {
 
 window.addEventListener('beforeunload', () => {
     stopTimer();
-    if (firestoreUnsubscribe) {
+    if (typeof firestoreUnsubscribe === 'function') {
         firestoreUnsubscribe();
     }
     if (resultsUnsubscribe) {
         resultsUnsubscribe();
     }
 });
-
-
 </script>
 
 </body>
