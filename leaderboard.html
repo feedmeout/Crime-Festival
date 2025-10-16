@@ -40,58 +40,72 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             min-height: 100vh;
-            padding: 15px;
+            padding: clamp(10px, 3vw, 20px);
+            overflow-x: hidden;
         }
 
         .container {
             max-width: 1400px;
             margin: 0 auto;
+            width: 100%;
         }
 
         .header {
             background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
-            padding: 25px 20px;
-            border-radius: 15px;
+            padding: clamp(20px, 4vw, 30px) clamp(15px, 3vw, 25px);
+            border-radius: clamp(10px, 2vw, 15px);
             text-align: center;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            margin-bottom: clamp(15px, 3vw, 25px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+            word-wrap: break-word;
         }
 
         .header h1 {
             color: white;
-            font-size: clamp(20px, 5vw, 32px);
-            margin-bottom: 10px;
+            font-size: clamp(18px, 4.5vw, 32px);
+            margin-bottom: 8px;
+            line-height: 1.2;
         }
 
         .header p {
             color: rgba(255,255,255,0.9);
-            font-size: clamp(14px, 3vw, 16px);
+            font-size: clamp(13px, 2.8vw, 16px);
+            line-height: 1.4;
         }
 
         .action-bar {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: clamp(15px, 3vw, 25px);
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: clamp(8px, 2vw, 12px);
             justify-content: center;
         }
 
         .btn {
-            padding: 12px 24px;
+            padding: clamp(10px, 2vw, 14px) clamp(16px, 3vw, 26px);
             border: none;
             border-radius: 8px;
-            font-size: 14px;
+            font-size: clamp(13px, 2.5vw, 15px);
             font-weight: bold;
             cursor: pointer;
-            transition: transform 0.2s ease;
+            transition: all 0.2s ease;
             text-decoration: none;
             display: inline-block;
             white-space: nowrap;
+            min-height: 44px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .btn:hover {
             transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .btn:active {
+            transform: translateY(0);
         }
 
         .btn-primary {
@@ -106,61 +120,72 @@
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-bottom: 25px;
+            grid-template-columns: repeat(auto-fit, minmax(min(130px, 100%), 1fr));
+            gap: clamp(10px, 2vw, 15px);
+            margin-bottom: clamp(20px, 4vw, 30px);
         }
 
         .stat-card {
             background: white;
-            padding: 20px 15px;
+            padding: clamp(15px, 3vw, 22px) clamp(12px, 2.5vw, 18px);
             border-radius: 10px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             text-align: center;
         }
 
         .stat-card h3 {
             color: #666;
-            font-size: clamp(11px, 2.5vw, 14px);
-            margin-bottom: 10px;
+            font-size: clamp(10px, 2.3vw, 13px);
+            margin-bottom: 8px;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
+            line-height: 1.3;
         }
 
         .stat-card .value {
-            font-size: clamp(24px, 6vw, 32px);
+            font-size: clamp(22px, 5.5vw, 32px);
             font-weight: bold;
             color: #ff6b00;
+            line-height: 1.2;
         }
 
         .leaderboard {
             background: white;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-            overflow-x: auto;
+            border-radius: clamp(10px, 2vw, 15px);
+            padding: clamp(15px, 3vw, 25px);
+            margin-bottom: clamp(20px, 4vw, 35px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+            overflow: hidden;
         }
 
         .leaderboard h2 {
             color: #1a1a2e;
-            font-size: clamp(18px, 4vw, 24px);
-            margin-bottom: 20px;
-            padding-bottom: 15px;
+            font-size: clamp(17px, 3.8vw, 24px);
+            margin-bottom: clamp(15px, 3vw, 20px);
+            padding-bottom: clamp(10px, 2vw, 15px);
             border-bottom: 3px solid #ff6b00;
+            word-wrap: break-word;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin: 0 clamp(-15px, -3vw, -25px);
+            padding: 0 clamp(15px, 3vw, 25px);
         }
 
         .leaderboard-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin-top: 15px;
             min-width: 650px;
         }
 
         .leaderboard-table th {
             background: linear-gradient(135deg, #0f3460 0%, #16213e 100%);
             color: white;
-            padding: 12px 10px;
-            text-align: left;
+            padding: clamp(10px, 2vw, 14px) clamp(8px, 1.5vw, 12px);
+            text-align: center;
             font-size: clamp(11px, 2vw, 13px);
             text-transform: uppercase;
             font-weight: bold;
@@ -168,9 +193,10 @@
         }
 
         .leaderboard-table td {
-            padding: 12px 10px;
+            padding: clamp(10px, 2vw, 14px) clamp(8px, 1.5vw, 12px);
             border-bottom: 1px solid #ddd;
-            font-size: clamp(12px, 2vw, 14px);
+            font-size: clamp(12px, 2.2vw, 14px);
+            vertical-align: middle;
         }
 
         .leaderboard-table tr:hover {
@@ -178,13 +204,12 @@
         }
 
         .rank {
-            font-size: clamp(18px, 4vw, 24px);
+            font-size: clamp(16px, 3.5vw, 24px);
             font-weight: bold;
-            width: 50px;
+            min-width: 40px;
             text-align: center;
         }
 
-        /* Mobile Cards */
         .mobile-cards {
             display: none;
         }
@@ -193,7 +218,7 @@
             background: white;
             border: 2px solid #e0e0e0;
             border-radius: 12px;
-            padding: 20px;
+            padding: clamp(15px, 3vw, 20px);
             margin-bottom: 15px;
             box-shadow: 0 3px 10px rgba(0,0,0,0.1);
             transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -211,35 +236,41 @@
             margin-bottom: 15px;
             padding-bottom: 15px;
             border-bottom: 2px solid #f0f0f0;
+            gap: 10px;
         }
 
         .card-rank {
-            font-size: 36px;
+            font-size: clamp(28px, 7vw, 36px);
             font-weight: bold;
+            flex-shrink: 0;
         }
 
         .card-team-name {
-            font-size: 18px;
+            font-size: clamp(15px, 3.5vw, 18px);
             font-weight: bold;
             color: #1a1a2e;
             text-transform: uppercase;
             flex: 1;
-            margin: 0 15px;
+            margin: 0 10px;
+            word-wrap: break-word;
+            line-height: 1.3;
         }
 
         .card-score {
-            font-size: 24px;
+            font-size: clamp(18px, 4.5vw, 24px);
             font-weight: bold;
             color: #28a745;
             white-space: nowrap;
+            flex-shrink: 0;
         }
 
         .card-row {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
             padding: 10px 0;
             border-bottom: 1px solid #f5f5f5;
+            gap: 10px;
         }
 
         .card-row:last-child {
@@ -249,14 +280,16 @@
         .card-label {
             font-weight: bold;
             color: #666;
-            font-size: 13px;
+            font-size: clamp(12px, 2.5vw, 13px);
             text-transform: uppercase;
+            flex-shrink: 0;
         }
 
         .card-value {
-            font-size: 14px;
+            font-size: clamp(13px, 2.8vw, 14px);
             color: #333;
             text-align: right;
+            word-wrap: break-word;
         }
 
         .card-suspects {
@@ -264,7 +297,7 @@
             gap: 5px;
             flex-wrap: wrap;
             justify-content: flex-end;
-            max-width: 60%;
+            max-width: 65%;
         }
 
         .card-actions {
@@ -275,8 +308,8 @@
 
         .card-actions .btn {
             width: 100%;
-            padding: 12px;
-            font-size: 14px;
+            padding: clamp(12px, 2.5vw, 14px);
+            font-size: clamp(13px, 2.8vw, 14px);
         }
 
         .rank-1 { color: #ffd700; }
@@ -286,12 +319,14 @@
         .team-name {
             font-weight: bold;
             color: #1a1a2e;
-            font-size: clamp(13px, 2.5vw, 16px);
+            font-size: clamp(12px, 2.4vw, 16px);
             text-transform: uppercase;
+            word-wrap: break-word;
+            max-width: 200px;
         }
 
         .score {
-            font-size: clamp(16px, 3vw, 20px);
+            font-size: clamp(15px, 3vw, 20px);
             font-weight: bold;
             color: #28a745;
             white-space: nowrap;
@@ -299,21 +334,23 @@
 
         .grade-badge {
             display: inline-block;
-            padding: 6px 12px;
+            padding: clamp(5px, 1.2vw, 7px) clamp(10px, 2vw, 14px);
             border-radius: 6px;
             font-size: clamp(10px, 2vw, 12px);
             font-weight: bold;
             white-space: nowrap;
+            line-height: 1.3;
         }
 
         .badge {
             display: inline-block;
-            padding: 4px 8px;
+            padding: clamp(4px, 1vw, 6px) clamp(7px, 1.5vw, 10px);
             border-radius: 4px;
-            font-size: clamp(9px, 1.8vw, 11px);
+            font-size: clamp(9px, 1.9vw, 11px);
             font-weight: bold;
             margin: 2px;
             white-space: nowrap;
+            line-height: 1.3;
         }
 
         .badge-correct {
@@ -328,20 +365,21 @@
 
         .solution-details {
             background: #f8f9fa;
-            padding: 20px;
+            padding: clamp(15px, 3vw, 20px);
             border-radius: 10px;
-            margin: 20px 0;
+            margin: 15px 0;
         }
 
         .solution-details h3 {
             color: #0f3460;
-            margin-bottom: 15px;
-            font-size: clamp(16px, 3vw, 18px);
+            margin-bottom: 12px;
+            font-size: clamp(15px, 3vw, 18px);
+            word-wrap: break-word;
         }
 
         .suspect-list {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             flex-wrap: wrap;
             margin: 10px 0;
         }
@@ -356,56 +394,67 @@
             background: rgba(0,0,0,0.8);
             z-index: 1000;
             overflow-y: auto;
-            padding: 15px;
+            padding: clamp(10px, 2vw, 20px);
+            -webkit-overflow-scrolling: touch;
         }
 
         .modal.active {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: center;
+            padding-top: clamp(20px, 5vh, 50px);
         }
 
         .modal-content {
             background: white;
-            border-radius: 15px;
-            padding: 25px;
+            border-radius: 12px;
+            padding: clamp(20px, 4vw, 30px);
             max-width: 800px;
             width: 100%;
-            max-height: 90vh;
+            max-height: calc(100vh - 40px);
             overflow-y: auto;
             box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            margin: auto;
         }
 
         .modal-header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
+            align-items: flex-start;
+            margin-bottom: 18px;
             padding-bottom: 15px;
             border-bottom: 2px solid #ff6b00;
+            gap: 15px;
         }
 
         .modal-header h2 {
             color: #1a1a2e;
-            font-size: clamp(18px, 4vw, 24px);
+            font-size: clamp(16px, 3.5vw, 24px);
+            word-wrap: break-word;
+            line-height: 1.3;
+            flex: 1;
         }
 
         .close-modal {
-            font-size: 32px;
+            font-size: clamp(28px, 6vw, 32px);
             cursor: pointer;
             color: #999;
             line-height: 1;
             background: none;
             border: none;
             padding: 0;
-            min-width: 32px;
+            min-width: clamp(28px, 6vw, 32px);
+            min-height: 44px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .close-modal:hover {
             color: #333;
         }
 
-        /* Mobile optimizations */
         @media (max-width: 768px) {
             body {
                 padding: 10px;
@@ -413,16 +462,13 @@
 
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
-                gap: 10px;
             }
 
             .leaderboard {
-                padding: 15px;
-                border-radius: 10px;
+                padding: 15px 10px;
             }
 
-            /* Hide table, show cards on mobile */
-            .leaderboard-table {
+            .table-container {
                 display: none;
             }
 
@@ -430,29 +476,25 @@
                 display: block;
             }
 
+            .action-bar {
+                gap: 8px;
+            }
+
             .btn {
-                padding: 10px 16px;
-                font-size: 12px;
-            }
-
-            .modal-content {
-                padding: 20px 15px;
-            }
-
-            .stat-card {
-                padding: 15px 10px;
+                padding: 12px 16px;
+                font-size: 13px;
             }
         }
 
-        /* Small mobile */
         @media (max-width: 480px) {
             .header {
-                padding: 20px 15px;
-                margin-bottom: 15px;
+                padding: 18px 12px;
+                margin-bottom: 12px;
             }
 
             .stats-grid {
                 grid-template-columns: 1fr;
+                gap: 8px;
             }
 
             .action-bar {
@@ -463,33 +505,55 @@
                 width: 100%;
             }
 
+            .card-header {
+                flex-wrap: wrap;
+            }
+
+            .card-team-name {
+                flex-basis: 100%;
+                order: -1;
+                margin: 0 0 10px 0;
+                text-align: center;
+            }
+
+            .card-suspects {
+                max-width: 100%;
+            }
+
+            .suspect-list {
+                gap: 6px;
+            }
+        }
+
+        @media (max-width: 360px) {
             .grade-badge {
                 font-size: 9px;
                 padding: 4px 8px;
             }
 
-            .suspect-list {
-                gap: 5px;
-            }
-
             .badge {
-                font-size: 9px;
+                font-size: 8px;
                 padding: 3px 6px;
             }
         }
 
-        /* Tablet */
         @media (min-width: 769px) and (max-width: 1024px) {
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
+        }
 
-            .leaderboard-table {
-                font-size: 13px;
+        @media (orientation: landscape) and (max-height: 600px) {
+            .modal.active {
+                align-items: flex-start;
+                padding-top: 10px;
+            }
+
+            .modal-content {
+                max-height: calc(100vh - 20px);
             }
         }
 
-        /* Print styles */
         @media print {
             body {
                 background: white;
@@ -502,6 +566,14 @@
 
             .leaderboard {
                 box-shadow: none;
+            }
+
+            .table-container {
+                display: block !important;
+            }
+
+            .mobile-cards {
+                display: none !important;
             }
         }
     </style>
@@ -539,30 +611,30 @@
         <div class="leaderboard">
             <h2>🏆 ΚΑΤΑΤΑΞΗ ΟΜΑΔΩΝ</h2>
             
-            <!-- Desktop/Tablet Table -->
-            <table class="leaderboard-table" id="leaderboardTable">
-                <thead>
-                    <tr>
-                        <th>Θέση</th>
-                        <th>Ομάδα</th>
-                        <th>Βαθμολογία</th>
-                        <th>Τίτλος</th>
-                        <th>Δράστες</th>
-                        <th>Χρόνος</th>
-                        <th>Prompts</th>
-                        <th>Ενέργειες</th>
-                    </tr>
-                </thead>
-                <tbody id="leaderboardBody">
-                    <tr>
-                        <td colspan="8" style="text-align: center; padding: 40px; color: #666;">
-                            Φόρτωση δεδομένων...
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="table-container">
+                <table class="leaderboard-table" id="leaderboardTable">
+                    <thead>
+                        <tr>
+                            <th>Θέση</th>
+                            <th>Ομάδα</th>
+                            <th>Βαθμολογία</th>
+                            <th>Τίτλος</th>
+                            <th>Δράστες</th>
+                            <th>Χρόνος</th>
+                            <th>Prompts</th>
+                            <th>Ενέργειες</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboardBody">
+                        <tr>
+                            <td colspan="8" style="text-align: center; padding: 40px; color: #666;">
+                                Φόρτωση δεδομένων...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
-            <!-- Mobile Cards -->
             <div class="mobile-cards" id="mobileCards">
                 <div style="text-align: center; padding: 40px; color: #666;">
                     Φόρτωση δεδομένων...
@@ -575,7 +647,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2 id="modalTeamName">Λύση Ομάδας</h2>
-                <button class="close-modal" onclick="closeModal()">&times;</button>
+                <button class="close-modal" onclick="closeModal()" aria-label="Close">&times;</button>
             </div>
             <div id="modalContent"></div>
         </div>
@@ -593,9 +665,9 @@
         };
 
         function getGrade(percentage) {
-            if (percentage >= 90) return { name: 'ΑΡΧΙ-ΝΤΕΤΕΚΤΙΒΣ 🕵️', color: '#00d4ff' };
+            if (percentage >= 90) return { name: 'ΑΡΧΙ-ΝΤΕΤΕΚΤΙΒΑΣ 🕵️', color: '#00d4ff' };
             if (percentage >= 80) return { name: 'ΑΝΩΤΕΡΟΙ ΑΝΑΚΡΙΤΕΣ 🎖️', color: '#ffd700' };
-            if (percentage >= 70) return { name: 'ΝΤΕΤΕΚΤΙΒΣ 🔎', color: '#c0c0c0' };
+            if (percentage >= 70) return { name: 'ΝΤΕΤΕΚΤΙΒΑΣ 🔎', color: '#c0c0c0' };
             if (percentage >= 60) return { name: 'ΑΣΤΥΝΟΜΟΙ 👮', color: '#cd7f32' };
             if (percentage >= 50) return { name: 'ΕΡΕΥΝΗΤΕΣ 📋', color: '#ffcc00' };
             if (percentage >= 40) return { name: 'ΑΣΚΟΥΜΕΝΟΙ 🎓', color: '#28a745' };
@@ -694,7 +766,7 @@
                 tbody.innerHTML = `
                     <tr>
                         <td colspan="8" style="text-align: center; padding: 40px; color: #666;">
-                              
+                            ΔΕΝ ΥΠΑΡΧΟΥΝ ΥΠΟΒΟΛΕΣ ΑΚΟΜΑ
                         </td>
                     </tr>
                 `;
@@ -741,7 +813,7 @@
                         <td>${formatTime(solution.completionTimeMs)}</td>
                         <td>${solution.promptCount || 0}</td>
                         <td>
-                            <button class="btn btn-primary" style="padding: 8px 16px; font-size: 12px;" onclick="viewSolution('${team.name}')">
+                            <button class="btn btn-primary" style="padding: 8px 16px; font-size: 12px; min-height: 36px;" onclick="viewSolution('${team.name}')">
                                 👁️ Προβολή
                             </button>
                         </td>
@@ -842,10 +914,10 @@
                 document.getElementById('modalContent').innerHTML = `
                     <div class="solution-details">
                         <h3>📊 Βαθμολογία</h3>
-                        <div style="font-size: clamp(24px, 6vw, 32px); font-weight: bold; color: ${solution.score === 0 ? '#dc3545' : '#28a745'}; margin: 15px 0;">
+                        <div style="font-size: clamp(22px, 5vw, 32px); font-weight: bold; color: ${solution.score === 0 ? '#dc3545' : '#28a745'}; margin: 15px 0;">
                             ${solution.score}/${maxScore} πόντοι
                         </div>
-                        <div style="font-size: clamp(16px, 4vw, 20px); font-weight: bold; margin: 10px 0;">
+                        <div style="font-size: clamp(15px, 3.5vw, 20px); font-weight: bold; margin: 10px 0;">
                             <span style="background: ${grade.color}; color: ${percentage >= 50 ? '#000' : '#fff'}; padding: 8px 16px; border-radius: 8px;">
                                 ${grade.name}
                             </span>
@@ -862,26 +934,26 @@
                         <h3 style="margin-top: 20px;">👥 Δράστες που επέλεξαν:</h3>
                         <div class="suspect-list">
                             ${suspects.map(s => `
-                                <span class="badge ${CORRECT_SUSPECTS.includes(s) ? 'badge-correct' : 'badge-incorrect'}" style="font-size: 14px; padding: 8px 12px;">
+                                <span class="badge ${CORRECT_SUSPECTS.includes(s) ? 'badge-correct' : 'badge-incorrect'}" style="font-size: clamp(12px, 2.5vw, 14px); padding: 8px 12px;">
                                     ${CORRECT_SUSPECTS.includes(s) ? '✔' : '✗'} ${SUSPECT_NAMES[s] || s}
                                 </span>
                             `).join('')}
                         </div>
 
-                        <h3 style="margin-top: 20px;">📝 Αιτιολόγηση:</h3>
-                        <div style="background: white; padding: 15px; border-radius: 8px; border: 1px solid #ddd; white-space: pre-wrap; line-height: 1.6; max-height: 300px; overflow-y: auto; font-size: clamp(12px, 2.5vw, 14px);">
+                        <h3 style="margin-top: 20px;">🔍 Αιτιολόγηση:</h3>
+                        <div style="background: white; padding: 15px; border-radius: 8px; border: 1px solid #ddd; white-space: pre-wrap; word-wrap: break-word; line-height: 1.6; max-height: 300px; overflow-y: auto; font-size: clamp(12px, 2.5vw, 14px);">
                             ${solution.justification || 'Δεν παρασχέθηκε αιτιολόγηση'}
                         </div>
 
                         <h3 style="margin-top: 20px;">⏱️ Στατιστικά:</h3>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-top: 10px;">
-                            <div style="background: #e3f2fd; padding: 10px; border-radius: 8px;">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(130px, 100%), 1fr)); gap: 10px; margin-top: 10px;">
+                            <div style="background: #e3f2fd; padding: 12px; border-radius: 8px;">
                                 <strong>Χρόνος:</strong><br>${formatTime(solution.completionTimeMs)}
                             </div>
-                            <div style="background: #e3f2fd; padding: 10px; border-radius: 8px;">
+                            <div style="background: #e3f2fd; padding: 12px; border-radius: 8px;">
                                 <strong>Prompts:</strong><br>${solution.promptCount || 0}
                             </div>
-                            <div style="background: #e3f2fd; padding: 10px; border-radius: 8px;">
+                            <div style="background: #e3f2fd; padding: 12px; border-radius: 8px;">
                                 <strong>Υποβολή:</strong><br>${new Date(solution.submittedAt).toLocaleString('el-GR', {
                                     day: '2-digit',
                                     month: '2-digit',
@@ -892,13 +964,13 @@
                         </div>
 
                         <h3 style="margin-top: 25px; margin-bottom: 15px;">🎯 Αναλυτική Βαθμολογία:</h3>
-                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: clamp(11px, 2vw, 13px); line-height: 1.7; max-height: 400px; overflow-y: auto;">
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: clamp(11px, 2vw, 13px); line-height: 1.7; max-height: 400px; overflow-y: auto; word-wrap: break-word;">
 ${solution.breakdown.map(item => {
                             if (item.trim() === '') {
                                 return '<div style="height: 5px;"></div>';
                             }
 
-                            if (item.includes('╔') || item.includes('═') || item.includes('─')) {
+                            if (item.includes('╔') || item.includes('║') || item.includes('─')) {
                                 return '';
                             }
                             
@@ -913,7 +985,7 @@ ${solution.breakdown.map(item => {
                                 textColor = '#721c24';
                                 fontWeight = 'bold';
                             } 
-                            else if (item.includes('✓') || item.includes('+')) {
+                            else if (item.includes('✔') || item.includes('+')) {
                                 bgColor = '#d4edda';
                                 borderColor = '#28a745';
                                 textColor = '#155724';
@@ -934,20 +1006,21 @@ ${solution.breakdown.map(item => {
                                 textColor = '#0d47a1';
                             }
                             else if (item.includes('ΘΕΤΙΚΑ ΣΤΟΙΧΕΙΑ') || item.includes('ΑΡΝΗΤΙΚΑ ΣΤΟΙΧΕΙΑ')) {
-                                return `<div style="color: #0f3460; font-weight: bold; margin: 15px 0 8px 0; font-size: clamp(12px, 2.5vw, 14px);">${item}</div>`;
+                                return `<div style="color: #0f3460; font-weight: bold; margin: 15px 0 8px 0; font-size: clamp(12px, 2.5vw, 14px); word-wrap: break-word;">${item}</div>`;
                             }
 
                             if (item.startsWith('   ')) {
-                                return `<div style="padding: 4px 4px 4px 30px; margin: 2px 0; color: ${textColor}; font-size: clamp(11px, 2vw, 13px);">${item}</div>`;
+                                return `<div style="padding: 4px 4px 4px 20px; margin: 2px 0; color: ${textColor}; font-size: clamp(11px, 2vw, 13px); word-wrap: break-word;">${item}</div>`;
                             }
 
-                            return `<div style="padding: 10px 15px; margin: 5px 0; background: ${bgColor}; border-left: 4px solid ${borderColor}; border-radius: 4px; color: ${textColor}; font-weight: ${fontWeight};">${item}</div>`;
+                            return `<div style="padding: 10px 12px; margin: 5px 0; background: ${bgColor}; border-left: 4px solid ${borderColor}; border-radius: 4px; color: ${textColor}; font-weight: ${fontWeight}; word-wrap: break-word;">${item}</div>`;
                         }).join('')}
                         </div>
                     </div>
                 `;
 
                 document.getElementById('solutionModal').classList.add('active');
+                document.body.style.overflow = 'hidden';
 
             } catch (error) {
                 console.error('Error loading solution:', error);
@@ -957,12 +1030,19 @@ ${solution.breakdown.map(item => {
 
         window.closeModal = function() {
             document.getElementById('solutionModal').classList.remove('active');
+            document.body.style.overflow = '';
         };
 
         window.refreshLeaderboard = refreshLeaderboard;
 
         document.getElementById('solutionModal').addEventListener('click', function(e) {
             if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
                 closeModal();
             }
         });

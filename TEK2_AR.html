@@ -13,23 +13,61 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --primary-orange: #ff6b00;
+            --primary-orange-light: #ff8800;
+            --dark-blue: #1a1a2e;
+            --medium-blue: #0f3460;
+            --danger-red: #dc3545;
+            --text-dark: #1a1a2e;
+            --text-medium: #333;
+            --text-light: #666;
+            --bg-white: #ffffff;
+            --bg-light: #f8f9fa;
+            --border-light: #e0e0e0;
+            
+            --space-xs: clamp(0.5rem, 2vw, 0.75rem);
+            --space-sm: clamp(0.75rem, 3vw, 1rem);
+            --space-md: clamp(1rem, 4vw, 1.5rem);
+            --space-lg: clamp(1.5rem, 5vw, 2rem);
+            --space-xl: clamp(2rem, 6vw, 3rem);
+            
+            --font-xs: clamp(0.625rem, 2.5vw, 0.75rem);
+            --font-sm: clamp(0.75rem, 3vw, 0.875rem);
+            --font-base: clamp(0.875rem, 3.5vw, 1rem);
+            --font-md: clamp(1rem, 4vw, 1.125rem);
+            --font-lg: clamp(1.125rem, 4.5vw, 1.5rem);
+            --font-xl: clamp(1.5rem, 5vw, 2rem);
+            --font-2xl: clamp(1.75rem, 6vw, 2.5rem);
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
             min-height: 100vh;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            background: linear-gradient(135deg, var(--dark-blue) 0%, #16213e 100%);
             position: relative;
             overflow-x: hidden;
+            font-size: var(--font-base);
+            line-height: 1.6;
         }
 
         .animated-background {
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
             opacity: 0.1;
-            background-image: repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,107,0,0.5) 35px, rgba(255,107,0,0.5) 70px);
+            background-image: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 35px,
+                rgba(255,107,0,0.5) 35px,
+                rgba(255,107,0,0.5) 70px
+            );
             animation: slide 20s linear infinite;
+            pointer-events: none;
+            z-index: 0;
         }
 
         @keyframes slide {
@@ -49,8 +87,8 @@
         }
 
         .header {
-            background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
-            padding: 20px;
+            background: linear-gradient(135deg, var(--primary-orange) 0%, var(--primary-orange-light) 100%);
+            padding: var(--space-md) var(--space-sm);
             box-shadow: 0 4px 20px rgba(0,0,0,0.5);
             position: relative;
             z-index: 10;
@@ -60,141 +98,90 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            margin-bottom: 10px;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-xs);
+            flex-wrap: wrap;
         }
 
         .check-icon {
-            width: 32px;
-            height: 32px;
+            width: clamp(24px, 8vw, 32px);
+            height: clamp(24px, 8vw, 32px);
             color: #fff;
             animation: unlock 0.6s ease-out;
+            flex-shrink: 0;
         }
 
         .header h1 {
             color: #fff;
-            font-size: 24px;
+            font-size: var(--font-xl);
             font-weight: bold;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            text-align: center;
         }
 
         .header p {
             color: #fff;
             text-align: center;
             opacity: 0.9;
-            font-size: 14px;
-        }
-
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 18px;
-            }
-            .check-icon {
-                width: 24px;
-                height: 24px;
-            }
-            .header {
-                padding: 15px 10px;
-            }
-            .header p {
-                font-size: 12px;
-            }
+            font-size: var(--font-sm);
         }
 
         .container {
-            padding: 20px;
+            padding: var(--space-md);
             position: relative;
             z-index: 1;
             max-width: 1200px;
             margin: 0 auto;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 10px;
-            }
+            width: 100%;
         }
 
         .evidence-card {
             background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
+            border-radius: clamp(10px, 3vw, 15px);
             box-shadow: 0 10px 40px rgba(0,0,0,0.3);
             overflow: hidden;
-            border: 3px solid #ff6b00;
-        }
-
-        @media (max-width: 768px) {
-            .evidence-card {
-                border-radius: 10px;
-                border: 2px solid #ff6b00;
-            }
+            border: clamp(2px, 0.5vw, 3px) solid var(--primary-orange);
         }
 
         .badge-bar {
-            background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
-            padding: 15px 20px;
+            background: linear-gradient(135deg, var(--dark-blue) 0%, var(--medium-blue) 100%);
+            padding: var(--space-md) var(--space-sm);
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        @media (max-width: 768px) {
-            .badge-bar {
-                padding: 12px 15px;
-                flex-direction: column;
-                align-items: flex-start;
-            }
+            gap: var(--space-sm);
         }
 
         .badge-info {
             flex: 1;
+            min-width: min-content;
         }
 
         .evidence-id {
-            font-size: 28px;
+            font-size: var(--font-xl);
             font-weight: bold;
-            color: #ff6b00;
+            color: var(--primary-orange);
             font-family: monospace;
-            letter-spacing: 2px;
-        }
-
-        @media (max-width: 768px) {
-            .evidence-id {
-                font-size: 22px;
-                letter-spacing: 1px;
-            }
+            letter-spacing: clamp(1px, 0.3vw, 2px);
+            word-break: break-word;
         }
 
         .category {
-            font-size: 12px;
+            font-size: var(--font-xs);
             color: #aaa;
             margin-top: 2px;
         }
 
-        @media (max-width: 768px) {
-            .category {
-                font-size: 10px;
-            }
-        }
-
         .official-badge {
             background: rgba(255,107,0,0.2);
-            border: 2px solid #ff6b00;
+            border: 2px solid var(--primary-orange);
             border-radius: 8px;
-            padding: 8px 15px;
-            font-size: 11px;
-            color: #ff6b00;
+            padding: var(--space-xs) var(--space-sm);
+            font-size: var(--font-xs);
+            color: var(--primary-orange);
             font-weight: bold;
-        }
-
-        @media (max-width: 768px) {
-            .official-badge {
-                font-size: 9px;
-                padding: 6px 10px;
-                align-self: flex-start;
-            }
+            white-space: nowrap;
         }
 
         .crime-scene-photo {
@@ -206,185 +193,127 @@
             border-top: 2px solid #333;
             border-bottom: 2px solid #333;
             overflow: hidden;
+            min-height: 200px;
         }
 
         #crimeSceneCanvas {
             width: 100%;
-            max-width: 800px;
             height: auto;
             display: block;
-        }
-
-        @media (max-width: 768px) {
-            .crime-scene-photo {
-                border-top: 1px solid #333;
-                border-bottom: 1px solid #333;
-            }
+            max-width: 100%;
         }
 
         .confidential-badge {
             position: absolute;
-            top: 10px;
-            right: 10px;
+            top: var(--space-xs);
+            right: var(--space-xs);
             background: rgba(255,0,0,0.9);
             color: white;
-            padding: 5px 10px;
-            font-size: 11px;
+            padding: var(--space-xs) var(--space-sm);
+            font-size: var(--font-xs);
             font-weight: bold;
             border-radius: 5px;
             border: 1px solid #fff;
-        }
-
-        @media (max-width: 768px) {
-            .confidential-badge {
-                font-size: 9px;
-                padding: 4px 8px;
-                top: 5px;
-                right: 5px;
-            }
+            z-index: 10;
         }
 
         .ar-container {
-            margin: 20px 0;
-            padding: 20px;
+            margin: var(--space-md) 0;
+            padding: var(--space-md);
             background: linear-gradient(135deg, rgba(255,107,0,0.05) 0%, rgba(255,136,0,0.05) 100%);
-            border: 2px solid #ff6b00;
+            border: 2px solid var(--primary-orange);
             border-radius: 10px;
         }
 
         .ar-title {
-            font-size: 18px;
-            color: #ff6b00;
+            font-size: var(--font-lg);
+            color: var(--primary-orange);
             font-weight: bold;
-            margin: 0 0 15px 0;
+            margin: 0 0 var(--space-md) 0;
             text-align: center;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: var(--space-xs);
+            flex-wrap: wrap;
         }
 
         model-viewer {
             width: 100%;
-            height: 450px;
+            height: clamp(300px, 50vh, 450px);
             background-color: #f5f5f5;
             border-radius: 8px;
             border: 2px solid #ddd;
-        }
-
-        @media (max-width: 768px) {
-            model-viewer {
-                height: 350px;
-            }
-            .ar-title {
-                font-size: 16px;
-            }
-            .ar-container {
-                padding: 15px;
-                margin: 15px 0;
-            }
+            display: block;
         }
 
         .details {
-            padding: 30px;
-            background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
-        }
-
-        @media (max-width: 768px) {
-            .details {
-                padding: 20px;
-            }
+            padding: var(--space-lg) var(--space-md);
+            background: linear-gradient(to bottom, var(--bg-white) 0%, var(--bg-light) 100%);
         }
 
         .evidence-title {
-            margin: 0 0 25px 0;
-            font-size: 24px;
-            color: #1a1a2e;
-            border-bottom: 3px solid #ff6b00;
-            padding-bottom: 15px;
+            margin: 0 0 var(--space-lg) 0;
+            font-size: var(--font-xl);
+            color: var(--text-dark);
+            border-bottom: 3px solid var(--primary-orange);
+            padding-bottom: var(--space-md);
             font-weight: 700;
             display: flex;
             align-items: center;
-            gap: 12px;
-        }
-
-        @media (max-width: 768px) {
-            .evidence-title {
-                font-size: 20px;
-                margin: 0 0 20px 0;
-                gap: 10px;
-            }
+            gap: var(--space-sm);
+            flex-wrap: wrap;
         }
 
         .section {
-            margin-bottom: 25px;
+            margin-bottom: var(--space-lg);
             background: white;
-            padding: 20px;
+            padding: var(--space-md);
             border-radius: 10px;
-            border: 1px solid #e0e0e0;
+            border: 1px solid var(--border-light);
             box-shadow: 0 2px 6px rgba(0,0,0,0.05);
         }
 
         .section-title {
-            font-size: 18px;
-            color: #0f3460;
-            margin-bottom: 15px;
+            font-size: var(--font-lg);
+            color: var(--medium-blue);
+            margin-bottom: var(--space-md);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: var(--space-sm);
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            border-bottom: 2px solid #e0e0e0;
-            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border-light);
+            padding-bottom: var(--space-sm);
+            flex-wrap: wrap;
         }
 
-        @media (max-width: 768px) {
-            .section-title {
-                font-size: 16px;
-                gap: 8px;
-            }
+        .section-content {
+            font-size: var(--font-base);
+            line-height: 1.8;
+            color: var(--text-medium);
         }
-
-.section-content {
-    font-size: 15px;
-    line-height: 1.8;
-    color: #333;
-    text-align: justify;
-}
 
         .section-content p {
             margin: 0;
         }
 
-        @media (max-width: 768px) {
-            .section-content {
-                font-size: 14px;
-            }
-        }
-
         ul {
-            padding-left: 25px;
-            line-height: 2;
+            padding-left: clamp(20px, 5vw, 25px);
+            line-height: 1.8;
         }
 
         ul li {
-            margin-bottom: 8px;
-        }
-
-        @media (max-width: 768px) {
-            ul {
-                padding-left: 20px;
-                line-height: 1.8;
-            }
+            margin-bottom: var(--space-xs);
         }
 
         .glass-item {
-            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            background: linear-gradient(135deg, var(--bg-white) 0%, var(--bg-light) 100%);
             border: 2px solid #dee2e6;
             border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 12px;
+            padding: var(--space-md);
+            margin-bottom: var(--space-sm);
             transition: all 0.3s ease;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
@@ -396,7 +325,7 @@
 
         .glass-item.critical {
             background: linear-gradient(135deg, #fff5f5 0%, #ffe5e5 100%);
-            border-color: #dc3545;
+            border-color: var(--danger-red);
             border-width: 3px;
             box-shadow: 0 4px 12px rgba(220,53,69,0.15);
         }
@@ -407,99 +336,203 @@
 
         .glass-name {
             font-weight: 700;
-            font-size: 15px;
-            color: #1a1a2e;
-            margin-bottom: 8px;
+            font-size: var(--font-base);
+            color: var(--text-dark);
+            margin-bottom: var(--space-xs);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: var(--space-xs);
+            flex-wrap: wrap;
         }
 
         .glass-name::before {
             content: "🥃";
-            font-size: 20px;
+            font-size: clamp(18px, 5vw, 20px);
         }
 
         .glass-item.critical .glass-name {
-            color: #dc3545;
-            font-size: 16px;
+            color: var(--danger-red);
+            font-size: var(--font-md);
         }
 
         .glass-details {
-            font-size: 13px;
-            color: #666;
-            padding-left: 28px;
+            font-size: var(--font-sm);
+            color: var(--text-light);
+            padding-left: clamp(24px, 6vw, 28px);
             line-height: 1.6;
         }
 
         .glass-details div {
             margin-bottom: 4px;
-        }
-
-        @media (max-width: 768px) {
-            .glass-item {
-                padding: 12px;
-                margin-bottom: 10px;
-            }
-            
-            .glass-name {
-                font-size: 14px;
-            }
-            
-            .glass-details {
-                font-size: 12px;
-            }
+            word-break: break-word;
         }
 
         .significance-box {
             background: linear-gradient(135deg, #fff5f0 0%, #ffe8db 100%);
-            border: 2px solid #ff6b00;
+            border: 2px solid var(--primary-orange);
             border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 25px;
+            padding: var(--space-lg);
+            margin-bottom: var(--space-lg);
             box-shadow: 0 4px 12px rgba(255,107,0,0.1);
         }
 
         .significance-title {
-            font-size: 18px;
-            color: #ff6b00;
-            margin: 0 0 15px 0;
+            font-size: var(--font-lg);
+            color: var(--primary-orange);
+            margin: 0 0 var(--space-md) 0;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: var(--space-sm);
             font-weight: 700;
+            flex-wrap: wrap;
         }
 
-        @media (max-width: 768px) {
-            .significance-box {
-                padding: 20px;
-                margin-bottom: 20px;
+        .significance-text {
+            font-size: var(--font-base);
+            line-height: 1.8;
+            color: var(--text-dark);
+            margin: 0;
+        }
+
+        .back-button-container {
+            text-align: center;
+            padding: var(--space-md);
+            background: rgba(0,0,0,0.05);
+            position: relative;
+            z-index: 100;
+        }
+
+        .back-button {
+            background: linear-gradient(135deg, var(--primary-orange) 0%, var(--primary-orange-light) 100%);
+            color: white;
+            padding: var(--space-md) var(--space-xl);
+            border: none;
+            border-radius: 10px;
+            font-size: var(--font-base);
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(255,107,0,0.3);
+            position: relative;
+            z-index: 101;
+            pointer-events: auto;
+            transition: all 0.3s ease;
+            min-height: 48px;
+            min-width: 200px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-xs);
+        }
+
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(255,107,0,0.4);
+        }
+
+        .back-button:active {
+            transform: translateY(0);
+        }
+
+        #debugInfo {
+            margin-top: var(--space-sm);
+            padding: var(--space-sm);
+            background: #e7f3ff;
+            border: 1px solid #2196F3;
+            border-radius: 5px;
+            font-size: var(--font-xs);
+            font-family: monospace;
+            display: none;
+            word-break: break-word;
+        }
+
+        @media (min-width: 768px) and (max-width: 1024px) {
+            .container {
+                padding: var(--space-lg);
             }
             
-            .significance-title {
-                font-size: 16px;
+            .badge-bar {
+                flex-direction: row;
+                align-items: center;
+            }
+            
+            .official-badge {
+                align-self: center;
             }
         }
 
-.significance-text {
-    font-size: 15px;
-    line-height: 1.8;
-    color: #1a1a2e;
-    margin: 0;
-    text-align: justify;
-}
-
-        @media (max-width: 768px) {
-            .significance-text {
-                font-size: 14px;
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: clamp(1rem, 5vw, 1.25rem);
             }
+            
+            .badge-bar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .official-badge {
+                align-self: flex-start;
+            }
+            
+            .evidence-title,
+            .section-title,
+            .significance-title,
+            .ar-title {
+                font-size: clamp(0.9rem, 4.5vw, 1.1rem);
+            }
+            
+            .section-content,
+            .significance-text {
+                text-align: left;
+            }
+            
+            .back-button {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+
+        @media (min-width: 1440px) {
+            .container {
+                max-width: 1400px;
+            }
+        }
+
+        @media print {
+            .animated-background,
+            .back-button-container {
+                display: none;
+            }
+            
+            body {
+                background: white;
+            }
+            
+            .evidence-card {
+                box-shadow: none;
+                border: 2px solid #000;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        @media (prefers-color-scheme: dark) {
+		
         }
     </style>
 </head>
 <body>
     <div class="animated-background"></div>
 
-    <div class="header">
+    <header class="header">
         <div class="header-content">
             <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
@@ -508,10 +541,10 @@
             <h1>ΤΕΚΜΗΡΙΟ ΞΕΚΛΕΙΔΩΘΗΚΕ!</h1>
         </div>
         <p>Προστέθηκε στον φάκελο υπόθεσης</p>
-    </div>
+    </header>
 
-    <div class="container">
-        <div class="evidence-card">
+    <main class="container">
+        <article class="evidence-card">
             <div class="badge-bar">
                 <div class="badge-info">
                     <div class="evidence-id">ΤΕΚ #002</div>
@@ -592,152 +625,130 @@
                     </div>
                 </model-viewer>
                 
-                <div id="debugInfo" style="
-                    margin-top: 10px;
-                    padding: 10px;
-                    background: #e7f3ff;
-                    border: 1px solid #2196F3;
-                    border-radius: 5px;
-                    font-size: 12px;
-                    font-family: monospace;
-                    display: none;
-                "></div>
+                <div id="debugInfo"></div>
             </div>
 
-<div class="details">
-    <h2 class="evidence-title">🥃 ΚΡΥΣΤΑΛΛΙΝΑ ΠΟΤΗΡΙΑ</h2>
+            <section class="details">
+                <h2 class="evidence-title">🥃 ΚΡΥΣΤΑΛΛΙΝΑ ΠΟΤΗΡΙΑ</h2>
 
-    <div class="section">
-        <h3 class="section-title">
-            <span style="font-size: 24px;">🔬</span>
-            Εγκληματολογική Ανάλυση
-        </h3>
-        <div>
-            <div class="glass-item critical">
-                <div class="glass-name">Ποτήρι Α (Δημητρίου)</div>
-                <div class="glass-details">
-                    <div><strong>Υπόλειμμα:</strong> ~180ml ουίσκι με πάγο (πλήρως λιωμένο)</div>
-                    <div><strong>Κυάνιο:</strong> 185mg/L - ΘΑΝΑΤΗΦΟΡΟΣ ΔΟΣΗ</div>
-                    <div><strong>Χρόνος:</strong> Πάγος λιωμένος = 45-60 λεπτά σε θερμοκρασία δωματίου</div>
-                    <div><strong>Θέση:</strong> Στο γραφείο, δεξιά πλευρά</div>
-                    <div><strong>Καθαρότητα:</strong> Σχετικά καθαρό εξωτερικά</div>
+                <div class="section">
+                    <h3 class="section-title">
+                        <span style="font-size: 24px;">🔬</span>
+                        Εγκληματολογική Ανάλυση
+                    </h3>
+                    <div>
+                        <div class="glass-item critical">
+                            <div class="glass-name">Ποτήρι Α (Δημητρίου)</div>
+                            <div class="glass-details">
+                                <div><strong>Υπόλειμμα:</strong> ~180ml ουίσκι με πάγο (πλήρως λιωμένο)</div>
+                                <div><strong>Κυάνιο:</strong> 185mg/L - ΘΑΝΑΤΗΦΟΡΟΣ ΔΟΣΗ</div>
+                                <div><strong>Χρόνος:</strong> Πάγος λιωμένος = 45-60 λεπτά σε θερμοκρασία δωματίου</div>
+                                <div><strong>Θέση:</strong> Στο γραφείο, δεξιά πλευρά</div>
+                                <div><strong>Καθαρότητα:</strong> Σχετικά καθαρό εξωτερικά</div>
+                            </div>
+                        </div>
+                        
+                        <div class="glass-item">
+                            <div class="glass-name">Ποτήρι Β (Δεύτερο άτομο)</div>
+                            <div class="glass-details">
+                                <div><strong>Υπόλειμμα:</strong> ~110ml ουίσκι (ΚΑΘΑΡΟ - χωρίς πάγο)</div>
+                                <div><strong>Κυάνιο:</strong> 0mg/L</div>
+                                <div><strong>DNA:</strong> Μερικό στο χείλος (αποτελέσματα σε 48h)</div>
+                                <div><strong>Θέση:</strong> Στο ράφι δίπλα στο παράθυρο - ΟΧΙ στο γραφείο</div>
+                                <div><strong>Καθαρότητα:</strong> Εξωτερικά σκουπισμένο (ίνες πανιού)</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="glass-item">
-                <div class="glass-name">Ποτήρι Β (Δεύτερο άτομο)</div>
-                <div class="glass-details">
-                    <div><strong>Υπόλειμμα:</strong> ~110ml ουίσκι (ΚΑΘΑΡΟ - χωρίς πάγο)</div>
-                    <div><strong>Κυάνιο:</strong> 0mg/L - ΔΕΝ ΕΝΤΟΠΙΣΤΗΚΕ</div>
-                    <div><strong>DNA:</strong> Μερικό στο χείλος (αποτελέσματα σε 48h)</div>
-                    <div><strong>Θέση:</strong> Στο ράφι δίπλα στο παράθυρο - ΟΧΙ στο γραφείο</div>
-                    <div><strong>Καθαρότητα:</strong> Εξωτερικά σκουπισμένο (ίνες πανιού)</div>
+
+                <div class="section">
+                    <h3 class="section-title">
+                        <span style="font-size: 24px;">👆</span>
+                        Αποτυπώματα ΚΑΙ Χρονολόγιο (βάσει στρωματοποίησης)
+                    </h3>
+                    
+                    <div style="margin-bottom: 25px;">
+                        <p class="section-content" style="margin-bottom: 15px;">
+                            <strong style="color: #0f3460; font-size: 16px;">Ποτήρι Α (Δημητρίου)</strong>
+                        </p>
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong>Πλήρη & Καθαρά Αποτυπώματα:</strong>
+                        </p>
+                        
+                        <div class="glass-item critical">
+                            <div class="glass-name">Ποτήρι Α (Δημητρίου Πέτρος)</div>
+                            <div class="glass-details">
+                                <div>• Αντίχειρας + δείκτης δεξί χέρι</div>
+                                <div>• Χρονολόγιο: &lt; 30 λεπτά πριν τον θάνατο (21:00-21:30 εκτιμώμενη ώρα θανάτου)</div>
+                                <div>• Θέση: Περιμετρικά στο σώμα του ποτηριού (φυσιολογική λαβή)</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 35px;">
+                        <p class="section-content" style="margin-bottom: 15px;">
+                            <strong style="color: #0f3460; font-size: 16px;">Ποτήρι Β (Δεύτερου ατόμου)</strong>
+                        </p>
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong>Μερικά Αποτυπώματα (70% σβησμένα με πανί):</strong>
+                        </p>
+                        
+                        <div class="glass-item">
+                            <div class="glass-name">Αναγνώστου Κωνσταντίνος</div>
+                            <div class="glass-details">
+                                <div>• Ίχνη στη βάση</div>
+                                <div>• Χρονολόγιο: 2-4 ώρες πριν (17:00-21:00)</div>
+                            </div>
+                        </div>
+                        
+                        <div class="glass-item">
+                            <div class="glass-name">Μαυρίδη Ελένη</div>
+                            <div class="glass-details">
+                                <div>• Ίχνη στο χείλος</div>
+                                <div>• Χρονολόγιο: 2-4 ώρες πριν (17:00-21:00)</div>
+                            </div>
+                        </div>
+                        
+                        <div class="glass-item">
+                            <div class="glass-name">Παπαδοπούλου Μαρία</div>
+                            <div class="glass-details">
+                                <div>• Αντίχειρας αριστερό χέρι στο σώμα</div>
+                                <div>• Χρονολόγιο: 48-72 ώρες πριν</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </div>
 
-    <div class="section">
-        <h3 class="section-title">
-            <span style="font-size: 24px;">👆</span>
-            Αποτυπώματα ΚΑΙ Χρονολόγιο (βάσει στρωματοποίησης)
-        </h3>
-        
-        <div style="margin-bottom: 25px;">
-            <p class="section-content" style="margin-bottom: 15px;">
-                <strong style="color: #0f3460; font-size: 16px;">Ποτήρι Α (Δημητρίου)</strong>
-            </p>
-            <p class="section-content" style="margin-bottom: 10px;">
-                <strong>Πλήρη & Καθαρά Αποτυπώματα:</strong>
-            </p>
-            
-            <div class="glass-item critical">
-                <div class="glass-name">Ποτήρι Α (Δημητρίου Πέτρος)</div>
-                <div class="glass-details">
-                    <div>• Αντίχειρας + δείκτης δεξί χέρι</div>
-                    <div>• Χρονολόγιο: &lt; 30 λεπτά πριν τον θάνατο (21:00-21:30 εκτιμώμενη ώρα θανάτου)</div>
-                    <div>• Θέση: Περιμετρικά στο σώμα του ποτηριού (φυσιολογική λαβή)</div>
+                <div class="significance-box">
+                    <h3 class="significance-title">
+                        <span style="font-size: 20px;">💡</span>
+                        ΣΗΜΑΣΙΑ ΓΙΑ ΤΗΝ ΕΡΕΥΝΑ
+                    </h3>
+                    <p class="significance-text">
+                        Δύο ποτήρια - ένα με κυάνιο, ένα καθαρό - αλλά ήταν από την ίδια στιγμή; Το Ποτήρι Β έχει αποτυπώματα από 48-72 ώρες πριν (Παπαδοπούλου) ΚΑΙ από 2-4 ώρες πριν (Αναγνώστου/Μαυρίδη). Μήπως το Ποτήρι Β δεν ήταν από το «τελευταίο ποτό» με τον Δημητρίου, αλλά από προηγούμενη μέρα που κάποιος ξέχασε να το μαζέψει ή μήπως το άφησαν σκόπιμα εκεί για να μπερδέψουν την έρευνα; Διατί κάποιος να το καθαρίσει μερικώς;
+                    </p>
                 </div>
-            </div>
-        </div>
 
-        <div style="margin-top: 35px;">
-            <p class="section-content" style="margin-bottom: 15px;">
-                <strong style="color: #0f3460; font-size: 16px;">Ποτήρι Β (Δεύτερου ατόμου)</strong>
-            </p>
-            <p class="section-content" style="margin-bottom: 10px;">
-                <strong>Μερικά Αποτυπώματα (70% σβησμένα με πανί):</strong>
-            </p>
-            
-            <div class="glass-item">
-                <div class="glass-name">Αναγνώστου Κωνσταντίνος</div>
-                <div class="glass-details">
-                    <div>• Ίχνη στη βάση</div>
-                    <div>• Χρονολόγιο: 2-4 ώρες πριν (17:00-19:00)</div>
+                <div class="section">
+                    <h3 class="section-title">
+                        <span style="font-size: 24px;">❓</span>
+                        Βασικά Ερωτήματα Διερεύνησης
+                    </h3>
+                    <ul class="section-content">
+                        <li>Τα δύο ποτήρια ήταν από το ΙΔΙΟ «ποτό» την ίδια στιγμή ή το Ποτήρι Β είναι από προηγούμενη μέρα;</li>
+                        <li>Αν το Ποτήρι Β είναι παλιό, γιατί δεν το μάζεψαν; Λησμονιά ή σκηνοθεσία;</li>
+                        <li>Διατί το Ποτήρι Β βρίσκεται στο ΡΑΦΙ και όχι στο γραφείο;</li>
+                    </ul>
                 </div>
-            </div>
-            
-            <div class="glass-item">
-                <div class="glass-name">Μαυρίδη Ελένη</div>
-                <div class="glass-details">
-                    <div>• Ίχνη στο χείλος</div>
-                    <div>• Χρονολόγιο: 2-4 ώρες πριν (17:00-19:00)</div>
-                </div>
-            </div>
-            
-            <div class="glass-item">
-                <div class="glass-name">Παπαδοπούλου Μαρία</div>
-                <div class="glass-details">
-                    <div>• Αντίχειρας αριστερό χέρι στο σώμα</div>
-                    <div>• Χρονολόγιο: 48-72 ώρες πριν</div>
-                </div>
-            </div>
-        </div>
-    </div>
+            </section>
+        </article>
+    </main>
 
-    <div class="significance-box">
-        <h3 class="significance-title">
-            <span style="font-size: 20px;">💡</span>
-            ΣΗΜΑΣΙΑ ΓΙΑ ΤΗΝ ΕΡΕΥΝΑ
-        </h3>
-        <p class="significance-text">
-            Δύο ποτήρια - ένα με κυάνιο, ένα καθαρό - αλλά ήταν από την ίδια στιγμή; Το Ποτήρι Β έχει αποτυπώματα από 48-72 ώρες πριν (Παπαδοπούλου) ΚΑΙ από 2-4 ώρες πριν (Αναγνώστου/Μαυρίδη). Μήπως το Ποτήρι Β δεν ήταν από το «τελευταίο ποτό» με τον Δημητρίου, αλλά από προηγούμενη μέρα που κάποιος ξέχασε να το μαζέψει ή μήπως το άφησαν σκόπιμα εκεί για να μπερδέψουν την έρευνα; Γιατί κάποιος να το καθαρίσει μερικώς;
-        </p>
-    </div>
-
-    <div class="section">
-        <h3 class="section-title">
-            <span style="font-size: 24px;">❓</span>
-            Βασικά Ερωτήματα Διερεύνησης
-        </h3>
-        <ul class="section-content">
-            <li>Τα δύο ποτήρια ήταν από το ΙΔΙΟ «ποτό» την ίδια στιγμή ή το Ποτήρι Β είναι από προηγούμενη μέρα;</li>
-            <li>Αν το Ποτήρι Β είναι παλιό, γιατί δεν το μάζεψαν; Λησμονιά ή σκηνοθεσία;</li>
-            <li>Γιατί το Ποτήρι Β βρίσκεται στο ΡΑΦΙ και όχι στο γραφείο;</li>
-        </ul>
-    </div>
-</div>
-
-        </div>
-    </div>
-
-    <div style="text-align: center; padding: 20px; background: rgba(0,0,0,0.05); position: relative; z-index: 100;">
-        <button onclick="window.goBackToCaseFile()" 
-                style="background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%); 
-                       color: white; 
-                       padding: 15px 40px; 
-                       border: none; 
-                       border-radius: 10px; 
-                       font-size: 16px; 
-                       font-weight: bold; 
-                       cursor: pointer; 
-                       box-shadow: 0 4px 12px rgba(255,107,0,0.3);
-                       position: relative;
-                       z-index: 101;
-                       pointer-events: auto;">
+    <footer class="back-button-container">
+        <button onclick="window.goBackToCaseFile()" class="back-button">
             ← ΕΠΙΣΤΡΟΦΗ ΣΤΟΝ ΦΑΚΕΛΟ
         </button>
-    </div>
+    </footer>
 
     <script>
         window.goBackToCaseFile = function() {
@@ -754,20 +765,28 @@
         function drawCrimeScene() {
             const canvas = document.getElementById('crimeSceneCanvas');
             const ctx = canvas.getContext('2d');
+            const container = canvas.parentElement;
+            const containerWidth = container.clientWidth;
+            const baseWidth = 800;
+            const baseHeight = 400;
+            const scale = Math.min(containerWidth / baseWidth, 1.5);
             
-            canvas.width = 800;
-            canvas.height = 400;
-            const floorGradient = ctx.createLinearGradient(0, 0, 0, 400);
+            canvas.width = baseWidth;
+            canvas.height = baseHeight;
+            canvas.style.width = '100%';
+            canvas.style.height = 'auto';
+            
+            const floorGradient = ctx.createLinearGradient(0, 0, 0, baseHeight);
             floorGradient.addColorStop(0, '#8b7355');
             floorGradient.addColorStop(1, '#6b5345');
             ctx.fillStyle = floorGradient;
-            ctx.fillRect(0, 0, 800, 400);
+            ctx.fillRect(0, 0, baseWidth, baseHeight);
             ctx.strokeStyle = 'rgba(101, 67, 33, 0.3)';
             ctx.lineWidth = 2;
-            for (let i = 0; i < 400; i += 40) {
+            for (let i = 0; i < baseHeight; i += 40) {
                 ctx.beginPath();
                 ctx.moveTo(0, i);
-                ctx.lineTo(800, i + Math.random() * 10);
+                ctx.lineTo(baseWidth, i + Math.random() * 10);
                 ctx.stroke();
             }
 
@@ -778,6 +797,7 @@
             ctx.beginPath();
             ctx.ellipse(520, 330, 40, 15, -0.3, 0, Math.PI * 2);
             ctx.fill();
+            
             const glass1Gradient = ctx.createLinearGradient(240, 260, 320, 260);
             glass1Gradient.addColorStop(0, 'rgba(200, 220, 255, 0.3)');
             glass1Gradient.addColorStop(0.5, 'rgba(220, 235, 255, 0.5)');
@@ -844,13 +864,13 @@
                 ctx.ellipse(-10 + i * 8, -35 + i * 8, 8, 12, 0.5, 0, Math.PI * 2);
                 ctx.fill();
             }
+            
             ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
             ctx.lineWidth = 2;
             ctx.beginPath();
             ctx.moveTo(-25, -45);
             ctx.lineTo(-22, -10);
             ctx.stroke();
-
             ctx.restore();
             ctx.fillStyle = 'rgba(220, 53, 69, 0.8)';
             ctx.font = 'bold 16px monospace';
@@ -858,7 +878,7 @@
             ctx.fillText('A', 280, 345);
             ctx.fillText('B', 500, 345);
             ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-            ctx.fillRect(0, 0, 800, 40);
+            ctx.fillRect(0, 0, baseWidth, 40);
             
             ctx.fillStyle = '#ff0000';
             ctx.font = 'bold 14px monospace';
@@ -872,8 +892,15 @@
             ctx.fillText('ΤΕΚ #002', 790, 25);
         }
 
+        let resizeTimeout;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(drawCrimeScene, 250);
+        });
+
         window.onload = function() {
             drawCrimeScene();
+            
             const modelViewer = document.querySelector('model-viewer');
             const debugInfo = document.getElementById('debugInfo');
             

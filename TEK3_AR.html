@@ -2,7 +2,7 @@
 <html lang="el">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>Τεκμήριο Ξεκλειδώθηκε</title>
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
     
@@ -14,7 +14,7 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             min-height: 100vh;
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             position: relative;
@@ -22,7 +22,7 @@
         }
 
         .animated-background {
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             right: 0;
@@ -31,6 +31,7 @@
             background-image: repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,107,0,0.5) 35px, rgba(255,107,0,0.5) 70px);
             animation: slide 20s linear infinite;
             pointer-events: none;
+            z-index: 0;
         }
 
         @keyframes slide {
@@ -51,7 +52,7 @@
 
         .header {
             background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
-            padding: 20px;
+            padding: clamp(15px, 4vw, 25px);
             box-shadow: 0 4px 20px rgba(0,0,0,0.5);
             position: relative;
             z-index: 10;
@@ -61,141 +62,95 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            margin-bottom: 10px;
+            gap: clamp(8px, 2vw, 12px);
+            margin-bottom: clamp(8px, 2vw, 12px);
+            flex-wrap: wrap;
         }
 
         .check-icon {
-            width: 32px;
-            height: 32px;
+            width: clamp(24px, 6vw, 36px);
+            height: clamp(24px, 6vw, 36px);
             color: #fff;
             animation: unlock 0.6s ease-out;
+            flex-shrink: 0;
         }
 
         .header h1 {
             color: #fff;
-            font-size: 24px;
+            font-size: clamp(16px, 4vw, 26px);
             font-weight: bold;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            text-align: center;
+            word-break: break-word;
         }
 
         .header p {
             color: #fff;
             text-align: center;
-            opacity: 0.9;
-            font-size: 14px;
-        }
-
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 18px;
-            }
-            .check-icon {
-                width: 24px;
-                height: 24px;
-            }
-            .header {
-                padding: 15px 10px;
-            }
-            .header p {
-                font-size: 12px;
-            }
+            opacity: 0.95;
+            font-size: clamp(12px, 3vw, 15px);
         }
 
         .container {
-            padding: 20px;
+            padding: clamp(10px, 3vw, 25px);
             position: relative;
             z-index: 1;
             max-width: 1200px;
             margin: 0 auto;
         }
 
-        @media (max-width: 768px) {
-            .container {
-                padding: 10px;
-            }
-        }
-
         .evidence-card {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: clamp(10px, 2vw, 16px);
             box-shadow: 0 10px 40px rgba(0,0,0,0.3);
             overflow: hidden;
-            border: 3px solid #ff6b00;
-        }
-
-        @media (max-width: 768px) {
-            .evidence-card {
-                border-radius: 10px;
-                border: 2px solid #ff6b00;
-            }
+            border: clamp(2px, 0.3vw, 3px) solid #ff6b00;
+            margin-bottom: 20px;
         }
 
         .badge-bar {
             background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
-            padding: 15px 20px;
+            padding: clamp(12px, 3vw, 20px);
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        @media (max-width: 768px) {
-            .badge-bar {
-                padding: 12px 15px;
-                flex-direction: column;
-                align-items: flex-start;
-            }
+            gap: clamp(8px, 2vw, 15px);
         }
 
         .badge-info {
             flex: 1;
+            min-width: 150px;
         }
 
         .evidence-id {
-            font-size: 28px;
+            font-size: clamp(20px, 5vw, 30px);
             font-weight: bold;
             color: #ff6b00;
-            font-family: monospace;
-            letter-spacing: 2px;
-        }
-
-        @media (max-width: 768px) {
-            .evidence-id {
-                font-size: 22px;
-                letter-spacing: 1px;
-            }
+            font-family: 'Courier New', monospace;
+            letter-spacing: clamp(1px, 0.2vw, 2px);
+            word-break: break-all;
         }
 
         .category {
-            font-size: 12px;
+            font-size: clamp(10px, 2.5vw, 13px);
             color: #aaa;
-            margin-top: 2px;
-        }
-
-        @media (max-width: 768px) {
-            .category {
-                font-size: 10px;
-            }
+            margin-top: 4px;
         }
 
         .official-badge {
             background: rgba(255,107,0,0.2);
             border: 2px solid #ff6b00;
             border-radius: 8px;
-            padding: 8px 15px;
-            font-size: 11px;
+            padding: clamp(6px, 1.5vw, 10px) clamp(10px, 2vw, 18px);
+            font-size: clamp(9px, 2.2vw, 12px);
             color: #ff6b00;
             font-weight: bold;
-        }
-
-        @media (max-width: 768px) {
-            .official-badge {
-                font-size: 9px;
-                padding: 6px 10px;
-                align-self: flex-start;
-            }
+            white-space: nowrap;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .crime-scene-photo {
@@ -207,180 +162,126 @@
             border-top: 2px solid #333;
             border-bottom: 2px solid #333;
             overflow: hidden;
+            min-height: 200px;
         }
 
         #crimeSceneCanvas {
             width: 100%;
-            max-width: 800px;
             height: auto;
             display: block;
-        }
-
-        @media (max-width: 768px) {
-            .crime-scene-photo {
-                border-top: 1px solid #333;
-                border-bottom: 1px solid #333;
-            }
+            max-width: 100%;
         }
 
         .confidential-badge {
             position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(255,0,0,0.9);
+            top: clamp(5px, 2vw, 12px);
+            right: clamp(5px, 2vw, 12px);
+            background: rgba(255,0,0,0.95);
             color: white;
-            padding: 5px 10px;
-            font-size: 11px;
+            padding: clamp(4px, 1vw, 8px) clamp(8px, 2vw, 14px);
+            font-size: clamp(9px, 2vw, 12px);
             font-weight: bold;
             border-radius: 5px;
             border: 1px solid #fff;
-        }
-
-        @media (max-width: 768px) {
-            .confidential-badge {
-                font-size: 9px;
-                padding: 4px 8px;
-                top: 5px;
-                right: 5px;
-            }
+            z-index: 5;
         }
 
         .ar-container {
-            margin: 20px 0;
-            padding: 20px;
+            margin: clamp(15px, 3vw, 25px) 0;
+            padding: clamp(15px, 3vw, 25px);
             background: linear-gradient(135deg, rgba(255,107,0,0.05) 0%, rgba(255,136,0,0.05) 100%);
             border: 2px solid #ff6b00;
             border-radius: 10px;
         }
 
         .ar-title {
-            font-size: 18px;
+            font-size: clamp(16px, 3.5vw, 20px);
             color: #ff6b00;
             font-weight: bold;
-            margin: 0 0 15px 0;
+            margin: 0 0 clamp(12px, 2.5vw, 18px) 0;
             text-align: center;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: clamp(6px, 1.5vw, 10px);
+            flex-wrap: wrap;
         }
 
         model-viewer {
             width: 100%;
-            height: 450px;
+            height: clamp(300px, 50vh, 500px);
             background-color: #f5f5f5;
             border-radius: 8px;
             border: 2px solid #ddd;
         }
 
-        @media (max-width: 768px) {
-            model-viewer {
-                height: 350px;
-            }
-            .ar-title {
-                font-size: 16px;
-            }
-            .ar-container {
-                padding: 15px;
-                margin: 15px 0;
-            }
-        }
-
         .details {
-            padding: 30px;
+            padding: clamp(20px, 4vw, 35px);
             background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
         }
 
-        @media (max-width: 768px) {
-            .details {
-                padding: 20px;
-            }
-        }
-
         .evidence-title {
-            margin: 0 0 25px 0;
-            font-size: 24px;
+            margin: 0 0 clamp(20px, 4vw, 30px) 0;
+            font-size: clamp(18px, 4vw, 26px);
             color: #1a1a2e;
             border-bottom: 3px solid #ff6b00;
-            padding-bottom: 15px;
+            padding-bottom: clamp(12px, 2.5vw, 18px);
             font-weight: 700;
             display: flex;
             align-items: center;
-            gap: 12px;
-        }
-
-        @media (max-width: 768px) {
-            .evidence-title {
-                font-size: 20px;
-                margin: 0 0 20px 0;
-                gap: 10px;
-            }
+            gap: clamp(8px, 2vw, 14px);
+            flex-wrap: wrap;
+            word-break: break-word;
         }
 
         .section {
-            margin-bottom: 25px;
+            margin-bottom: clamp(20px, 4vw, 30px);
             background: white;
-            padding: 20px;
+            padding: clamp(15px, 3vw, 25px);
             border-radius: 10px;
             border: 1px solid #e0e0e0;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         }
 
         .section-title {
-            font-size: 18px;
+            font-size: clamp(15px, 3.5vw, 20px);
             color: #0f3460;
-            margin-bottom: 15px;
+            margin-bottom: clamp(12px, 2.5vw, 18px);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: clamp(8px, 2vw, 12px);
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             border-bottom: 2px solid #e0e0e0;
-            padding-bottom: 10px;
+            padding-bottom: clamp(8px, 1.5vw, 12px);
+            flex-wrap: wrap;
         }
 
-        @media (max-width: 768px) {
-            .section-title {
-                font-size: 16px;
-                gap: 8px;
-            }
-        }
-
-.section-content {
-    font-size: 15px;
-    line-height: 1.8;
-    color: #333;
-    text-align: justify;
-}
-
-        @media (max-width: 768px) {
-            .section-content {
-                font-size: 14px;
-            }
+        .section-content {
+            font-size: clamp(13px, 3vw, 16px);
+            line-height: 1.7;
+            color: #333;
+            text-align: left;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
         ul {
-            padding-left: 25px;
-            line-height: 2;
+            padding-left: clamp(20px, 4vw, 30px);
+            line-height: 1.8;
         }
 
         ul li {
-            margin-bottom: 8px;
-        }
-
-        @media (max-width: 768px) {
-            ul {
-                padding-left: 20px;
-                line-height: 1.8;
-            }
+            margin-bottom: clamp(8px, 2vw, 12px);
+            word-wrap: break-word;
         }
 
         .sms-message {
             background: linear-gradient(135deg, #fff5f5 0%, #ffe5e5 100%);
             border-left: 4px solid #dc3545;
-            padding: 20px;
-            margin: 15px 0;
+            padding: clamp(15px, 3vw, 25px);
+            margin: clamp(12px, 2.5vw, 18px) 0;
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(220,53,69,0.15);
         }
@@ -389,50 +290,43 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
-            padding-bottom: 10px;
+            margin-bottom: clamp(10px, 2vw, 15px);
+            padding-bottom: clamp(8px, 1.5vw, 12px);
             border-bottom: 1px solid rgba(220,53,69,0.2);
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .sms-time {
-            font-size: 13px;
+            font-size: clamp(11px, 2.5vw, 14px);
             color: #666;
             font-weight: 600;
         }
 
         .sms-sender {
-            font-size: 12px;
+            font-size: clamp(10px, 2.2vw, 13px);
             color: #dc3545;
             background: rgba(220,53,69,0.1);
-            padding: 4px 10px;
+            padding: clamp(4px, 1vw, 6px) clamp(8px, 2vw, 12px);
             border-radius: 12px;
             font-weight: 700;
         }
 
         .sms-text {
-            font-size: 18px;
+            font-size: clamp(15px, 3.5vw, 19px);
             color: #1a1a2e;
             font-weight: 600;
             line-height: 1.6;
             font-style: italic;
-        }
-
-        @media (max-width: 768px) {
-            .sms-message {
-                padding: 15px;
-            }
-            
-            .sms-text {
-                font-size: 16px;
-            }
+            word-wrap: break-word;
         }
 
         .phone-data {
             background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
             border: 2px solid #dee2e6;
             border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 12px;
+            padding: clamp(12px, 2.5vw, 18px);
+            margin-bottom: clamp(10px, 2vw, 15px);
             transition: all 0.3s ease;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
@@ -455,71 +349,165 @@
 
         .data-label {
             font-weight: 700;
-            font-size: 13px;
+            font-size: clamp(11px, 2.5vw, 14px);
             color: #666;
-            margin-bottom: 5px;
+            margin-bottom: 6px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
         .data-value {
-            font-size: 15px;
+            font-size: clamp(13px, 3vw, 16px);
             color: #1a1a2e;
             font-weight: 600;
+            word-wrap: break-word;
         }
 
         .phone-data.critical .data-value {
             color: #dc3545;
         }
 
-        @media (max-width: 768px) {
-            .phone-data {
-                padding: 12px;
-                margin-bottom: 10px;
-            }
-        }
-
         .significance-box {
             background: linear-gradient(135deg, #fff5f0 0%, #ffe8db 100%);
             border: 2px solid #ff6b00;
             border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 25px;
+            padding: clamp(18px, 3.5vw, 28px);
+            margin-bottom: clamp(20px, 4vw, 30px);
             box-shadow: 0 4px 12px rgba(255,107,0,0.1);
         }
 
         .significance-title {
-            font-size: 18px;
+            font-size: clamp(16px, 3.5vw, 20px);
             color: #ff6b00;
-            margin: 0 0 15px 0;
+            margin: 0 0 clamp(12px, 2.5vw, 18px) 0;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: clamp(8px, 2vw, 12px);
             font-weight: 700;
+            flex-wrap: wrap;
         }
 
-        @media (max-width: 768px) {
-            .significance-box {
+        .significance-text {
+            font-size: clamp(13px, 3vw, 16px);
+            line-height: 1.7;
+            color: #1a1a2e;
+            margin: 0;
+            text-align: left;
+            word-wrap: break-word;
+        }
+
+        .back-button-container {
+            text-align: center;
+            padding: clamp(15px, 3vw, 25px);
+            background: rgba(0,0,0,0.05);
+            position: relative;
+            z-index: 100;
+        }
+
+        .back-button {
+            background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
+            color: white;
+            padding: clamp(12px, 2.5vw, 18px) clamp(25px, 5vw, 50px);
+            border: none;
+            border-radius: 10px;
+            font-size: clamp(14px, 3vw, 18px);
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(255,107,0,0.3);
+            position: relative;
+            z-index: 101;
+            pointer-events: auto;
+            min-height: 44px;
+            min-width: 44px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(255,107,0,0.4);
+        }
+
+        .back-button:active {
+            transform: translateY(0);
+        }
+
+        /* Tablet breakpoint */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .container {
                 padding: 20px;
-                margin-bottom: 20px;
             }
-            
-            .significance-title {
-                font-size: 16px;
+
+            .badge-bar {
+                flex-direction: row;
+            }
+
+            model-viewer {
+                height: 400px;
             }
         }
 
-.significance-text {
-    font-size: 15px;
-    line-height: 1.8;
-    color: #1a1a2e;
-    margin: 0;
-    text-align: justify;
-}
-
-        @media (max-width: 768px) {
-            .significance-text {
+        /* Small mobile breakpoint */
+        @media (max-width: 480px) {
+            .header h1 {
                 font-size: 14px;
+            }
+
+            .badge-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .official-badge {
+                align-self: stretch;
+                text-align: center;
+            }
+
+            .sms-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .phone-data:hover {
+                transform: none;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            .animated-background,
+            .back-button-container {
+                display: none;
+            }
+
+            body {
+                background: white;
+            }
+
+            .evidence-card {
+                box-shadow: none;
+                border: 1px solid #333;
+            }
+        }
+
+        /* High DPI screens */
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+            .evidence-card {
+                border-width: 2px;
+            }
+        }
+
+        /* Accessibility - Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            .animated-background,
+            .check-icon,
+            .phone-data,
+            .back-button {
+                animation: none;
+                transition: none;
             }
         }
     </style>
@@ -529,7 +517,7 @@
 
     <div class="header">
         <div class="header-content">
-            <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                 <polyline points="22 4 12 14.01 9 11.01"></polyline>
             </svg>
@@ -544,26 +532,26 @@
                 <div class="badge-info">
                     <div class="evidence-id">ΤΕΚ #003</div>
                 </div>
-                <div class="official-badge">ΕΠΙΣΗΜΟ ΤΕΚΜΗΡΙΟ</div>
+                <div class="official-badge" role="badge">ΕΠΙΣΗΜΟ ΤΕΚΜΗΡΙΟ</div>
             </div>
 
             <div class="crime-scene-photo">
-                <canvas id="crimeSceneCanvas"></canvas>
-                <div class="confidential-badge">ΑΠΟΡΡΗΤΟ</div>
+                <canvas id="crimeSceneCanvas" aria-label="Φωτογραφία σκηνής εγκλήματος"></canvas>
+                <div class="confidential-badge" role="status">ΑΠΟΡΡΗΤΟ</div>
             </div>
 
             <div class="ar-container">
                 <h3 class="ar-title">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                         <path d="M2 16.1A5 5 0 0 1 5.9 20M2 12.05A9 9 0 0 1 9.95 20M2 8V6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-6"></path>
                         <line x1="2" y1="20" x2="2.01" y2="20"></line>
                     </svg>
-                    ΠΡΟΒΟΛΗ ΣΕ 3D
+                    <span>ΠΡΟΒΟΛΗ ΣΕ 3D</span>
                 </h3>
                 
                 <model-viewer
                     src="mobile_phone.glb"
-                    alt="Mobile Phone 3D Model - Evidence"
+                    alt="Τρισδιάστατο μοντέλο κινητού τηλεφώνου - Στοιχείο"
                     ar
                     ar-modes="webxr scene-viewer quick-look"
                     camera-controls
@@ -597,7 +585,7 @@
                             width: 40px;
                             height: 40px;
                             animation: spin 1s linear infinite;
-                        "></div>
+                        " aria-label="Φόρτωση"></div>
                         <p style="color: #666; font-size: 14px;">Φόρτωση 3D μοντέλου...</p>
                     </div>
                     
@@ -611,167 +599,149 @@
                         flex-direction: column;
                         gap: 15px;
                         padding: 20px;
+                        text-align: center;
                     ">
-                        <p style="color: #856404; font-size: 16px; font-weight: bold;">⚠️ Σφάλμα Φόρτωσης</p>
-                        <p style="color: #856404; font-size: 13px; text-align: center;">
+                        <p style="color: #856404; font-size: clamp(14px, 3vw, 16px); font-weight: bold;">⚠️ Σφάλμα Φόρτωσης</p>
+                        <p style="color: #856404; font-size: clamp(12px, 2.5vw, 13px);">
                             Το 3D μοντέλο δεν μπορεί να φορτώσει.<br>
                             Ελέγξτε το αρχείο: mobile_phone.glb
                         </p>
                     </div>
                 </model-viewer>
                 
-                <div id="debugInfo" style="
-                    margin-top: 10px;
-                    padding: 10px;
-                    background: #e7f3ff;
-                    border: 1px solid #2196F3;
-                    border-radius: 5px;
-                    font-size: 12px;
-                    font-family: monospace;
-                    display: none;
-                "></div>
-                
-                <p style="text-align: center; color: #666; font-size: 13px; margin-top: 10px; font-style: italic;">
+                <p style="text-align: center; color: #666; font-size: clamp(11px, 2.5vw, 13px); margin-top: 10px; font-style: italic;">
                     💡 Σύρετε για να περιστρέψετε • Zoom με δύο δάχτυλα
                 </p>
             </div>
 
-<div class="details">
-    <h2 class="evidence-title">📱 ΚΙΝΗΤΟ ΤΗΛΕΦΩΝΟ ΘΥΜΑΤΟΣ</h2>
+            <div class="details">
+                <h2 class="evidence-title">
+                    <span aria-hidden="true">📱</span>
+                    <span>ΚΙΝΗΤΟ ΤΗΛΕΦΩΝΟ ΘΥΜΑΤΟΣ</span>
+                </h2>
 
-    <div class="section">
-        <h3 class="section-title">
-            <span style="font-size: 24px;">🔬</span>
-            Εγκληματολογική Ανάλυση
-        </h3>
-        
-        <div class="sms-message">
-            <div class="sms-header">
-                <span class="sms-time">⏰ 20:45</span>
-                <span class="sms-sender">🔴 ΑΓΝΩΣΤΟΣ ΑΠΟΣΤΟΛΕΑΣ</span>
-            </div>
-            <div class="sms-text">
-               «Θα τελειώσει απόψε...»
+                <section class="section">
+                    <h3 class="section-title">
+                        <span style="font-size: 24px;" aria-hidden="true">🔬</span>
+                        <span>Εγκληματολογική Ανάλυση</span>
+                    </h3>
+                    
+                    <div class="sms-message">
+                        <div class="sms-header">
+                            <span class="sms-time">⏰ 20:45</span>
+                            <span class="sms-sender">🔴 ΑΓΝΩΣΤΟΣ ΑΠΟΣΤΟΛΕΑΣ</span>
+                        </div>
+                        <div class="sms-text">
+                           «Θα τελειώσει απόψε...»
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 25px;">
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong>Αποστολέας:</strong> Προπληρωμένη κάρτα SIM - μη καταγεγραμμένη
+                        </p>
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong>Τοποθεσία κεραίας:</strong> 250m από το κτίριο (πύργος κινητής τηλεφωνίας Α-47)
+                        </p>
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong>Χρονική σήμανση:</strong> 20:45:17 - 30 λεπτά πριν τον εκτιμώμενο θάνατο
+                        </p>
+                        <p class="section-content">
+                            <strong>Προηγούμενη επικοινωνία:</strong> Καμία με αυτόν τον αριθμό
+                        </p>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h3 class="section-title">
+                        <span style="font-size: 24px;" aria-hidden="true">🔬</span>
+                        <span>Τεχνική Ανάλυση Συσκευής</span>
+                    </h3>
+                    <div>
+                        <div class="phone-data critical">
+                            <div class="data-label">Κατάσταση Κλειδώματος</div>
+                            <div class="data-value">ΞΕΚΛΕΙΔΩΤΗ</div>
+                        </div>
+                        <div class="phone-data critical">
+                            <div class="data-label">Τελευταία Εξερχόμενη Κλήση</div>
+                            <div class="data-value">20:15 - Άγνωστος αριθμός (5 λεπτά διάρκεια)</div>
+                        </div>
+                        <div class="phone-data">
+                            <div class="data-label">Διαγραμμένα Μηνύματα</div>
+                            <div class="data-value">37 μηνύματα διαγράφηκαν 19:30-20:00</div>
+                        </div>
+                        <div class="phone-data">
+                            <div class="data-label">Εφαρμογή Email</div>
+                            <div class="data-value">Ανοιχτή στα «Πρόχειρα» - κενό μήνυμα</div>
+                        </div>
+                        <div class="phone-data">
+                            <div class="data-label">Μπαταρία</div>
+                            <div class="data-value">27% - Τελευταία φόρτιση 17:22</div>
+                        </div>
+                        <div class="phone-data">
+                            <div class="data-label">Τοποθεσία GPS</div>
+                            <div class="data-value">Ενεργή - Γραφείο (20:00-21:30)</div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h3 class="section-title">
+                        <span style="font-size: 24px;" aria-hidden="true">📞</span>
+                        <span>Ιστορικό Κλήσεων (Τελευταίες 24 ώρες)</span>
+                    </h3>
+                    
+                    <div>
+                        <div class="phone-data">
+                            <div class="data-label">14:30</div>
+                            <div class="data-value">Εισερχόμενη - Παπαδοπούλου Μαρία (12 λεπτά)</div>
+                        </div>
+                        <div class="phone-data">
+                            <div class="data-label">16:45</div>
+                            <div class="data-value">Εξερχόμενη - Νικολάου Αλεξάνδρα (3 λεπτά)</div>
+                        </div>
+                        <div class="phone-data">
+                            <div class="data-label">18:20</div>
+                            <div class="data-value">Αναπάντητη - Μαυρίδη Ελένη (2 κλήσεις)</div>
+                        </div>
+                        <div class="phone-data critical">
+                            <div class="data-label">20:15</div>
+                            <div class="data-value">Εξερχόμενη - Άγνωστος αριθμός (5 λεπτά)</div>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="significance-box">
+                    <h3 class="significance-title">
+                        <span style="font-size: 20px;" aria-hidden="true">💡</span>
+                        <span>ΣΗΜΑΣΙΑ ΓΙΑ ΤΗΝ ΕΡΕΥΝΑ</span>
+                    </h3>
+                    <p class="significance-text">
+                        Ένα απειλητικό μήνυμα 30 λεπτά πριν τον θάνατο από άγνωστο αποστολέα που βρισκόταν πολύ κοντά στο κτίριο. Η συσκευή βρέθηκε ξεκλείδωτη παρά το γεγονός πως ο Δημητρίου ήταν γνωστός για την εμμονή του με την ασφάλεια - πάντα κλείδωνε το τηλέφωνο ακόμα και για λίγα δευτερόλεπτα. Τα 37 διαγραμμένα μηνύματα μεταξύ 19:30-20:00 δημιουργούν ένα κενό στην επικοινωνία του, ενώ η μυστηριώδης κλήση των 5 λεπτών στις 20:15 σε άγνωστο αριθμό παραμένει ανεξήγητη. Η ανοιχτή εφαρμογή email στα «Πρόχειρα» με κενό μήνυμα μοιάζει σαν ο Δημητρίου να ήθελε να γράψει κάτι αλλά δεν πρόλαβε ή άλλαξε γνώμη. Ήταν όντως απειλή το SMS ή προειδοποίηση από κάποιον που ήξερε τι επρόκειτο να συμβεί;
+                    </p>
+                </div>
+
+                <section class="section">
+                    <h3 class="section-title">
+                        <span style="font-size: 24px;" aria-hidden="true">❓</span>
+                        <span>Βασικά Ερωτήματα Διερεύνησης</span>
+                    </h3>
+                    <ul class="section-content">
+                        <li>Γιατί ο Δημητρίου διέγραψε 37 μηνύματα μία ώρα πριν τον θάνατό του και με ποιον επικοινωνούσε;</li>
+                        <li>Ποιος ήταν ο άγνωστος αριθμός της τελευταίας κλήσης και γιατί δεν υπάρχει στο ιστορικό επαφών;</li>
+                        <li>Το ξεκλείδωτο τηλέφωνο ήταν από αμέλεια του Δημητρίου ή κάποιος το ξεκλείδωσε μετά τον θάνατο;</li>
+                    </ul>
+                </section>
             </div>
         </div>
-
-        <div style="margin-top: 25px;">
-            <p class="section-content" style="margin-bottom: 10px;">
-                <strong>Αποστολέας:</strong> Προπληρωμένη κάρτα SIM - μη καταγεγραμμένη
-            </p>
-            <p class="section-content" style="margin-bottom: 10px;">
-                <strong>Τοποθεσία κεραίας:</strong> 250m από το κτίριο (πύργος κινητής τηλεφωνίας Β-47)
-            </p>
-            <p class="section-content" style="margin-bottom: 10px;">
-                <strong>Χρονική σήμανση:</strong> 20:45:17 - 30 λεπτά πριν τον εκτιμώμενο θάνατο
-            </p>
-            <p class="section-content">
-                <strong>Προηγούμενη επικοινωνία:</strong> Καμία με αυτόν τον αριθμό
-            </p>
-        </div>
     </div>
 
-    <div class="section">
-        <h3 class="section-title">
-            <span style="font-size: 24px;">🔬</span>
-            Τεχνική Ανάλυση Συσκευής
-        </h3>
-        <div>
-            <div class="phone-data critical">
-                <div class="data-label">Κατάσταση Κλειδώματος</div>
-                <div class="data-value">ΞΕΚΛΕΙΔΩΤΗ</div>
-            </div>
-            <div class="phone-data critical">
-                <div class="data-label">Τελευταία Εξερχόμενη Κλήση</div>
-                <div class="data-value">20:15 - Άγνωστος αριθμός (5 λεπτά διάρκεια)</div>
-            </div>
-            <div class="phone-data">
-                <div class="data-label">Διαγραμμένα Μηνύματα</div>
-                <div class="data-value">37 μηνύματα διαγράφηκαν 19:30-20:00</div>
-            </div>
-            <div class="phone-data">
-                <div class="data-label">Εφαρμογή Email</div>
-                <div class="data-value">Ανοιχτή στα «Πρόχειρα» - κενό μήνυμα</div>
-            </div>
-            <div class="phone-data">
-                <div class="data-label">Μπαταρία</div>
-                <div class="data-value">27% - Τελευταία φόρτιση 17:22</div>
-            </div>
-            <div class="phone-data">
-                <div class="data-label">Τοποθεσία GPS</div>
-                <div class="data-value">Ενεργή - Γραφείο (20:00-21:30)</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="section">
-        <h3 class="section-title">
-            <span style="font-size: 24px;">📞</span>
-            Ιστορικό Κλήσεων (Τελευταίες 24 ώρες)
-        </h3>
-        
-        <div style="margin-bottom: 25px;">
-        <div style="margin-top: 35px;">            
-            <div class="phone-data">
-                <div class="data-label">14:30</div>
-                <div class="data-value">Εισερχόμενη - Παπαδοπούλου Μαρία (12 λεπτά)</div>
-            </div>
-            <div class="phone-data">
-                <div class="data-label">16:45</div>
-                <div class="data-value">Εξερχόμενη - Νικολάου Αλεξάνδρα (3 λεπτά)</div>
-            </div>
-            <div class="phone-data">
-                <div class="data-label">18:20</div>
-                <div class="data-value">Αναπάντητη - Μαυρίδη Ελένη (2 κλήσεις)</div>
-            </div>
-            <div class="phone-data critical">
-                <div class="data-label">20:15</div>
-                <div class="data-value">Εξερχόμενη - Άγνωστος αριθμός (5 λεπτά)</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="significance-box">
-        <h3 class="significance-title">
-            <span style="font-size: 20px;">💡</span>
-            ΣΗΜΑΣΙΑ ΓΙΑ ΤΗΝ ΕΡΕΥΝΑ
-        </h3>
-        <p class="significance-text">
-            Ένα απειλητικό μήνυμα 30 λεπτά πριν τον θάνατο από άγνωστο αποστολέα που βρισκόταν πολύ κοντά στο κτίριο. Η συσκευή βρέθηκε ξεκλείδωτη παρά το γεγονός πως ο Δημητρίου ήταν γνωστός για την εμμονή του με την ασφάλεια - πάντα κλείδωνε το τηλέφωνο ακόμα και για λίγα δευτερόλεπτα. Τα 37 διαγραμμένα μηνύματα μεταξύ 19:30-20:00 δημιουργούν ένα κενό στην επικοινωνία του, ενώ η μυστηριώδης κλήση των 5 λεπτών στις 20:15 σε άγνωστο αριθμό παραμένει ανεξήγητη. Η ανοιχτή εφαρμογή email στα «Πρόχειρα» με κενό μήνυμα μοιάζει σαν ο Δημητρίου να ήθελε να γράψει κάτι αλλά δεν πρόλαβε ή άλλαξε γνώμη. Ήταν όντως απειλή το SMS ή προειδοποίηση από κάποιον που ήξερε τι επρόκειτο να συμβεί;
-        </p>
-    </div>
-
-    <div class="section">
-        <h3 class="section-title">
-            <span style="font-size: 24px;">❓</span>
-            Βασικά Ερωτήματα Διερεύνησης
-        </h3>
-        <ul class="section-content">
-            <li>Γιατί ο Δημητρίου διέγραψε 37 μηνύματα μία ώρα πριν τον θάνατό του και με ποιον επικοινωνούσε;</li>
-            <li>Ποιος ήταν ο άγνωστος αριθμός της τελευταίας κλήσης και γιατί δεν υπάρχει στο ιστορικό επαφών;</li>
-            <li>Το ξεκλείδωτο τηλέφωνο ήταν από αμέλεια του Δημητρίου ή κάποιος το ξεκλείδωσε μετά τον θάνατο;</li>
-        </ul>
-    </div>
-</div>
-
-        </div>
-    </div>
-
-    <div style="text-align: center; padding: 20px; background: rgba(0,0,0,0.05); position: relative; z-index: 100;">
+    <div class="back-button-container">
         <button onclick="window.goBackToCaseFile()" 
-                style="background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%); 
-                       color: white; 
-                       padding: 15px 40px; 
-                       border: none; 
-                       border-radius: 10px; 
-                       font-size: 16px; 
-                       font-weight: bold; 
-                       cursor: pointer; 
-                       box-shadow: 0 4px 12px rgba(255,107,0,0.3);
-                       position: relative;
-                       z-index: 101;
-                       pointer-events: auto;">
-            ← ΕΠΙΣΤΡΟΦΗ ΣΤΟΝ ΦΑΚΕΛΟ
+                class="back-button"
+                aria-label="Επιστροφή στον φάκελο υπόθεσης">
+            <span aria-hidden="true">←</span>
+            <span>ΕΠΙΣΤΡΟΦΗ ΣΤΟΝ ΦΑΚΕΛΟ</span>
         </button>
     </div>
 
@@ -789,116 +759,114 @@
 
         function drawCrimeScene() {
             const canvas = document.getElementById('crimeSceneCanvas');
-            const ctx = canvas.getContext('2d');
+            if (!canvas) return;
             
-            canvas.width = 800;
-            canvas.height = 400;
-            const floorGradient = ctx.createLinearGradient(0, 0, 0, 400);
+            const ctx = canvas.getContext('2d');
+            const container = canvas.parentElement;
+            const dpr = window.devicePixelRatio || 1;
+            const containerWidth = container.clientWidth;
+            const aspectRatio = 2;
+            const canvasWidth = Math.min(containerWidth, 800);
+            const canvasHeight = canvasWidth / aspectRatio;
+            
+            canvas.width = canvasWidth * dpr;
+            canvas.height = canvasHeight * dpr;
+            canvas.style.width = canvasWidth + 'px';
+            canvas.style.height = canvasHeight + 'px';
+            
+            ctx.scale(dpr, dpr);
+            
+            const scaleX = canvasWidth / 800;
+            const scaleY = canvasHeight / 400;
+            const scale = Math.min(scaleX, scaleY);
+            const floorGradient = ctx.createLinearGradient(0, 0, 0, canvasHeight);
             floorGradient.addColorStop(0, '#8b7355');
             floorGradient.addColorStop(1, '#6b5345');
             ctx.fillStyle = floorGradient;
-            ctx.fillRect(0, 0, 800, 400);
+            ctx.fillRect(0, 0, canvasWidth, canvasHeight);
             ctx.strokeStyle = 'rgba(101, 67, 33, 0.3)';
-            ctx.lineWidth = 2;
-            for (let i = 0; i < 400; i += 40) {
+            ctx.lineWidth = 2 * scale;
+            for (let i = 0; i < canvasHeight; i += 40 * scale) {
                 ctx.beginPath();
                 ctx.moveTo(0, i);
-                ctx.lineTo(800, i + Math.random() * 10);
+                ctx.lineTo(canvasWidth, i + Math.random() * 10 * scale);
                 ctx.stroke();
             }
-	
-            const phoneGradient = ctx.createLinearGradient(330, 100, 470, 100);
+            
+            const phoneWidth = 140 * scale;
+            const phoneHeight = 260 * scale;
+            const phoneX = (canvasWidth - phoneWidth) / 2;
+            const phoneY = (canvasHeight - phoneHeight) / 2;
+            const phoneGradient = ctx.createLinearGradient(phoneX, phoneY, phoneX + phoneWidth, phoneY);
             phoneGradient.addColorStop(0, '#1a1a1a');
             phoneGradient.addColorStop(0.5, '#2d2d2d');
             phoneGradient.addColorStop(1, '#1a1a1a');
             ctx.fillStyle = phoneGradient;
-            ctx.fillRect(330, 100, 140, 260);
+            
             ctx.beginPath();
-            ctx.roundRect(330, 100, 140, 260, 15);
+            ctx.roundRect(phoneX, phoneY, phoneWidth, phoneHeight, 15 * scale);
             ctx.fill();
-
-            const screenGradient = ctx.createLinearGradient(340, 120, 460, 120);
+            
+            const screenX = phoneX + 10 * scale;
+            const screenY = phoneY + 20 * scale;
+            const screenWidth = phoneWidth - 20 * scale;
+            const screenHeight = phoneHeight - 40 * scale;
+            
+            const screenGradient = ctx.createLinearGradient(screenX, screenY, screenX + screenWidth, screenY);
             screenGradient.addColorStop(0, '#0a4d6e');
             screenGradient.addColorStop(0.5, '#0d5f8a');
             screenGradient.addColorStop(1, '#0a4d6e');
             ctx.fillStyle = screenGradient;
-            ctx.fillRect(340, 120, 120, 220);
+            ctx.fillRect(screenX, screenY, screenWidth, screenHeight);
             ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
-            ctx.fillRect(345, 125, 50, 100);
+            ctx.fillRect(screenX + 5 * scale, screenY + 5 * scale, 50 * scale, 100 * scale);
+
+            const centerX = phoneX + phoneWidth / 2;
+            const centerY = phoneY + phoneHeight / 2;
+            
             ctx.fillStyle = '#fff';
-            ctx.font = 'bold 16px sans-serif';
+            ctx.font = `bold ${16 * scale}px sans-serif`;
             ctx.textAlign = 'center';
-            ctx.fillText('💬', 400, 160);
+            ctx.fillText('💬', centerX, centerY - 40 * scale);
+            
             ctx.fillStyle = '#fff';
-            ctx.font = '11px sans-serif';
-            ctx.fillText('Νέο Μήνυμα', 400, 185);
-            ctx.fillText('20:45', 400, 200);
+            ctx.font = `${11 * scale}px sans-serif`;
+            ctx.fillText('Νέο Μήνυμα', centerX, centerY - 15 * scale);
+            ctx.fillText('20:45', centerX, centerY);
+            
             ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
-            ctx.font = 'bold 10px sans-serif';
-            ctx.fillText('Θα τελειώσει απόψε...', 400, 220);
+            ctx.font = `bold ${10 * scale}px sans-serif`;
+            ctx.fillText('Θα τελειώσει απόψε...', centerX, centerY + 20 * scale);
             ctx.fillStyle = '#333';
             ctx.beginPath();
-            ctx.arc(400, 345, 10, 0, Math.PI * 2);
+            ctx.arc(centerX, phoneY + phoneHeight - 15 * scale, 10 * scale, 0, Math.PI * 2);
             ctx.fill();
             ctx.fillStyle = '#1a5f7a';
-            ctx.fillRect(390, 112, 20, 2);
+            ctx.fillRect(centerX - 10 * scale, phoneY + 12 * scale, 20 * scale, 2 * scale);
             ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-            ctx.fillRect(0, 0, 800, 40);
+            ctx.fillRect(0, 0, canvasWidth, 40 * scale);
+            
             ctx.fillStyle = '#ff0000';
-            ctx.font = 'bold 14px monospace';
+            ctx.font = `bold ${14 * scale}px monospace`;
             ctx.textAlign = 'left';
-            ctx.fillText('● REC', 10, 25);
+            ctx.fillText('● REC', 10 * scale, 25 * scale);
+            
             ctx.fillStyle = '#fff';
-            ctx.fillText('22/09/2025  22:25:10  |  ΣΚΗΝΗ ΕΓΚΛΗΜΑΤΟΣ - ΓΡΑΦΕΙΟ ΘΥΜΑΤΟΣ', 80, 25);
+            const fontSize = Math.max(10 * scale, 8);
+            ctx.font = `${fontSize}px monospace`;
+            ctx.fillText('22/09/2025  22:25:10  |  ΣΚΗΝΗ ΕΓΚΛΗΜΑΤΟΣ', 60 * scale, 25 * scale);
+            
             ctx.textAlign = 'right';
-            ctx.fillText('ΤΕΚ #003', 790, 25);
+            ctx.fillText('ΤΕΚ #003', canvasWidth - 10 * scale, 25 * scale);
         }
 
-        window.onload = function() {
-            drawCrimeScene();
-            const modelViewer = document.querySelector('model-viewer');
-            const debugInfo = document.getElementById('debugInfo');
-            
-            if (modelViewer) {
-                debugInfo.style.display = 'block';
-                debugInfo.innerHTML = '🔍 Προσπάθεια φόρτωσης: mobile_phone.glb<br>';
-                
-                modelViewer.addEventListener('progress', (event) => {
-                    const percent = Math.round(event.detail.totalProgress * 100);
-                    debugInfo.innerHTML = `⏳ Φόρτωση: ${percent}%<br>`;
-                });
-                
-                modelViewer.addEventListener('load', () => {
-                    debugInfo.innerHTML = '✅ 3D μοντέλο φορτώθηκε επιτυχώς!<br>';
-                    debugInfo.style.background = '#d4edda';
-                    debugInfo.style.borderColor = '#28a745';
-                    setTimeout(() => {
-                        debugInfo.style.display = 'none';
-                    }, 3000);
-                });
-                
-                modelViewer.addEventListener('error', (event) => {
-                    debugInfo.innerHTML = '❌ ΣΦΑΛΜΑ: Το αρχείο δεν μπορεί να φορτώσει<br>';
-                    debugInfo.innerHTML += 'Ελέγξτε:<br>';
-                    debugInfo.innerHTML += '1. Το αρχείο υπάρχει στον ίδιο φάκελο<br>';
-                    debugInfo.innerHTML += '2. Το όνομα είναι: mobile_phone.glb<br>';
-                    debugInfo.innerHTML += '3. Το αρχείο είναι έγκυρο .glb<br>';
-                    debugInfo.style.background = '#f8d7da';
-                    debugInfo.style.borderColor = '#dc3545';
-                });
-                
-                setTimeout(() => {
-                    if (debugInfo.innerHTML.includes('Φόρτωση')) {
-                        debugInfo.innerHTML = '⚠️ Το μοντέλο δεν φορτώνει...<br>';
-                        debugInfo.innerHTML += 'Πιθανές αιτίες:<br>';
-                        debugInfo.innerHTML += '• Το αρχείο δεν βρέθηκε<br>';
-                        debugInfo.innerHTML += '• Λάθος όνομα: mobile_phone.glb<br>';
-                        debugInfo.style.background = '#fff3cd';
-                        debugInfo.style.borderColor = '#ffc107';
-                    }
-                }, 10000);
-            }
-        };
+        let resizeTimeout;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(drawCrimeScene, 250);
+        });
+
+        window.addEventListener('load', drawCrimeScene);
     </script>
 </body>
 </html>
