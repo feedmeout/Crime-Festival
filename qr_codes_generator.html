@@ -10,12 +10,24 @@
     
     <style>
         @media print {
-            body { margin: 0; padding: 0; }
+            body { 
+                margin: 0; 
+                padding: 0;
+                background: white !important;
+            }
             .no-print { display: none !important; }
-            .url-display { display: none !important; }  /* HIDE URL IN PRINT */
+            .url-display { display: none !important; }
             .qr-card { 
                 page-break-inside: avoid; 
                 box-shadow: none;
+                background: white !important;
+            }
+            .qr-container {
+                background: white !important;
+                border: 2px solid #dee2e6;
+            }
+            .qr-code-wrapper {
+                background: white !important;
             }
             .page-break { page-break-after: always; }
         }
@@ -156,7 +168,11 @@
             border-width: 5px;
         }
 
-        /* ALL TAG TYPES */
+        .qr-card.entry {
+            border-color: #28a745;
+            border-width: 5px;
+        }
+
         .critical-tag {
             position: absolute;
             top: 10px;
@@ -176,6 +192,7 @@
         .tag-financial { background: #17a2b8; }
         .tag-blackmail { background: #6c757d; }
         .tag-sabotage { background: #343a40; }
+        .tag-entry { background: #28a745; }
 
         .tek-number {
             font-size: 36px;
@@ -222,6 +239,12 @@
             font-size: 14px;
             font-weight: 600;
             color: #ff6b00;
+        }
+
+        .scan-instruction.entry-instruction {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            border-color: #28a745;
+            color: #28a745;
         }
 
         .url-display {
@@ -277,6 +300,7 @@
 
     <script>
         const tekData = [
+            { id: 'entry', name: 'Έναρξη Εμπειρίας', icon: '🚪', tag: 'entry', url: 'team_entry.html' },
             { id: 1, name: 'Μπουκάλι Ουίσκι', icon: '🍾', tag: 'critical' },
             { id: 2, name: 'Κρυστάλλινα Ποτήρια', icon: '🥃', tag: 'critical' },
             { id: 3, name: 'Κινητό Θύματος', icon: '📱', tag: 'threat' },
@@ -298,7 +322,8 @@
             'clue': 'ΕΝΔΕΙΞΗ',
             'financial': 'ΟΙΚΟΝΟΜΙΚΟ',
             'blackmail': 'ΕΚΒΙΑΣΜΟΣ',
-            'sabotage': 'ΣΑΜΠΟΤΑΖ'
+            'sabotage': 'ΣΑΜΠΟΤΑΖ',
+            'entry': 'ΕΝΑΡΞΗ'
         };
 
         function generateAllQRCodes() {
@@ -317,22 +342,46 @@
             container.innerHTML = '';
 
             tekData.forEach((tek, index) => {
-                const url = `${baseUrl}unlock_system.html?tek=${tek.id}`;
+                let url;
+                if (tek.id === 'entry') {
+                    url = `${baseUrl}team_entry.html`;
+                } else {
+                    url = `${baseUrl}unlock_system.html?tek=${tek.id}`;
+                }
+                
                 const tagLabel = tagLabels[tek.tag] || '';
                 const tagClass = `tag-${tek.tag}`;
                 
+                let cardClass = 'qr-card';
+                if (tek.tag === 'critical') cardClass += ' critical';
+                if (tek.tag === 'entry') cardClass += ' entry';
+
+                let cardNumber;
+                if (tek.id === 'entry') {
+                    cardNumber = '<div class="tek-number">TEK #000</div>';
+                } else {
+                    cardNumber = `<div class="tek-number">ΤΕΚ #${tek.id.toString().padStart(3, '0')}</div>`;
+                }
+                
+                let scanInstructionClass = 'scan-instruction';
+                let scanText = '📱 ΣΚΑΝΑΡΕΤΕ ΓΙΑ ΞΕΚΛΕΙΔΩΜΑ';
+                if (tek.id === 'entry') {
+                    scanInstructionClass += ' entry-instruction';
+                    scanText = '📱 ΣΚΑΝΑΡΕΤΕ ΓΙΑ ΕΙΣΟΔΟ';
+                }
+                
                 const cardDiv = document.createElement('div');
-                cardDiv.className = `qr-card ${tek.tag === 'critical' ? 'critical' : ''}`;
+                cardDiv.className = cardClass;
                 cardDiv.innerHTML = `
                     ${tagLabel ? `<div class="critical-tag ${tagClass}">⚠️ ${tagLabel}</div>` : ''}
-                    <div class="tek-number">ΤΕΚ #${tek.id.toString().padStart(3, '0')}</div>
+                    ${cardNumber}
                     <div class="tek-icon">${tek.icon}</div>
                     <div class="tek-name">${tek.name}</div>
                     <div class="qr-container">
                         <div class="qr-code-wrapper" id="qr-${tek.id}"></div>
                     </div>
-                    <div class="scan-instruction">
-                        📱 ΣΚΑΝΑΡΕΤΕ ΓΙΑ ΞΕΚΛΕΙΔΩΜΑ
+                    <div class="${scanInstructionClass}">
+                        ${scanText}
                     </div>
                     <div class="url-display">${url}</div>
                 `;
@@ -351,7 +400,7 @@
                 }, 100 * index);
             });
 
-            console.log('✅ All QR codes generated successfully!');
+            console.log('✅ All 12 QR codes generated successfully!');
         }
 
         window.addEventListener('DOMContentLoaded', () => {
