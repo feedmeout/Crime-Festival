@@ -26,7 +26,7 @@
         window.firebaseGetDoc = getDoc;
         window.firebaseReady = true;
         
-        console.log("✅ Firebase connected in unlock_system!");
+        console.log("✅ Firebase connected!");
     </script>
     
     <style>
@@ -242,53 +242,6 @@
     </div>
 
     <script>
-        // EMERGENCY DEBUG - SHOWS IMMEDIATELY
-        (function() {
-            const debugDiv = document.createElement('div');
-            debugDiv.id = 'emergencyDebug';
-            debugDiv.style.cssText = `
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                background: black;
-                color: lime;
-                padding: 15px;
-                font-family: monospace;
-                font-size: 12px;
-                z-index: 99999;
-                white-space: pre-wrap;
-                border-bottom: 3px solid lime;
-            `;
-            
-            const info = [
-                '=== EMERGENCY DEBUG ===',
-                'teamCode: ' + (localStorage.getItem('teamCode') || 'NULL'),
-                'memberAuth: ' + (localStorage.getItem('memberAuth') || 'NULL'),
-                'URL: ' + window.location.href,
-                'TEK: ' + new URLSearchParams(window.location.search).get('tek'),
-                'localStorage works: ' + (typeof(Storage) !== 'undefined'),
-                'Time: ' + new Date().toLocaleTimeString()
-            ].join('\n');
-            
-            debugDiv.textContent = info;
-            document.body.insertBefore(debugDiv, document.body.firstChild);
-            
-            // Update every second
-            setInterval(() => {
-                debugDiv.textContent = [
-                    '=== EMERGENCY DEBUG ===',
-                    'teamCode: ' + (localStorage.getItem('teamCode') || 'NULL'),
-                    'memberAuth: ' + (localStorage.getItem('memberAuth') || 'NULL'),
-                    'URL: ' + window.location.href,
-                    'TEK: ' + new URLSearchParams(window.location.search).get('tek'),
-                    'Firebase ready: ' + (window.firebaseReady || false),
-                    'localStorage works: ' + (typeof(Storage) !== 'undefined'),
-                    'Time: ' + new Date().toLocaleTimeString()
-                ].join('\n');
-            }, 1000);
-        })();
-
         const tekInfo = {
             '1': { name: 'Μπουκάλι Ουίσκι', icon: '🍾', page: 'TEK1_AR.html' },
             '2': { name: 'Κρυστάλλινα Ποτήρια', icon: '🥃', page: 'TEK2_AR.html' },
@@ -306,53 +259,71 @@
         const urlParams = new URLSearchParams(window.location.search);
         const tekNumber = urlParams.get('tek');
 
+        // TIMEOUT WRAPPER FOR PROMISES
+        function withTimeout(promise, ms, errorMsg) {
+            return Promise.race([
+                promise,
+                new Promise((_, reject) => 
+                    setTimeout(() => reject(new Error(errorMsg)), ms)
+                )
+            ]);
+        }
+
         function isFirebaseReady() {
             return typeof window.firebaseReady !== 'undefined' && window.firebaseReady === true;
         }
 
         async function saveToFirebase(teamName, data) {
             if (!isFirebaseReady()) {
-                console.warn('⚠️ Firebase not ready, skipping cloud save');
+                console.warn('⚠️ Firebase not ready');
                 return false;
             }
             
             try {
-                console.log(`💾 Saving to Firebase for team: ${teamName}`, data);
+                console.log(`💾 Saving to Firebase...`);
                 
-                await window.firebaseSetDoc(
-                    window.firebaseDoc(window.firebaseDB, 'teams', teamName),
-                    data
+                await withTimeout(
+                    window.firebaseSetDoc(
+                        window.firebaseDoc(window.firebaseDB, 'teams', teamName),
+                        data
+                    ),
+                    5000,
+                    'Firebase save timeout'
                 );
                 
-                console.log('✅ Successfully saved to Firebase');
+                console.log('✅ Saved to Firebase');
                 return true;
             } catch (error) {
-                console.error('❌ Firebase save error:', error);
+                console.error('❌ Firebase save error:', error.message);
                 return false;
             }
         }
 
         async function loadFromFirebase(teamName) {
             if (!isFirebaseReady()) {
-                console.warn('⚠️ Firebase not ready, loading from localStorage only');
+                console.warn('⚠️ Firebase not ready');
                 return null;
             }
             
             try {
-                console.log(`📥 Loading from Firebase for team: ${teamName}`);
+                console.log(`📥 Loading from Firebase...`);
                 
                 const docRef = window.firebaseDoc(window.firebaseDB, 'teams', teamName);
-                const docSnap = await window.firebaseGetDoc(docRef);
+                const docSnap = await withTimeout(
+                    window.firebaseGetDoc(docRef),
+                    5000,
+                    'Firebase load timeout'
+                );
                 
                 if (docSnap.exists()) {
-                    console.log('✅ Loaded from Firebase:', docSnap.data());
+                    console.log('✅ Loaded from Firebase');
                     return docSnap.data();
                 } else {
-                    console.log('ℹ️ No Firebase data found for this team');
+                    console.log('ℹ️ No Firebase data');
                     return null;
                 }
             } catch (error) {
-                console.error('❌ Firebase load error:', error);
+                console.error('❌ Firebase load error:', error.message);
                 return null;
             }
         }
@@ -362,29 +333,40 @@
         }
 
         async function getTeamData(teamCode) {
+            console.log('🔍 Getting team data for:', teamCode);
+            
+            // Try Firebase first (with timeout)
             const firebaseData = await loadFromFirebase(teamCode);
-            if (firebaseData && firebaseData.unlocked && firebaseData.unlocked.length > 0) {
+            if (firebaseData && firebaseData.unlocked) {
                 console.log('✅ Using Firebase data');
                 return firebaseData;
             }
             
+            // Fallback to localStorage
             const localData = localStorage.getItem(getStorageKey(teamCode));
             if (localData) {
-                const unlocked = JSON.parse(localData);
-                console.log('ℹ️ Using localStorage data (migrating to Firebase structure)');
-                return {
-                    unlocked: unlocked,
-                    timestamps: {},
-                    startTime: null,
-                    completedAt: null,
-                    totalTimeMs: null
-                };
+                try {
+                    const unlocked = JSON.parse(localData);
+                    console.log('✅ Using localStorage data');
+                    return {
+                        unlocked: unlocked,
+                        timestamps: {},
+                        evidenceTimestamps: {},
+                        startTime: null,
+                        completedAt: null,
+                        totalTimeMs: null
+                    };
+                } catch (e) {
+                    console.error('Error parsing localStorage:', e);
+                }
             }
 
-            console.log('ℹ️ New team, creating fresh data');
+            // New team
+            console.log('✅ New team data');
             return {
                 unlocked: [],
                 timestamps: {},
+                evidenceTimestamps: {},
                 startTime: null,
                 completedAt: null,
                 totalTimeMs: null
@@ -392,15 +374,15 @@
         }
 
         async function saveTeamData(teamCode, data) {
+            // Always save to localStorage first (immediate)
             localStorage.setItem(getStorageKey(teamCode), JSON.stringify(data.unlocked || []));
+            console.log('✅ Saved to localStorage');
+            
+            // Try Firebase (with timeout, can fail)
             const saved = await saveToFirebase(teamCode, {
                 ...data,
                 lastUpdate: new Date().toISOString()
             });
-            
-            if (!saved) {
-                console.error('⚠️ WARNING: Data not saved to Firebase! Admin panel will not see this update.');
-            }
             
             return saved;
         }
@@ -424,18 +406,20 @@
         }
 
         async function processUnlock() {
+            console.log('🚀 Starting processUnlock...');
+            
             const container = document.getElementById('unlockContainer');
             const teamCode = localStorage.getItem('teamCode');
             const memberAuth = localStorage.getItem('memberAuth');
 
             if (!teamCode || memberAuth !== 'true') {
-                console.log('⚠️ User not logged in, redirecting to login page');
+                console.log('⚠️ Not logged in, redirecting...');
                 const redirectUrl = encodeURIComponent(window.location.href);
                 window.location.href = `team_entry.html?redirect=${redirectUrl}`;
                 return;
             }
 
-            console.log(`✅ User authenticated: team=${teamCode}`);
+            console.log(`✅ Authenticated: ${teamCode}`);
 
             if (!tekNumber || !tekInfo[tekNumber]) {
                 container.innerHTML = `
@@ -449,12 +433,28 @@
             }
 
             const tek = tekInfo[tekNumber];
-            const teamData = await getTeamData(teamCode);
+            console.log('📦 TEK:', tekNumber, tek.name);
+            
+            try {
+                const teamData = await getTeamData(teamCode);
+                console.log('✅ Got team data:', teamData);
 
-            if (teamData.unlocked.includes(tekNumber)) {
-                showAlreadyUnlocked(tek, tekNumber, teamData, teamCode);
-            } else {
-                await unlockNew(tek, tekNumber, teamData, teamCode);
+                if (teamData.unlocked.includes(tekNumber)) {
+                    console.log('ℹ️ Already unlocked');
+                    showAlreadyUnlocked(tek, tekNumber, teamData, teamCode);
+                } else {
+                    console.log('🔓 Unlocking now...');
+                    await unlockNew(tek, tekNumber, teamData, teamCode);
+                }
+            } catch (error) {
+                console.error('❌ Process error:', error);
+                container.innerHTML = `
+                    <div class="error">
+                        <h2>⚠️ Σφάλμα</h2>
+                        <p>${error.message}</p>
+                        <button class="btn" onclick="location.reload()">Δοκιμάστε Ξανά</button>
+                    </div>
+                `;
             }
         }
 
@@ -485,6 +485,11 @@
             teamData.unlocked.push(tekNumber);
             teamData.timestamps[tekNumber] = now;
             
+            if (!teamData.evidenceTimestamps) {
+                teamData.evidenceTimestamps = {};
+            }
+            teamData.evidenceTimestamps[tekNumber] = now;
+            
             if (teamData.unlocked.length === 1) {
                 teamData.startTime = now;
             }
@@ -497,7 +502,7 @@
                 teamData.totalTimeMs = endMs - startMs;
             }
             
-            console.log('📝 Saving team data:', teamData);
+            console.log('💾 Saving team data...');
             const saved = await saveTeamData(teamCode, teamData);
             
             const container = document.getElementById('unlockContainer');
@@ -515,7 +520,7 @@
             
             let firebaseStatus = saved ? 
                 '<br>☁️ Αποθηκεύτηκε στο cloud' : 
-                '<br>⚠️ Προειδοποίηση: Αποθήκευση cloud απέτυχε';
+                '<br>💾 Αποθηκεύτηκε τοπικά';
             
             container.innerHTML = `
                 <div class="unlock-icon">✅</div>
@@ -539,11 +544,13 @@
             `;
         }
 
-        // START THE PROCESS
+        // START
         window.addEventListener('DOMContentLoaded', () => {
+            console.log('📱 Page loaded');
+            
             setTimeout(() => {
                 if (!isFirebaseReady()) {
-                    console.error('⚠️ Firebase failed to initialize');
+                    console.error('⚠️ Firebase failed');
                     document.getElementById('unlockContainer').innerHTML = `
                         <div class="error">
                             <h2>⚠️ Σφάλμα Σύνδεσης</h2>
@@ -553,8 +560,10 @@
                     `;
                     return;
                 }
+                
+                console.log('✅ Firebase ready, starting unlock...');
                 processUnlock();
-            }, 2500);
+            }, 1500);
         });
     </script>
 </body>
