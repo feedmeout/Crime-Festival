@@ -1303,7 +1303,7 @@ button:focus-visible,
                                 ΤΑ ΑΠΟΤΕΛΕΣΜΑΤΑ ΔΕΙΝΑΙ ΑΚΟΜΑ ΔΙΑΘΕΣΙΜΑ
                             </h2>
                             <div style="background: #d4edda; border: 2px solid #28a745; border-radius: 12px; padding: 20px; margin: 30px auto; max-width: 500px;">
-                                <div style="font-size: 24px; margin-bottom: 10px;">✓</div>
+                                <div style="font-size: 24px; margin-bottom: 10px;"></div>
                                 <div style="color: #155724; font-weight: bold;">
                                     Η ΣΕΛΙΔΑ ΘΑ ΑΝΑΝΕΩΘΕΙ ΟΤΑΝ ΟΛΕΣ ΟΙ ΟΜΑΔΕΣ ΟΛΟΚΛΗΡΩΣΟΥΝ ΤΗΝ ΕΡΕΥΝΑ ΤΟΥΣ!!<br>
                                 </div>
@@ -1509,7 +1509,7 @@ const teks = [
         name: 'Ιατρική Γνωμάτευση',
         subtitle: 'Ιατρική Γνωμάτευση (Κρυφή)',
         icon: '🥼',
-        description: '<strong>Διάγνωση:</strong> Καρκίνος παγκρέατος σταδίου IV<br><strong>Ημερομηνία:</strong> 28/08/2025<br><strong>Πρόγνωση:</strong> 2-3 μήνες ζωής<br><strong>Διατρός:</strong> Δρ. Σταυρίδης',
+        description: '<strong>Διάγνωση:</strong> Καρκίνος παγκρέατος σταδίου IV<br><strong>Ημερομηνία:</strong> 28/08/2025<br><strong>Πρόγνωση:</strong> 2-3 μήνες ζωής<br><strong>Γιατρός:</strong> Δρ. Σταυρίδης',
         page: 'TEK5_AR.html',
         critical: false,
         secret: true
@@ -2259,7 +2259,7 @@ function displaySolutionResult(solution) {
         '<div style="background: ' + headerGradient + '; color: white; padding: 30px; border-radius: 15px; margin: 20px 0; text-align: center; box-shadow: 0 10px 40px ' + headerShadow + ';">' +
         
         '<h2 style="font-size: 32px; margin-bottom: 15px;">' +
-        (isPerfect ? '🎉 ΤΕΛΕΙΑ ΛΥΣΗ!' : isContradiction ? '❌ ΛΟΓΙΚΗ ΑΝΤΙΦΑΣΗ' : solution.score === 0 ? '❌ ΛΑΘΟΣ ΑΠΑΝΤΗΣΗ' : '✓ ΛΥΣΗ ΥΠΟΒΛΗΘΗΚΕ') +
+        (isPerfect ? '🎉 ΤΕΛΕΙΑ ΛΥΣΗ!' : isContradiction ? '❌ ΛΟΓΙΚΗ ΑΝΤΙΦΑΣΗ' : solution.score === 0 ? '❌ ΛΑΘΟΣ ΑΠΑΝΤΗΣΗ' : ' ΑΠΟΤΕΛΕΣΜΑΤΑ') +
         '</h2>' +
         '<div style="font-size: 64px; font-weight: bold; margin: 20px 0;">' + solution.score + '/' + solution.maxScore + '</div>' +
         '<div style="font-size: 28px; margin-bottom: 20px; color: ' + gradeColor + '; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">' + grade + '</div>' +
@@ -2352,7 +2352,7 @@ function displaySolutionResult(solution) {
         '<span style="background: #28a745; color: white; padding: 2px 6px; border-radius: 8px; font-size: 9px; font-weight: bold; margin-left: auto;">✓ ΙΣΧΥΡΟ</span>' +
         '</div>' +
         '<div style="font-size: 11px; color: #155724; line-height: 1.5;">' +
-        '<div>• Διατρός 18:30-19:30 (επιβεβαιωμένο)</div>' +
+        '<div>• Γιατρός 18:30-19:30 (επιβεβαιωμένο)</div>' +
         '<div>• Δείπνο με αδελφή 19:45-22:30</div>' +
         '<div style="margin-top: 4px; padding: 4px 6px; background: rgba(40,167,69,0.1); border-radius: 3px;">✓ Κάλυψε όλο το κρίσιμο χρονικό παράθυρο!</div>' +
         '</div>' +
