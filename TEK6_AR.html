@@ -51,7 +51,7 @@
 
         .header {
             background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
-            padding: 20px;
+            padding: clamp(15px, 4vw, 20px);
             box-shadow: 0 4px 20px rgba(0,0,0,0.5);
             position: relative;
             z-index: 10;
@@ -61,79 +61,52 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: clamp(8px, 2vw, 10px);
             margin-bottom: 10px;
         }
 
         .check-icon {
-            width: 32px;
-            height: 32px;
+            width: clamp(24px, 6vw, 32px);
+            height: clamp(24px, 6vw, 32px);
             color: #fff;
             animation: unlock 0.6s ease-out;
+            flex-shrink: 0;
         }
 
         .header h1 {
             color: #fff;
-            font-size: 24px;
+            font-size: clamp(16px, 4.5vw, 24px);
             font-weight: bold;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            line-height: 1.2;
         }
 
         .header p {
             color: #fff;
             text-align: center;
             opacity: 0.9;
-            font-size: 14px;
-        }
-
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 18px;
-            }
-            .check-icon {
-                width: 24px;
-                height: 24px;
-            }
-            .header {
-                padding: 15px 10px;
-            }
-            .header p {
-                font-size: 12px;
-            }
+            font-size: clamp(11px, 3vw, 14px);
         }
 
         .container {
-            padding: 20px;
+            padding: clamp(10px, 3vw, 20px);
             position: relative;
             z-index: 1;
             max-width: 1200px;
             margin: 0 auto;
         }
 
-        @media (max-width: 768px) {
-            .container {
-                padding: 10px;
-            }
-        }
-
         .evidence-card {
             background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
+            border-radius: clamp(10px, 2vw, 15px);
             box-shadow: 0 10px 40px rgba(0,0,0,0.3);
             overflow: hidden;
-            border: 3px solid #ff6b00;
-        }
-
-        @media (max-width: 768px) {
-            .evidence-card {
-                border-radius: 10px;
-                border: 2px solid #ff6b00;
-            }
+            border: clamp(2px, 0.5vw, 3px) solid #ff6b00;
         }
 
         .badge-bar {
             background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
-            padding: 15px 20px;
+            padding: clamp(12px, 3vw, 15px) clamp(15px, 4vw, 20px);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -141,61 +114,34 @@
             gap: 10px;
         }
 
-        @media (max-width: 768px) {
-            .badge-bar {
-                padding: 12px 15px;
-                flex-direction: column;
-                align-items: flex-start;
-            }
-        }
-
         .badge-info {
             flex: 1;
+            min-width: 150px;
         }
 
         .evidence-id {
-            font-size: 28px;
+            font-size: clamp(20px, 5vw, 28px);
             font-weight: bold;
             color: #ff6b00;
             font-family: monospace;
-            letter-spacing: 2px;
-        }
-
-        @media (max-width: 768px) {
-            .evidence-id {
-                font-size: 22px;
-                letter-spacing: 1px;
-            }
+            letter-spacing: clamp(1px, 0.3vw, 2px);
         }
 
         .category {
-            font-size: 12px;
+            font-size: clamp(10px, 2.5vw, 12px);
             color: #aaa;
             margin-top: 2px;
-        }
-
-        @media (max-width: 768px) {
-            .category {
-                font-size: 10px;
-            }
         }
 
         .official-badge {
             background: rgba(255,107,0,0.2);
             border: 2px solid #ff6b00;
             border-radius: 8px;
-            padding: 8px 15px;
-            font-size: 11px;
+            padding: clamp(6px, 1.5vw, 8px) clamp(10px, 2.5vw, 15px);
+            font-size: clamp(9px, 2vw, 11px);
             color: #ff6b00;
             font-weight: bold;
-        }
-
-        @media (max-width: 768px) {
-            .official-badge {
-                font-size: 9px;
-                padding: 6px 10px;
-                align-self: flex-start;
-            }
+            white-space: nowrap;
         }
 
         .crime-scene-photo {
@@ -207,54 +153,40 @@
             border-top: 2px solid #333;
             border-bottom: 2px solid #333;
             overflow: hidden;
+            min-height: 200px;
         }
 
         #crimeSceneCanvas {
             width: 100%;
-            max-width: 800px;
             height: auto;
             display: block;
-        }
-
-        @media (max-width: 768px) {
-            .crime-scene-photo {
-                border-top: 1px solid #333;
-                border-bottom: 1px solid #333;
-            }
+            max-width: 800px;
         }
 
         .confidential-badge {
             position: absolute;
-            top: 10px;
-            right: 10px;
+            top: clamp(5px, 2vw, 10px);
+            right: clamp(5px, 2vw, 10px);
             background: rgba(255,0,0,0.9);
             color: white;
-            padding: 5px 10px;
-            font-size: 11px;
+            padding: clamp(4px, 1vw, 5px) clamp(8px, 2vw, 10px);
+            font-size: clamp(9px, 2vw, 11px);
             font-weight: bold;
             border-radius: 5px;
             border: 1px solid #fff;
-        }
-
-        @media (max-width: 768px) {
-            .confidential-badge {
-                font-size: 9px;
-                padding: 4px 8px;
-                top: 5px;
-                right: 5px;
-            }
+            z-index: 10;
         }
 
         .ar-container {
-            margin: 20px 0;
-            padding: 20px;
+            margin: clamp(15px, 3vw, 20px) 0;
+            padding: clamp(15px, 3vw, 20px);
             background: linear-gradient(135deg, rgba(255,107,0,0.05) 0%, rgba(255,136,0,0.05) 100%);
             border: 2px solid #ff6b00;
             border-radius: 10px;
         }
 
         .ar-title {
-            font-size: 18px;
+            font-size: clamp(16px, 3.5vw, 18px);
             color: #ff6b00;
             font-weight: bold;
             margin: 0 0 15px 0;
@@ -263,11 +195,17 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .ar-title svg {
+            width: clamp(20px, 4vw, 24px);
+            height: clamp(20px, 4vw, 24px);
         }
 
         model-viewer {
             width: 100%;
-            height: 450px;
+            height: clamp(300px, 50vh, 450px);
             background-color: #f5f5f5;
             border-radius: 8px;
             border: 2px solid #ddd;
@@ -277,75 +215,46 @@
             background-color: #ff6b00;
             color: white;
             font-weight: bold;
-            padding: 12px 24px;
+            padding: clamp(10px, 2vw, 12px) clamp(20px, 4vw, 24px);
             border-radius: 8px;
-            font-size: 16px;
+            font-size: clamp(14px, 3vw, 16px);
             border: none;
             box-shadow: 0 4px 12px rgba(255,107,0,0.3);
         }
 
-        @media (max-width: 768px) {
-            model-viewer {
-                height: 350px;
-            }
-            .ar-title {
-                font-size: 16px;
-            }
-            .ar-instructions {
-                font-size: 12px;
-            }
-            .ar-container {
-                padding: 15px;
-                margin: 15px 0;
-            }
-        }
-
         .details {
-            padding: 30px;
+            padding: clamp(20px, 4vw, 30px);
             background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
         }
 
-        @media (max-width: 768px) {
-            .details {
-                padding: 20px;
-            }
-        }
-
         .evidence-title {
-            margin: 0 0 25px 0;
-            font-size: 24px;
+            margin: 0 0 clamp(20px, 4vw, 25px) 0;
+            font-size: clamp(18px, 4vw, 24px);
             color: #1a1a2e;
             border-bottom: 3px solid #ff6b00;
-            padding-bottom: 15px;
+            padding-bottom: clamp(10px, 2vw, 15px);
             font-weight: 700;
             display: flex;
             align-items: center;
-            gap: 12px;
-        }
-
-        @media (max-width: 768px) {
-            .evidence-title {
-                font-size: 20px;
-                margin: 0 0 20px 0;
-                gap: 10px;
-            }
+            gap: clamp(8px, 2vw, 12px);
+            flex-wrap: wrap;
         }
 
         .evidence-metadata {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+            gap: clamp(12px, 2.5vw, 15px);
+            margin-bottom: clamp(25px, 4vw, 30px);
         }
 
         .metadata-item {
             background: white;
             border: 2px solid #e0e0e0;
             border-radius: 10px;
-            padding: 15px;
+            padding: clamp(12px, 2.5vw, 15px);
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: clamp(10px, 2vw, 12px);
             transition: all 0.3s ease;
         }
 
@@ -356,16 +265,17 @@
         }
 
         .metadata-icon {
-            font-size: 28px;
+            font-size: clamp(22px, 5vw, 28px);
             flex-shrink: 0;
         }
 
         .metadata-content {
             flex: 1;
+            min-width: 0;
         }
 
         .metadata-label {
-            font-size: 11px;
+            font-size: clamp(10px, 2vw, 11px);
             color: #999;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -374,37 +284,18 @@
         }
 
         .metadata-value {
-            font-size: 14px;
+            font-size: clamp(13px, 2.8vw, 14px);
             color: #1a1a2e;
             font-weight: 600;
             line-height: 1.3;
-        }
-
-        @media (max-width: 768px) {
-            .evidence-metadata {
-                grid-template-columns: 1fr;
-                gap: 12px;
-                margin-bottom: 25px;
-            }
-            
-            .metadata-item {
-                padding: 12px;
-            }
-            
-            .metadata-icon {
-                font-size: 24px;
-            }
-            
-            .metadata-value {
-                font-size: 13px;
-            }
+            word-wrap: break-word;
         }
 
         .critical-alert {
             background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
             border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 30px;
+            padding: clamp(18px, 3vw, 20px);
+            margin-bottom: clamp(25px, 4vw, 30px);
             box-shadow: 0 6px 20px rgba(220,53,69,0.3);
             position: relative;
             overflow: hidden;
@@ -429,13 +320,13 @@
 
         .alert-badge {
             position: absolute;
-            top: 15px;
-            right: 15px;
+            top: clamp(12px, 2vw, 15px);
+            right: clamp(12px, 2vw, 15px);
             background: rgba(0,0,0,0.3);
             color: white;
-            padding: 6px 12px;
+            padding: clamp(5px, 1vw, 6px) clamp(10px, 2vw, 12px);
             border-radius: 20px;
-            font-size: 11px;
+            font-size: clamp(10px, 2vw, 11px);
             font-weight: 700;
             letter-spacing: 1px;
             z-index: 1;
@@ -448,155 +339,218 @@
 
         .alert-title {
             color: white;
-            font-size: 16px;
+            font-size: clamp(15px, 3vw, 16px);
             font-weight: 700;
             margin-bottom: 10px;
             display: flex;
             align-items: center;
             gap: 8px;
+            flex-wrap: wrap;
         }
 
         .alert-text {
             color: white;
-            font-size: 15px;
+            font-size: clamp(14px, 2.8vw, 15px);
             line-height: 1.6;
             font-weight: 500;
         }
 
-        @media (max-width: 768px) {
-            .critical-alert {
-                padding: 18px;
-                margin-bottom: 25px;
-            }
-            
-            .alert-badge {
-                top: 12px;
-                right: 12px;
-                font-size: 10px;
-                padding: 5px 10px;
-            }
-            
-            .alert-title {
-                font-size: 15px;
-            }
-            
-            .alert-text {
-                font-size: 14px;
-            }
-        }
-
         .section {
-            margin-bottom: 25px;
+            margin-bottom: clamp(20px, 3vw, 25px);
             background: white;
-            padding: 20px;
+            padding: clamp(15px, 3vw, 20px);
             border-radius: 10px;
             border: 1px solid #e0e0e0;
             box-shadow: 0 2px 6px rgba(0,0,0,0.05);
         }
 
         .section-title {
-            font-size: 18px;
+            font-size: clamp(16px, 3.5vw, 18px);
             color: #0f3460;
             margin-bottom: 15px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: clamp(8px, 2vw, 10px);
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             border-bottom: 2px solid #e0e0e0;
             padding-bottom: 10px;
-        }
-
-        @media (max-width: 768px) {
-            .section-title {
-                font-size: 16px;
-                gap: 8px;
-            }
+            flex-wrap: wrap;
         }
 
         .section-content {
-            font-size: 15px;
+            font-size: clamp(14px, 2.8vw, 15px);
             line-height: 1.8;
             color: #333;
             text-align: justify;
         }
 
-        @media (max-width: 768px) {
-            .section-content {
-                font-size: 14px;
-            }
-        }
-
         ul {
-            padding-left: 25px;
+            padding-left: clamp(20px, 4vw, 25px);
             line-height: 2;
         }
 
         ul li {
             margin-bottom: 8px;
-        }
-
-        @media (max-width: 768px) {
-            ul {
-                padding-left: 20px;
-                line-height: 1.8;
-            }
+            font-size: clamp(14px, 2.8vw, 15px);
         }
 
         .significance-box {
             background: linear-gradient(135deg, #fff5f0 0%, #ffe8db 100%);
             border: 2px solid #ff6b00;
             border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 25px;
+            padding: clamp(20px, 3.5vw, 25px);
+            margin-bottom: clamp(20px, 3vw, 25px);
             box-shadow: 0 4px 12px rgba(255,107,0,0.1);
         }
 
         .significance-title {
-            font-size: 18px;
+            font-size: clamp(16px, 3.5vw, 18px);
             color: #ff6b00;
             margin: 0 0 15px 0;
             display: flex;
             align-items: center;
             gap: 10px;
             font-weight: 700;
-        }
-
-        @media (max-width: 768px) {
-            .significance-box {
-                padding: 20px;
-                margin-bottom: 20px;
-            }
-            
-            .significance-title {
-                font-size: 16px;
-            }
+            flex-wrap: wrap;
         }
 
         .significance-text {
-            font-size: 15px;
+            font-size: clamp(14px, 2.8vw, 15px);
             line-height: 1.8;
             color: #1a1a2e;
             margin: 0;
             text-align: justify;
         }
 
-        @media (max-width: 768px) {
-            .significance-text {
-                font-size: 14px;
-            }
+        .floor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+            gap: clamp(12px, 2.5vw, 15px);
+            margin-bottom: clamp(20px, 3vw, 25px);
+        }
+
+        .floor-box {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            padding: clamp(15px, 3vw, 18px);
+        }
+
+        .floor-title {
+            font-weight: 700;
+            font-size: clamp(14px, 3vw, 15px);
+            color: #0f3460;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .floor-content {
+            font-size: clamp(12px, 2.5vw, 13px);
+            color: #495057;
+            line-height: 1.6;
+        }
+
+        .floor-content div {
+            margin-bottom: 6px;
+        }
+
+        .floor-total {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #dee2e6;
+            font-weight: 600;
+            color: #0f3460;
+        }
+
+        .back-button-container {
+            text-align: center;
+            padding: clamp(15px, 3vw, 20px);
+            background: rgba(0,0,0,0.05);
+            position: relative;
+            z-index: 100;
+        }
+
+        .back-button {
+            background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
+            color: white;
+            padding: clamp(12px, 2.5vw, 15px) clamp(30px, 6vw, 40px);
+            border: none;
+            border-radius: 10px;
+            font-size: clamp(14px, 3vw, 16px);
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(255,107,0,0.3);
+            position: relative;
+            z-index: 101;
+            pointer-events: auto;
+            transition: transform 0.2s, box-shadow 0.2s;
+            min-height: 44px;
+            touch-action: manipulation;
+        }
+
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(255,107,0,0.4);
+        }
+
+        .back-button:active {
+            transform: translateY(0);
         }
 
         #debugInfo {
             margin-top: 10px;
             padding: 10px;
-            background: #fff3cd;
-            border: 1px solid #ffc107;
+            background: #e7f3ff;
+            border: 1px solid #2196F3;
             border-radius: 5px;
-            font-size: 12px;
+            font-size: clamp(11px, 2.2vw, 12px);
             font-family: monospace;
             display: none;
+            word-wrap: break-word;
+        }
+
+        @media (max-width: 480px) {
+            .badge-bar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .official-badge {
+                align-self: flex-start;
+            }
+
+            .header h1 {
+                font-size: 16px;
+            }
+
+            .evidence-title {
+                font-size: 18px;
+            }
+        }
+
+        @media (min-width: 768px) and (max-width: 1024px) {
+            .evidence-metadata {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .floor-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1025px) {
+            .evidence-metadata {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .floor-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
         }
     </style>
 </head>
@@ -628,7 +582,6 @@
                 <div class="confidential-badge">ΑΠΟΡΡΗΤΟ</div>
             </div>
 
-            <!-- AR 3D VIEWER SECTION -->
             <div class="ar-container">
                 <h3 class="ar-title">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -688,195 +641,174 @@
                         flex-direction: column;
                         gap: 15px;
                         padding: 20px;
+                        text-align: center;
                     ">
                         <p style="color: #856404; font-size: 16px; font-weight: bold;">⚠️ Σφάλμα Φόρτωσης</p>
-                        <p style="color: #856404; font-size: 13px; text-align: center;">
+                        <p style="color: #856404; font-size: 13px;">
                             Το 3D μοντέλο δεν μπορεί να φορτώσει.<br>
                             Ελέγξτε το αρχείο: latex_glove.glb
                         </p>
                     </div>
                 </model-viewer>
                 
-                <div id="debugInfo" style="
-                    margin-top: 10px;
-                    padding: 10px;
-                    background: #e7f3ff;
-                    border: 1px solid #2196F3;
-                    border-radius: 5px;
-                    font-size: 12px;
-                    font-family: monospace;
-                    display: none;
-                "></div>
+                <div id="debugInfo"></div>
                 
-                <p style="text-align: center; color: #666; font-size: 13px; margin-top: 10px; font-style: italic;">
+                <p style="text-align: center; color: #666; font-size: clamp(12px, 2.5vw, 13px); margin-top: 10px; font-style: italic;">
                     💡 Σύρετε για να περιστρέψετε • Zoom με δύο δάχτυλα
                 </p>
             </div>
 			
-<div class="details">
-    <h2 class="evidence-title">🧤 ΙΧΝΗ ΛΑΤΕΞ ΣΤΟ ΠΟΜΟΛΟ</h2>
+            <div class="details">
+                <h2 class="evidence-title">🧤 ΙΧΝΗ ΛΑΤΕΞ ΣΤΟ ΠΟΜΟΛΟ</h2>
 
-    <div class="section">
-        <h3 class="section-title">
-            <span style="font-size: 24px;">🔬</span>
-            Εγκληματολογική Ανάλυση
-        </h3>
-        <p class="section-content">
-            Εντοπίστηκαν μικροσκοπικά ίχνη λάτεξ στο εσωτερικό πόμολο της πόρτας του γραφείου του Δημητρίου. <br> Η φασματοσκοπική ανάλυση επιβεβαίωσε ότι πρόκειται για λάτεξ καουτσούκ με πούδρα άμυλου καλαμποκιού – ο πιο συνηθισμένος τύπος γαντιών μιας χρήσης.</br>
-        </p>
-        
-        <div style="margin-top: 25px;">
-            <p class="section-content" style="margin-bottom: 15px;"><strong style="color: #0f3460; font-size: 16px;">🔬 Χημική Ανάλυση Δειγμάτων</strong></p>
-            <p class="section-content" style="margin-bottom: 10px;">
-                <strong>Τύπος Λάτεξ:</strong> Φυσικό καουτσούκ με πούδρα
-            </p>
-            <p class="section-content" style="margin-bottom: 10px;">
-                <strong>Πούδρα:</strong> Άμυλο καλαμποκιού 100% - γενικού τύπου
-            </p>
-            <p class="section-content" style="margin-bottom: 10px;">
-                <strong>Ποσότητα:</strong> 0.8mg συνολικά
-            </p>
-            <p class="section-content" style="margin-bottom: 10px;">
-                <strong>Χρονολόγηση:</strong> Τα μόρια πούδρας δεν είχαν διασπαρεί πλήρως (12-36 ώρες πριν την ανακάλυψη)
-            </p>
-            <p class="section-content" style="margin-bottom: 10px;">
-                <strong>Συμβατότητα:</strong> Ταιριάζει με γάντια από κουτιά πρώτων βοηθειών, καθαριστικά είδη, και προμήθειες εκτυπωτηρίου
-            </p>
-        </div>
+                <div class="section">
+                    <h3 class="section-title">
+                        <span style="font-size: 24px;">🔬</span>
+                        Εγκληματολογική Ανάλυση
+                    </h3>
+                    <p class="section-content">
+                        Εντοπίστηκαν μικροσκοπικά ίχνη λάτεξ στο εσωτερικό πόμολο της πόρτας του γραφείου του Δημητρίου. Η φασματοσκοπική ανάλυση επιβεβαίωσε ότι πρόκειται για λάτεξ καουτσούκ με πούδρα άμυλου καλαμποκιού – ο πιο συνηθισμένος τύπος γαντιών μιας χρήσης.
+                    </p>
+                    
+                    <div style="margin-top: 25px;">
+                        <p class="section-content" style="margin-bottom: 15px;"><strong style="color: #0f3460; font-size: clamp(15px, 3vw, 16px);">🔬 Χημική Ανάλυση Δειγμάτων</strong></p>
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong>Τύπος Λάτεξ:</strong> Φυσικό καουτσούκ με πούδρα
+                        </p>
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong>Πούδρα:</strong> Άμυλο καλαμποκιού 100% - γενικού τύπου
+                        </p>
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong>Ποσότητα:</strong> 0.8mg συνολικά
+                        </p>
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong>Χρονολόγηση:</strong> Τα μόρια πούδρας δεν είχαν διασπαρεί πλήρως (12-36 ώρες πριν την ανακάλυψη)
+                        </p>
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong>Συμβατότητα:</strong> Ταιριάζει με γάντια από κουτιά πρώτων βοηθειών, καθαριστικά είδη, και προμήθειες εκτυπωτηρίου
+                        </p>
+                    </div>
 
-        <div style="margin-top: 25px;">
-            <p class="section-content" style="margin-bottom: 15px;"><strong style="color: #0f3460; font-size: 16px;">🔍 Τοποθεσία και Κατανομή Ιχνών</strong></p>
-            <p class="section-content" style="margin-bottom: 10px;">
-                <strong>Εσωτερικό Πόμολο:</strong> 8 διακριτά σημεία επαφής - συμβατό με αριστερό χέρι που περιστρέφει το πόμολο
-            </p>
-            <p class="section-content" style="margin-bottom: 10px;">
-                <strong>Εξωτερικό Πόμολο:</strong> ΔΕΝ εντοπίστηκαν ίχνη λάτεξ - ΜΟΝΟ δακτυλικά αποτυπώματα
-            </p>
-            <p class="section-content" style="margin-bottom: 10px;">
-                <strong>Κλειδαριά:</strong> Καμία ένδειξη γαντιού στον μηχανισμό
-            </p>
-        </div>
-    </div>
+                    <div style="margin-top: 25px;">
+                        <p class="section-content" style="margin-bottom: 15px;"><strong style="color: #0f3460; font-size: clamp(15px, 3vw, 16px);">🔍 Τοποθεσία και Κατανομή Ιχνών</strong></p>
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong>Εσωτερικό Πόμολο:</strong> 8 διακριτά σημεία επαφής - συμβατό με αριστερό χέρι που περιστρέφει το πόμολο
+                        </p>
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong>Εξωτερικό Πόμολο:</strong> ΔΕΝ εντοπίστηκαν ίχνη λάτεξ - ΜΟΝΟ δακτυλικά αποτυπώματα
+                        </p>
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong>Κλειδαριά:</strong> Καμία ένδειξη γαντιού στον μηχανισμό
+                        </p>
+                    </div>
+                </div>
 
-<div class="section">
-    <h3 class="section-title">
-        <span style="font-size: 24px;">🧤</span>
-        Ανάλυση ΑΠΟΘΕΜΑΤΩΝ ΚΑΙ  Διαθεσιμότητα
-    </h3>
-    
-    <!-- FLOOR DISTRIBUTION - Gray Boxes -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-bottom: 25px;">
-        <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border: 2px solid #dee2e6; border-radius: 10px; padding: 18px;">
-            <div style="font-weight: 700; font-size: 15px; color: #0f3460; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-                <span style="font-size: 20px;">🏢</span> 3ος Όροφος - Εκτυπωτήριο
-            </div>
-            <div style="font-size: 13px; color: #495057; line-height: 1.6;">
-                <div style="margin-bottom: 6px;">📦 Χώρος Εκτύπωσης (χειρισμός μελανιών)</div>
-                <div style="margin-bottom: 6px;">📦 Αποθήκη Αναλωσίμων</div>
-                <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #dee2e6; font-weight: 600; color: #0f3460;">
-                    Σύνολο: 8 κουτιά
+                <div class="section">
+                    <h3 class="section-title">
+                        <span style="font-size: 24px;">🧤</span>
+                        Ανάλυση ΑΠΟΘΕΜΑΤΩΝ ΚΑΙ Διαθεσιμότητα
+                    </h3>
+                    
+                    <div class="floor-grid">
+                        <div class="floor-box">
+                            <div class="floor-title">
+                                <span style="font-size: 20px;">🏢</span> 3ος Όροφος - Εκτυπωτήριο
+                            </div>
+                            <div class="floor-content">
+                                <div>📦 Χώρος Εκτύπωσης (χειρισμός μελανιών)</div>
+                                <div>📦 Αποθήκη Αναλωσίμων</div>
+                                <div class="floor-total">
+                                    Σύνολο: 8 κουτιά
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="floor-box">
+                            <div class="floor-title">
+                                <span style="font-size: 20px;">🏢</span> Ισόγειο
+                            </div>
+                            <div class="floor-content">
+                                <div>📦 Ρεσεψιόν</div>
+                                <div>📦 Φαρμακείο/Πρώτες Βοήθειες</div>
+                                <div class="floor-total">
+                                    Σύνολο: 2 κουτιά
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="floor-box">
+                            <div class="floor-title">
+                                <span style="font-size: 20px;">🏢</span> Υπόγειο
+                            </div>
+                            <div class="floor-content">
+                                <div>📦 Αποθήκη Καθαριότητας (πρόσβαση καθαριστριών)</div>
+                                <div class="floor-total">
+                                    Σύνολο: 10 κουτία
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="floor-grid" style="grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));">
+                        <div class="floor-box">
+                            <div class="floor-title">
+                                <span style="font-size: 20px;">🔓</span> Πρόσβαση
+                            </div>
+                            <div class="floor-content">
+                                <div>• <strong>ΟΛΟ το προσωπικό</strong></div>
+                                <div>• <strong>Καθαριστές</strong> (καθημερινά)</div>
+                                <div>• <strong>Εκτυπωτήριο</strong> (χειρισμός μελανιών)</div>
+                                <div style="font-size: clamp(11px, 2.2vw, 12px); font-style: italic; margin-top: 10px; padding-top: 10px; border-top: 1px solid #dee2e6;">
+                                    Καμία καταγραφή χρήσης
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="floor-box">
+                            <div class="floor-title">
+                                <span style="font-size: 20px;">📏</span> Μεγέθη
+                            </div>
+                            <div class="floor-content">
+                                <div>• Small (S)</div>
+                                <div>• Medium (M)</div>
+                                <div>• Large (L)</div>
+                                <div style="font-size: clamp(11px, 2.2vw, 12px); font-style: italic; margin-top: 10px; padding-top: 10px; border-top: 1px solid #dee2e6;">
+                                    Τα κουτιά περιέχουν ΜΙΚΤΑ μεγέθη
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="significance-box">
+                    <h3 class="significance-title">
+                        <span style="font-size: 20px;">💡</span>
+                        ΣΗΜΑΣΙΑ ΓΙΑ ΤΗΝ ΕΡΕΥΝΑ
+                    </h3>
+                    <p class="significance-text">
+                        Το γεγονός ότι τα γάντια χρησιμοποιούνται καθημερινά από καθαριστές αλλά και το προσωπικό εκτυπωτηρίου (χειρισμός μελανιών) δημιουργεί σοβαρό πρόβλημα στην έρευνα. Το χρονικό παράθυρο 12-36 ώρες σημαίνει ότι τα ίχνη μπορεί απλώς να είναι υπολείμματα από το τελευταίο καθάρισμα. Επιπλέον, η απουσία ιχνών στο εξωτερικό πόμολο δεν είναι απαραίτητα ύποπτη - το εξωτερικό καθαρίζεται πιο συχνά, αγγίζεται από δεκάδες άτομα καθημερινά, και τυχόν ίχνη θα είχαν διαλυθεί γρήγορα. Ωστόσο, υπάρχει το αντεπιχείρημα: γιατί τα ίχνη να είναι ΜΟΝΟ στο εσωτερικό; Ή είναι απλώς τυχαίο κατάλοιπο; Το τεκμήριο αυτό μπορεί να είναι κρίσιμο - ή εντελώς άνευ σημασίας.
+                    </p>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">
+                        <span style="font-size: 24px;">❓</span>
+                        Βασικά Ερωτήματα Διερεύνησης
+                    </h3>
+                    <ul class="section-content">
+                        <li>Τα ίχνη είναι από την καθαρίστρια ή από κάποιον άλλο;</li>
+                        <li>Γιατί τα ίχνη εμφανίζονται ΜΟΝΟ στο εσωτερικό πόμολο - τι σημαίνει αυτό;</li>
+                        <li>Ποιος από τους υπόπτους έχει συνήθεια να χρησιμοποιεί γάντια λάτεξ για την εργασία του;</li>
+                        <li>Μπορεί να είναι απλώς τυχαίο κατάλοιπο χωρίς σχέση με το έγκλημα;</li>
+                    </ul>
                 </div>
             </div>
         </div>
-
-        <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border: 2px solid #dee2e6; border-radius: 10px; padding: 18px;">
-            <div style="font-weight: 700; font-size: 15px; color: #0f3460; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-                <span style="font-size: 20px;">🏢</span> Ισόγειο
-            </div>
-            <div style="font-size: 13px; color: #495057; line-height: 1.6;">
-                <div style="margin-bottom: 6px;">📦 Ρεσεψιόν</div>
-                <div style="margin-bottom: 6px;">📦 Φαρμακείο/Πρώτες Βοήθειες</div>
-                <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #dee2e6; font-weight: 600; color: #0f3460;">
-                    Σύνολο: 2 κουτιά
-                </div>
-            </div>
-        </div>
-
-        <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border: 2px solid #dee2e6; border-radius: 10px; padding: 18px;">
-            <div style="font-weight: 700; font-size: 15px; color: #0f3460; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-                <span style="font-size: 20px;">🏢</span> Υπόγειο
-            </div>
-            <div style="font-size: 13px; color: #495057; line-height: 1.6;">
-                <div style="margin-bottom: 6px;">📦 Αποθήκη Καθαριότητας (πρόσβαση καθαριστριών)</div>
-                <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #dee2e6; font-weight: 600; color: #0f3460;">
-                    Σύνολο: 10 κουτία
-                </div>
-            </div>
-        </div>
     </div>
 
-    <!-- ACCESS & SIZES - Matching Gray Style -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px;">
-        <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border: 2px solid #dee2e6; border-radius: 10px; padding: 18px;">
-            <div style="font-weight: 700; font-size: 15px; color: #0f3460; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-                <span style="font-size: 20px;">🔓</span> Πρόσβαση
-            </div>
-            <div style="font-size: 14px; color: #495057; line-height: 1.8;">
-                <div style="margin-bottom: 8px;">• <strong>ΟΛΟ το προσωπικό</strong></div>
-                <div style="margin-bottom: 8px;">• <strong>Καθαριστές</strong> (καθημερινά)</div>
-                <div style="margin-bottom: 8px;">• <strong>Εκτυπωτήριο</strong> (χειρισμός μελανιών)</div>
-                <div style="font-size: 12px; font-style: italic; margin-top: 10px; padding-top: 10px; border-top: 1px solid #dee2e6;">
-                    Καμία καταγραφή χρήσης
-                </div>
-            </div>
-        </div>
-
-        <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border: 2px solid #dee2e6; border-radius: 10px; padding: 18px;">
-            <div style="font-weight: 700; font-size: 15px; color: #0f3460; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-                <span style="font-size: 20px;">📏</span> Μεγέθη
-            </div>
-            <div style="font-size: 14px; color: #495057; line-height: 1.8;">
-                <div style="margin-bottom: 8px;">• Small (S)</div>
-                <div style="margin-bottom: 8px;">• Medium (M)</div>
-                <div style="margin-bottom: 8px;">• Large (L)</div>
-                <div style="font-size: 12px; font-style: italic; margin-top: 10px; padding-top: 10px; border-top: 1px solid #dee2e6;">
-                    Τα κουτιά περιέχουν ΜΙΚΤΑ μεγέθη
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-    <div class="significance-box">
-        <h3 class="significance-title">
-            <span style="font-size: 20px;">💡</span>
-            ΣΗΜΑΣΙΑ ΓΙΑ ΤΗΝ ΕΡΕΥΝΑ
-        </h3>
-        <p class="significance-text">
-            Το γεγονός ότι τα γάντια χρησιμοποιούνται καθημερινά από καθαριστές αλλά και το προσωπικό εκτυπωτηρίου (χειρισμός μελανιών) δημιουργεί σοβαρό πρόβλημα στην έρευνα. Το χρονικό παράθυρο 12-36 ώρες σημαίνει ότι τα ίχνη μπορεί απλώς να είναι υπολείμματα από το τελευταίο καθάρισμα. Επιπλέον, η απουσία ιχνών στο εξωτερικό πόμολο δεν είναι απαραίτητα ύποπτη - το εξωτερικό καθαρίζεται πιο συχνά, αγγίζεται από δεκάδες άτομα καθημερινά, και τυχόν ίχνη θα είχαν διαλυθεί γρήγορα. Ωστόσο, υπάρχει το αντεπιχείρημα: γιατί τα ίχνη να είναι ΜΟΝΟ στο εσωτερικό; Ή είναι απλώς τυχαίο κατάλοιπο; Το τεκμήριο αυτό μπορεί να είναι κρίσιμο - ή εντελώς άνευ σημασίας.
-        </p>
-    </div>
-
-    <div class="section">
-        <h3 class="section-title">
-            <span style="font-size: 24px;">❓</span>
-            Βασικά Ερωτήματα Διερεύνησης
-        </h3>
-        <ul class="section-content">
-            <li>Τα ίχνη είναι από την καθαρίστρια ή από κάποιον άλλο;</li>
-            <li>Γιατί τα ίχνη εμφανίζονται ΜΟΝΟ στο εσωτερικό πόμολο - τι σημαίνει αυτό;</li>
-            <li>Ποιος από τους υπόπτους έχει συνήθεια να χρησιμοποιεί γάντια λάτεξ για την εργασία του;</li>
-            <li>Μπορεί να είναι απλώς τυχαίο κατάλοιπο χωρίς σχέση με το έγκλημα;</li>
-        </ul>
-    </div>
-</div>
-        </div>
-    </div>
-
-    <div style="text-align: center; padding: 20px; background: rgba(0,0,0,0.05); position: relative; z-index: 100;">
-        <button onclick="window.goBackToCaseFile()" 
-                style="background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%); 
-                       color: white; 
-                       padding: 15px 40px; 
-                       border: none; 
-                       border-radius: 10px; 
-                       font-size: 16px; 
-                       font-weight: bold; 
-                       cursor: pointer; 
-                       box-shadow: 0 4px 12px rgba(255,107,0,0.3);
-                       position: relative;
-                       z-index: 101;
-                       pointer-events: auto;">
-            ← ΕΠΙΣΤΡΟΦΗ ΣΤΟΝ ΦΑΚΕΛΟ
+    <div class="back-button-container">
+        <button onclick="window.goBackToCaseFile()" class="back-button">
+            ← ΕΠΙΣΤΡΟΦΗ ΣΤΟ ΦΑΚΕΛΟ
         </button>
     </div>
 
@@ -894,16 +826,24 @@
 
         function drawCrimeScene() {
             const canvas = document.getElementById('crimeSceneCanvas');
+            if (!canvas) return;
+            
             const ctx = canvas.getContext('2d');
+            const container = canvas.parentElement;
+            const maxWidth = Math.min(container.clientWidth, 800);
+            const scale = maxWidth / 800;
             
             canvas.width = 800;
             canvas.height = 400;
+            canvas.style.width = maxWidth + 'px';
+            canvas.style.height = (400 * scale) + 'px';
 			
             const wallGradient = ctx.createLinearGradient(0, 0, 0, 400);
             wallGradient.addColorStop(0, '#e8e4d9');
             wallGradient.addColorStop(1, '#d4cfc0');
             ctx.fillStyle = wallGradient;
             ctx.fillRect(0, 0, 800, 400);
+            
             ctx.fillStyle = '#5a4a3a';
             ctx.fillRect(260, 60, 280, 300);
             ctx.fillStyle = '#4a3a2a';
@@ -917,6 +857,7 @@
             doorGradient.addColorStop(1, '#3d2f1f');
             ctx.fillStyle = doorGradient;
             ctx.fillRect(285, 85, 230, 255);
+            
             ctx.strokeStyle = '#2d1f0f';
             ctx.lineWidth = 3;
             ctx.strokeRect(305, 105, 190, 100);
@@ -929,6 +870,7 @@
             ctx.strokeStyle = '#7d6e57';
             ctx.lineWidth = 1;
             ctx.strokeRect(307, 222, 186, 96);
+            
             ctx.strokeStyle = 'rgba(45, 31, 15, 0.15)';
             ctx.lineWidth = 0.5;
             for (let i = 0; i < 12; i++) {
@@ -965,6 +907,7 @@
             ctx.beginPath();
             ctx.arc(477, 218, 12, 0, Math.PI * 2);
             ctx.fill();
+            
             ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
             ctx.beginPath();
             ctx.arc(475, 216, 4, 0, Math.PI * 2);
@@ -973,6 +916,7 @@
             ctx.beginPath();
             ctx.arc(473, 214, 2, 0, Math.PI * 2);
             ctx.fill();
+            
             ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
             ctx.beginPath();
             ctx.arc(150, 280, 70, 0, Math.PI * 2);
@@ -980,10 +924,12 @@
             ctx.strokeStyle = '#ff6b00';
             ctx.lineWidth = 4;
             ctx.stroke();
+            
             ctx.fillStyle = '#d4af37';
             ctx.beginPath();
             ctx.ellipse(150, 280, 35, 12, 0, 0, Math.PI * 2);
             ctx.fill();
+            
             ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
             ctx.beginPath();
             ctx.arc(140, 275, 4, 0, Math.PI * 2);
@@ -994,15 +940,18 @@
             ctx.beginPath();
             ctx.arc(145, 290, 3, 0, Math.PI * 2);
             ctx.fill();
+            
             ctx.fillStyle = 'rgba(138, 43, 226, 0.3)';
             ctx.beginPath();
             ctx.arc(150, 280, 60, 0, Math.PI * 2);
             ctx.fill();
+            
             ctx.fillStyle = '#ff6b00';
             ctx.font = 'bold 12px sans-serif';
             ctx.textAlign = 'center';
             ctx.fillText('ΙΧΝΗ ΛΑΤΕΞ', 150, 365);
             ctx.fillText('(UV ΦΩΤΙΣΜΟΣ)', 150, 380);
+            
             ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
             ctx.fillRect(0, 0, 800, 40);
             ctx.fillStyle = '#ff0000';
@@ -1015,19 +964,25 @@
             ctx.fillText('ΤΕΚ #006', 790, 25);
         }
 
+        let resizeTimeout;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(drawCrimeScene, 250);
+        });
+
         window.onload = function() {
             drawCrimeScene();
 
             const modelViewer = document.querySelector('model-viewer');
             const debugInfo = document.getElementById('debugInfo');
             
-            if (modelViewer) {
+            if (modelViewer && debugInfo) {
                 debugInfo.style.display = 'block';
                 debugInfo.innerHTML = '🔍 Προσπάθεια φόρτωσης: latex_glove.glb<br>';
                 
                 modelViewer.addEventListener('progress', (event) => {
                     const percent = Math.round(event.detail.totalProgress * 100);
-                    debugInfo.innerHTML = `⏳ Φόρτωση: ${percent}%<br>`;
+                    debugInfo.innerHTML = `ⳠΦόρτωση: ${percent}%<br>`;
                 });
 
                 modelViewer.addEventListener('load', () => {

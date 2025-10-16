@@ -85,22 +85,6 @@
             font-size: 14px;
         }
 
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 18px;
-            }
-            .check-icon {
-                width: 24px;
-                height: 24px;
-            }
-            .header {
-                padding: 15px 10px;
-            }
-            .header p {
-                font-size: 12px;
-            }
-        }
-
         .container {
             padding: 20px;
             position: relative;
@@ -109,25 +93,12 @@
             margin: 0 auto;
         }
 
-        @media (max-width: 768px) {
-            .container {
-                padding: 10px;
-            }
-        }
-
         .evidence-card {
             background: rgba(255, 255, 255, 0.95);
             border-radius: 15px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.3);
             overflow: hidden;
             border: 3px solid #ff6b00;
-        }
-
-        @media (max-width: 768px) {
-            .evidence-card {
-                border-radius: 10px;
-                border: 2px solid #ff6b00;
-            }
         }
 
         .badge-bar {
@@ -140,14 +111,6 @@
             gap: 10px;
         }
 
-        @media (max-width: 768px) {
-            .badge-bar {
-                padding: 12px 15px;
-                flex-direction: column;
-                align-items: flex-start;
-            }
-        }
-
         .badge-info {
             flex: 1;
         }
@@ -158,25 +121,14 @@
             color: #ff6b00;
             font-family: monospace;
             letter-spacing: 2px;
-        }
-
-        @media (max-width: 768px) {
-            .evidence-id {
-                font-size: 22px;
-                letter-spacing: 1px;
-            }
+            word-break: keep-all;
+            overflow-wrap: break-word;
         }
 
         .category {
             font-size: 12px;
             color: #aaa;
             margin-top: 2px;
-        }
-
-        @media (max-width: 768px) {
-            .category {
-                font-size: 10px;
-            }
         }
 
         .official-badge {
@@ -187,14 +139,6 @@
             font-size: 11px;
             color: #ff6b00;
             font-weight: bold;
-        }
-
-        @media (max-width: 768px) {
-            .official-badge {
-                font-size: 9px;
-                padding: 6px 10px;
-                align-self: flex-start;
-            }
         }
 
         .crime-scene-photo {
@@ -215,13 +159,6 @@
             display: block;
         }
 
-        @media (max-width: 768px) {
-            .crime-scene-photo {
-                border-top: 1px solid #333;
-                border-bottom: 1px solid #333;
-            }
-        }
-
         .confidential-badge {
             position: absolute;
             top: 10px;
@@ -233,15 +170,6 @@
             font-weight: bold;
             border-radius: 5px;
             border: 1px solid #fff;
-        }
-
-        @media (max-width: 768px) {
-            .confidential-badge {
-                font-size: 9px;
-                padding: 4px 8px;
-                top: 5px;
-                right: 5px;
-            }
         }
 
         .ar-container {
@@ -272,28 +200,9 @@
             border: 2px solid #ddd;
         }
 
-        @media (max-width: 768px) {
-            model-viewer {
-                height: 350px;
-            }
-            .ar-title {
-                font-size: 16px;
-            }
-            .ar-container {
-                padding: 15px;
-                margin: 15px 0;
-            }
-        }
-
         .details {
             padding: 30px;
             background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
-        }
-
-        @media (max-width: 768px) {
-            .details {
-                padding: 20px;
-            }
         }
 
         .evidence-title {
@@ -306,14 +215,6 @@
             display: flex;
             align-items: center;
             gap: 12px;
-        }
-
-        @media (max-width: 768px) {
-            .evidence-title {
-                font-size: 20px;
-                margin: 0 0 20px 0;
-                gap: 10px;
-            }
         }
 
         .section {
@@ -339,28 +240,20 @@
             padding-bottom: 10px;
         }
 
-        @media (max-width: 768px) {
-            .section-title {
-                font-size: 16px;
-                gap: 8px;
-            }
-        }
-
         .section-content {
             font-size: 15px;
             line-height: 1.8;
             color: #333;
             text-align: justify;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            hyphens: auto;
+            -webkit-hyphens: auto;
+            -ms-hyphens: auto;
         }
 
         .section-content p {
             margin: 0;
-        }
-
-        @media (max-width: 768px) {
-            .section-content {
-                font-size: 14px;
-            }
         }
 
         ul {
@@ -370,13 +263,6 @@
 
         ul li {
             margin-bottom: 8px;
-        }
-
-        @media (max-width: 768px) {
-            ul {
-                padding-left: 20px;
-                line-height: 1.8;
-            }
         }
 
         .log-item {
@@ -445,32 +331,21 @@
             color: #666;
             padding-left: 28px;
             line-height: 1.6;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            hyphens: auto;
+            -webkit-hyphens: auto;
+            -ms-hyphens: auto;
         }
 
         .log-details div {
             margin-bottom: 4px;
         }
 
-        @media (max-width: 768px) {
-            .log-item {
-                padding: 12px;
-                margin-bottom: 10px;
-            }
-            
-            .log-time {
-                font-size: 14px;
-            }
-            
-            .log-details {
-                font-size: 12px;
-            }
-        }
-
         .access-table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 15px;
-            font-size: 13px;
         }
 
         .access-table th {
@@ -493,16 +368,6 @@
             background: #f8f9fa;
         }
 
-        @media (max-width: 768px) {
-            .access-table {
-                font-size: 11px;
-            }
-            
-            .access-table th, .access-table td {
-                padding: 8px 5px;
-            }
-        }
-
         .significance-box {
             background: linear-gradient(135deg, #fff5f0 0%, #ffe8db 100%);
             border: 2px solid #ff6b00;
@@ -522,29 +387,15 @@
             font-weight: 700;
         }
 
-        @media (max-width: 768px) {
-            .significance-box {
-                padding: 20px;
-                margin-bottom: 20px;
-            }
-            
-            .significance-title {
-                font-size: 16px;
-            }
-        }
-
         .significance-text {
             font-size: 15px;
             line-height: 1.8;
             color: #1a1a2e;
             margin: 0;
             text-align: justify;
-        }
-
-        @media (max-width: 768px) {
-            .significance-text {
-                font-size: 14px;
-            }
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            hyphens: auto;
         }
 
         .critical-alert {
@@ -610,7 +461,214 @@
             font-weight: 500;
         }
 
+        .back-button {
+            background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(255,107,0,0.3);
+            position: relative;
+            z-index: 101;
+            pointer-events: auto;
+            transition: transform 0.2s;
+        }
+
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(255,107,0,0.4);
+        }
+
+        .back-button:active {
+            transform: translateY(0);
+        }
+
+        .back-button:focus {
+            outline: 3px solid rgba(255, 107, 0, 0.5);
+            outline-offset: 2px;
+        }
+
+        /* ========== RESPONSIVE MEDIA QUERIES ========== */
+
         @media (max-width: 768px) {
+            .header h1 {
+                font-size: 18px;
+            }
+            
+            .check-icon {
+                width: 24px;
+                height: 24px;
+            }
+            
+            .header {
+                padding: 15px 10px;
+            }
+            
+            .header p {
+                font-size: 12px;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+            .evidence-card {
+                border-radius: 10px;
+                border: 2px solid #ff6b00;
+            }
+
+            .badge-bar {
+                padding: 12px 15px;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .evidence-id {
+                font-size: 22px;
+                letter-spacing: 1px;
+            }
+
+            .category {
+                font-size: 10px;
+            }
+
+            .official-badge {
+                font-size: 9px;
+                padding: 6px 10px;
+                align-self: flex-start;
+            }
+
+            #crimeSceneCanvas {
+                max-width: 100%;
+            }
+
+            .crime-scene-photo {
+                border-top: 1px solid #333;
+                border-bottom: 1px solid #333;
+            }
+
+            .confidential-badge {
+                font-size: 9px;
+                padding: 4px 8px;
+                top: 5px;
+                right: 5px;
+            }
+
+            model-viewer {
+                height: 350px;
+            }
+            
+            .ar-title {
+                font-size: 16px;
+            }
+            
+            .ar-container {
+                padding: 15px;
+                margin: 15px 0;
+            }
+
+            .details {
+                padding: 20px;
+            }
+
+            .evidence-title {
+                font-size: 20px;
+                margin: 0 0 20px 0;
+                gap: 10px;
+            }
+
+            .section-title {
+                font-size: 16px;
+                gap: 8px;
+            }
+
+            .section-content {
+                font-size: 14px;
+            }
+
+            ul {
+                padding-left: 20px;
+                line-height: 1.8;
+            }
+
+            .log-item {
+                padding: 12px;
+                margin-bottom: 10px;
+            }
+            
+            .log-time {
+                font-size: 14px;
+            }
+            
+            .log-details {
+                font-size: 12px;
+                padding-left: 0;
+                padding-top: 8px;
+            }
+
+            .log-time::before {
+                display: inline-block;
+                margin-right: 5px;
+            }
+
+            .access-table {
+                font-size: 12px;
+                display: block;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .access-table thead {
+                display: none;
+            }
+            
+            .access-table tbody,
+            .access-table tr {
+                display: block;
+            }
+            
+            .access-table tr {
+                margin-bottom: 15px;
+                border: 2px solid #e0e0e0;
+                border-radius: 8px;
+                padding: 10px;
+                background: #fff;
+            }
+            
+            .access-table td {
+                display: block;
+                text-align: left;
+                padding: 8px 5px;
+                border: none;
+                position: relative;
+                padding-left: 45%;
+            }
+            
+            .access-table td:before {
+                content: attr(data-label);
+                position: absolute;
+                left: 10px;
+                font-weight: bold;
+                color: #0f3460;
+                white-space: nowrap;
+            }
+
+            .significance-box {
+                padding: 20px;
+                margin-bottom: 20px;
+            }
+            
+            .significance-title {
+                font-size: 16px;
+            }
+
+            .significance-text {
+                font-size: 14px;
+            }
+
             .critical-alert {
                 padding: 18px;
                 margin-bottom: 25px;
@@ -630,6 +688,81 @@
             .alert-text {
                 font-size: 14px;
             }
+
+            .back-button {
+                padding: 12px 30px;
+                font-size: 14px;
+                width: 90%;
+                max-width: 300px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 5px;
+            }
+            
+            .details {
+                padding: 15px;
+            }
+            
+            .section {
+                padding: 15px;
+                margin-bottom: 20px;
+            }
+            
+            .evidence-title {
+                font-size: 18px;
+            }
+            
+            .section-title {
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .evidence-id {
+                font-size: 18px;
+                letter-spacing: 1px;
+            }
+            
+            .header h1 {
+                font-size: 16px;
+            }
+            
+            .section-title {
+                font-size: 13px;
+            }
+            
+            .back-button {
+                padding: 10px 20px;
+                font-size: 13px;
+            }
+        }
+
+        /* Touch-friendly interactions */
+        @media (hover: none) and (pointer: coarse) {
+            .back-button:hover {
+                transform: none;
+            }
+            
+            .back-button:active {
+                transform: scale(0.95);
+            }
+
+            .log-item:hover {
+                transform: none;
+            }
+        }
+
+        /* Max-width overflow protection */
+        .section-content,
+        .log-details,
+        .significance-text,
+        .alert-text {
+            max-width: 100%;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
         }
     </style>
 </head>
@@ -731,13 +864,13 @@
             </div>
 
             <div class="details">
-                <h2 class="evidence-title">📹 ΣΥΣΤΗΜΑ ΚΛΕΙΣΤΟΥ ΚΥΚΛΩΜΑΤΟΣ (CCTV)</h2>
+                <h2 class="evidence-title">🔹 ΣΥΣΤΗΜΑ ΚΛΕΙΣΤΟΥ ΚΥΚΛΩΜΑΤΟΣ (CCTV)</h2>
 
                 <div class="critical-alert">
                     <div class="alert-badge">ΚΡΙΣΙΜΟ</div>
                     <div class="alert-content">
                         <h3 class="alert-title">
-                            <span style="font-size: 20px;"></span>
+                            <span style="font-size: 20px;">⚡</span>
                             ΑΠΕΝΕΡΓΟΠΟΙΗΣΗ ΣΥΣΤΗΜΑΤΟΣ
                         </h3>
                         <p class="alert-text">
@@ -785,34 +918,34 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td><strong>Διοικητικό Επίπεδο</strong></td>
-                                    <td>ADMIN_CEO</td>
-                                    <td>Δημητρίου Π. (CEO)</td>
-                                    <td>12/01/2025</td>
+                                    <td data-label="Κατηγορία"><strong>Διοικητικό Επίπεδο</strong></td>
+                                    <td data-label="Username">ADMIN_CEO</td>
+                                    <td data-label="Άτομα με Πρόσβαση">Δημητρίου Π. (CEO)</td>
+                                    <td data-label="Τελευταία Αλλαγή">12/01/2025</td>
                                 </tr>
                                 <tr>
-                                    <td><strong>Διοικητικό Επίπεδο</strong></td>
-                                    <td>ADMIN_CFO</td>
-                                    <td>Αναγνώστου Κ. (CFO)</td>
-                                    <td>12/01/2025</td>
+                                    <td data-label="Κατηγορία"><strong>Διοικητικό Επίπεδο</strong></td>
+                                    <td data-label="Username">ADMIN_CFO</td>
+                                    <td data-label="Άτομα με Πρόσβαση">Αναγνώστου Κ. (CFO)</td>
+                                    <td data-label="Τελευταία Αλλαγή">12/01/2025</td>
                                 </tr>
                                 <tr style="background: #fff5f5;">
-                                    <td><strong>Ομάδα Ασφαλείας</strong></td>
-                                    <td>SECURITY_01*</td>
-                                    <td>Πετρόπουλος Γ., Καραμάνης Σ., Γόρκας Α., Λυκορδής Π.</td>
-                                    <td>08/09/2025</td>
+                                    <td data-label="Κατηγορία"><strong>Ομάδα Ασφαλείας</strong></td>
+                                    <td data-label="Username">SECURITY_01*</td>
+                                    <td data-label="Άτομα με Πρόσβαση">Πετρόπουλος Δ., Καραμάνης Σ., Γόρκας Α., Λυκορδής Π.</td>
+                                    <td data-label="Τελευταία Αλλαγή">08/09/2025</td>
                                 </tr>
                                 <tr style="background: #fffbf0;">
-                                    <td><strong>Τμήμα IT</strong></td>
-                                    <td>IT_VLACHOS</td>
-                                    <td>Βλάχος Μ. (Senior IT Administrator)</td>
-                                    <td>20/07/2025</td>
+                                    <td data-label="Κατηγορία"><strong>Τμήμα IT</strong></td>
+                                    <td data-label="Username">IT_VLACHOS</td>
+                                    <td data-label="Άτομα με Πρόσβαση">Βλάχος Μ. (Senior IT Administrator)</td>
+                                    <td data-label="Τελευταία Αλλαγή">20/07/2025</td>
                                 </tr>
                                 <tr style="background: #fffbf0;">
-                                    <td><strong>Τμήμα IT</strong></td>
-                                    <td>IT_SAVVIDIS</td>
-                                    <td>Σαββίδης Κ. (IT Technician)</td>
-                                    <td>20/07/2025</td>
+                                    <td data-label="Κατηγορία"><strong>Τμήμα IT</strong></td>
+                                    <td data-label="Username">IT_SAVVIDIS</td>
+                                    <td data-label="Άτομα με Πρόσβαση">Σαββίδης Κ. (IT Technician)</td>
+                                    <td data-label="Τελευταία Αλλαγή">20/07/2025</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -838,83 +971,84 @@
                     </div>
                 </div>
 				
-<div class="section">
-    <h3 class="section-title">
-        <span style="font-size: 24px;">💾</span>
-        Ηλεκτρονικό Αρχείο Διακομιστή (Server Log - 22/09/2025)
-    </h3>
-    <p class="section-content" style="margin-bottom: 15px; font-style: italic; color: #666;">
-        Το ηλεκτρονικό αρχείο καταγράφει αυτόματα κάθε τεχνική ενέργεια και εντολή συστήματος.
-    </p>
-    <div>
-        <div class="log-item warning">
-            <div class="log-time">15:20 - Προγραμματισμένη Συντήρηση</div>
-            <div class="log-details">
-                <div><strong>Χρήστης:</strong> IT_VLACHOS</div>
-                <div><strong>Τερματικό:</strong> 192.168.1.201 (Τμήμα IT - Υπόγειο)</div>
-                <div><strong>Ενέργεια:</strong> Ενημέρωση firmware καμερών #03, #07, #12</div>
-                <div><strong>Έκδοση:</strong> v3.2.0 → v3.2.1</div>
-                <div><strong>Σημείωση:</strong> Πιθανή ευπάθεια σε διακοπές δικτύου</div>
-            </div>
-        </div>
+                <div class="section">
+                    <h3 class="section-title">
+                        <span style="font-size: 24px;">💾</span>
+                        Ηλεκτρονικό Αρχείο Διακομιστή (Server Log - 22/09/2025)
+                    </h3>
+                    <p class="section-content" style="margin-bottom: 15px; font-style: italic; color: #666;">
+                        Το ηλεκτρονικό αρχείο καταγράφει αυτόματα κάθε τεχνική ενέργεια και εντολή συστήματος.
+                    </p>
+                    <div>
+                        <div class="log-item warning">
+                            <div class="log-time">15:20 - Προγραμματισμένη Συντήρηση</div>
+                            <div class="log-details">
+                                <div><strong>Χρήστης:</strong> IT_VLACHOS</div>
+                                <div><strong>Τερματικό:</strong> 192.168.1.201 (Τμήμα IT - Υπόγειο)</div>
+                                <div><strong>Ενέργεια:</strong> Ενημέρωση firmware καμερών #03, #07, #12</div>
+                                <div><strong>Έκδοση:</strong> v3.2.0 → v3.2.1</div>
+                                <div><strong>Σημείωση:</strong> Πιθανή ευπάθεια σε διακοπές δικτύου</div>
+                            </div>
+                        </div>
 
-        <div class="log-item">
-            <div class="log-time">20:42 - Πρώτα Σημάδια Αστάθειας</div>
-            <div class="log-details">
-                <div><strong>Κωδικός:</strong> NETWORK_FLUCTUATION</div>
-                <div><strong>Απώλεια πακέτων:</strong> 3% → 7% → 12%</div>
-                <div><strong>Επηρεαζόμενες κάμερες:</strong> CAM_03, CAM_07</div>
-            </div>
-        </div>
+                        <div class="log-item">
+                            <div class="log-time">20:42 - Πρώτα Σημάδια Αστάθειας</div>
+                            <div class="log-details">
+                                <div><strong>Κωδικός:</strong> NETWORK_FLUCTUATION</div>
+                                <div><strong>Απώλεια πακέτων:</strong> 3% → 7% → 12%</div>
+                                <div><strong>Επηρεαζόμενες κάμερες:</strong> CAM_03, CAM_07</div>
+                            </div>
+                        </div>
 
-        <div class="log-item warning">
-            <div class="log-time">20:48 - Κλιμάκωση Προβλήματος</div>
-            <div class="log-details">
-                <div><strong>Κωδικός:</strong> VIDEO_SIGNAL_DEGRADATION</div>
-                <div><strong>Κάμερες με πρόβλημα:</strong> CAM_03, CAM_07, CAM_12</div>
-                <div><strong>Περιγραφή:</strong> Διακοπτόμενο σήμα</div>
-                <div><strong>Απώλεια πακέτων:</strong> 28% και αυξανόμενη</div>
-            </div>
-        </div>
+                        <div class="log-item warning">
+                            <div class="log-time">20:48 - Κλιμάκωση Προβλήματος</div>
+                            <div class="log-details">
+                                <div><strong>Κωδικός:</strong> VIDEO_SIGNAL_DEGRADATION</div>
+                                <div><strong>Κάμερες με πρόβλημα:</strong> CAM_03, CAM_07, CAM_12</div>
+                                <div><strong>Περιγραφή:</strong> Διακοπτόμενο σήμα</div>
+                                <div><strong>Απώλεια πακέτων:</strong> 28% και αυξανόμενη</div>
+                            </div>
+                        </div>
 
-        <div class="log-item critical">
-            <div class="log-time">20:55 - Απόπειρα Επανεκκίνησης</div>
-            <div class="log-details">
-                <div><strong>Χρήστης:</strong> SECURITY_01</div>
-                <div><strong>Τοποθεσία:</strong> Φυσικός Πίνακας Ελέγχου - Δωμάτιο Ασφαλείας</div>
-                <div><strong>Εντολή:</strong> SYSTEM_RESTART</div>
-                <div><strong>Αιτιολογία:</strong> «Αποκατάσταση σφαλμάτων δικτύου»</div>
-                <div><strong>Κατάσταση:</strong> ΕΚΤΕΛΕΣΗ...</div>
-            </div>
-        </div>
+                        <div class="log-item critical">
+                            <div class="log-time">20:55 - Απόπειρα Επανεκκίνησης</div>
+                            <div class="log-details">
+                                <div><strong>Χρήστης:</strong> SECURITY_01</div>
+                                <div><strong>Τοποθεσία:</strong> Φυσικός Πίνακας Ελέγχου - Δωμάτιο Ασφαλείας</div>
+                                <div><strong>Εντολή:</strong> SYSTEM_RESTART</div>
+                                <div><strong>Αιτιολογία:</strong> «Αποκατάσταση σφαλμάτων δικτύου»</div>
+                                <div><strong>Κατάσταση:</strong> ΕΚΤΕΛΕΣΗ...</div>
+                            </div>
+                        </div>
 
-        <div class="log-item critical">
-            <div class="log-time">20:56 - Αποτυχία Επανεκκίνησης</div>
-            <div class="log-details">
-                <div><strong>Κωδικός σφάλματος:</strong> BOOT_FAILURE_0xE0434352</div>
-                <div><strong>Περιγραφή:</strong> Το σύστημα δεν μπόρεσε να επανεκκινήσει</div>
-                <div><strong>Προσπάθειες αυτόματης αποκατάστασης:</strong> 0/3</div>
-                <div><strong>Σύστημα:</strong> ΕΚΤΟΣ ΛΕΙΤΟΥΡΓΙΑΣ</div>
-            </div>
-        </div>
+                        <div class="log-item critical">
+                            <div class="log-time">20:56 - Αποτυχία Επανεκκίνησης</div>
+                            <div class="log-details">
+                                <div><strong>Κωδικός σφάλματος:</strong> BOOT_FAILURE_0xE0434352</div>
+                                <div><strong>Περιγραφή:</strong> Το σύστημα δεν μπόρεσε να επανεκκινήσει</div>
+                                <div><strong>Προσπάθειες αυτόματης αποκατάστασης:</strong> 0/3</div>
+                                <div><strong>Σύστημα:</strong> ΕΚΤΟΣ ΛΕΙΤΟΥΡΓΙΑΣ</div>
+                            </div>
+                        </div>
 
-        <div class="log-item critical">
-            <div class="log-time">21:42 - Αυτόματη Αποκατάσταση</div>
-            <div class="log-details">
-                <div><strong>Ενεργοποίηση:</strong> Watchdog Timer</div>
-                <div><strong>Διαδικασία:</strong> Εξαναγκασμένη επαναφορά από ROM</div>
-                <div><strong>Αποτέλεσμα:</strong> Επιτυχής εκκίνηση - όλες οι κάμερες online</div>
-                <div><strong>Σημείωση:</strong> Metadata CAM_03, CAM_07 κατεστραμμένα</div>
-            </div>
-        </div>
-    </div>
-</div>
+                        <div class="log-item critical">
+                            <div class="log-time">21:42 - Αυτόματη Αποκατάσταση</div>
+                            <div class="log-details">
+                                <div><strong>Ενεργοποίηση:</strong> Watchdog Timer</div>
+                                <div><strong>Διαδικασία:</strong> Εξαναγκασμένη επαναφορά από ROM</div>
+                                <div><strong>Αποτέλεσμα:</strong> Επιτυχής εκκίνηση - όλες οι κάμερες online</div>
+                                <div><strong>Σημείωση:</strong> Metadata CAM_03, CAM_07 κατεστραμμένα</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="section">
                     <h3 class="section-title">
                         <span style="font-size: 24px;">🎬</span>
                         Ανασκόπηση Διαθέσιμων Καταγραφών
                     </h3>
-                    <p class="section-content" style="margin-bottom: 15px;"><strong style="color: #0f3460; font-size: 16px;">📹 Τελευταίες Διαθέσιμες Καταγραφές (Πριν 20:55)</strong></p>
+                    <p class="section-content" style="margin-bottom: 15px;"><strong style="color: #0f3460; font-size: 16px;">🔹 Τελευταίες Διαθέσιμες Καταγραφές (Πριν 20:55)</strong></p>
                     <p class="section-content" style="margin-bottom: 10px;">
                         <strong>18:15 - Κάμερες Εισόδου:</strong> Ο τελευταίος εργαζόμενος φεύγει από το κτίριο
                     </p>
@@ -935,12 +1069,12 @@
                     <div style="margin-top: 25px;">
                         <p class="section-content" style="margin-bottom: 15px;"><strong style="color: #0f3460; font-size: 16px;">🔍 Ψηφιακή Εγκληματολογική Ανάλυση</strong></p>
                         
-						<p class="section-content" style="margin-bottom: 10px;">
-    <strong>1. Απόπειρα Επανεκκίνησης που Απέτυχε:</strong> Ο φύλακας ακολούθησε το πρωτόκολλο Α-12 για επανεκκίνηση συστήματος λόγω τεχνικών προβλημάτων. Η επανεκκίνηση ξεκίνησε κανονικά αλλά το σύστημα δεν μπόρεσε να επανέλθει. Παραμένει ασαφές αν τα αρχικά προβλήματα ήταν τυχαία ή προκλητά, και αν κάποιος εκμεταλλεύτηκε την ευπάθεια που δημιούργησε η ενημέρωση του firmware των 15:20.
-</p>
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong>1. Απόπειρα Επανεκκίνησης που Απέτυχε:</strong> Ο φύλακας ακολούθησε το πρωτόκολλο Α-12 για επανεκκίνηση συστήματος λόγω τεχνικών προβλημάτων. Η επανεκκίνηση ξεκίνησε κανονικά αλλά το σύστημα δεν μπόρεσε να επανέλθει. Παραμένει ασαφές αν τα αρχικά προβλήματα ήταν τυχαία ή προκληθέντα, και αν κάποιος εκμεταλλεύτηκε την ευπάθεια που δημιούργησε η ενημέρωση του firmware των 15:20.
+                        </p>
 						
                         <p class="section-content" style="margin-bottom: 10px;">
-                            <strong>2. Πρόβλημα Αναγνώρισης Χρήστη:</strong> Χρησιμοποιήθηκε το username «SECURITY_01» - κοινός κωδικός που μοιράζονται 4 φύλακες (Πετρόπουλος Γ., Καραμάνης Σ., Γόρκας Α., Λυκορδής Π.). Επομένως, δεν μπορούμε να προσδιορίσουμε με βεβαιότητα ΠΟΙΟΣ από τους 4 εκτέλεσε την απενεργοποίηση - ή αν κάποιος τρίτος είχε αποκτήσει πρόσβαση στον κωδικό.
+                            <strong>2. Πρόβλημα Αναγνώρισης Χρήστη:</strong> Χρησιμοποιήθηκε το username «SECURITY_01» - κοινός κωδικός που μοιράζονται 4 φύλακες (Πετρόπουλος Δ., Καραμάνης Σ., Γόρκας Α., Λυκορδής Π.). Επομένως, δεν μπορούμε να προσδιορίσουμε με βεβαιότητα ΠΟΙΟΣ από τους 4 εκτέλεσε την απενεργοποίηση - ή αν κάποιος τρίτος είχε αποκτήσει πρόσβαση στον κωδικό.
                         </p>
 
                         <p class="section-content" style="margin-bottom: 10px;">
@@ -957,56 +1091,56 @@
                     </div>
                 </div>
 
-<div class="section">
-    <h3 class="section-title">
-        <span style="font-size: 24px;">📝</span>
-        Φυσικό Τετράδιο Συμβάντων
-    </h3>
-    <p class="section-content" style="margin-bottom: 15px; font-style: italic; color: #666;">
-        Χειρόγραφες καταχωρίσεις από το προσωπικό ασφαλείας.
-    </p>
-    
-    <div style="background: #fff9e6; border: 2px solid #ffc107; border-radius: 10px; padding: 20px; margin-top: 15px;">
-        <p class="section-content" style="margin-bottom: 10px;">
-            <strong style="color: #856404;">📅 Ημερομηνία:</strong> 22/09/2025
-        </p>
-        <p class="section-content" style="margin-bottom: 10px;">
-            <strong style="color: #856404;">🕐 Ώρα:</strong> 20:50-21:45
-        </p>
-        <p class="section-content" style="margin-bottom: 10px;">
-            <strong style="color: #856404;">✍️ Υπογραφή:</strong> Γ. ΠΕΤΡΟΠΟΥΛΟΣ
-        </p>
-        <p class="section-content" style="margin-bottom: 15px;">
-            <strong style="color: #856404;">📋 Περιγραφή Συμβάντος:</strong>
-        </p>
-        <div style="background: white; padding: 15px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: 14px; line-height: 1.8; border-left: 4px solid #ffc107;">
-			20:48 - Οθόνες άρχισαν να τρεμοπαίζουν..<br>
-			20:52 - Προσπάθησα επικοινωνία με IT support (Βλάχος, Σαββίδης) - κανείς δεν απαντά.<br>
-			20:55 - Ακολούθησα πρωτόκολλο Α-12. Εκτέλεσα επανεκκίνηση από κεντρικό πίνακα.<br>
-			20:58 - Σύστημα δεν επανήλθε. Μαύρες οθόνες. Κόκκινο LED σφάλματος.<br>
-			21:10 - Προσπάθεια χειροκίνητης επαναφοράς από server room - αποτυχία.<br>
-			21:20 - Έλεγχος καλωδίων και συνδέσεων - όλα φαίνονται OK.<br>
-			21:30 - Προσπάθεια επαναφοράς από backup configuration - αποτυχία.<br>
-			21:42 - Σύστημα επανήλθε ΑΥΤΟΜΑΤΑ. Όλες οι κάμερες online.<br>
-			21:45 - Ενημέρωσα βιβλίο συμβάντων. Θα χρειαστεί τεχνικός το πρωί.
-        </div>
-        <div style="margin-top: 15px; padding: 12px; background: #fff3cd; border-radius: 8px;">
-<p class="section-content" style="color: #856404; margin: 0;">
-    <strong>🔬 Γραφολογική Ανάλυση:</strong> Η υπογραφή και το κείμενο δείχνουν σημάδια έντονου άγχους - τρεμάμενες γραμμές, ασυνεπές μέγεθος γραμμάτων, αυξανόμενη πίεση πένας στις κρίσιμες ώρες. Οι εγγραφές 21:10-21:30 εμφανίζουν ασυνήθιστα σταθερό γραφικό χαρακτήρα σε σχέση με τις προηγούμενες - σαν ο γράφων να ηρέμησε ξαφνικά εν μέσω κρίσης. Η τελευταία εγγραφή (21:45) επιστρέφει στον αρχικό «ταραγμένο» χαρακτήρα. Επίσης, η φράση «Θα χρειαστεί τεχνικός το πρωί» γράφτηκε και διαγράφηκε μερικώς πριν ξαναγραφτεί.
-</p>
-        </div>
-    </div>
-</div>
+                <div class="section">
+                    <h3 class="section-title">
+                        <span style="font-size: 24px;">📝</span>
+                        Φυσικό Τετράδιο Συμβάντων
+                    </h3>
+                    <p class="section-content" style="margin-bottom: 15px; font-style: italic; color: #666;">
+                        Χειρόγραφες καταχωρίσεις από το προσωπικό ασφαλείας.
+                    </p>
+                    
+                    <div style="background: #fff9e6; border: 2px solid #ffc107; border-radius: 10px; padding: 20px; margin-top: 15px;">
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong style="color: #856404;">📅 Ημερομηνία:</strong> 22/09/2025
+                        </p>
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong style="color: #856404;">🕐 Ώρα:</strong> 20:50-21:45
+                        </p>
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong style="color: #856404;">✍️ Υπογραφή:</strong> Δ. ΠΕΤΡΟΠΟΥΛΟΣ
+                        </p>
+                        <p class="section-content" style="margin-bottom: 15px;">
+                            <strong style="color: #856404;">📋 Περιγραφή Συμβάντος:</strong>
+                        </p>
+                        <div style="background: white; padding: 15px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: 14px; line-height: 1.8; border-left: 4px solid #ffc107;">
+                            20:48 - Οθόνες άρχισαν να τρεμοπαίζουν..<br>
+                            20:52 - Προσπάθησα επικοινωνία με IT support (Βλάχος, Σαββίδης) - κανείς δεν απαντά.<br>
+                            20:55 - Ακολούθησα πρωτόκολλο Α-12. Εκτέλεσα επανεκκίνηση από κεντρικό πίνακα.<br>
+                            20:58 - Σύστημα δεν επανήλθε. Μαύρες οθόνες. Κόκκινο LED σφάλματος.<br>
+                            21:10 - Προσπάθεια χειροκίνητης επαναφοράς από server room - αποτυχία.<br>
+                            21:20 - Έλεγχος καλωδίων και συνδέσεων - όλα φαίνονται OK.<br>
+                            21:30 - Προσπάθεια επαναφοράς από backup configuration - αποτυχία.<br>
+                            21:42 - Σύστημα επανήλθε ΑΥΤΟΜΑΤΑ. Όλες οι κάμερες online.<br>
+                            21:45 - Ενημέρωσα βιβλίο συμβάντων. Θα χρειαστεί τεχνικός το πρωί.
+                        </div>
+                        <div style="margin-top: 15px; padding: 12px; background: #fff3cd; border-radius: 8px;">
+                            <p class="section-content" style="color: #856404; margin: 0;">
+                                <strong>🔬 Γραφολογική Ανάλυση:</strong> Η υπογραφή και το κείμενο δείχνουν σημάδια έντονου άγχους - τρεμάμενες γραμμές, ασυνεπές μέγεθος γραμμάτων, αυξανόμενη πίεση πένας στις κρίσιμες ώρες. Οι εγγραφές 21:10-21:30 εμφανίζουν ασυνήθιστα σταθερό γραφικό χαρακτήρα σε σχέση με τις προηγούμενες - σαν ο γράφων να ηρέμησε ξαφνικά εν μέσω κρίσης. Η τελευταία εγγραφή (21:45) επιστρέφει στον αρχικό "ταραγμένο" χαρακτήρα. Επίσης, η φράση "Θα χρειαστεί τεχνικός το πρωί" γράφτηκε και διαγράφηκε μερικώς πριν ξαναγραφτεί.
+                            </p>
+                        </div>
+                    </div>
+                </div>
 
-<div class="significance-box">
-    <h3 class="significance-title">
-        <span style="font-size: 20px;">💡</span>
-        ΣΗΜΑΣΙΑ ΓΙΑ ΤΗΝ ΕΡΕΥΝΑ
-    </h3>
-<p class="significance-text">
-    Το χρονικό παράθυρο 20:58-21:42 αποτελεί το «μαύρο κουτί» της έρευνας - 44 λεπτά χωρίς οπτική καταγραφή. Τα τεχνικά προβλήματα ξεκίνησαν στις 20:42, κλιμακώθηκαν στις 20:48, και οδήγησαν σε απόπειρα επανεκκίνησης στις 20:55 που ουσιαστικά απέτυχε. Κρίσιμα ερωτήματα: (1) Ήταν τα αρχικά προβλήματα τυχαία ή σκόπιμα προκληθέντα; (2) Γιατί μόνο η Κάμερα #03 έχασε metadata; (3) Ποιος από τους 4 φύλακες ήταν στο δωμάτιο ελέγχου στις 20:55; (4) Υπήρχε σχέση μεταξύ της ενημέρωσης λογισμικού και της αποτυχίας επανεκκίνησης;
-</p>
-</div>
+                <div class="significance-box">
+                    <h3 class="significance-title">
+                        <span style="font-size: 20px;">💡</span>
+                        ΣΗΜΑΣΙΑ ΓΙΑ ΤΗΝ ΕΡΕΥΝΑ
+                    </h3>
+                    <p class="significance-text">
+                        Το χρονικό παράθυρο 20:58-21:42 αποτελεί το "μαύρο κουτί" της έρευνας - 44 λεπτά χωρίς οπτική καταγραφή. Τα τεχνικά προβλήματα ξεκίνησαν στις 20:42, κλιμακώθηκαν στις 20:48, και οδήγησαν σε απόπειρα επανεκκίνησης στις 20:55 που ουσιαστικά απέτυχε. Κρίσιμα ερωτήματα: (1) Ήταν τα αρχικά προβλήματα τυχαία ή σκόπιμα προκληθέντα; (2) Διατί μόνο η Κάμερα #03 έχασε metadata; (3) Ποιος από τους 4 φύλακες ήταν στο δωμάτιο ελέγχου στις 20:55; (4) Υπήρχε σχέση μεταξύ της ενημέρωσης λογισμικού και της αποτυχίας επανεκκίνησης;
+                    </p>
+                </div>
 
                 <div class="section">
                     <h3 class="section-title">
@@ -1026,28 +1160,15 @@
     </div>
 
     <div style="text-align: center; padding: 20px; background: rgba(0,0,0,0.05); position: relative; z-index: 100;">
-        <button onclick="window.goBackToCaseFile()" 
-                style="background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%); 
-                       color: white; 
-                       padding: 15px 40px; 
-                       border: none; 
-                       border-radius: 10px; 
-                       font-size: 16px; 
-                       font-weight: bold; 
-                       cursor: pointer; 
-                       box-shadow: 0 4px 12px rgba(255,107,0,0.3);
-                       position: relative;
-                       z-index: 101;
-                       pointer-events: auto;">
+        <button onclick="window.goBackToCaseFile()" class="back-button">
             ← ΕΠΙΣΤΡΟΦΗ ΣΤΟ ΦΑΚΕΛΟ
         </button>
     </div>
 
-    
     <script>
         window.goBackToCaseFile = function() {
             const teamCode = sessionStorage.getItem('teamCode');
-            console.log('📙 Button clicked! Team:', teamCode);
+            console.log('🔙 Button clicked! Team:', teamCode);
             
             if (teamCode) {
                 window.location.href = `index.html?team=${teamCode}&tab=evidence`;
@@ -1059,61 +1180,66 @@
         function drawCrimeScene() {
             const canvas = document.getElementById('crimeSceneCanvas');
             const ctx = canvas.getContext('2d');
+            const container = canvas.parentElement;
+            const containerWidth = container.offsetWidth;
+            const maxWidth = Math.min(containerWidth, 800);
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = maxWidth * dpr;
+            canvas.height = maxWidth * 0.5 * dpr;
+            canvas.style.width = maxWidth + 'px';
+            canvas.style.height = (maxWidth * 0.5) + 'px';
+            ctx.scale(dpr, dpr);
             
-            canvas.width = 800;
-            canvas.height = 400;
-
-            const bgGradient = ctx.createLinearGradient(0, 0, 0, 400);
+            const scale = maxWidth / 800;
+            
+            const bgGradient = ctx.createLinearGradient(0, 0, 0, maxWidth * 0.5);
             bgGradient.addColorStop(0, '#1a1a2e');
             bgGradient.addColorStop(1, '#0f0f1e');
             ctx.fillStyle = bgGradient;
-            ctx.fillRect(0, 0, 800, 400);
-
+            ctx.fillRect(0, 0, maxWidth, maxWidth * 0.5);
+            
             ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
-            ctx.lineWidth = 1;
-            for (let i = 0; i < 800; i += 100) {
+            ctx.lineWidth = 1 * scale;
+            for (let i = 0; i < maxWidth; i += (100 * scale)) {
                 ctx.beginPath();
                 ctx.moveTo(i, 0);
-                ctx.lineTo(i, 400);
+                ctx.lineTo(i, maxWidth * 0.5);
                 ctx.stroke();
             }
 
             for (let i = 0; i < 3; i++) {
-                const x = 150 + i * 200;
-                const y = 120;
-                
+                const x = (150 + i * 200) * scale;
+                const y = 120 * scale;
                 ctx.fillStyle = '#2d2d3d';
-                ctx.fillRect(x, y, 160, 120);
-                
+                ctx.fillRect(x, y, 160 * scale, 120 * scale);
                 ctx.fillStyle = '#000';
-                ctx.fillRect(x + 10, y + 10, 140, 90);
-                
+                ctx.fillRect(x + (10 * scale), y + (10 * scale), 140 * scale, 90 * scale);
                 for (let j = 0; j < 50; j++) {
                     ctx.fillStyle = `rgba(${Math.random() * 100}, ${Math.random() * 100}, ${Math.random() * 100}, 0.3)`;
                     ctx.fillRect(
-                        x + 10 + Math.random() * 140,
-                        y + 10 + Math.random() * 90,
-                        2, 2
+                        x + (10 * scale) + Math.random() * (140 * scale),
+                        y + (10 * scale) + Math.random() * (90 * scale),
+                        2 * scale, 
+                        2 * scale
                     );
                 }
-                
+
                 ctx.fillStyle = '#ff3333';
-                ctx.font = 'bold 12px monospace';
+                ctx.font = `bold ${12 * scale}px monospace`;
                 ctx.textAlign = 'center';
-                ctx.fillText('NO SIGNAL', x + 80, y + 60);
-                
+                ctx.fillText('NO SIGNAL', x + (80 * scale), y + (60 * scale));
                 ctx.fillStyle = '#2d2d3d';
-                ctx.fillRect(x + 65, y + 120, 30, 40);
-                ctx.fillRect(x + 50, y + 160, 60, 10);
-                
+                ctx.fillRect(x + (65 * scale), y + (120 * scale), 30 * scale, 40 * scale);
+                ctx.fillRect(x + (50 * scale), y + (160 * scale), 60 * scale, 10 * scale);
                 ctx.fillStyle = '#ffaa00';
-                ctx.font = 'bold 10px monospace';
-                ctx.fillText(`CAM #${i === 0 ? '03' : i === 1 ? '07' : '12'}`, x + 80, y + 115);
+                ctx.font = `bold ${10 * scale}px monospace`;
+                ctx.fillText(`CAM #${i === 0 ? '03' : i === 1 ? '07' : '12'}`, x + (80 * scale), y + (115 * scale));
             }
         }
 
         window.onload = function() {
             drawCrimeScene();
+            window.addEventListener('resize', drawCrimeScene);
         };
     </script>
 </body>

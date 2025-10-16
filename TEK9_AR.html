@@ -44,7 +44,7 @@
 
         .header {
             background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
-            padding: 20px;
+            padding: clamp(15px, 4vw, 20px);
             box-shadow: 0 4px 20px rgba(0,0,0,0.5);
             position: relative;
             z-index: 10;
@@ -54,129 +54,82 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: clamp(8px, 2vw, 10px);
             margin-bottom: 10px;
         }
 
         .check-icon {
-            width: 32px;
-            height: 32px;
+            width: clamp(20px, 5vw, 32px);
+            height: clamp(20px, 5vw, 32px);
             color: #fff;
             animation: unlock 0.6s ease-out;
+            flex-shrink: 0;
         }
 
         .header h1 {
             color: #fff;
-            font-size: 24px;
+            font-size: clamp(16px, 4vw, 24px);
             font-weight: bold;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            text-align: center;
         }
 
         .header p {
             color: #fff;
             text-align: center;
             opacity: 0.9;
-            font-size: 14px;
-        }
-
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 18px;
-            }
-            .check-icon {
-                width: 24px;
-                height: 24px;
-            }
-            .header {
-                padding: 15px 10px;
-            }
-            .header p {
-                font-size: 12px;
-            }
+            font-size: clamp(11px, 2.5vw, 14px);
         }
 
         .container {
-            padding: 20px;
+            padding: clamp(10px, 3vw, 20px);
             position: relative;
             z-index: 1;
             max-width: 1200px;
             margin: 0 auto;
         }
 
-        @media (max-width: 768px) {
-            .container {
-                padding: 10px;
-            }
-        }
-
         .evidence-card {
             background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
+            border-radius: clamp(10px, 2vw, 15px);
             box-shadow: 0 10px 40px rgba(0,0,0,0.3);
             overflow: hidden;
-            border: 3px solid #ff6b00;
-        }
-
-        @media (max-width: 768px) {
-            .evidence-card {
-                border-radius: 10px;
-                border: 2px solid #ff6b00;
-            }
+            border: clamp(2px, 0.3vw, 3px) solid #ff6b00;
         }
 
         .badge-bar {
             background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
-            padding: 15px 20px;
+            padding: clamp(12px, 3vw, 15px) clamp(15px, 4vw, 20px);
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        @media (max-width: 768px) {
-            .badge-bar {
-                padding: 12px 15px;
-                flex-direction: column;
-                align-items: flex-start;
-            }
+            gap: clamp(8px, 2vw, 10px);
         }
 
         .badge-info {
             flex: 1;
+            min-width: 150px;
         }
 
         .evidence-id {
-            font-size: 28px;
+            font-size: clamp(20px, 5vw, 28px);
             font-weight: bold;
             color: #ff6b00;
             font-family: monospace;
-            letter-spacing: 2px;
-        }
-
-        @media (max-width: 768px) {
-            .evidence-id {
-                font-size: 22px;
-                letter-spacing: 1px;
-            }
+            letter-spacing: clamp(1px, 0.3vw, 2px);
+            word-break: break-all;
         }
 
         .official-badge {
             background: rgba(255,107,0,0.2);
             border: 2px solid #ff6b00;
             border-radius: 8px;
-            padding: 8px 15px;
-            font-size: 11px;
+            padding: clamp(6px, 1.5vw, 8px) clamp(10px, 2.5vw, 15px);
+            font-size: clamp(9px, 2vw, 11px);
             color: #ff6b00;
             font-weight: bold;
-        }
-
-        @media (max-width: 768px) {
-            .official-badge {
-                font-size: 9px;
-                padding: 6px 10px;
-                align-self: flex-start;
-            }
+            white-space: nowrap;
         }
 
         .crime-scene-photo {
@@ -188,54 +141,39 @@
             border-top: 2px solid #333;
             border-bottom: 2px solid #333;
             overflow: hidden;
+            min-height: 200px;
         }
 
         #crimeSceneCanvas {
             width: 100%;
-            max-width: 800px;
             height: auto;
             display: block;
-        }
-
-        @media (max-width: 768px) {
-            .crime-scene-photo {
-                border-top: 1px solid #333;
-                border-bottom: 1px solid #333;
-            }
+            max-width: 800px;
         }
 
         .confidential-badge {
             position: absolute;
-            top: 10px;
-            right: 10px;
+            top: clamp(5px, 1.5vw, 10px);
+            right: clamp(5px, 1.5vw, 10px);
             background: rgba(255,0,0,0.9);
             color: white;
-            padding: 5px 10px;
-            font-size: 11px;
+            padding: clamp(4px, 1vw, 5px) clamp(8px, 2vw, 10px);
+            font-size: clamp(9px, 2vw, 11px);
             font-weight: bold;
             border-radius: 5px;
             border: 1px solid #fff;
         }
 
-        @media (max-width: 768px) {
-            .confidential-badge {
-                font-size: 9px;
-                padding: 4px 8px;
-                top: 5px;
-                right: 5px;
-            }
-        }
-
         .ar-container {
-            margin: 20px 0;
-            padding: 20px;
+            margin: clamp(15px, 3vw, 20px) 0;
+            padding: clamp(15px, 3vw, 20px);
             background: linear-gradient(135deg, rgba(255,107,0,0.05) 0%, rgba(255,136,0,0.05) 100%);
             border: 2px solid #ff6b00;
             border-radius: 10px;
         }
 
         .ar-title {
-            font-size: 18px;
+            font-size: clamp(16px, 3.5vw, 18px);
             color: #ff6b00;
             font-weight: bold;
             margin: 0 0 15px 0;
@@ -244,117 +182,82 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
-        }
-
-        @media (max-width: 768px) {
-            .ar-title {
-                font-size: 16px;
-            }
-            .ar-container {
-                padding: 15px;
-                margin: 15px 0;
-            }
+            flex-wrap: wrap;
         }
 
         .details {
-            padding: 30px;
+            padding: clamp(20px, 4vw, 30px);
             background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
         }
 
-        @media (max-width: 768px) {
-            .details {
-                padding: 20px;
-            }
-        }
-
         .evidence-title {
-            margin: 0 0 25px 0;
-            font-size: 24px;
+            margin: 0 0 clamp(20px, 4vw, 25px) 0;
+            font-size: clamp(18px, 4vw, 24px);
             color: #1a1a2e;
             border-bottom: 3px solid #ff6b00;
-            padding-bottom: 15px;
+            padding-bottom: clamp(10px, 2vw, 15px);
             font-weight: 700;
             display: flex;
             align-items: center;
-            gap: 12px;
-        }
-
-        @media (max-width: 768px) {
-            .evidence-title {
-                font-size: 20px;
-                margin: 0 0 20px 0;
-                gap: 10px;
-            }
+            gap: clamp(8px, 2vw, 12px);
+            flex-wrap: wrap;
         }
 
         .section {
-            margin-bottom: 25px;
+            margin-bottom: clamp(20px, 4vw, 25px);
             background: white;
-            padding: 20px;
+            padding: clamp(15px, 3vw, 20px);
             border-radius: 10px;
             border: 1px solid #e0e0e0;
             box-shadow: 0 2px 6px rgba(0,0,0,0.05);
         }
 
         .section-title {
-            font-size: 18px;
+            font-size: clamp(15px, 3.5vw, 18px);
             color: #0f3460;
             margin-bottom: 15px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: clamp(8px, 2vw, 10px);
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             border-bottom: 2px solid #e0e0e0;
             padding-bottom: 10px;
-        }
-
-        @media (max-width: 768px) {
-            .section-title {
-                font-size: 16px;
-                gap: 8px;
-            }
+            flex-wrap: wrap;
         }
 
         .section-content {
-            font-size: 15px;
+            font-size: clamp(13px, 2.8vw, 15px);
             line-height: 1.8;
             color: #333;
-            text-align: justify;
         }
 
         .section-content p {
-            margin: 0;
+            margin: 0 0 15px 0;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
-        @media (max-width: 768px) {
-            .section-content {
-                font-size: 14px;
-            }
+        .section-content p:last-child {
+            margin-bottom: 0;
         }
 
         ul {
-            padding-left: 25px;
+            padding-left: clamp(20px, 4vw, 25px);
             line-height: 2;
         }
 
         ul li {
             margin-bottom: 8px;
-        }
-
-        @media (max-width: 768px) {
-            ul {
-                padding-left: 20px;
-                line-height: 1.8;
-            }
+            word-wrap: break-word;
         }
 
         .receipt-box {
             background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
             border: 3px solid #dc3545;
             border-radius: 10px;
-            padding: 20px;
+            padding: clamp(15px, 3vw, 20px);
             margin-bottom: 20px;
             box-shadow: 0 4px 12px rgba(220,53,69,0.15);
             font-family: 'Courier New', monospace;
@@ -368,28 +271,31 @@
         }
 
         .receipt-company {
-            font-size: 18px;
+            font-size: clamp(16px, 3.5vw, 18px);
             font-weight: bold;
             color: #1a1a2e;
             margin-bottom: 5px;
         }
 
         .receipt-details {
-            font-size: 12px;
+            font-size: clamp(10px, 2.2vw, 12px);
             color: #666;
+            line-height: 1.6;
         }
 
         .receipt-item {
             display: flex;
             justify-content: space-between;
-            padding: 8px 0;
+            padding: clamp(6px, 1.5vw, 8px) 0;
             border-bottom: 1px solid #e0e0e0;
+            gap: 10px;
+            flex-wrap: wrap;
         }
 
         .receipt-item.critical {
             background: rgba(220,53,69,0.1);
-            padding: 12px;
-            margin: 10px -10px;
+            padding: clamp(10px, 2vw, 12px);
+            margin: 10px clamp(-10px, -2vw, -10px);
             border-radius: 5px;
             font-weight: bold;
             border: 2px solid #dc3545;
@@ -397,13 +303,16 @@
 
         .receipt-label {
             color: #333;
-            font-size: 14px;
+            font-size: clamp(12px, 2.5vw, 14px);
+            flex: 1;
+            min-width: 120px;
         }
 
         .receipt-value {
             color: #1a1a2e;
             font-weight: 600;
-            font-size: 14px;
+            font-size: clamp(12px, 2.5vw, 14px);
+            text-align: right;
         }
 
         .receipt-total {
@@ -412,8 +321,9 @@
             border-top: 2px solid #333;
             display: flex;
             justify-content: space-between;
-            font-size: 16px;
+            font-size: clamp(14px, 3vw, 16px);
             font-weight: bold;
+            gap: 10px;
         }
 
         .signature-box {
@@ -425,73 +335,146 @@
         }
 
         .signature-label {
-            font-size: 12px;
+            font-size: clamp(10px, 2.2vw, 12px);
             color: #666;
             margin-bottom: 10px;
         }
 
         .signature-name {
-            font-size: 16px;
+            font-size: clamp(14px, 3vw, 16px);
             font-weight: bold;
             color: #1a1a2e;
             font-style: italic;
         }
 
-        @media (max-width: 768px) {
-            .receipt-box {
-                padding: 15px;
-            }
-            
-            .receipt-company {
-                font-size: 16px;
-            }
-            
-            .receipt-item {
-                font-size: 13px;
-            }
+        .signature-box > div:last-child {
+            margin-top: 10px;
+            font-size: clamp(9px, 2vw, 11px);
+            color: #999;
+            line-height: 1.6;
         }
 
         .significance-box {
             background: linear-gradient(135deg, #fff5f0 0%, #ffe8db 100%);
             border: 2px solid #ff6b00;
             border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 25px;
+            padding: clamp(20px, 4vw, 25px);
+            margin-bottom: clamp(20px, 4vw, 25px);
             box-shadow: 0 4px 12px rgba(255,107,0,0.1);
         }
 
         .significance-title {
-            font-size: 18px;
+            font-size: clamp(16px, 3.5vw, 18px);
             color: #ff6b00;
             margin: 0 0 15px 0;
             display: flex;
             align-items: center;
             gap: 10px;
             font-weight: 700;
+            flex-wrap: wrap;
         }
 
-        @media (max-width: 768px) {
-            .significance-box {
-                padding: 20px;
-                margin-bottom: 20px;
+        .significance-text {
+            font-size: clamp(13px, 2.8vw, 15px);
+            line-height: 1.8;
+            color: #1a1a2e;
+            margin: 0;
+            word-wrap: break-word;
+        }
+
+        .back-button-container {
+            text-align: center;
+            padding: clamp(15px, 3vw, 20px);
+            background: rgba(0,0,0,0.05);
+            position: relative;
+            z-index: 100;
+        }
+
+        .back-button {
+            background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
+            color: white;
+            padding: clamp(12px, 2.5vw, 15px) clamp(30px, 6vw, 40px);
+            border: none;
+            border-radius: 10px;
+            font-size: clamp(14px, 3vw, 16px);
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(255,107,0,0.3);
+            position: relative;
+            z-index: 101;
+            pointer-events: auto;
+            transition: transform 0.2s, box-shadow 0.2s;
+            min-height: 44px;
+            touch-action: manipulation;
+        }
+
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(255,107,0,0.4);
+        }
+
+        .back-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(255,107,0,0.3);
+        }
+
+        /* Small mobile phones */
+        @media (max-width: 375px) {
+            .header h1 {
+                font-size: 14px;
             }
             
-            .significance-title {
+            .evidence-id {
+                font-size: 18px;
+            }
+            
+            .badge-bar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .official-badge {
+                align-self: flex-start;
+            }
+        }
+
+        /* Tablet and larger */
+        @media (min-width: 769px) {
+            .receipt-item {
+                flex-wrap: nowrap;
+            }
+            
+            .badge-bar {
+                flex-wrap: nowrap;
+            }
+        }
+
+        /* Large screens */
+        @media (min-width: 1200px) {
+            body {
                 font-size: 16px;
             }
         }
 
-        .significance-text {
-            font-size: 15px;
-            line-height: 1.8;
-            color: #1a1a2e;
-            margin: 0;
-            text-align: justify;
+        /* Landscape mobile */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .header {
+                padding: 10px;
+            }
+            
+            .header-content {
+                margin-bottom: 5px;
+            }
         }
 
-        @media (max-width: 768px) {
-            .significance-text {
-                font-size: 14px;
+        /* Print styles */
+        @media print {
+            .animated-background {
+                display: none;
+            }
+            
+            .back-button-container {
+                display: none;
             }
         }
     </style>
@@ -595,7 +578,7 @@
                     <div class="signature-box">
                         <div class="signature-label">Υπογραφή Αγοραστή:</div>
                         <div class="signature-name">Γ. Πετρόπουλος</div>
-                        <div style="margin-top: 10px; font-size: 11px; color: #999;">
+                        <div>
                             Άδεια Απεντόμωσης: ΑΠ-2024-15873<br>
                             Εταιρεία: SecureGuard Υπηρεσίες Ασφαλείας
                         </div>
@@ -603,11 +586,11 @@
                 </div>
 
                 <div style="margin-top: 20px; padding: 15px; background: rgba(220,53,69,0.05); border: 2px solid #dc3545; border-radius: 8px;">
-                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-                        <span style="font-size: 24px;"></span>
-                        <strong style="color: #dc3545; font-size: 15px;">ΠΑΡΑΤΗΡΗΣΗ</strong>
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap;">
+                        <span style="font-size: 24px;">⚠️</span>
+                        <strong style="color: #dc3545; font-size: clamp(13px, 2.8vw, 15px);">ΠΑΡΑΤΗΡΗΣΗ</strong>
                     </div>
-                    <p style="font-size: 14px; color: #666; margin: 0; line-height: 1.6;">
+                    <p style="font-size: clamp(12px, 2.5vw, 14px); color: #666; margin: 0; line-height: 1.6;">
                         Η αγορά έγινε 3 ημέρες πριν τον θάνατο του Δημητρίου. Η γραφολογική ανάλυση δείχνει <strong style="color: #dc3545;">78% ταύτιση</strong> με την υπογραφή του Πετρόπουλου, αλλά εντοπίστηκαν μικροδιαφορές που μπορεί να υποδηλώνουν άγχος ή προσπάθεια μίμησης.
                     </p>
                 </div>
@@ -622,13 +605,13 @@
                         Γραφολογική & Τεχνική Ανάλυση
                     </h3>
                     <div class="section-content">
-                        <p style="margin-bottom: 15px;">
+                        <p>
                             <strong>Κατάσταση Εγγράφου:</strong> Η απόδειξη βρέθηκε στο λογιστήριο, μέσα σε φάκελο με τίτλο «Λογαριασμοί Συντήρησης - Σεπτέμβριος 2025». Το έγγραφο ήταν διπλωμένο και φαινόταν να έχει χειριστεί πολλές φορές, με ελαφρές φθορές στις άκρες και ένα σημάδι από φλιτζάνι καφέ στην επάνω δεξιά γωνία.
                         </p>
-                        <p style="margin-bottom: 15px;">
+                        <p>
                             <strong>Γραφολογική Εξέταση:</strong> Η υπογραφή «Γ. Πετρόπουλος» αναλύθηκε από πιστοποιημένο γραφολόγο. Προκαταρκτικά ευρήματα δείχνουν 78% πιθανότητα ταύτισης με γνωστά δείγματα υπογραφής του Πετρόπουλου Γεωργίου από επίσημα έγγραφα απασχόλησης. Εντοπίστηκαν μικροδιαφορές στην πίεση του στυλό και στην κλίση ορισμένων γραμμάτων, που θα μπορούσαν να υποδηλώνουν άγχος κατά την υπογραφή ή απλώς διαφορετικές συνθήκες γραφής (όρθιος vs καθιστός). Ωστόσο, τα χαρακτηριστικά βασικά στοιχεία της υπογραφής - το διακριτικό «Γ» και η ροή του επωνύμου - είναι συνεπή.
                         </p>
-                        <p style="margin-bottom: 15px;">
+                        <p>
                             <strong>Χρονολόγηση:</strong> Η αγορά έγινε στις 19/09/2025 στις 14:30 - δηλαδή 3 ημέρες πριν από το θάνατο του Δημητρίου Πέτρου. Αυτό το χρονικό πλαίσιο θα επέτρεπε επαρκή προετοιμασία και σχεδιασμό. Ενδιαφέρον είναι ότι αυτή η συγκεκριμένη ημέρα ήταν Παρασκευή απόγευμα, όταν το κατάστημα είναι συνήθως πολυσύχναστο, γεγονός που θα μπορούσε να βοηθήσει κάποιον να περάσει απαρατήρητος ανάμεσα σε πολλούς πελάτες.
                         </p>
                         <p>
@@ -643,10 +626,10 @@
                         Νομική Άδεια & Διαδικασίες
                     </h3>
                     <div class="section-content">
-                        <p style="margin-bottom: 15px;">
+                        <p>
                             <strong>Νομιμότητα Αγοράς:</strong> Το κυανιούχο κάλιο είναι ελεγχόμενη ουσία στην Ελλάδα και απαιτεί ειδική άδεια για την αγορά του. Ο Πετρόπουλος Γεώργιος, ως υπεύθυνος ασφαλείας και συντήρησης κτιρίου, κατείχε νόμιμη άδεια απεντόμωσης (ΑΠ-2024-15873) που εκδόθηκε τον Φεβρουάριο 2024 με ισχύ 2 ετών. Η άδεια επιτρέπει την αγορά συγκεκριμένων χημικών, συμπεριλαμβανομένου του KCN, για σκοπούς επαγγελματικής απεντόμωσης.
                         </p>
-                        <p style="margin-bottom: 15px;">
+                        <p>
                             <strong>Διαδικασία Επαλήθευσης:</strong> Σύμφωνα με τις καταστατικές υποχρεώσεις του «ΧημικάPlus», ο πωλητής θα έπρεπε να επαληθεύσει την άδεια, να καταγράψει τα στοιχεία ταυτότητας του αγοραστή, και να κρατήσει αντίγραφο της άδειας στο αρχείο. Ο καταναλωτής επίσης υπογράφει δήλωση σκοπού χρήσης. Επικοινωνήσαμε με το κατάστημα και επιβεβαίωσαν ότι ακολουθήθηκαν όλες οι διαδικασίες. Ωστόσο, η δήλωση σκοπού χρήσης αναφέρει γενικά «απεντόμωση χώρων εταιρείας» χωρίς περαιτέρω λεπτομέρειες.
                         </p>
                         <p>
@@ -680,20 +663,8 @@
         </div>
     </div>
 
-    <div style="text-align: center; padding: 20px; background: rgba(0,0,0,0.05); position: relative; z-index: 100;">
-        <button onclick="window.goBackToCaseFile()" 
-                style="background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%); 
-                       color: white; 
-                       padding: 15px 40px; 
-                       border: none; 
-                       border-radius: 10px; 
-                       font-size: 16px; 
-                       font-weight: bold; 
-                       cursor: pointer; 
-                       box-shadow: 0 4px 12px rgba(255,107,0,0.3);
-                       position: relative;
-                       z-index: 101;
-                       pointer-events: auto;">
+    <div class="back-button-container">
+        <button onclick="window.goBackToCaseFile()" class="back-button">
             ← ΕΠΙΣΤΡΟΦΗ ΣΤΟ ΦΑΚΕΛΟ
         </button>
     </div>
@@ -713,9 +684,13 @@
         function drawCrimeScene() {
             const canvas = document.getElementById('crimeSceneCanvas');
             const ctx = canvas.getContext('2d');
+            const containerWidth = canvas.parentElement.offsetWidth;
+            const aspectRatio = 4/3;
+            canvas.width = Math.min(800, containerWidth);
+            canvas.height = canvas.width / aspectRatio;
             
-            canvas.width = 800;
-            canvas.height = 600;
+            const scale = canvas.width / 800;
+            ctx.scale(scale, scale);
             
             const floorGradient = ctx.createLinearGradient(0, 0, 0, 600);
             floorGradient.addColorStop(0, '#8b7355');
@@ -723,7 +698,6 @@
             floorGradient.addColorStop(1, '#6b5345');
             ctx.fillStyle = floorGradient;
             ctx.fillRect(0, 0, 800, 600);
-            
             ctx.strokeStyle = 'rgba(101, 67, 33, 0.2)';
             ctx.lineWidth = 1.5;
             for (let i = 0; i < 600; i += 35) {
@@ -755,7 +729,7 @@
             ctx.beginPath();
             ctx.roundRect(receiptX + 5, receiptY + 5, receiptWidth, receiptHeight, 4);
             ctx.fill();
-            
+
             const paperGradient = ctx.createLinearGradient(receiptX, receiptY, receiptX + receiptWidth, receiptY);
             paperGradient.addColorStop(0, '#fafafa');
             paperGradient.addColorStop(0.5, '#ffffff');
@@ -769,7 +743,6 @@
             ctx.beginPath();
             ctx.roundRect(receiptX, receiptY, receiptWidth, receiptHeight, 4);
             ctx.stroke();
-            
             ctx.setLineDash([4, 4]);
             ctx.strokeStyle = '#bbb';
             ctx.lineWidth = 1.5;
@@ -795,14 +768,12 @@
             ctx.fillStyle = '#555';
             ctx.font = '10px Arial';
             ctx.fillText('ΑΦΜ: 094523871 | ΔΟΥ: Χαλανδρίου | Τηλ: 210-6847321', receiptX + receiptWidth / 2, receiptY + 105);
-            
             ctx.strokeStyle = '#ddd';
             ctx.lineWidth = 1;
             ctx.beginPath();
             ctx.moveTo(receiptX + 30, receiptY + 115);
             ctx.lineTo(receiptX + receiptWidth - 30, receiptY + 115);
             ctx.stroke();
-            
             ctx.fillStyle = '#333';
             ctx.font = '11px monospace';
             ctx.textAlign = 'left';
@@ -840,7 +811,6 @@
             ctx.fillText('⚠️', receiptX + 35, yPos + 10);
             ctx.fillStyle = '#c00';
             ctx.font = 'bold 15px Arial';
-            ctx.textAlign = 'left';
             ctx.fillText('ΚΥΑΝΙΟΥΧΟ ΚΑΛΙΟ (KCN)', receiptX + 60, yPos + 10);
             yPos += 25;
             
@@ -937,8 +907,7 @@
             ctx.fillRect(barcodeX, yPos, barcodeWidth, 2);
             yPos += 4;
             
-            const seed = 12345;
-            let random = seed;
+            let random = 12345;
             for (let i = 0; i < 60; i++) {
                 random = (random * 9301 + 49297) % 233280;
                 const barWidth = (random % 3) + 1;
@@ -951,7 +920,6 @@
             ctx.font = '10px monospace';
             ctx.textAlign = 'center';
             ctx.fillText('CH-2025-09847-KCN', receiptX + receiptWidth / 2, yPos);
-            
             ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
             ctx.fillRect(0, 0, 800, 45);
             ctx.fillStyle = '#ff0000';
@@ -967,6 +935,12 @@
             ctx.textAlign = 'right';
             ctx.fillText('ΤΕΚ #009', 780, 27);
         }
+
+        let resizeTimer;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(drawCrimeScene, 250);
+        });
 
         window.onload = function() {
             drawCrimeScene();
