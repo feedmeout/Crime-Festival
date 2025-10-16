@@ -12,6 +12,7 @@
         @media print {
             body { margin: 0; padding: 0; }
             .no-print { display: none !important; }
+            .url-display { display: none !important; }  /* HIDE URL IN PRINT */
             .qr-card { 
                 page-break-inside: avoid; 
                 box-shadow: none;
@@ -155,18 +156,26 @@
             border-width: 5px;
         }
 
-        .qr-card.critical::before {
-            content: '⚠️ ΚΡΙΣΙΜΟ';
+        /* ALL TAG TYPES */
+        .critical-tag {
             position: absolute;
             top: 10px;
             right: 10px;
-            background: #dc3545;
-            color: white;
             padding: 5px 12px;
             border-radius: 5px;
             font-size: 11px;
             font-weight: bold;
+            color: white;
         }
+
+        .tag-critical { background: #dc3545; }
+        .tag-secret { background: #6f42c1; }
+        .tag-threat { background: #e83e8c; }
+        .tag-forgery { background: #fd7e14; }
+        .tag-clue { background: #20c997; }
+        .tag-financial { background: #17a2b8; }
+        .tag-blackmail { background: #6c757d; }
+        .tag-sabotage { background: #343a40; }
 
         .tek-number {
             font-size: 36px;
@@ -268,18 +277,29 @@
 
     <script>
         const tekData = [
-            { id: 1, name: 'Μπουκάλι Ουίσκι', icon: '🍾', critical: true },
-            { id: 2, name: 'Κρυστάλλινα Ποτήρια', icon: '🥃', critical: true },
-            { id: 3, name: 'Κινητό Θύματος', icon: '📱', critical: false },
-            { id: 4, name: 'Email Αυτοκτονίας', icon: '💻', critical: false },
-            { id: 5, name: 'Ιατρική Γνωμάτευση', icon: '🥼', critical: false },
-            { id: 6, name: 'Γάντια Λάτεξ', icon: '🧤', critical: false },
-            { id: 7, name: 'Χειρόγραφο Σημείωμα', icon: '✍️', critical: false },
-            { id: 8, name: 'Φάκελος Εμπιστευτικό', icon: '📂', critical: false },
-            { id: 9, name: 'Απόδειξη Χημικών', icon: '🧪', critical: true },
-            { id: 10, name: 'Κλειδί Χρηματοκιβωτίου', icon: '🔑', critical: false },
-            { id: 11, name: 'Κάμερες Ασφαλείας', icon: '📹', critical: false }
+            { id: 1, name: 'Μπουκάλι Ουίσκι', icon: '🍾', tag: 'critical' },
+            { id: 2, name: 'Κρυστάλλινα Ποτήρια', icon: '🥃', tag: 'critical' },
+            { id: 3, name: 'Κινητό Θύματος', icon: '📱', tag: 'threat' },
+            { id: 4, name: 'Email Αυτοκτονίας', icon: '💻', tag: 'forgery' },
+            { id: 5, name: 'Ιατρική Γνωμάτευση', icon: '🥼', tag: 'secret' },
+            { id: 6, name: 'Γάντια Λάτεξ', icon: '🧤', tag: 'clue' },
+            { id: 7, name: 'Χειρόγραφο Σημείωμα', icon: '✍️', tag: 'forgery' },
+            { id: 8, name: 'Φάκελος Εμπιστευτικό', icon: '📂', tag: 'blackmail' },
+            { id: 9, name: 'Απόδειξη Χημικών', icon: '🧪', tag: 'critical' },
+            { id: 10, name: 'Κλειδί Χρηματοκιβωτίου', icon: '🔑', tag: 'financial' },
+            { id: 11, name: 'Κάμερες Ασφαλείας', icon: '📹', tag: 'sabotage' }
         ];
+
+        const tagLabels = {
+            'critical': 'ΚΡΙΣΙΜΟ',
+            'secret': 'ΑΠΟΡΡΗΤΟ',
+            'threat': 'ΑΠΕΙΛΗ',
+            'forgery': 'ΠΛΑΣΤΟΓΡΑΦΙΑ',
+            'clue': 'ΕΝΔΕΙΞΗ',
+            'financial': 'ΟΙΚΟΝΟΜΙΚΟ',
+            'blackmail': 'ΕΚΒΙΑΣΜΟΣ',
+            'sabotage': 'ΣΑΜΠΟΤΑΖ'
+        };
 
         function generateAllQRCodes() {
             let baseUrl = document.getElementById('baseUrl').value.trim();
@@ -298,10 +318,13 @@
 
             tekData.forEach((tek, index) => {
                 const url = `${baseUrl}unlock_system.html?tek=${tek.id}`;
+                const tagLabel = tagLabels[tek.tag] || '';
+                const tagClass = `tag-${tek.tag}`;
                 
                 const cardDiv = document.createElement('div');
-                cardDiv.className = `qr-card ${tek.critical ? 'critical' : ''}`;
+                cardDiv.className = `qr-card ${tek.tag === 'critical' ? 'critical' : ''}`;
                 cardDiv.innerHTML = `
+                    ${tagLabel ? `<div class="critical-tag ${tagClass}">⚠️ ${tagLabel}</div>` : ''}
                     <div class="tek-number">ΤΕΚ #${tek.id.toString().padStart(3, '0')}</div>
                     <div class="tek-icon">${tek.icon}</div>
                     <div class="tek-name">${tek.name}</div>
