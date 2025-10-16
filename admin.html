@@ -655,6 +655,7 @@ body {
             <div class="quick-actions">
                 <button class="btn" style="background: #17a2b8; color: white;" onclick="exportAllData()">💾 EXPORT DATA (GAME)</button>
                 <button class="btn" style="background: #6c757d; color: white;" onclick="importData()">📥 IMPORT DATA (GAME)</button>
+				<button class="btn" style="background: #059669; color: white;" onclick="exportSurveyDataToExcel()">📊 EXPORT SURVEYS (EXCEL)</button>
                 <button class="btn" style="background: #ffc107; color: #000;" onclick="window.location.href='leaderboard.html'">🏆 LEADERBOARD (ADMIN)</button>
                 <button class="btn" id="leaderboardToggleBtn" style="background: #dc3545; color: white;" onclick="toggleLeaderboard()">
                     🔒 LOADING...
@@ -1707,6 +1708,142 @@ await updateLeaderboardButton();
         alert('❌ Σφάλμα! Δοκιμάστε ξανά.');
     }
 }
+
+async function exportSurveyDataToExcel() {
+    if (!window.firebaseDB) {
+        alert('❌ Firebase not available!');
+        return;
+    }
+
+    try {
+        const statusDiv = document.createElement('div');
+        statusDiv.style.cssText = 'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); z-index: 10000; text-align: center;';
+        statusDiv.innerHTML = '<div style="font-size: 48px; margin-bottom: 20px;">⏳</div><h3>Exporting Survey Data...</h3><p>Please wait...</p>';
+        document.body.appendChild(statusDiv);
+        const surveysRef = window.firebaseCollection(window.firebaseDB, 'surveys');
+        const querySnapshot = await window.firebaseGetDocs(surveysRef);
+        
+        console.log(`📊 Found ${querySnapshot.size} survey responses`);
+
+        if (querySnapshot.size === 0) {
+            alert('No survey data found!');
+            document.body.removeChild(statusDiv);
+            return;
+        }
+
+        const allResponses = [];
+        querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            allResponses.push({
+                docId: doc.id,
+                ...data
+            });
+        });
+
+        const processedData = allResponses.map(survey => {
+            const flatData = {
+                'Document_ID': survey.docId || '',
+                'Team_Code': survey.teamCode || '',
+                'Member_Name': survey.memberName || '',
+                'Survey_Type': survey.surveyType || '',
+                'Submitted_At': survey.submittedAt || '',
+                'Submission_Date': survey.submittedAt ? new Date(survey.submittedAt).toLocaleDateString('el-GR') : '',
+                'Submission_Time': survey.submittedAt ? new Date(survey.submittedAt).toLocaleTimeString('el-GR') : '',
+            };
+
+            if (survey.responses) {
+                Object.keys(survey.responses).forEach(key => {
+                    const value = survey.responses[key];
+                    
+                    if (Array.isArray(value)) {
+                        flatData[key] = value.join('; ');
+                    } else {
+                        flatData[key] = value;
+                    }
+                });
+            }
+
+            return flatData;
+        });
+
+        const allHeaders = new Set();
+        processedData.forEach(row => {
+            Object.keys(row).forEach(key => allHeaders.add(key));
+        });
+
+        const metadataHeaders = ['Document_ID', 'Team_Code', 'Member_Name', 'Survey_Type', 'Submitted_At', 'Submission_Date', 'Submission_Time'];
+        const otherHeaders = Array.from(allHeaders)
+            .filter(h => !metadataHeaders.includes(h))
+            .sort();
+        const sortedHeaders = [...metadataHeaders, ...otherHeaders];
+        const worksheetData = [
+            sortedHeaders,
+            ...processedData.map(row => 
+                sortedHeaders.map(header => row[header] !== undefined ? row[header] : '')
+            )
+        ];
+
+        const XLSX = await import('https://cdn.sheetjs.com/xlsx-0.20.1/package/xlsx.mjs');
+        const wb = XLSX.utils.book_new();
+        const ws = XLSX.utils.aoa_to_sheet(worksheetData);
+        const colWidths = sortedHeaders.map(header => {
+            const maxLength = Math.max(
+                header.length,
+                ...processedData.map(row => 
+                    String(row[header] || '').length
+                ).slice(0, 100)
+            );
+            return { wch: Math.min(Math.max(maxLength + 2, 10), 50) };
+        });
+        ws['!cols'] = colWidths;
+
+        XLSX.utils.book_append_sheet(wb, ws, 'Survey Responses');
+
+        const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
+        const filename = `Crime_Festival_2025_Survey_Data_${timestamp}.xlsx`;
+
+        XLSX.writeFile(wb, filename, { 
+            bookType: 'xlsx',
+            type: 'binary',
+            compression: true
+        });
+
+        document.body.removeChild(statusDiv);
+
+        const successDiv = document.createElement('div');
+        successDiv.style.cssText = 'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); z-index: 10000; text-align: center; max-width: 400px;';
+        successDiv.innerHTML = `
+            <div style="font-size: 64px; margin-bottom: 15px;">✅</div>
+            <h3 style="margin-bottom: 10px;">Export Successful!</h3>
+            <p style="margin-bottom: 15px;">Downloaded: <strong>${filename}</strong></p>
+            <p style="font-size: 14px; opacity: 0.9;">Total responses: ${allResponses.length}</p>
+            <p style="font-size: 14px; opacity: 0.9;">Pre-surveys: ${allResponses.filter(r => r.surveyType === 'pre').length} | Post-surveys: ${allResponses.filter(r => r.surveyType === 'post').length}</p>
+        `;
+        document.body.appendChild(successDiv);
+
+        setTimeout(() => {
+            document.body.removeChild(successDiv);
+        }, 5000);
+
+        console.log('✅ Export completed successfully');
+        console.log(`📊 Statistics:
+        - Total responses: ${allResponses.length}
+        - Pre-surveys: ${allResponses.filter(r => r.surveyType === 'pre').length}
+        - Post-surveys: ${allResponses.filter(r => r.surveyType === 'post').length}
+        - Columns: ${sortedHeaders.length}
+        `);
+
+    } catch (error) {
+        console.error('❌ Export error:', error);
+        alert(`Export failed: ${error.message}\n\nCheck console for details.`);
+
+        const statusDiv = document.querySelector('div[style*="position: fixed"]');
+        if (statusDiv) {
+            document.body.removeChild(statusDiv);
+        }
+    }
+}
+
 
 </script>
 </body>
