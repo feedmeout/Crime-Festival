@@ -253,6 +253,13 @@
     </div>
 
     <script>
+console.log('=== UNLOCK DEBUG START ===');
+console.log('teamCode:', localStorage.getItem('teamCode'));
+console.log('memberAuth:', localStorage.getItem('memberAuth'));
+console.log('URL params:', window.location.search);
+console.log('Firebase ready?', window.firebaseReady);
+console.log('=== UNLOCK DEBUG END ===');
+
         (function() {
 const teamCode = localStorage.getItem('teamCode');
 const memberAuth = localStorage.getItem('memberAuth');
@@ -399,13 +406,20 @@ const memberAuth = localStorage.getItem('memberAuth');
         }
 
         window.addEventListener('DOMContentLoaded', () => {
-            setTimeout(() => {
-                if (!isFirebaseReady()) {
-                    console.error('⚠️ Firebase failed to initialize after timeout');
-                }
-                processUnlock();
-            }, 800);
-        });
+setTimeout(() => {
+    if (!isFirebaseReady()) {
+        console.error('⚠️ Firebase failed to initialize');
+        document.getElementById('unlockContainer').innerHTML = `
+            <div class="error">
+                <h2>⚠️ Σφάλμα Σύνδεσης</h2>
+                <p>Προσπαθήστε ξανά</p>
+                <button class="btn" onclick="location.reload()">Επανάληψη</button>
+            </div>
+        `;
+        return;
+    }
+    processUnlock();
+}, 2500); // Changed from 800 to 2500ms
 
         async function processUnlock() {
             const container = document.getElementById('unlockContainer');
