@@ -955,15 +955,35 @@
                             ${solution.justification || 'Δεν παρασχέθηκε αιτιολόγηση'}
                         </div>
 
-                        <h3 style="margin-top: 20px;">⏱️ ΧΡΟΝΟΣ ΕΠΙΛΥΣΗΣ</h3>
-                        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; border-radius: 12px; text-align: center; margin-top: 10px; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);">
-                            <div style="font-size: clamp(32px, 8vw, 48px); font-weight: bold; color: white; text-shadow: 0 2px 8px rgba(0,0,0,0.2);">
-                                ${formatTime(solution.completionTimeMs)}
-                            </div>
-                            <div style="font-size: clamp(12px, 2.5vw, 14px); color: rgba(255,255,255,0.9); margin-top: 8px; text-transform: uppercase; letter-spacing: 1px;">
-                                Συνολικός Χρόνος
-                            </div>
-                        </div>
+<h3 style="margin-top: 20px;">⏱️ ΧΡΟΝΟΣ ΕΠΙΛΥΣΗΣ</h3>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 12px; margin-top: 10px;">
+    ${(() => {
+        const ms = solution.completionTimeMs;
+        const seconds = Math.floor(ms / 1000);
+        const minutes = Math.floor(seconds / 60);
+        const hours = Math.floor(minutes / 60);
+        
+        const h = hours;
+        const m = minutes % 60;
+        const s = seconds % 60;
+        
+        let timeUnits = [];
+        if (h > 0) timeUnits.push({value: h, label: 'ΩΡΕΣ'});
+        if (m > 0 || h > 0) timeUnits.push({value: m, label: 'ΛΕΠΤΑ'});
+        timeUnits.push({value: s, label: 'ΔΕΥΤ.'});
+        
+        return timeUnits.map(unit => `
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 15px; border-radius: 12px; text-align: center; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);">
+                <div style="font-size: clamp(32px, 7vw, 42px); font-weight: bold; color: white; line-height: 1; text-shadow: 0 2px 8px rgba(0,0,0,0.2);">
+                    ${unit.value}
+                </div>
+                <div style="font-size: 10px; color: rgba(255,255,255,0.7); margin-top: 8px; text-transform: uppercase; letter-spacing: 1px;">
+                    ${unit.label}
+                </div>
+            </div>
+        `).join('');
+    })()}
+</div>
 
 <h3 style="margin-top: 25px; margin-bottom: 15px;">🎯 ΑΝΑΛΥΤΙΚΗ ΒΑΘΜΟΛΟΓΙΑ</h3>
 <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: clamp(11px, 2vw, 13px); line-height: 1.7; max-height: 400px; overflow-y: auto; word-wrap: break-word;">
