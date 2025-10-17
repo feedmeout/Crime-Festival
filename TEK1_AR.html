@@ -704,24 +704,23 @@
                 </button>
 
                 <div class="model-viewer-container" id="modelViewerContainer">
-                    <model-viewer
-                        id="bottleModel"
-                        src="whiskey_bottle.glb"
-                        alt="Jack Daniels Whiskey Bottle 3D Model - Evidence"
-                        ar
-                        ar-modes="webxr scene-viewer quick-look"
-                        camera-controls
-                        touch-action="pan-y"
-                        auto-rotate
-                        auto-rotate-delay="1000"
-                        rotation-per-second="30deg"
-                        shadow-intensity="1"
-                        exposure="0.8"
-                        camera-orbit="0deg 75deg 2.5m"
-                        min-camera-orbit="auto 0deg auto"
-                        max-camera-orbit="auto 180deg auto"
-                        loading="lazy"
-                        reveal="interaction">
+<model-viewer
+    id="bottleModel"
+    alt="Jack Daniels Whiskey Bottle 3D Model - Evidence"
+    ar
+    ar-modes="webxr scene-viewer quick-look"
+    camera-controls
+    touch-action="pan-y"
+    auto-rotate
+    auto-rotate-delay="1000"
+    rotation-per-second="30deg"
+    shadow-intensity="1"
+    exposure="0.8"
+    camera-orbit="0deg 75deg 2.5m"
+    min-camera-orbit="auto 0deg auto"
+    max-camera-orbit="auto 180deg auto"
+    loading="lazy"
+    reveal="interaction">
                         
                         <div slot="poster" style="
                             width: 100%;
@@ -890,59 +889,69 @@
                 window.location.href = 'index.html?tab=evidence';
             }
         };
+####################################################################################
+const view3DBtn = document.getElementById('view3DBtn');
+const close3DBtn = document.getElementById('close3DBtn');
+const modelViewerContainer = document.getElementById('modelViewerContainer');
+const modelViewer = document.getElementById('bottleModel');
+const debugInfo = document.getElementById('debugInfo');
 
-        // 3D Viewer toggle functionality
-        const view3DBtn = document.getElementById('view3DBtn');
-        const close3DBtn = document.getElementById('close3DBtn');
-        const modelViewerContainer = document.getElementById('modelViewerContainer');
-        const modelViewer = document.getElementById('bottleModel');
-        const debugInfo = document.getElementById('debugInfo');
+let modelLoaded = false;
 
-        view3DBtn.addEventListener('click', function() {
-            modelViewerContainer.classList.add('active');
-            view3DBtn.style.display = 'none';
-            
-            // Scroll to the 3D viewer
-            modelViewerContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        });
+view3DBtn.addEventListener('click', function() {
+    modelViewerContainer.classList.add('active');
+    view3DBtn.style.display = 'none';
+    
+    if (!modelLoaded) {
+        modelViewer.src = 'whiskey_bottle.glb';
+        modelLoaded = true;
+    }
+    
+    setTimeout(() => {
+        modelViewer.style.display = 'none';
+        modelViewer.offsetHeight;
+        modelViewer.style.display = 'block';
+    }, 50);
+    
+    modelViewerContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+});
 
-        close3DBtn.addEventListener('click', function() {
-            modelViewerContainer.classList.remove('active');
-            view3DBtn.style.display = 'flex';
-            
-            // Scroll back to the button
-            view3DBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        });
+close3DBtn.addEventListener('click', function() {
+    modelViewerContainer.classList.remove('active');
+    view3DBtn.style.display = 'flex';
+    view3DBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+});
 
-        // Model viewer event handlers
-        if (modelViewer) {
-            modelViewer.addEventListener('progress', (event) => {
-                const percent = Math.round(event.detail.totalProgress * 100);
-                debugInfo.style.display = 'block';
-                debugInfo.innerHTML = `⏳ Φόρτωση: ${percent}%<br>`;
-            });
+if (modelViewer) {
+    modelViewer.addEventListener('progress', (event) => {
+        const percent = Math.round(event.detail.totalProgress * 100);
+        debugInfo.style.display = 'block';
+        debugInfo.innerHTML = `⏳ Φόρτωση: ${percent}%<br>`;
+    });
 
-            modelViewer.addEventListener('load', () => {
-                debugInfo.innerHTML = '✅ 3D μοντέλο φορτώθηκε επιτυχώς!<br>';
-                debugInfo.style.background = '#d4edda';
-                debugInfo.style.borderColor = '#28a745';
-                setTimeout(() => {
-                    debugInfo.style.display = 'none';
-                }, 3000);
-            });
-            
-            modelViewer.addEventListener('error', (event) => {
-                debugInfo.style.display = 'block';
-                debugInfo.innerHTML = '❌ ΣΦΑΛΜΑ: Το αρχείο δεν μπορεί να φορτώσει<br>';
-                debugInfo.innerHTML += 'Ελέγξτε:<br>';
-                debugInfo.innerHTML += '1. Το αρχείο υπάρχει στον ίδιο φάκελο<br>';
-                debugInfo.innerHTML += '2. Το όνομα είναι σωστό (με κεφαλαία/πεζά)<br>';
-                debugInfo.innerHTML += '3. Το αρχείο είναι έγκυρο .glb<br>';
-                debugInfo.style.background = '#f8d7da';
-                debugInfo.style.borderColor = '#dc3545';
-            });
-        }
-
+    modelViewer.addEventListener('load', () => {
+        debugInfo.innerHTML = '✅ 3D μοντέλο φορτώθηκε επιτυχώς!<br>';
+        debugInfo.style.background = '#d4edda';
+        debugInfo.style.borderColor = '#28a745';
+        
+        setTimeout(() => {
+            modelViewer.resetTurntableRotation();
+            debugInfo.style.display = 'none';
+        }, 2000);
+    });
+    
+    modelViewer.addEventListener('error', (event) => {
+        debugInfo.style.display = 'block';
+        debugInfo.innerHTML = '❌ ΣΦΑΛΜΑ: Το αρχείο δεν μπορεί να φορτώσει<br>';
+        debugInfo.innerHTML += 'Ελέγξτε:<br>';
+        debugInfo.innerHTML += '1. Το αρχείο υπάρχει στον ίδιο φάκελο<br>';
+        debugInfo.innerHTML += '2. Το όνομα είναι σωστό (με κεφαλαία/πεζά)<br>';
+        debugInfo.innerHTML += '3. Το αρχείο είναι έγκυρο .glb<br>';
+        debugInfo.style.background = '#f8d7da';
+        debugInfo.style.borderColor = '#dc3545';
+    });
+}
+########################################################################
         function drawCrimeScene() {
             const canvas = document.getElementById('crimeSceneCanvas');
             const ctx = canvas.getContext('2d');
