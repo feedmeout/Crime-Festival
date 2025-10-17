@@ -53,40 +53,8 @@
             background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
             padding: clamp(15px, 4vw, 20px);
             box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .header-back-btn {
-            position: absolute;
-            left: clamp(10px, 2vw, 15px);
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(0,0,0,0.3);
-            color: white;
-            border: 1px solid rgba(255,255,255,0.3);
-            padding: clamp(6px, 1.5vw, 8px) clamp(12px, 3vw, 15px);
-            border-radius: 6px;
-            font-size: clamp(11px, 2.5vw, 13px);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
+            position: relative;
             z-index: 10;
-            min-height: 36px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .header-back-btn:hover {
-            background: rgba(0,0,0,0.5);
-            border-color: rgba(255,255,255,0.5);
-            transform: translateY(-50%) scale(1.05);
-        }
-
-        .header-back-btn:active {
-            transform: translateY(-50%) scale(0.98);
         }
 
         .header-content {
@@ -119,6 +87,39 @@
             text-align: center;
             opacity: 0.9;
             font-size: clamp(11px, 2.8vw, 14px);
+        }
+
+        .floating-back {
+            position: fixed;
+            top: 80px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            background: rgba(255,107,0,0.95);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 999;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
+
+        .floating-back:hover {
+            transform: scale(1.1);
+            background: rgba(255,107,0,1);
+            box-shadow: 0 6px 16px rgba(255,107,0,0.5);
+        }
+
+        .floating-back:active {
+            transform: scale(0.95);
         }
 
         .container {
@@ -563,19 +564,17 @@
             word-wrap: break-word;
         }
 
-        @media (max-width: 375px) {
-            .header-back-btn {
-                position: static;
-                transform: none;
-                width: 100%;
-                margin-bottom: 10px;
-                justify-content: center;
+        @media (max-width: 768px) {
+            .floating-back {
+                width: 44px;
+                height: 44px;
+                font-size: 20px;
+                top: 70px;
+                left: 15px;
             }
-            
-            .header-back-btn:hover {
-                transform: scale(1.02);
-            }
+        }
 
+        @media (max-width: 375px) {
             .header-content {
                 flex-direction: column;
                 gap: 5px;
@@ -589,6 +588,14 @@
             .evidence-title {
                 flex-direction: column;
                 align-items: flex-start;
+            }
+
+            .floating-back {
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+                top: 65px;
+                left: 10px;
             }
         }
 
@@ -611,7 +618,7 @@
         @media print {
             .animated-background,
             .back-button-container,
-            .header-back-btn,
+            .floating-back,
             model-viewer {
                 display: none;
             }
@@ -629,10 +636,11 @@
 <body>
     <div class="animated-background"></div>
 
+    <button class="floating-back" onclick="window.goBackToCaseFile()" title="Επιστροφή στο φάκελο">
+        ←
+    </button>
+
     <div class="header">
-        <button class="header-back-btn" onclick="window.goBackToCaseFile()">
-            ← ΦΑΚΕΛΟΣ
-        </button>
         <div class="header-content">
             <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
