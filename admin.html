@@ -1720,6 +1720,7 @@ async function exportSurveyDataToExcel() {
         statusDiv.style.cssText = 'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); z-index: 10000; text-align: center;';
         statusDiv.innerHTML = '<div style="font-size: 48px; margin-bottom: 20px;">⏳</div><h3>Exporting Survey Data...</h3><p>Please wait...</p>';
         document.body.appendChild(statusDiv);
+
         const surveysRef = window.firebaseCollection(window.firebaseDB, 'surveys');
         const querySnapshot = await window.firebaseGetDocs(surveysRef);
         
@@ -1740,6 +1741,17 @@ async function exportSurveyDataToExcel() {
             });
         });
 
+        allResponses.sort((a, b) => {
+            if (a.teamCode !== b.teamCode) {
+                return (a.teamCode || '').localeCompare(b.teamCode || '', 'el');
+            }
+            if (a.memberName !== b.memberName) {
+                return (a.memberName || '').localeCompare(b.memberName || '', 'el');
+            }
+            const typeOrder = { 'pre': 1, 'post': 2 };
+            return (typeOrder[a.surveyType] || 3) - (typeOrder[b.surveyType] || 3);
+        });
+
         const processedData = allResponses.map(survey => {
             const flatData = {
                 'Document_ID': survey.docId || '',
@@ -1754,7 +1766,6 @@ async function exportSurveyDataToExcel() {
             if (survey.responses) {
                 Object.keys(survey.responses).forEach(key => {
                     const value = survey.responses[key];
-                    
                     if (Array.isArray(value)) {
                         flatData[key] = value.join('; ');
                     } else {
@@ -1798,7 +1809,6 @@ async function exportSurveyDataToExcel() {
         ws['!cols'] = colWidths;
 
         XLSX.utils.book_append_sheet(wb, ws, 'Survey Responses');
-
         const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
         const filename = `Crime_Festival_2025_Survey_Data_${timestamp}.xlsx`;
 
@@ -1809,7 +1819,6 @@ async function exportSurveyDataToExcel() {
         });
 
         document.body.removeChild(statusDiv);
-
         const successDiv = document.createElement('div');
         successDiv.style.cssText = 'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); z-index: 10000; text-align: center; max-width: 400px;';
         successDiv.innerHTML = `
@@ -1836,14 +1845,12 @@ async function exportSurveyDataToExcel() {
     } catch (error) {
         console.error('❌ Export error:', error);
         alert(`Export failed: ${error.message}\n\nCheck console for details.`);
-
         const statusDiv = document.querySelector('div[style*="position: fixed"]');
         if (statusDiv) {
             document.body.removeChild(statusDiv);
         }
     }
 }
-
 
 </script>
 </body>
