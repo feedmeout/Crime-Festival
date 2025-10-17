@@ -90,32 +90,27 @@
         }
 
         .floating-back {
-            position: fixed;
-            top: 80px;
-            left: 20px;
-            width: 50px;
-            height: 50px;
-            background: rgba(255,107,0,0.95);
-            color: white;
-            border: 2px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            font-size: 24px;
+            position: absolute;
+            top: 50px;
+            right: 15px;
+            background: transparent;
+            color: #000;
+            border: none;
+            font-size: 28px;
             font-weight: bold;
             cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
             z-index: 999;
             transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
             display: flex;
             align-items: center;
             justify-content: center;
             line-height: 1;
+            padding: 5px;
         }
 
         .floating-back:hover {
-            transform: scale(1.1);
-            background: rgba(255,107,0,1);
-            box-shadow: 0 6px 16px rgba(255,107,0,0.5);
+            transform: scale(1.2);
+            color: #333;
         }
 
         .floating-back:active {
@@ -186,7 +181,7 @@
             align-items: center;
             border-top: 2px solid #333;
             border-bottom: 2px solid #333;
-            overflow: hidden;
+            overflow: visible;
             min-height: 200px;
         }
 
@@ -566,11 +561,9 @@
 
         @media (max-width: 768px) {
             .floating-back {
-                width: 44px;
-                height: 44px;
-                font-size: 20px;
-                top: 70px;
-                left: 15px;
+                font-size: 24px;
+                top: 45px;
+                right: 12px;
             }
         }
 
@@ -591,11 +584,9 @@
             }
 
             .floating-back {
-                width: 40px;
-                height: 40px;
-                font-size: 18px;
-                top: 65px;
-                left: 10px;
+                font-size: 22px;
+                top: 40px;
+                right: 10px;
             }
         }
 
