@@ -2003,22 +2003,32 @@ function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
         breakdown.push('');
     }
         
-    if (missedSuspects.length > 0) {
-        breakdown.push(`🔍 Χάσατε ${missedSuspects.length} Πραγματικό Δράστη:`);
-        missedSuspects.forEach(name => {
-            breakdown.push(`   → ${name}`);
-            if (name === 'Αναγνώστου Κωνσταντίνος') {
-                breakdown.push('      • Τα αποτυπώματά του στο μπουκάλι και το κλειδί');
-                breakdown.push('      • Είχε υπεξαίρεση €1.5εκ να κρύψει');
-            } else if (name === 'Πετρόπουλος Γεώργιος') {
-                breakdown.push('      • Αγόρασε το κυάνιο (απόδειξη ΤΕΚ #9)');
-                breakdown.push('      • Απενεργοποίησε κάμερες 20:55');
-            } else if (name === 'Μαυρίδη Ελένη') {
-                breakdown.push('      • Έστειλε το πλαστό email "αυτοκτονίας"');
-                breakdown.push('      • Πλαστογράφησε το χειρόγραφο σημείωμα');
-            }
-        });
-    }
+if (missedSuspects.length > 0) {
+    breakdown.push(`🔍 ΧΑΣΑΤΕ ΠΡΑΓΜΑΤΙΚΟΥΣ ΔΡΑΣΤΕΣ`);
+    breakdown.push('');
+    const missedPenalty = missedSuspects.length * 20;
+    score -= missedPenalty;
+    
+    breakdown.push(`❌ Δεν Εντοπίσατε ${missedSuspects.length} από τους 3 Δράστες (-${missedPenalty} πόντοι)`);
+    breakdown.push('');
+    
+    missedSuspects.forEach(name => {
+        breakdown.push(`   → ${name}`);
+        if (name === 'Αναγνώστου Κωνσταντίνος') {
+            breakdown.push('      • Τα αποτυπώματά του στο μπουκάλι και το κλειδί');
+            breakdown.push('      • Είχε υπεξαίρεση €1.5εκ να κρύψει');
+        } else if (name === 'Πετρόπουλος Γεώργιος') {
+            breakdown.push('      • Αγόρασε το κυάνιο (απόδειξη ΤΕΚ #9)');
+            breakdown.push('      • Απενεργοποίησε κάμερες 20:55');
+        } else if (name === 'Μαυρίδη Ελένη') {
+            breakdown.push('      • Έστειλε το πλαστό email "αυτοκτονίας"');
+            breakdown.push('      • Πλαστογράφησε το χειρόγραφο σημείωμα');
+        }
+    });
+    
+    breakdown.push('');
+    breakdown.push(`⚖️ Ποινή Ελλιπούς Ανάλυσης: -${missedPenalty} πόντοι`);
+}
     
     breakdown.push('');
     breakdown.push(`🏁 ΤΕΛΙΚΗ ΒΑΘΜΟΛΟΓΙΑ: ${score}/${140}`);
