@@ -234,14 +234,19 @@
             flex-shrink: 0;
         }
 
-        .model-viewer-container {
-            display: none;
-            margin-top: 20px;
-        }
+		.model-viewer-container {
+			max-height: 0;
+			overflow: hidden;
+			opacity: 0;
+			margin-top: 0;
+			transition: max-height 0.3s ease, opacity 0.3s ease, margin-top 0.3s ease;
+		}
 
-        .model-viewer-container.active {
-            display: block;
-        }
+		.model-viewer-container.active {
+			max-height: 800px;
+			opacity: 1;
+			margin-top: 20px;
+		}
 
         model-viewer {
             width: 100%;
