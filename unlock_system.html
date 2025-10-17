@@ -243,7 +243,7 @@
 
     <script>
         const tekInfo = {
-            '1': { name: 'Μπουκάλι Ουίσκι', icon: '🥃', page: 'TEK1_AR.html' },
+            '1': { name: 'Μπουκάλι Ουίσκι', icon: '🍾', page: 'TEK1_AR.html' },
             '2': { name: 'Κρυστάλλινα Ποτήρια', icon: '🥃', page: 'TEK2_AR.html' },
             '3': { name: 'Κινητό Θύματος', icon: '📱', page: 'TEK3_AR.html' },
             '4': { name: 'Email Αυτοκτονίας', icon: '💻', page: 'TEK4_AR.html' },
@@ -258,16 +258,13 @@
 
         const urlParams = new URLSearchParams(window.location.search);
         const tekNumber = urlParams.get('tek');
-
-        // SIMULATION MODE
         const simulationMode = urlParams.get('simulate');
-        let simulatedUnlockCount = 1; // Default: simulate unlocking one TEK
+        let simulatedUnlockCount = 1;
         
         if (simulationMode === 'complete') {
-            simulatedUnlockCount = 11; // Simulate completing all TEKs
+            simulatedUnlockCount = 11;
         }
 
-        // TIMEOUT WRAPPER FOR PROMISES
         function withTimeout(promise, ms, errorMsg) {
             return Promise.race([
                 promise,
@@ -343,7 +340,6 @@
         async function getTeamData(teamCode) {
             console.log('🔍 Getting team data for:', teamCode);
             
-            // SIMULATION MODE
             if (simulationMode) {
                 const mockUnlocked = [];
                 for (let i = 1; i <= simulatedUnlockCount - 1; i++) {
@@ -359,14 +355,12 @@
                 };
             }
             
-            // Try Firebase first (with timeout)
             const firebaseData = await loadFromFirebase(teamCode);
             if (firebaseData && firebaseData.unlocked) {
                 console.log('✅ Using Firebase data');
                 return firebaseData;
             }
             
-            // Fallback to localStorage
             const localData = localStorage.getItem(getStorageKey(teamCode));
             if (localData) {
                 try {
@@ -385,7 +379,6 @@
                 }
             }
 
-            // New team
             console.log('✅ New team data');
             return {
                 unlocked: [],
@@ -398,16 +391,13 @@
         }
 
         async function saveTeamData(teamCode, data) {
-            // SIMULATION MODE - skip saving
             if (simulationMode) {
                 return true;
             }
             
-            // Always save to localStorage first (immediate)
             localStorage.setItem(getStorageKey(teamCode), JSON.stringify(data.unlocked || []));
             console.log('✅ Saved to localStorage');
             
-            // Try Firebase (with timeout, can fail)
             const saved = await saveToFirebase(teamCode, {
                 ...data,
                 lastUpdate: new Date().toISOString()
@@ -568,7 +558,6 @@
             `;
         }
 
-        // START
         window.addEventListener('DOMContentLoaded', () => {
             console.log('📱 Page loaded');
             
