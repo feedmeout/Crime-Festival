@@ -894,6 +894,33 @@ async function getAllTeams() {
         return teams;
     }
 
+async function getLoggedInMembersCount(teamName) {
+    if (!window.firebaseDB) {
+        return 0;
+    }
+    
+    try {
+        const surveysRef = window.firebaseCollection(window.firebaseDB, 'surveys');
+        const querySnapshot = await window.firebaseGetDocs(surveysRef);
+        
+        const loggedInMembers = new Set();
+        
+        querySnapshot.forEach((doc) => {
+            const docId = doc.id;
+            // Check for pre-survey documents for this team
+            if (docId.startsWith(`${teamName}_pre_`)) {
+                const memberName = docId.replace(`${teamName}_pre_`, '');
+                loggedInMembers.add(memberName);
+            }
+        });
+        
+        return loggedInMembers.size;
+    } catch (error) {
+        console.error(`Error counting logged-in members for ${teamName}:`, error);
+        return 0;
+    }
+}
+
 async function saveTeam(teamName, data) {
     const existingTeam = teamsData[teamName];
     if (existingTeam && existingTeam.teamSize && !data.teamSize) {
@@ -1069,6 +1096,11 @@ if (teams.length === 0) {
     }
     
     teams = sortTeams(teams, sortOrder);
+	const memberCounts = new Map();
+	for (const team of teams) {
+		const loggedInCount = await getLoggedInMembersCount(team.name);
+		memberCounts.set(team.name, loggedInCount);
+	}
     container.innerHTML = '';    
     if (window.timerInterval) {
         clearInterval(window.timerInterval);
@@ -1096,6 +1128,24 @@ window.timerInterval = setInterval(() => {
         const progress = Math.round((team.unlocked.length / TOTAL_TEKS) * 100);
         const allEvidenceUnlocked = team.unlocked.length === TOTAL_TEKS;
         const solutionSubmitted = !!team.solution;
+		const loggedInCount = memberCounts.get(team.name) || 0;
+		const teamSize = team.teamSize || 0;
+
+		// Determine color based on login status
+		let memberStatusColor = '#666';
+		let memberStatusIcon = '👥';
+		if (teamSize > 0) {
+			if (loggedInCount === teamSize) {
+				memberStatusColor = '#28a745'; // Green - all logged in
+				memberStatusIcon = '✅';
+			} else if (loggedInCount > 0) {
+				memberStatusColor = '#ffc107'; // Yellow - partial
+				memberStatusIcon = '⚠️';
+			} else {
+				memberStatusColor = '#dc3545'; // Red - none logged in
+				memberStatusIcon = '❌';
+			}
+		}
         
         let timingHtml = '';
         if (team.startTime) {
@@ -1130,7 +1180,9 @@ window.timerInterval = setInterval(() => {
                     <div class="progress-fill" style="width: ${progress}%;">${progress}%</div>
                 </div>
                 <div class="team-stats">📊 ΞΕΚΛΕΙΔΩΜΕΝΑ: ${team.unlocked.length} / ${TOTAL_TEKS} ΣΤΟΙΧΕΙΑ</div>
-                <div class="team-stats">👥 ΜΕΛΗ: <strong>${team.teamSize || 'N/A'}</strong></div>
+				<div class="team-stats" style="color: ${memberStatusColor};">
+					${memberStatusIcon} ΜΕΛΗ ΣΥΝΔΕΔΕΜΕΝΑ: <strong>${loggedInCount} / ${teamSize || 'N/A'}</strong>
+				</div>
                 <div class="team-stats">🔑 ΚΩΔΙΚΟΣ: <strong>${team.password || 'N/A'}</strong></div>
                 ${timingHtml}
                 <div class="tek-grid">
