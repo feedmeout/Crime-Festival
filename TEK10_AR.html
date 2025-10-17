@@ -196,29 +196,29 @@
             flex-wrap: wrap;
         }
 
-		.view-3d-button {
-			background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
-			color: white;
-			padding: clamp(15px, 3.5vw, 20px) clamp(30px, 6vw, 40px);
-			border: none;
-			border-radius: clamp(8px, 2vw, 10px);
-			font-size: clamp(16px, 3.5vw, 18px);
-			font-weight: bold;
-			cursor: pointer;
-			box-shadow: 0 4px 12px rgba(255,107,0,0.3);
-			transition: all 0.3s ease;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			gap: clamp(8px, 2vw, 10px);
-			width: 100%;
-			margin-bottom: clamp(10px, 2vw, 15px);
-		}
+        .view-3d-button {
+            background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
+            color: white;
+            padding: clamp(15px, 3.5vw, 20px) clamp(30px, 6vw, 40px);
+            border: none;
+            border-radius: clamp(8px, 2vw, 10px);
+            font-size: clamp(16px, 3.5vw, 18px);
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(255,107,0,0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(8px, 2vw, 10px);
+            width: 100%;
+            margin-bottom: clamp(10px, 2vw, 15px);
+        }
 
-		.view-3d-button:hover {
-			transform: translateY(-2px);
-			box-shadow: 0 6px 16px rgba(255,107,0,0.4);
-		}
+        .view-3d-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(255,107,0,0.4);
+        }
 
         .view-3d-button:active {
             transform: translateY(0);
@@ -235,7 +235,7 @@
             cursor: pointer;
             box-shadow: 0 4px 12px rgba(220,53,69,0.3);
             transition: all 0.3s ease;
-            display: none;
+            display: flex;
             align-items: center;
             justify-content: center;
             gap: clamp(6px, 1.5vw, 8px);
@@ -253,11 +253,16 @@
         }
 
         .model-viewer-container {
-            display: none;
+            visibility: hidden;
+            height: 0;
+            overflow: hidden;
+            transition: visibility 0s 0.3s, height 0.3s ease;
         }
 
         .model-viewer-container.active {
-            display: block;
+            visibility: visible;
+            height: auto;
+            transition: visibility 0s, height 0.3s ease;
         }
 
         model-viewer {
@@ -266,6 +271,7 @@
             background-color: #f5f5f5;
             border-radius: clamp(6px, 1.5vw, 8px);
             border: 2px solid #ddd;
+            display: block;
             --poster-color: transparent;
         }
 
@@ -484,18 +490,6 @@
         .back-button:active {
             transform: translateY(0);
         }
-
-        #debugInfo {
-            margin-top: 10px;
-            padding: 10px;
-            background: #e7f3ff;
-            border: 1px solid #2196F3;
-            border-radius: 5px;
-            font-size: clamp(11px, 2.5vw, 12px);
-            font-family: monospace;
-            display: none;
-            word-wrap: break-word;
-        }
 		
         @media (max-width: 374px) {
             .header h1 {
@@ -554,8 +548,7 @@
 
         @media print {
             .animated-background,
-            .back-button-container,
-            #debugInfo {
+            .back-button-container {
                 display: none !important;
             }
             
@@ -628,48 +621,7 @@
                         exposure="0.8"
                         camera-orbit="0deg 75deg 2.5m"
                         min-camera-orbit="auto 0deg auto"
-                        max-camera-orbit="auto 180deg auto"
-                        loading="lazy"
-                        reveal="interaction">
-                        
-                        <div slot="poster" style="
-                            width: 100%;
-                            height: 100%;
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            background: #f5f5f5;
-                            flex-direction: column;
-                            gap: 10px;
-                        ">
-                            <div style="
-                                border: 4px solid #f3f3f3;
-                                border-top: 4px solid #0f3460;
-                                border-radius: 50%;
-                                width: 40px;
-                                height: 40px;
-                                animation: spin 1s linear infinite;
-                            "></div>
-                            <p style="color: #666; font-size: 14px;">Φόρτωση 3D μοντέλου...</p>
-                        </div>
-                        
-                        <div slot="error" style="
-                            width: 100%;
-                            height: 100%;
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            background: #fff3cd;
-                            flex-direction: column;
-                            gap: 15px;
-                            padding: 20px;
-                        ">
-                            <p style="color: #856404; font-size: 16px; font-weight: bold;">⚠️ Σφάλμα Φόρτωσης</p>
-                            <p style="color: #856404; font-size: 13px; text-align: center;">
-                                Το 3D μοντέλο δεν μπορεί να φορτώσει.<br>
-                                Ελέγξτε το αρχείο: safe_key.glb
-                            </p>
-                        </div>
+                        max-camera-orbit="auto 180deg auto">
                     </model-viewer>
                     
                     <button id="close3DButton" class="close-3d-button">
@@ -683,8 +635,7 @@
 
                 <p style="text-align: center; color: #666; font-size: clamp(12px, 2.5vw, 13px); margin-top: 10px; font-style: italic;">
                     💡 Σύρετε για να περιστρέψετε • Zoom με δύο δάχτυλα
-                </p>                
-                <div id="debugInfo"></div>
+                </p>
             </div>
 
             <div class="details">
@@ -801,7 +752,7 @@
                         ΣΗΜΑΣΙΑ ΓΙΑ ΤΗΝ ΕΡΕΥΝΑ
                     </h3>
                     <p class="significance-text">
-                        Το κλειδί αποτελεί κρίσιμο στοιχείο για την κατανόηση των κινήσεων τις τελευταίες ώρες. Ο Δημητρίου χειρίστηκε το κλειδί 2-4 ώρες πριν τον θάνατό του - μήπως άνοιξε το χρηματοκιβώτιο για να πάρει ή να βάλει κάτι; Τα αποτυπώματα του Αναγνώστου είναι παλαιότερα αλλά σημαντικά - γιατί ο CFO είχε πρόσβαση στο κλειδί; Εγκρίθηκε από τον Δημητρίου ή το πήρε κρυφά; Ακόμη πιο ανησυχητική είναι η σκόνη ταλκ από latex γάντια - κάποιος προσπάθησε να χειριστεί το κλειδί χωρίς να αφήσει αποτυπώματα. Ποιος; Η Παπαδοπούλου, η Νικολάου ή η Μαυρίδη που έχουν πρόσβαση σε ιατρικά γάντια; Ώ μήπως ο Πετρόπουλος που μπορεί να τα προμηθευτηκε ως μέρος του σχεδίου; Το χρηματοκιβώτιο ήταν ανοιχτό και τίποτα δεν έλειπε - αυτό μπορεί να σημαίνει ότι το άνοιξε ο ίδιος, λίγο πριν πεθάνει, ή κάποιος μετά τον θάνατό του χωρίς να πάρει τίποτα επειδή αναζητούσε κάτι συγκεκριμένο που δεν ήταν εκεί;
+                        Το κλειδί αποτελεί κρίσιμο στοιχείο για την κατανόηση των κινήσεων τις τελευταίες ώρες. Ο Δημητρίου χειρίστηκε το κλειδί 2-4 ώρες πριν τον θάνατό του - μήπως άνοιξε το χρηματοκιβώτιο για να πάρει ή να βάλει κάτι; Τα αποτυπώματα του Αναγνώστου είναι παλαιότερα αλλά σημαντικά - γιατί ο CFO είχε πρόσβαση στο κλειδί; Εγκρίθηκε από τον Δημητρίου ή το πήρε κρυφά; Ακόμη πιο ανησυχητική είναι η σκόνη ταλκ από latex γάντια - κάποιος προσπάθησε να χειριστεί το κλειδί χωρίς να αφήσει αποτυπώματα. Ποιος; Η Παπαδοπούλου, η Νικολάου ή η Μαυρίδη που έχουν πρόσβαση σε ιατρικά γάντια; Ή μήπως ο Πετρόπουλος που μπορεί να τα προμηθευτηκε ως μέρος του σχεδίου; Το χρηματοκιβώτιο ήταν ανοιχτό και τίποτα δεν έλειπε - αυτό μπορεί να σημαίνει ότι το άνοιξε ο ίδιος, λίγο πριν πεθάνει, ή κάποιος μετά τον θάνατό του χωρίς να πάρει τίποτα επειδή αναζητούσε κάτι συγκεκριμένο που δεν ήταν εκεί;
                     </p>
                 </div>
 
@@ -842,55 +793,22 @@
         const load3DButton = document.getElementById('load3DButton');
         const close3DButton = document.getElementById('close3DButton');
         const modelViewerContainer = document.getElementById('modelViewerContainer');
-        const modelViewer = document.getElementById('keyModel');
-        const debugInfo = document.getElementById('debugInfo');
 
         load3DButton.addEventListener('click', function() {
             modelViewerContainer.classList.add('active');
             load3DButton.style.display = 'none';
-            close3DButton.style.display = 'flex';
             
-            // Trigger the model to load
-            modelViewer.dismissPoster();
-            
-            // Show debug info
-            debugInfo.style.display = 'block';
-            debugInfo.innerHTML = '🔄 Προσπάθεια φόρτωσης: safe_key.glb<br>';
+            setTimeout(() => {
+                modelViewerContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 100);
         });
 
         close3DButton.addEventListener('click', function() {
             modelViewerContainer.classList.remove('active');
             load3DButton.style.display = 'flex';
-            close3DButton.style.display = 'none';
-            debugInfo.style.display = 'none';
+            
+            load3DButton.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         });
-
-        // Model Viewer Event Listeners
-        if (modelViewer) {
-            modelViewer.addEventListener('progress', (event) => {
-                const percent = Math.round(event.detail.totalProgress * 100);
-                debugInfo.innerHTML = `⏳ Φόρτωση: ${percent}%<br>`;
-            });
-            
-            modelViewer.addEventListener('load', () => {
-                debugInfo.innerHTML = '✅ 3D μοντέλο φορτώθηκε επιτυχώς!<br>';
-                debugInfo.style.background = '#d4edda';
-                debugInfo.style.borderColor = '#28a745';
-                setTimeout(() => {
-                    debugInfo.style.display = 'none';
-                }, 3000);
-            });
-            
-            modelViewer.addEventListener('error', (event) => {
-                debugInfo.innerHTML = '❌ ΣΦΑΛΜΑ: Το αρχείο δεν μπορεί να φορτώσει<br>';
-                debugInfo.innerHTML += 'Ελέγξτε:<br>';
-                debugInfo.innerHTML += '1. Το αρχείο υπάρχει στον ίδιο φάκελο<br>';
-                debugInfo.innerHTML += '2. Το όνομα είναι: safe_key.glb<br>';
-                debugInfo.innerHTML += '3. Το αρχείο είναι έγκυρο .glb<br>';
-                debugInfo.style.background = '#f8d7da';
-                debugInfo.style.borderColor = '#dc3545';
-            });
-        }
 
         function drawCrimeScene() {
             const canvas = document.getElementById('crimeSceneCanvas');
@@ -911,14 +829,14 @@
             ctx.fillStyle = floorGradient;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-			ctx.strokeStyle = 'rgba(101, 67, 33, 0.3)';
-			ctx.lineWidth = 2 * scale;
-			for (let i = 0; i < canvas.height; i += 40 * scale) {
-				ctx.beginPath();
-				ctx.moveTo(0, i);
-				ctx.lineTo(canvas.width, i);
-				ctx.stroke();
-			}
+            ctx.strokeStyle = 'rgba(101, 67, 33, 0.3)';
+            ctx.lineWidth = 2 * scale;
+            for (let i = 0; i < canvas.height; i += 40 * scale) {
+                ctx.beginPath();
+                ctx.moveTo(0, i);
+                ctx.lineTo(canvas.width, i);
+                ctx.stroke();
+            }
 
             const vignette = ctx.createRadialGradient(canvas.width/2, canvas.height/2, 150 * scale, canvas.width/2, canvas.height/2, 550 * scale);
             vignette.addColorStop(0, 'rgba(0,0,0,0)');
@@ -1157,16 +1075,16 @@
             ctx.textAlign = 'center';
             ctx.fillText('5.2 cm', 624 * scale, 372 * scale);
 
-			ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
-			ctx.fillRect(0, 0, canvas.width, 40 * scale);
-			ctx.fillStyle = '#ff0000';
-			ctx.font = `bold ${14 * scale}px monospace`;
-			ctx.textAlign = 'left';
-			ctx.fillText('● REC', 10 * scale, 25 * scale);
-			ctx.fillStyle = '#ffffff';
-			ctx.fillText('31/10/2025  09:29:15  |  ΣΚΗΝΗ ΕΓΚΛΗΜΑΤΟΣ - ΓΡΑΦΕΙΟ ΘΥΜΑΤΟΣ', 80 * scale, 25 * scale);
-			ctx.textAlign = 'right';
-			ctx.fillText('ΤΕΚ #010', (canvas.width - 10 * scale), 25 * scale);
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
+            ctx.fillRect(0, 0, canvas.width, 40 * scale);
+            ctx.fillStyle = '#ff0000';
+            ctx.font = `bold ${14 * scale}px monospace`;
+            ctx.textAlign = 'left';
+            ctx.fillText('● REC', 10 * scale, 25 * scale);
+            ctx.fillStyle = '#ffffff';
+            ctx.fillText('31/10/2025  09:29:15  |  ΣΚΗΝΗ ΕΓΚΛΗΜΑΤΟΣ - ΓΡΑΦΕΙΟ ΘΥΜΑΤΟΣ', 80 * scale, 25 * scale);
+            ctx.textAlign = 'right';
+            ctx.fillText('ΤΕΚ #010', (canvas.width - 10 * scale), 25 * scale);
         }
 
         function handleResize() {
