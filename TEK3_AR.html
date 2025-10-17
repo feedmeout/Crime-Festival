@@ -843,21 +843,20 @@
             ctx.fill();
             ctx.fillStyle = '#1a5f7a';
             ctx.fillRect(centerX - 10 * scale, phoneY + 12 * scale, 20 * scale, 2 * scale);
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-            ctx.fillRect(0, 0, canvasWidth, 40 * scale);
-            
-            ctx.fillStyle = '#ff0000';
-            ctx.font = `bold ${14 * scale}px monospace`;
-            ctx.textAlign = 'left';
-            ctx.fillText('● REC', 10 * scale, 25 * scale);
-            
-            ctx.fillStyle = '#fff';
-            const fontSize = Math.max(10 * scale, 8);
-            ctx.font = `${fontSize}px monospace`;
-            ctx.fillText('22/09/2025  22:25:10  |  ΣΚΗΝΗ ΕΓΚΛΗΜΑΤΟΣ', 60 * scale, 25 * scale);
-            
-            ctx.textAlign = 'right';
-            ctx.fillText('ΤΕΚ #003', canvasWidth - 10 * scale, 25 * scale);
+			
+			ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+			ctx.fillRect(0, 0, canvasWidth, 40 * scale);
+
+			ctx.fillStyle = '#ff0000';
+			ctx.font = `bold ${14 * scale}px monospace`;
+			ctx.textAlign = 'left';
+			ctx.fillText('● REC', 10 * scale, 25 * scale);
+
+			ctx.fillStyle = '#fff';
+			ctx.fillText('31/10/2025  07:42:10  |  ΣΚΗΝΗ ΕΓΚΛΗΜΑΤΟΣ - ΓΡΑΦΕΙΟ ΘΥΜΑΤΟΣ', 80 * scale, 25 * scale);
+
+			ctx.textAlign = 'right';
+			ctx.fillText('ΤΕΚ #003', (canvasWidth - 10 * scale), 25 * scale);
         }
 
         let resizeTimeout;

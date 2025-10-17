@@ -860,19 +860,19 @@
             ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
             ctx.fillRect(375 * scale, 185 * scale, 8 * scale, 80 * scale);
             
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-            ctx.fillRect(0, 0, canvas.width, 40 * scale);
-            
-            ctx.fillStyle = '#ff0000';
-            ctx.font = `bold ${14 * scale}px monospace`;
-            ctx.textAlign = 'left';
-            ctx.fillText('● REC', 10 * scale, 25 * scale);
-            
-            ctx.fillStyle = '#fff';
-            ctx.fillText('22/09/2025  22:15:33  |  ΣΚΗΝΗ ΕΓΚΛΗΜΑΤΟΣ - ΓΡΑΦΕΙΟ ΘΥΜΑΤΟΣ', 80 * scale, 25 * scale);
-            
-            ctx.textAlign = 'right';
-            ctx.fillText('ΤΕΚ #001', (canvas.width - 10 * scale), 25 * scale);
+			ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+			ctx.fillRect(0, 0, canvas.width, 40 * scale);
+
+			ctx.fillStyle = '#ff0000';
+			ctx.font = `bold ${14 * scale}px monospace`;
+			ctx.textAlign = 'left';
+			ctx.fillText('● REC', 10 * scale, 25 * scale);
+
+			ctx.fillStyle = '#fff';
+			ctx.fillText('31/10/2025  07:15:20  |  ΣΚΗΝΗ ΕΓΚΛΗΜΑΤΟΣ - ΓΡΑΦΕΙΟ ΘΥΜΑΤΟΣ', 80 * scale, 25 * scale);
+
+			ctx.textAlign = 'right';
+			ctx.fillText('ΤΕΚ #001', (canvas.width - 10 * scale), 25 * scale);
         }
 
         function handleResize() {

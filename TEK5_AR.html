@@ -1199,19 +1199,20 @@
             ctx.textAlign = 'center';
             ctx.fillText('ΑΠΟΡΡΗΤΟ', 0, 5 * scale);
             ctx.restore();
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-            ctx.fillRect(0, 0, canvas.width, 40 * scale);
-            
-            ctx.fillStyle = '#ff0000';
-            ctx.font = `bold ${14 * scale}px monospace`;
-            ctx.textAlign = 'left';
-            ctx.fillText('● REC', 10 * scale, 25 * scale);
-            
-            ctx.fillStyle = '#fff';
-            ctx.fillText('22/09/2025  23:45:17  |  ΣΚΗΝΗ ΕΓΚΛΗΜΑΤΟΣ - ΓΡΑΦΕΙΟ ΘΥΜΑΤΟΣ (ΣΥΡΤΑΡΙ)', 80 * scale, 25 * scale);
-            
-            ctx.textAlign = 'right';
-            ctx.fillText('ΤΕΚ #005', (canvas.width - 10 * scale), 25 * scale);
+			
+			ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+			ctx.fillRect(0, 0, canvas.width, 40 * scale);
+
+			ctx.fillStyle = '#ff0000';
+			ctx.font = `bold ${14 * scale}px monospace`;
+			ctx.textAlign = 'left';
+			ctx.fillText('● REC', 10 * scale, 25 * scale);
+
+			ctx.fillStyle = '#fff';
+			ctx.fillText('31/10/2025  08:18:25  |  ΣΚΗΝΗ ΕΓΚΛΗΜΑΤΟΣ - ΓΡΑΦΕΙΟ ΘΥΜΑΤΟΣ (ΣΥΡΤΑΡΙ)', 80 * scale, 25 * scale);
+
+			ctx.textAlign = 'right';
+			ctx.fillText('ΤΕΚ #005', (canvas.width - 10 * scale), 25 * scale);
         }
 
         function handleResize() {

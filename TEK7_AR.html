@@ -762,19 +762,17 @@
             ctx.fillText('Συγχώρεσέ με Μ.', paperX + paperWidth/2, paperY + paperHeight/2);
             ctx.fillStyle = 'rgba(26, 58, 138, 0.1)';
             ctx.fillRect(paperX + paperWidth/2 - width * 0.075, paperY + paperHeight/2 - height * 0.05, width * 0.15, height * 0.0075);
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-            ctx.fillRect(0, 0, width, height * 0.1);
-            ctx.fillStyle = '#ff0000';
-            const recFontSize = Math.max(width * 0.0175, 10);
-            ctx.font = `bold ${recFontSize}px monospace`;
-            ctx.textAlign = 'left';
-            ctx.fillText('● REC', width * 0.0125, height * 0.0625);
-            ctx.fillStyle = '#fff';
-            const timestampSize = Math.max(width * 0.015, 9);
-            ctx.font = `${timestampSize}px monospace`;
-            ctx.fillText('22/09/2025  22:25:18  |  ΣΚΗΝΗ ΕΓΚΛΗΜΑΤΟΣ - ΓΡΑΦΕΙΟ ΘΥΜΑΤΟΣ', width * 0.1, height * 0.0625);
-            ctx.textAlign = 'right';
-            ctx.fillText('ΤΕΚ #007', width * 0.9875, height * 0.0625);
+			
+			ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+			ctx.fillRect(0, 0, width, height * 0.1);
+			ctx.fillStyle = '#ff0000';
+			ctx.font = `bold ${14 * (width / 800)}px monospace`;
+			ctx.textAlign = 'left';
+			ctx.fillText('● REC', 10 * (width / 800), 25 * (height / 400));
+			ctx.fillStyle = '#fff';
+			ctx.fillText('31/10/2025  08:47:55  |  ΣΚΗΝΗ ΕΓΚΛΗΜΑΤΟΣ - ΓΡΑΦΕΙΟ ΘΥΜΑΤΟΣ', 80 * (width / 800), 25 * (height / 400));
+			ctx.textAlign = 'right';
+			ctx.fillText('ΤΕΚ #007', (width - 10) * (width / 800), 25 * (height / 400));
         }
 
         window.addEventListener('load', drawCrimeScene);

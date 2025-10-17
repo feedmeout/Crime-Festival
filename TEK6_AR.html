@@ -952,16 +952,16 @@
             ctx.fillText('ΙΧΝΗ ΛΑΤΕΞ', 150, 365);
             ctx.fillText('(UV ΦΩΤΙΣΜΟΣ)', 150, 380);
             
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-            ctx.fillRect(0, 0, 800, 40);
-            ctx.fillStyle = '#ff0000';
-            ctx.font = 'bold 14px monospace';
-            ctx.textAlign = 'left';
-            ctx.fillText('● REC', 10, 25);
-            ctx.fillStyle = '#fff';
-            ctx.fillText('23/09/2025  08:45:12  |  ΓΡΑΦΕΙΟ ΘΥΜΑΤΟΣ - ΠΟΡΤΑ', 80, 25);
-            ctx.textAlign = 'right';
-            ctx.fillText('ΤΕΚ #006', 790, 25);
+			ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+			ctx.fillRect(0, 0, canvas.width, 40 * scale);
+			ctx.fillStyle = '#ff0000';
+			ctx.font = `bold ${14 * scale}px monospace`;
+			ctx.textAlign = 'left';
+			ctx.fillText('● REC', 10 * scale, 25 * scale);
+			ctx.fillStyle = '#fff';
+			ctx.fillText('31/10/2025  08:32:40  |  ΓΡΑΦΕΙΟ ΘΥΜΑΤΟΣ - ΠΟΡΤΑ', 80 * scale, 25 * scale);
+			ctx.textAlign = 'right';
+			ctx.fillText('ΤΕΚ #006', (canvas.width - 10 * scale), 25 * scale);
         }
 
         let resizeTimeout;
@@ -973,6 +973,7 @@
         window.onload = function() {
             drawCrimeScene();
 
+			const scale = 1;
             const modelViewer = document.querySelector('model-viewer');
             const debugInfo = document.getElementById('debugInfo');
             
