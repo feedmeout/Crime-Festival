@@ -196,12 +196,81 @@
             flex-wrap: wrap;
         }
 
+		.view-3d-button {
+			background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
+			color: white;
+			padding: clamp(15px, 3.5vw, 20px) clamp(30px, 6vw, 40px);
+			border: none;
+			border-radius: clamp(8px, 2vw, 10px);
+			font-size: clamp(16px, 3.5vw, 18px);
+			font-weight: bold;
+			cursor: pointer;
+			box-shadow: 0 4px 12px rgba(255,107,0,0.3);
+			transition: all 0.3s ease;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: clamp(8px, 2vw, 10px);
+			width: 100%;
+			margin-bottom: clamp(10px, 2vw, 15px);
+		}
+
+		.view-3d-button:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 6px 16px rgba(255,107,0,0.4);
+		}
+
+        .view-3d-button:active {
+            transform: translateY(0);
+        }
+
+        .close-3d-button {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: white;
+            padding: clamp(10px, 2.5vw, 12px) clamp(20px, 4vw, 25px);
+            border: none;
+            border-radius: clamp(6px, 1.5vw, 8px);
+            font-size: clamp(14px, 3vw, 16px);
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(220,53,69,0.3);
+            transition: all 0.3s ease;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(6px, 1.5vw, 8px);
+            width: 100%;
+            margin-top: clamp(10px, 2vw, 15px);
+        }
+
+        .close-3d-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(220,53,69,0.4);
+        }
+
+        .close-3d-button:active {
+            transform: translateY(0);
+        }
+
+        .model-viewer-container {
+            display: none;
+        }
+
+        .model-viewer-container.active {
+            display: block;
+        }
+
         model-viewer {
             width: 100%;
             height: clamp(300px, 50vh, 450px);
             background-color: #f5f5f5;
             border-radius: clamp(6px, 1.5vw, 8px);
             border: 2px solid #ddd;
+            --poster-color: transparent;
+        }
+
+        model-viewer::part(default-ar-button) {
+            background-color: #0f3460;
         }
 
         .details {
@@ -534,64 +603,84 @@
                     ΠΡΟΒΟΛΗ ΣΕ 3D
                 </h3>
                 
-                <model-viewer
-                    src="safe_key.glb"
-                    alt="Safe Key 3D Model - Evidence"
-                    ar
-                    ar-modes="webxr scene-viewer quick-look"
-                    camera-controls
-                    touch-action="pan-y"
-                    auto-rotate
-                    auto-rotate-delay="1000"
-                    rotation-per-second="30deg"
-                    shadow-intensity="1"
-                    exposure="0.8"
-                    camera-orbit="0deg 75deg 2.5m"
-                    min-camera-orbit="auto 0deg auto"
-                    max-camera-orbit="auto 180deg auto"
-                    loading="eager"
-                    reveal="auto"
-                    ar-scale="fixed">
+                <button id="load3DButton" class="view-3d-button">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                        <polyline points="2 17 12 22 22 17"></polyline>
+                        <polyline points="2 12 12 17 22 12"></polyline>
+                    </svg>
+                    Κάντε κλικ για Προβολή σε 3D
+                </button>
+
+                <div id="modelViewerContainer" class="model-viewer-container">
+                    <model-viewer
+                        id="keyModel"
+                        src="safe_key.glb"
+                        alt="Safe Key 3D Model - Evidence"
+                        ar
+                        ar-modes="webxr scene-viewer quick-look"
+                        camera-controls
+                        touch-action="pan-y"
+                        auto-rotate
+                        auto-rotate-delay="1000"
+                        rotation-per-second="30deg"
+                        shadow-intensity="1"
+                        exposure="0.8"
+                        camera-orbit="0deg 75deg 2.5m"
+                        min-camera-orbit="auto 0deg auto"
+                        max-camera-orbit="auto 180deg auto"
+                        loading="lazy"
+                        reveal="interaction">
+                        
+                        <div slot="poster" style="
+                            width: 100%;
+                            height: 100%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            background: #f5f5f5;
+                            flex-direction: column;
+                            gap: 10px;
+                        ">
+                            <div style="
+                                border: 4px solid #f3f3f3;
+                                border-top: 4px solid #0f3460;
+                                border-radius: 50%;
+                                width: 40px;
+                                height: 40px;
+                                animation: spin 1s linear infinite;
+                            "></div>
+                            <p style="color: #666; font-size: 14px;">Φόρτωση 3D μοντέλου...</p>
+                        </div>
+                        
+                        <div slot="error" style="
+                            width: 100%;
+                            height: 100%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            background: #fff3cd;
+                            flex-direction: column;
+                            gap: 15px;
+                            padding: 20px;
+                        ">
+                            <p style="color: #856404; font-size: 16px; font-weight: bold;">⚠️ Σφάλμα Φόρτωσης</p>
+                            <p style="color: #856404; font-size: 13px; text-align: center;">
+                                Το 3D μοντέλο δεν μπορεί να φορτώσει.<br>
+                                Ελέγξτε το αρχείο: safe_key.glb
+                            </p>
+                        </div>
+                    </model-viewer>
                     
-                    <div slot="poster" style="
-                        width: 100%;
-                        height: 100%;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        background: #f5f5f5;
-                        flex-direction: column;
-                        gap: 10px;
-                    ">
-                        <div style="
-                            border: 4px solid #f3f3f3;
-                            border-top: 4px solid #ff6b00;
-                            border-radius: 50%;
-                            width: 40px;
-                            height: 40px;
-                            animation: spin 1s linear infinite;
-                        "></div>
-                        <p style="color: #666; font-size: 14px;">Φόρτωση 3D μοντέλου...</p>
-                    </div>
-                    
-                    <div slot="error" style="
-                        width: 100%;
-                        height: 100%;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        background: #fff3cd;
-                        flex-direction: column;
-                        gap: 15px;
-                        padding: 20px;
-                    ">
-                        <p style="color: #856404; font-size: 16px; font-weight: bold;">⚠️ Σφάλμα Φόρτωσης</p>
-                        <p style="color: #856404; font-size: 13px; text-align: center;">
-                            Το 3D μοντέλο δεν μπορεί να φορτώσει.<br>
-                            Ελέγξτε το αρχείο: safe_key.glb
-                        </p>
-                    </div>
-                </model-viewer>
+                    <button id="close3DButton" class="close-3d-button">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                        Κλείσιμο 3D Προβολής
+                    </button>
+                </div>
+
                 <p style="text-align: center; color: #666; font-size: clamp(12px, 2.5vw, 13px); margin-top: 10px; font-style: italic;">
                     💡 Σύρετε για να περιστρέψετε • Zoom με δύο δάχτυλα
                 </p>                
@@ -648,8 +737,8 @@
 
                 <div class="section">
                     <h3 class="section-title">
-                        <span></span>
-                        👆 ΑΠΟΤΥΠΩΜΑΤΑ ΚΑΙ ΧΡΟΝΟΛΟΓΙΟ
+                        <span>👆</span>
+                        ΑΠΟΤΥΠΩΜΑΤΑ ΚΑΙ ΧΡΟΝΟΛΟΓΙΟ
                     </h3>
                     <div>
                         <div class="fingerprint-item critical">
@@ -666,7 +755,7 @@
                             <div class="fingerprint-name">Αναγνώστου Κωνσταντίνος (CFO)</div>
                             <div class="fingerprint-details">
                                 <div>• Μερικό αποτύπωμα αριστερού χεριού (μέσος δάκτυλος)</div>
-                                <div>• Χρονολόγιο: 12-24 ώρες πριν (εκτιμώμενη 10:00-22:00 προηγουμενη μέρα)</div>
+                                <div>• Χρονολόγιο: 12-24 ώρες πριν (εκτιμώμενη 10:00-22:00 προηγούμενη μέρα)</div>
                                 <div>• Θέση: Στην κεφαλή του κλειδιού (σημείο λαβής)</div>
                                 <div>• Ποιότητα: Μέτρια - μερικώς αλληλεπικαλυμμένο από νεότερα αποτυπώματα</div>
                             </div>
@@ -685,8 +774,8 @@
 
                 <div class="section">
                     <h3 class="section-title">
-                        <span></span>
-                       🔓 ΠΡΟΣΒΑΣΗ ΣΤΟ ΧΡΗΜΑΤΟΚΙΒΩΤΙΟ
+                        <span>🔓</span>
+                        ΠΡΟΣΒΑΣΗ ΣΤΟ ΧΡΗΜΑΤΟΚΙΒΩΤΙΟ
                     </h3>
                     <p class="section-content" style="margin-bottom: 15px;">
                         Το χρηματοκιβώτιο βρέθηκε <strong style="color: #dc3545;">ΑΝΟΙΧΤΟ</strong> κατά τον χρόνο της έρευνας. Η κλειδαριά δεν έφερε σημάδια παραβίασης, υποδηλώνοντας ότι άνοιξε με το σωστό κλειδί. Το χρηματοκιβώτιο περιείχε σημαντικά έγγραφα και προσωπικά αντικείμενα.
@@ -708,18 +797,18 @@
 
                 <div class="significance-box">
                     <h3 class="significance-title">
-                        <span></span>
-                        💡 ΣΗΜΑΣΙΑ ΓΙΑ ΤΗΝ ΕΡΕΥΝΑ
+                        <span>💡</span>
+                        ΣΗΜΑΣΙΑ ΓΙΑ ΤΗΝ ΕΡΕΥΝΑ
                     </h3>
                     <p class="significance-text">
-                        Το κλειδί αποτελεί κρίσιμο στοιχείο για την κατανόηση των κινήσεων τις τελευταίες ώρες. Ο Δημητρίου χειρίστηκε το κλειδί 2-4 ώρες πριν τον θάνατό του - μήπως άνοιξε το χρηματοκιβώτιο για να πάρει ή να βάλει κάτι; Τα αποτυπώματα του Αναγνώστου είναι παλαιότερα αλλά σημαντικά - γιατί ο CFO είχε πρόσβαση στο κλειδί; Εγκρίθηκε από τον Δημητρίου ή το πήρε κρυφά; Ακόμη πιο ανησυχητική είναι η σκόνη ταλκ από latex γάντια - κάποιος προσπάθησε να χειριστεί το κλειδί χωρίς να αφήσει αποτυπώματα. Ποιος; Η Παπαδοπούλου, η Νικολάου ή η Μαυρίδη που έχουν πρόσβαση σε ιατρικά γάντια; Ή μήπως ο Πετρόπουλος που μπορεί να τα προμηθευτηκε ως μέρος του σχεδίου; Το χρηματοκιβώτιο ήταν ανοιχτό και τίποτα δεν έλειπε - αυτό μπορεί να σημαίνει ότι το άνοιξε ο ίδιος, λίγο πριν πεθάνει, ή κάποιος μετά τον θάνατό του χωρίς να πάρει τίποτα επειδή αναζητούσε κάτι συγκεκριμένο που δεν ήταν εκεί;
+                        Το κλειδί αποτελεί κρίσιμο στοιχείο για την κατανόηση των κινήσεων τις τελευταίες ώρες. Ο Δημητρίου χειρίστηκε το κλειδί 2-4 ώρες πριν τον θάνατό του - μήπως άνοιξε το χρηματοκιβώτιο για να πάρει ή να βάλει κάτι; Τα αποτυπώματα του Αναγνώστου είναι παλαιότερα αλλά σημαντικά - γιατί ο CFO είχε πρόσβαση στο κλειδί; Εγκρίθηκε από τον Δημητρίου ή το πήρε κρυφά; Ακόμη πιο ανησυχητική είναι η σκόνη ταλκ από latex γάντια - κάποιος προσπάθησε να χειριστεί το κλειδί χωρίς να αφήσει αποτυπώματα. Ποιος; Η Παπαδοπούλου, η Νικολάου ή η Μαυρίδη που έχουν πρόσβαση σε ιατρικά γάντια; Ώ μήπως ο Πετρόπουλος που μπορεί να τα προμηθευτηκε ως μέρος του σχεδίου; Το χρηματοκιβώτιο ήταν ανοιχτό και τίποτα δεν έλειπε - αυτό μπορεί να σημαίνει ότι το άνοιξε ο ίδιος, λίγο πριν πεθάνει, ή κάποιος μετά τον θάνατό του χωρίς να πάρει τίποτα επειδή αναζητούσε κάτι συγκεκριμένο που δεν ήταν εκεί;
                     </p>
                 </div>
 
                 <div class="section">
                     <h3 class="section-title">
-                        <span></span>
-                        ❓ ΕΡΩΤΗΜΑΤΑ ΔΙΕΡΕΥΝΗΣΗΣ
+                        <span>❓</span>
+                        ΕΡΩΤΗΜΑΤΑ ΔΙΕΡΕΥΝΗΣΗΣ
                     </h3>
                     <ul class="section-content">
                         <li>Γιατί το κλειδί βρέθηκε κρυμμένο κάτω από έγγραφα και όχι στη θέση του; Το έβαλε εκεί ο Δημητρίου ή κάποιος άλλος;</li>
@@ -748,6 +837,60 @@
                 window.location.href = 'index.html?tab=evidence';
             }
         };
+
+        // 3D Model Loading Control
+        const load3DButton = document.getElementById('load3DButton');
+        const close3DButton = document.getElementById('close3DButton');
+        const modelViewerContainer = document.getElementById('modelViewerContainer');
+        const modelViewer = document.getElementById('keyModel');
+        const debugInfo = document.getElementById('debugInfo');
+
+        load3DButton.addEventListener('click', function() {
+            modelViewerContainer.classList.add('active');
+            load3DButton.style.display = 'none';
+            close3DButton.style.display = 'flex';
+            
+            // Trigger the model to load
+            modelViewer.dismissPoster();
+            
+            // Show debug info
+            debugInfo.style.display = 'block';
+            debugInfo.innerHTML = '🔄 Προσπάθεια φόρτωσης: safe_key.glb<br>';
+        });
+
+        close3DButton.addEventListener('click', function() {
+            modelViewerContainer.classList.remove('active');
+            load3DButton.style.display = 'flex';
+            close3DButton.style.display = 'none';
+            debugInfo.style.display = 'none';
+        });
+
+        // Model Viewer Event Listeners
+        if (modelViewer) {
+            modelViewer.addEventListener('progress', (event) => {
+                const percent = Math.round(event.detail.totalProgress * 100);
+                debugInfo.innerHTML = `⏳ Φόρτωση: ${percent}%<br>`;
+            });
+            
+            modelViewer.addEventListener('load', () => {
+                debugInfo.innerHTML = '✅ 3D μοντέλο φορτώθηκε επιτυχώς!<br>';
+                debugInfo.style.background = '#d4edda';
+                debugInfo.style.borderColor = '#28a745';
+                setTimeout(() => {
+                    debugInfo.style.display = 'none';
+                }, 3000);
+            });
+            
+            modelViewer.addEventListener('error', (event) => {
+                debugInfo.innerHTML = '❌ ΣΦΑΛΜΑ: Το αρχείο δεν μπορεί να φορτώσει<br>';
+                debugInfo.innerHTML += 'Ελέγξτε:<br>';
+                debugInfo.innerHTML += '1. Το αρχείο υπάρχει στον ίδιο φάκελο<br>';
+                debugInfo.innerHTML += '2. Το όνομα είναι: safe_key.glb<br>';
+                debugInfo.innerHTML += '3. Το αρχείο είναι έγκυρο .glb<br>';
+                debugInfo.style.background = '#f8d7da';
+                debugInfo.style.borderColor = '#dc3545';
+            });
+        }
 
         function drawCrimeScene() {
             const canvas = document.getElementById('crimeSceneCanvas');
@@ -1035,48 +1178,6 @@
 
         window.onload = function() {
             drawCrimeScene();
-            const modelViewer = document.querySelector('model-viewer');
-            const debugInfo = document.getElementById('debugInfo');
-            
-            if (modelViewer) {
-                debugInfo.style.display = 'block';
-                debugInfo.innerHTML = '🔍 Προσπάθεια φόρτωσης: safe_key.glb<br>';
-                
-                modelViewer.addEventListener('progress', (event) => {
-                    const percent = Math.round(event.detail.totalProgress * 100);
-                    debugInfo.innerHTML = `⏳ Φόρτωση: ${percent}%<br>`;
-                });
-                
-                modelViewer.addEventListener('load', () => {
-                    debugInfo.innerHTML = '✅ 3D μοντέλο φορτώθηκε επιτυχώς!<br>';
-                    debugInfo.style.background = '#d4edda';
-                    debugInfo.style.borderColor = '#28a745';
-                    setTimeout(() => {
-                        debugInfo.style.display = 'none';
-                    }, 3000);
-                });
-                
-                modelViewer.addEventListener('error', (event) => {
-                    debugInfo.innerHTML = '❌ ΣΦΑΛΜΑ: Το αρχείο δεν μπορεί να φορτώσει<br>';
-                    debugInfo.innerHTML += 'Ελέγξτε:<br>';
-                    debugInfo.innerHTML += '1. Το αρχείο υπάρχει στον ίδιο φάκελο<br>';
-                    debugInfo.innerHTML += '2. Το όνομα είναι: safe_key.glb<br>';
-                    debugInfo.innerHTML += '3. Το αρχείο είναι έγκυρο .glb<br>';
-                    debugInfo.style.background = '#f8d7da';
-                    debugInfo.style.borderColor = '#dc3545';
-                });
-                
-                setTimeout(() => {
-                    if (debugInfo.innerHTML.includes('Φόρτωση')) {
-                        debugInfo.innerHTML = '⚠️ Το μοντέλο δεν φορτώνει...<br>';
-                        debugInfo.innerHTML += 'Πιθανές αιτίες:<br>';
-                        debugInfo.innerHTML += '• Το αρχείο δεν βρέθηκε<br>';
-                        debugInfo.innerHTML += '• Λάθος όνομα: safe_key.glb<br>';
-                        debugInfo.style.background = '#fff3cd';
-                        debugInfo.style.borderColor = '#ffc107';
-                    }
-                }, 10000);
-            }
         };
     </script>
 </body>
