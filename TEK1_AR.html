@@ -235,16 +235,18 @@
         }
 
 		.model-viewer-container {
-			max-height: 0;
-			overflow: hidden;
+			position: absolute;
+			left: -9999px;
 			opacity: 0;
-			margin-top: 0;
-			transition: max-height 0.3s ease, opacity 0.3s ease, margin-top 0.3s ease;
+			pointer-events: none;
+			transition: opacity 0.3s ease;
 		}
 
 		.model-viewer-container.active {
-			max-height: 800px;
+			position: relative;
+			left: auto;
 			opacity: 1;
+			pointer-events: auto;
 			margin-top: 20px;
 		}
 
@@ -899,22 +901,24 @@
     let modelInitialized = false;
 
     view3DBtn.addEventListener('click', function() {
-        console.log('Button clicked, initializing 3D model...');
+        console.log('Button clicked, showing 3D model...');
         
-        // Show container first
-        modelViewerContainer.classList.add('active');
-        view3DBtn.style.display = 'none';
-        
-        // Wait for CSS transition to complete, then load model
         if (!modelInitialized) {
+            console.log('Setting model source...');
+            modelViewer.src = 'whiskey_bottle.glb';
+            modelInitialized = true;
+            
+            // Wait a bit for the model to start loading
             setTimeout(() => {
-                console.log('Loading model...');
-                modelViewer.src = 'whiskey_bottle.glb';
-                modelInitialized = true;
-            }, 350); // Wait for the CSS transition (300ms) + a bit extra
+                modelViewerContainer.classList.add('active');
+                view3DBtn.style.display = 'none';
+                modelViewerContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 100);
+        } else {
+            modelViewerContainer.classList.add('active');
+            view3DBtn.style.display = 'none';
+            modelViewerContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
-        
-        modelViewerContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     });
 
     close3DBtn.addEventListener('click', function() {
@@ -933,7 +937,7 @@
         });
 
         modelViewer.addEventListener('load', () => {
-            console.log('Model loaded successfully!');
+            console.log('✅ Model loaded and ready!');
             debugInfo.innerHTML = '✅ 3D μοντέλο φορτώθηκε επιτυχώς!<br>';
             debugInfo.style.background = '#d4edda';
             debugInfo.style.borderColor = '#28a745';
@@ -944,7 +948,7 @@
         });
         
         modelViewer.addEventListener('error', (event) => {
-            console.error('Model loading error:', event);
+            console.error('❌ Model loading error:', event);
             debugInfo.style.display = 'block';
             debugInfo.innerHTML = '❌ ΣΦΑΛΜΑ: Το αρχείο δεν μπορεί να φορτώσει<br>';
             debugInfo.innerHTML += 'Ελέγξτε:<br>';
@@ -953,10 +957,6 @@
             debugInfo.innerHTML += '3. Το αρχείο είναι έγκυρο .glb<br>';
             debugInfo.style.background = '#f8d7da';
             debugInfo.style.borderColor = '#dc3545';
-        });
-
-        modelViewer.addEventListener('model-visibility', (event) => {
-            console.log('Model visibility changed:', event.detail.visible);
         });
     }
 
