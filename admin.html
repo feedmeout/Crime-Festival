@@ -686,24 +686,51 @@ body {
             <div id="addTeamAlert"></div>
         </div>
 
+<div class="section">
+    <h2>📊 ADMIN PANEL</h2>
+    <div style="background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%); padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
+        <label style="color: #000; font-weight: 700; margin-right: 10px;">ΛΕΙΤΟΥΡΓΙΑ:</label>
+        <select id="adminMode" onchange="toggleAdminMode()" style="padding: 8px 15px; border-radius: 5px; border: 2px solid #000; font-weight: 700;">
+            <option value="live">🎮 LIVE EVENT</option>
+            <option value="testing">🧪 TESTING MODE</option>
+        </select>
+    </div>
+
+    <!-- PRIMARY CONTROLS - Most frequently used during event -->
+    <h3 style="color: #0f3460; margin-top: 0;">🎮 Live Event Controls</h3>
+    <div class="quick-actions">
+        <button class="btn" style="background: #ffc107; color: #000;" onclick="window.location.href='leaderboard.html'">🏆 LEADERBOARD (ADMIN)</button>
+        <button class="btn" id="leaderboardToggleBtn" style="background: #dc3545; color: white;" onclick="toggleLeaderboard()">🔒 LOADING...</button>
+        <button class="btn" style="background: #9c27b0; color: white;" onclick="openAlertModal()">📢 ΑΠΟΣΤΟΛΗ ΕΙΔΟΠΟΙΗΣΗΣ</button>
+    </div>
+
+    <!-- DATA EXPORT/IMPORT - For backups and data analysis -->
+    <h3 style="color: #0f3460;">💾 Data Management</h3>
+    <div class="quick-actions">
+        <button class="btn" style="background: #17a2b8; color: white;" onclick="exportAllData()">💾 EXPORT DATA (GAME)</button>
+        <button class="btn" style="background: #6c757d; color: white;" onclick="importData()">📥 IMPORT DATA (GAME)</button>
+        <button class="btn" style="background: #059669; color: white;" onclick="exportSurveyDataToExcel()">📊 EXPORT SURVEYS (EXCEL)</button>
+    </div>
+
+    <!-- TESTING TOOLS - For development/testing -->
+    <h3 style="color: #0f3460;">🧪 Testing & Debug Tools</h3>
+    <div class="quick-actions">
+        <button class="btn btn-secondary" onclick="unlockAllForAll()">🔓 ΤΕΚΜΗΡΙΑ (ΟΛΑ)</button>
+        <button class="btn" style="background: #673ab7; color: white;" onclick="fakeAllSurveys()">🧪 FAKE ΕΡΩΤΗΜΑΤΟΛΟΓΙΑ (ΔΗΜΙΟΥΡΓΙΑ)</button>
+        <button class="btn" style="background: #e91e63; color: white;" onclick="deleteFakeSurveys()">🗑️ FAKE ΕΡΩΤΗΜΑΤΟΛΟΓΙΑ (ΔΙΑΓΡΑΦΗ)</button>
+    </div>
+
+    <!-- DANGER ZONE - Destructive actions -->
+    <h3 style="color: #dc3545;">⚠️ Danger Zone</h3>
+    <div class="quick-actions" style="border: 2px solid #dc3545; padding: 15px; border-radius: 8px; background: rgba(220, 53, 69, 0.05);">
+        <button class="btn" style="background: #e91e63; color: white;" onclick="deleteAllAlerts()">🗑️ ΔΙΑΓΡΑΦΗ ΕΙΔΟΠΟΙΗΣΕΩΝ</button>
+        <button class="btn" style="background: #b91c1c; color: white;" onclick="deleteALLSurveysNuclear()">🗑️ ΚΑΘΑΡΙΣΜΟΣ ΕΡΩΤΗΜΑΤΟΛΟΓΙΩΝ (ΟΛΑ)</button>
+        <button class="btn btn-danger" onclick="resetAll()">🗑️ ΔΙΑΓΡΑΦΗ ΟΜΑΔΩΝ (ΟΛΕΣ)</button>
+    </div>
+</div>
+
         <div class="section">
-            <h2>📊 ADMIN PANEL</h2>
-            <div class="quick-actions">
-                <button class="btn" style="background: #17a2b8; color: white;" onclick="exportAllData()">💾 EXPORT DATA (GAME)</button>
-                <button class="btn" style="background: #6c757d; color: white;" onclick="importData()">📥 IMPORT DATA (GAME)</button>
-				<button class="btn" style="background: #059669; color: white;" onclick="exportSurveyDataToExcel()">📊 EXPORT SURVEYS (EXCEL)</button>
-                <button class="btn" style="background: #ffc107; color: #000;" onclick="window.location.href='leaderboard.html'">🏆 LEADERBOARD (ADMIN)</button>
-                <button class="btn" id="leaderboardToggleBtn" style="background: #dc3545; color: white;" onclick="toggleLeaderboard()">
-                    🔒 LOADING...
-                </button>
-                <button class="btn btn-secondary" onclick="unlockAllForAll()">🔓 ΤΕΚΜΗΡΙΑ (ΟΛΑ)</button>
-                <button class="btn btn-danger" onclick="resetAll()">🗑️ ΔΙΑΓΡΑΦΗ ΟΜΑΔΩΝ (ΟΛΕΣ)</button>
-                <button class="btn" style="background: #9c27b0; color: white;" onclick="openAlertModal()">📢 ΑΠΟΣΤΟΛΗ ΕΙΔΟΠΟΙΗΣΗΣ</button>
-				<button class="btn" style="background: #e91e63; color: white;" onclick="deleteAllAlerts()">🗑️ ΔΙΑΓΡΑΦΗ ΕΙΔΟΠΟΙΗΣΕΩΝ</button>
-				<button class="btn" style="background: #673ab7; color: white;" onclick="fakeAllSurveys()">🧪 FAKE ΕΡΩΤΗΜΑΤΟΛΟΓΙΑ (ΔΗΜΙΟΥΡΓΙΑ)</button>
-				<button class="btn" style="background: #e91e63; color: white;" onclick="deleteFakeSurveys()">🗑️ FAKE ΕΡΩΤΗΜΑΤΟΛΟΓΙΑ (ΔΙΑΓΡΑΦΗ)</button>
-				<button class="btn" style="background: #b91c1c; color: white;" onclick="deleteALLSurveysNuclear()">🗑️ ΚΑΘΑΡΙΣΜΟΣ ΕΡΩΤΗΜΑΤΟΛΟΓΙΩΝ (ΟΛΑ)</button>
-            </div>
+            <h2>👥 ΟΜΑΔΕΣ</h2>
             
             <div class="sort-controls">
                 <label>ΤΑΞΙΝΟΜΗΣΗ:</label>
@@ -923,12 +950,9 @@ async function fakeAllSurveys() {
                 console.log(`⚠️ Team ${team.name} has no teamSize, skipping`);
                 continue;
             }
-            
-            // Create fake pre and post surveys for each team member
+
             for (let i = 1; i <= teamSize; i++) {
                 const memberName = `Member${i}`;
-                
-                // Pre-survey
                 const preDocId = `${team.name}_pre_${memberName}`;
                 const preDocRef = window.firebaseDoc(window.firebaseDB, 'surveys', preDocId);
                 await window.firebaseSetDoc(preDocRef, {
@@ -947,8 +971,6 @@ async function fakeAllSurveys() {
                     }
                 });
                 totalCreated++;
-                
-                // Post-survey
                 const postDocId = `${team.name}_post_${memberName}`;
                 const postDocRef = window.firebaseDoc(window.firebaseDB, 'surveys', postDocId);
                 await window.firebaseSetDoc(postDocRef, {
@@ -969,7 +991,7 @@ async function fakeAllSurveys() {
         }
         
         alert(`✅ Δημιουργήθηκαν ${totalCreated} fake ερωτηματολόγια για ${teams.length} ομάδες!`);
-        refreshTeams(); // Refresh to show updated survey counts
+        refreshTeams();
         
     } catch (error) {
         console.error('❌ Error creating fake surveys:', error);
@@ -998,8 +1020,6 @@ async function deleteFakeSurveys() {
         
         querySnapshot.forEach((doc) => {
             const docId = doc.id;
-            
-            // Check if it's a fake survey (contains "Member1", "Member2", etc.)
             if (docId.match(/_(?:pre|post)_Member\d+$/)) {
                 console.log(`🗑️ Deleting FAKE survey: ${docId}`);
                 deletePromises.push(
@@ -1542,7 +1562,7 @@ async function showTimestamps(teamName) {
     }
 
     if (team.timestamps && Object.keys(team.timestamps).length > 0) {
-        html += '<h3 style="margin: 20px 0 10px 0;">Ξεκλειδώματα ΤΕΚ:</h3>';
+        html += '<h3 style="margin: 20px 0 10px 0;">ΞΕΚΛΕΙΔΩΜΕΝΑ ΤΕΚΜΗΡΙΑ:</h3>';
         html += '<ul class="timestamp-list">';
         const sortedTeks = Object.entries(team.timestamps)
             .sort((a, b) => new Date(a[1]) - new Date(b[1]));
@@ -2232,29 +2252,6 @@ window.addEventListener('storage', (e) => {
     }
 });
 
-window.addEventListener('DOMContentLoaded', async () => {
-    setTimeout(async () => {
-        if (isFirebaseReady()) {
-            showSyncStatus('✅ Connected - Real-time sync active', 'success');
-        } else {
-            console.warn('⚠️ Firebase not loaded - using localStorage only');
-            showSyncStatus('⚠️ Local mode - No cloud sync', 'error');
-        }
-        
-        await refreshTeams();
-        setupRealtimeListener();
-        await updateLeaderboardButton();
-        setInterval(updateLeaderboardButton, 5000);
-        
-        setTimeout(() => {
-            const status = document.getElementById('firebaseStatus');
-            if (status && !status.classList.contains('syncing')) {
-                status.style.display = 'none';
-            }
-        }, 5000);
-    }, 300);
-});
-
 function showSyncStatus(message, type = 'success') {
     const status = document.getElementById('firebaseStatus');
     if (!status) return;
@@ -2279,6 +2276,63 @@ function showSyncStatus(message, type = 'success') {
         }, 3000);
     }
 }
+
+function toggleAdminMode() {
+    const mode = document.getElementById('adminMode').value;
+    const testingSection = document.querySelector('h3:nth-of-type(3)');
+    const testingButtons = testingSection.nextElementSibling;
+    const dangerSection = document.querySelector('h3[style*="color: #dc3545"]');
+    const dangerButtons = dangerSection.nextElementSibling;
+    
+    if (mode === 'live') {
+        testingSection.style.display = 'none';
+        testingButtons.style.display = 'none';
+        dangerSection.style.display = 'none';
+        dangerButtons.style.display = 'none';
+        
+        console.log('🎮 LIVE EVENT MODE: Testing tools hidden');
+    } else {
+        testingSection.style.display = 'block';
+        testingButtons.style.display = 'grid';
+        dangerSection.style.display = 'block';
+        dangerButtons.style.display = 'grid';
+        
+        console.log('🧪 TESTING MODE: All tools visible');
+    }
+    
+    localStorage.setItem('adminMode', mode);
+}
+
+window.addEventListener('DOMContentLoaded', async () => {
+    const savedMode = localStorage.getItem('adminMode') || 'live';
+    const modeSelect = document.getElementById('adminMode');
+    if (modeSelect) {
+        modeSelect.value = savedMode;
+        toggleAdminMode();
+    }
+    
+    setTimeout(async () => {
+        if (isFirebaseReady()) {
+            showSyncStatus('✅ Connected - Real-time sync active', 'success');
+        } else {
+            console.warn('⚠️ Firebase not loaded - using localStorage only');
+            showSyncStatus('⚠️ Local mode - No cloud sync', 'error');
+        }
+        
+        await refreshTeams();
+        setupRealtimeListener();
+        await updateLeaderboardButton();
+        setInterval(updateLeaderboardButton, 5000);
+        
+        setTimeout(() => {
+            const status = document.getElementById('firebaseStatus');
+            if (status && !status.classList.contains('syncing')) {
+                status.style.display = 'none';
+            }
+        }, 5000);
+    }, 300);
+});
+
 </script>
 </body>
 </html>
