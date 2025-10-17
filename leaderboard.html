@@ -646,18 +646,15 @@
                     const minutes = totalTimeMs / 60000;
                     if (minutes < 30) {
                         efficiencyPoints += SCORING.time_under_30;
-                        efficiencyLines.push(`⏱️ ΤΑΧΥΤΑΤΗ ΕΠΙΛΥΣΗ (+${SCORING.time_under_30} πόντοι)`);
-                        efficiencyLines.push('   Χρόνος: <30 λεπτά');
+                        efficiencyLines.push('⏱️ ΤΑΧΥΤΑΤΗ ΕΠΙΛΥΣΗ : Χρόνος: <30 λεπτά');
                         hasBonus = true;
                     } else if (minutes < 45) {
                         efficiencyPoints += SCORING.time_30_45;
-                        efficiencyLines.push(`⏱️ ΓΡΗΓΟΡΗ ΕΠΙΛΥΣΗ (+${SCORING.time_30_45} πόντοι)`);
-                        efficiencyLines.push('   Χρόνος: 30-45 λεπτά');
+                        efficiencyLines.push('⏱️ ΓΡΗΓΟΡΗ ΕΠΙΛΥΣΗ : Χρόνος: 30-45 λεπτά');
                         hasBonus = true;
                     } else if (minutes < 60) {
                         efficiencyPoints += SCORING.time_45_60;
-                        efficiencyLines.push(`⏱️ ΚΑΛΟΣ ΧΡΟΝΟΣ (+${SCORING.time_45_60} πόντοι)`);
-                        efficiencyLines.push('   Χρόνος: 45-60 λεπτά');
+                        efficiencyLines.push('⏱️ ΚΑΛΟΣ ΧΡΟΝΟΣ : Χρόνος: 45-60 λεπτά');
                         hasBonus = true;
                     }
                 }
