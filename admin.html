@@ -699,6 +699,7 @@ body {
                 <button class="btn btn-secondary" onclick="unlockAllForAll()">🔓 ΤΕΚΜΗΡΙΑ (ΟΛΑ)</button>
                 <button class="btn btn-danger" onclick="resetAll()">🗑️ ΔΙΑΓΡΑΦΗ ΟΜΑΔΩΝ (ΟΛΕΣ)</button>
                 <button class="btn" style="background: #9c27b0; color: white;" onclick="openAlertModal()">📢 ΑΠΟΣΤΟΛΗ ΕΙΔΟΠΟΙΗΣΗΣ</button>
+				<button class="btn" style="background: #e91e63; color: white;" onclick="deleteAllAlerts()">🗑️ ΔΙΑΓΡΑΦΗ ΕΙΔΟΠΟΙΗΣΕΩΝ</button>
             </div>
             
             <div class="sort-controls">
@@ -855,6 +856,48 @@ let teamsData = {};
             return [];
         }
     }
+
+async function deleteAllAlerts() {
+    if (!confirm('ΔΙΑΓΡΑΦΗ ΟΛΩΝ ΤΩΝ ΕΙΔΟΠΟΙΗΣΕΩΝ;')) {
+        return;
+    }
+    
+    if (!window.firebaseDB) {
+        alert('❌ Firebase δεν είναι διαθέσιμο!');
+        return;
+    }
+    
+    try {
+        const alertsRef = window.firebaseCollection(window.firebaseDB, 'alerts');
+        const querySnapshot = await window.firebaseGetDocs(alertsRef);
+        
+        console.log(`🗑️ Found ${querySnapshot.size} alerts to delete`);
+        
+        if (querySnapshot.size === 0) {
+            alert('✅ Δεν υπάρχουν ειδοποιήσεις προς διαγραφή!');
+            return;
+        }
+        
+        const deletePromises = [];
+        querySnapshot.forEach((doc) => {
+            console.log(`🗑️ Deleting alert: ${doc.id}`);
+            deletePromises.push(
+                window.firebaseDeleteDoc(
+                    window.firebaseDoc(window.firebaseDB, 'alerts', doc.id)
+                )
+            );
+        });
+        
+        await Promise.all(deletePromises);
+        
+        alert(`✅ Διαγράφηκαν ${querySnapshot.size} ειδοποιήσεις επιτυχώς!`);
+        console.log('✅ All alerts deleted successfully');
+        
+    } catch (error) {
+        console.error('❌ Error deleting alerts:', error);
+        alert(`❌ Σφάλμα διαγραφής: ${error.message}`);
+    }
+}
 
 async function getAllTeams() {
         const allTeams = new Map();
