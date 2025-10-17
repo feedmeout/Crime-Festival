@@ -1084,116 +1084,179 @@
             }
         };
 
-        function drawCrimeScene() {
-            const canvas = document.getElementById('crimeSceneCanvas');
-            const ctx = canvas.getContext('2d');
-            const containerWidth = canvas.parentElement.clientWidth;
-            const scaleFactor = Math.min(containerWidth / 800, 1);
-            
-            canvas.width = 800;
-            canvas.height = 400;
-            
-            const floorGradient = ctx.createLinearGradient(0, 0, 0, 400);
-            floorGradient.addColorStop(0, '#8b7355');
-            floorGradient.addColorStop(1, '#6b5345');
-            ctx.fillStyle = floorGradient;
-            ctx.fillRect(0, 0, 800, 400);
-            ctx.strokeStyle = 'rgba(101, 67, 33, 0.3)';
-            ctx.lineWidth = 2;
-            for (let i = 0; i < 400; i += 40) {
-                ctx.beginPath();
-                ctx.moveTo(0, i);
-                ctx.lineTo(800, i + Math.random() * 10);
-                ctx.stroke();
-            }
+function drawCrimeScene() {
+    const canvas = document.getElementById('crimeSceneCanvas');
+    const ctx = canvas.getContext('2d');
+    const containerWidth = canvas.parentElement.clientWidth;
+    const aspectRatio = 2;
+    
+    canvas.width = Math.min(containerWidth, 800);
+    canvas.height = canvas.width / aspectRatio;
+    const scale = canvas.width / 800;
 
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
-            ctx.beginPath();
-            ctx.ellipse(400, 240, 100, 20, 0, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(280, 60, 240, 280);
-            ctx.strokeStyle = '#cccccc';
-            ctx.lineWidth = 2;
-            ctx.strokeRect(280, 60, 240, 280);
-            ctx.fillStyle = '#1e3a8a';
-            ctx.fillRect(280, 60, 240, 40);
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(300, 70, 8, 20);
-            ctx.fillRect(294, 76, 20, 8);
-            ctx.strokeStyle = '#ffffff';
-            ctx.lineWidth = 3;
-            ctx.beginPath();
-            ctx.moveTo(490, 70);
-            ctx.lineTo(490, 90);
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.arc(490, 75, 5, 0, Math.PI * 2);
-            ctx.fillStyle = '#ffffff';
-            ctx.fill();
-            ctx.fillStyle = '#1a1a1a';
-            ctx.font = 'bold 14px Arial';
-            ctx.textAlign = 'center';
-            ctx.fillText('ΙΑΤΡΙΚΗ ΓΝΩΜΑΤΕΥΣΗ', 400, 85);
-            ctx.fillStyle = '#333333';
-            ctx.font = '11px Arial';
-            ctx.textAlign = 'left';
-            ctx.fillText('ΑΣΘΕΝΗΣ: Δημητρίου Πέτρος', 295, 125);
-            ctx.fillText('ΗΜΕΡΟΜΗΝΙΑ: 28/08/2025', 295, 145);
-            ctx.fillText('ΓΙΑΤΡΟΣ: Δρ. Σταυρίδης Α.', 295, 165);
-            ctx.fillStyle = 'rgba(220, 53, 69, 0.15)';
-            ctx.fillRect(290, 180, 220, 60);
-            ctx.fillStyle = '#dc3545';
-            ctx.font = 'bold 12px Arial';
-            ctx.fillText('ΔΙΑΓΝΩΣΗ:', 295, 200);
-            ctx.font = '11px Arial';
-            ctx.fillText('Καρκίνος Παγκρέατος', 295, 215);
-            ctx.fillText('Στάδιο IV', 295, 230);
-            ctx.fillStyle = '#dc3545';
-            ctx.font = 'bold 11px Arial';
-            ctx.fillText('ΠΡΟΓΝΩΣΗ: 2-3 μήνες', 295, 260);
-            ctx.fillStyle = '#666666';
-            ctx.font = '9px Arial';
-            ctx.fillText('Μεταστάσεις σε ήπαρ', 295, 280);
-            ctx.fillText('Ασθενής αρνήθηκε θεραπεία', 295, 295);
-            ctx.fillText('Παρηγορητική φροντίδα', 295, 310);
-            ctx.strokeStyle = '#333333';
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(350, 325);
-            ctx.lineTo(500, 325);
-            ctx.stroke();
-            ctx.strokeStyle = '#1e3a8a';
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.moveTo(360, 320);
-            ctx.quadraticCurveTo(390, 310, 420, 320);
-            ctx.quadraticCurveTo(440, 325, 460, 318);
-            ctx.stroke();
-            ctx.save();
-            ctx.translate(450, 160);
-            ctx.rotate(-0.3);
-            ctx.strokeStyle = '#dc3545';
-            ctx.lineWidth = 3;
-            ctx.strokeRect(-50, -15, 100, 30);
-            ctx.fillStyle = 'rgba(220, 53, 69, 0.1)';
-            ctx.fillRect(-50, -15, 100, 30);
-            ctx.fillStyle = '#dc3545';
-            ctx.font = 'bold 12px Arial';
-            ctx.textAlign = 'center';
-            ctx.fillText('ΑΠΟΡΡΗΤΟ', 0, 5);
-            ctx.restore();
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-            ctx.fillRect(0, 0, 800, 40);
-            ctx.fillStyle = '#ff0000';
-            ctx.font = 'bold 14px monospace';
-            ctx.textAlign = 'left';
-            ctx.fillText('● REC', 10, 25);
-            ctx.fillStyle = '#fff';
-            ctx.fillText('22/09/2025  23:45:17  |  ΣΚΗΝΗ ΕΓΚΛΗΜΑΤΟΣ - ΓΡΑΦΕΙΟ ΘΥΜΑΤΟΣ (ΣΥΡΤΑΡΙ)', 80, 25);
-            ctx.textAlign = 'right';
-            ctx.fillText('ΤΕΚ #005', 790, 25);
-        }
+    // ===== 1. BLACK BACKGROUND (full canvas) =====
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // ===== 2. WOODEN FLOOR - CENTER ONLY =====
+    const floorWidthPercent = 0.9;
+    const floorWidth = canvas.width * floorWidthPercent;
+    const floorX = (canvas.width - floorWidth) / 2;
+    
+    const floorGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    floorGradient.addColorStop(0, '#8b7355');
+    floorGradient.addColorStop(1, '#6b5345');
+    ctx.fillStyle = floorGradient;
+    ctx.fillRect(floorX, 0, floorWidth, canvas.height);
+    
+    // Wood grain lines
+    ctx.strokeStyle = 'rgba(101, 67, 33, 0.3)';
+    ctx.lineWidth = 2 * scale;
+    for (let i = 0; i < canvas.height; i += 40 * scale) {
+        ctx.beginPath();
+        ctx.moveTo(floorX, i);
+        ctx.lineTo(floorX + floorWidth, i + Math.random() * 10 * scale);
+        ctx.stroke();
+    }
+
+    // ===== 3. CENTER POSITION for all items =====
+    const centerX = canvas.width / 2;
+
+    // Shadow - adjusted for smaller document
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+    ctx.beginPath();
+    ctx.ellipse(centerX, 290 * scale, 70 * scale, 15 * scale, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Medical Document (centered) - REDUCED SIZE
+    const docWidth = 160 * scale;
+    const docHeight = 200 * scale;
+    const docX = centerX - docWidth / 2;
+    const docY = 80 * scale;
+
+    // Document white background
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(docX, docY, docWidth, docHeight);
+    ctx.strokeStyle = '#cccccc';
+    ctx.lineWidth = 2 * scale;
+    ctx.strokeRect(docX, docY, docWidth, docHeight);
+
+    // Blue header - adjusted size
+    ctx.fillStyle = '#1e3a8a';
+    ctx.fillRect(docX, docY, docWidth, 28 * scale);
+
+    // Medical cross - smaller
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(docX + 12 * scale, docY + 8 * scale, 5 * scale, 14 * scale);
+    ctx.fillRect(docX + 7.5 * scale, docY + 12.5 * scale, 14 * scale, 5 * scale);
+
+    // Stethoscope - smaller
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 2 * scale;
+    ctx.beginPath();
+    ctx.moveTo(docX + docWidth - 20 * scale, docY + 8 * scale);
+    ctx.lineTo(docX + docWidth - 20 * scale, docY + 22 * scale);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(docX + docWidth - 20 * scale, docY + 12 * scale, 3 * scale, 0, Math.PI * 2);
+    ctx.fillStyle = '#ffffff';
+    ctx.fill();
+
+    // Header text - smaller font
+    ctx.fillStyle = '#1a1a1a';
+    ctx.font = `bold ${9 * scale}px Arial`;
+    ctx.textAlign = 'center';
+    ctx.fillText('ΙΑΤΡΙΚΗ ΓΝΩΜΑΤΕΥΣΗ', centerX, docY + 18 * scale);
+
+    // Document content - smaller text
+    ctx.fillStyle = '#333333';
+    ctx.font = `${7 * scale}px Arial`;
+    ctx.textAlign = 'left';
+    
+    const leftMargin = docX + 10 * scale;
+    ctx.fillText('ΑΣΘΕΝΗΣ: Δημητρίου Πέτρος', leftMargin, docY + 45 * scale);
+    ctx.fillText('ΗΜΕΡΟΜΗΝΙΑ: 28/08/2025', leftMargin, docY + 58 * scale);
+    ctx.fillText('ΔΙΑΤΡΟΣ: Δρ. Σταυρίδης Α.', leftMargin, docY + 71 * scale);
+
+    // Critical diagnosis box - smaller
+    ctx.fillStyle = 'rgba(220, 53, 69, 0.15)';
+    ctx.fillRect(docX + 7 * scale, docY + 80 * scale, docWidth - 14 * scale, 42 * scale);
+    
+    ctx.fillStyle = '#dc3545';
+    ctx.font = `bold ${8 * scale}px Arial`;
+    ctx.fillText('ΔΙΑΓΝΩΣΗ:', leftMargin, docY + 92 * scale);
+    
+    ctx.font = `${7 * scale}px Arial`;
+    ctx.fillText('Καρκίνος Παγκρέατος', leftMargin, docY + 102 * scale);
+    ctx.fillText('Στάδιο IV', leftMargin, docY + 112 * scale);
+
+    // Prognosis - smaller text
+    ctx.fillStyle = '#dc3545';
+    ctx.font = `bold ${7 * scale}px Arial`;
+    ctx.fillText('ΠΡΟΓΝΩΣΗ: 2-3 μήνες', leftMargin, docY + 132 * scale);
+
+    // Additional info - smaller text
+    ctx.fillStyle = '#666666';
+    ctx.font = `${6 * scale}px Arial`;
+    ctx.fillText('Μεταστάσεις σε ήπαρ', leftMargin, docY + 145 * scale);
+    ctx.fillText('Ασθενής αρνήθηκε θεραπεία', leftMargin, docY + 155 * scale);
+    ctx.fillText('Παρηγορητική φροντίδα', leftMargin, docY + 165 * scale);
+
+    // Signature line - adjusted
+    ctx.strokeStyle = '#333333';
+    ctx.lineWidth = 1 * scale;
+    ctx.beginPath();
+    ctx.moveTo(centerX - 35 * scale, docY + 180 * scale);
+    ctx.lineTo(centerX + 50 * scale, docY + 180 * scale);
+    ctx.stroke();
+
+    // Doctor's signature - smaller
+    ctx.strokeStyle = '#1e3a8a';
+    ctx.lineWidth = 1.5 * scale;
+    ctx.beginPath();
+    ctx.moveTo(centerX - 30 * scale, docY + 175 * scale);
+    ctx.quadraticCurveTo(centerX - 10 * scale, docY + 168 * scale, centerX + 10 * scale, docY + 175 * scale);
+    ctx.quadraticCurveTo(centerX + 25 * scale, docY + 178 * scale, centerX + 40 * scale, docY + 173 * scale);
+    ctx.stroke();
+
+    // "ΑΠΟΡΡΗΤΟ" stamp (rotated) - smaller
+    ctx.save();
+    ctx.translate(docX + docWidth - 32 * scale, docY + 60 * scale);
+    ctx.rotate(-0.3);
+    ctx.strokeStyle = '#dc3545';
+    ctx.lineWidth = 2 * scale;
+    ctx.strokeRect(-30 * scale, -10 * scale, 60 * scale, 20 * scale);
+    ctx.fillStyle = 'rgba(220, 53, 69, 0.1)';
+    ctx.fillRect(-30 * scale, -10 * scale, 60 * scale, 20 * scale);
+    ctx.fillStyle = '#dc3545';
+    ctx.font = `bold ${8 * scale}px Arial`;
+    ctx.textAlign = 'center';
+    ctx.fillText('ΑΠΟΡΡΗΤΟ', 0, 3 * scale);
+    ctx.restore();
+
+    // ===== 4. TOP BAR with responsive text =====
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+    ctx.fillRect(0, 0, canvas.width, 40 * scale);
+    
+    ctx.fillStyle = '#ff0000';
+    ctx.font = `bold ${Math.max(10, 14 * scale)}px monospace`;
+    ctx.textAlign = 'left';
+    ctx.fillText('● REC', 10 * scale, 25 * scale);
+    
+    ctx.fillStyle = '#fff';
+    const fontSize = Math.max(9, 12 * scale);
+    ctx.font = `${fontSize}px monospace`;
+    
+    // Responsive text
+    if (canvas.width < 600) {
+        ctx.fillText('22/09/2025  23:45:17  |  ΓΡΑΦΕΙΟ', 60 * scale, 25 * scale);
+    } else {
+        ctx.fillText('22/09/2025  23:45:17  |  ΣΚΗΝΗ ΕΓΚΛΗΜΑΤΟΣ - ΓΡΑΦΕΙΟ ΘΥΜΑΤΟΣ (ΣΥΡΤΑΡΙ)', 80 * scale, 25 * scale);
+    }
+    
+    ctx.textAlign = 'right';
+    ctx.fillText('ΤΕΚ #005', canvas.width - 10 * scale, 25 * scale);
+}
 
         window.onload = function() {
             drawCrimeScene();

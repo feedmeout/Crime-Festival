@@ -200,21 +200,20 @@
             width: 100%;
             height: auto;
             display: block;
-            max-width: 100%;
+            max-width: 800px;
         }
 
         .confidential-badge {
             position: absolute;
-            top: var(--space-xs);
-            right: var(--space-xs);
+            top: clamp(5px, 2vw, 10px);
+            right: clamp(5px, 2vw, 10px);
             background: rgba(255,0,0,0.9);
             color: white;
-            padding: var(--space-xs) var(--space-sm);
-            font-size: var(--font-xs);
+            padding: clamp(4px, 1vw, 5px) clamp(8px, 2vw, 10px);
+            font-size: clamp(9px, 2vw, 11px);
             font-weight: bold;
             border-radius: 5px;
             border: 1px solid #fff;
-            z-index: 10;
         }
 
         .ar-container {
@@ -248,49 +247,49 @@
         }
 
         .details {
-            padding: var(--space-lg) var(--space-md);
+            padding: clamp(20px, 4vw, 30px);
             background: linear-gradient(to bottom, var(--bg-white) 0%, var(--bg-light) 100%);
         }
 
         .evidence-title {
-            margin: 0 0 var(--space-lg) 0;
-            font-size: var(--font-xl);
+            margin: 0 0 clamp(20px, 4vw, 25px) 0;
+            font-size: clamp(20px, 4.5vw, 24px);
             color: var(--text-dark);
             border-bottom: 3px solid var(--primary-orange);
-            padding-bottom: var(--space-md);
+            padding-bottom: 15px;
             font-weight: 700;
             display: flex;
             align-items: center;
-            gap: var(--space-sm);
+            gap: 12px;
             flex-wrap: wrap;
         }
 
         .section {
-            margin-bottom: var(--space-lg);
+            margin-bottom: clamp(20px, 3vw, 25px);
             background: white;
-            padding: var(--space-md);
+            padding: clamp(18px, 3vw, 20px);
             border-radius: 10px;
             border: 1px solid var(--border-light);
             box-shadow: 0 2px 6px rgba(0,0,0,0.05);
         }
 
         .section-title {
-            font-size: var(--font-lg);
+            font-size: clamp(16px, 3.5vw, 18px);
             color: var(--medium-blue);
-            margin-bottom: var(--space-md);
+            margin-bottom: 15px;
             display: flex;
             align-items: center;
-            gap: var(--space-sm);
+            gap: clamp(8px, 2vw, 10px);
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             border-bottom: 2px solid var(--border-light);
-            padding-bottom: var(--space-sm);
+            padding-bottom: 10px;
             flex-wrap: wrap;
         }
 
         .section-content {
-            font-size: var(--font-base);
+            font-size: clamp(14px, 2.8vw, 15px);
             line-height: 1.8;
             color: var(--text-medium);
         }
@@ -305,15 +304,16 @@
         }
 
         ul li {
-            margin-bottom: var(--space-xs);
+            margin-bottom: 8px;
+            font-size: clamp(14px, 2.8vw, 15px);
         }
 
         .glass-item {
             background: linear-gradient(135deg, var(--bg-white) 0%, var(--bg-light) 100%);
             border: 2px solid #dee2e6;
             border-radius: 10px;
-            padding: var(--space-md);
-            margin-bottom: var(--space-sm);
+            padding: clamp(12px, 2.5vw, 15px);
+            margin-bottom: 12px;
             transition: all 0.3s ease;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
@@ -336,30 +336,30 @@
 
         .glass-name {
             font-weight: 700;
-            font-size: var(--font-base);
+            font-size: clamp(14px, 3vw, 15px);
             color: var(--text-dark);
-            margin-bottom: var(--space-xs);
+            margin-bottom: 5px;
             display: flex;
             align-items: center;
-            gap: var(--space-xs);
+            gap: 8px;
             flex-wrap: wrap;
         }
 
         .glass-name::before {
             content: "🥃";
-            font-size: clamp(18px, 5vw, 20px);
+            font-size: clamp(16px, 3.5vw, 18px);
         }
 
         .glass-item.critical .glass-name {
             color: var(--danger-red);
-            font-size: var(--font-md);
+            font-size: clamp(15px, 3.2vw, 16px);
         }
 
         .glass-details {
-            font-size: var(--font-sm);
+            font-size: clamp(12px, 2.5vw, 13px);
             color: var(--text-light);
-            padding-left: clamp(24px, 6vw, 28px);
-            line-height: 1.6;
+            padding-left: clamp(24px, 5vw, 26px);
+            line-height: 1.5;
         }
 
         .glass-details div {
@@ -371,32 +371,34 @@
             background: linear-gradient(135deg, #fff5f0 0%, #ffe8db 100%);
             border: 2px solid var(--primary-orange);
             border-radius: 12px;
-            padding: var(--space-lg);
-            margin-bottom: var(--space-lg);
+            padding: clamp(20px, 3.5vw, 25px);
+            margin-bottom: clamp(20px, 3vw, 25px);
             box-shadow: 0 4px 12px rgba(255,107,0,0.1);
         }
 
         .significance-title {
-            font-size: var(--font-lg);
+            font-size: clamp(16px, 3.5vw, 18px);
             color: var(--primary-orange);
-            margin: 0 0 var(--space-md) 0;
+            margin: 0 0 15px 0;
             display: flex;
             align-items: center;
-            gap: var(--space-sm);
+            gap: 10px;
             font-weight: 700;
             flex-wrap: wrap;
         }
 
         .significance-text {
-            font-size: var(--font-base);
+            font-size: clamp(14px, 2.8vw, 15px);
             line-height: 1.8;
             color: var(--text-dark);
             margin: 0;
+            text-align: justify;
+            text-justify: inter-word;
         }
 
         .back-button-container {
             text-align: center;
-            padding: var(--space-md);
+            padding: clamp(15px, 3vw, 20px);
             background: rgba(0,0,0,0.05);
             position: relative;
             z-index: 100;
@@ -405,10 +407,10 @@
         .back-button {
             background: linear-gradient(135deg, var(--primary-orange) 0%, var(--primary-orange-light) 100%);
             color: white;
-            padding: var(--space-md) var(--space-xl);
+            padding: clamp(12px, 2.5vw, 15px) clamp(30px, 6vw, 40px);
             border: none;
             border-radius: 10px;
-            font-size: var(--font-base);
+            font-size: clamp(14px, 3vw, 16px);
             font-weight: bold;
             cursor: pointer;
             box-shadow: 0 4px 12px rgba(255,107,0,0.3);
@@ -416,12 +418,9 @@
             z-index: 101;
             pointer-events: auto;
             transition: all 0.3s ease;
-            min-height: 48px;
+            display: inline-block;
+            min-height: 44px;
             min-width: 200px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: var(--space-xs);
         }
 
         .back-button:hover {
@@ -434,98 +433,54 @@
         }
 
         #debugInfo {
-            margin-top: var(--space-sm);
-            padding: var(--space-sm);
+            margin-top: 10px;
+            padding: 10px;
             background: #e7f3ff;
             border: 1px solid #2196F3;
             border-radius: 5px;
-            font-size: var(--font-xs);
+            font-size: clamp(11px, 2.2vw, 12px);
             font-family: monospace;
             display: none;
-            word-break: break-word;
+            word-wrap: break-word;
         }
 
-        @media (min-width: 768px) and (max-width: 1024px) {
-            .container {
-                padding: var(--space-lg);
+        @media (max-width: 375px) {
+            .header-content {
+                flex-direction: column;
+                gap: 5px;
             }
-            
-            .badge-bar {
-                flex-direction: row;
-                align-items: center;
-            }
-            
-            .official-badge {
-                align-self: center;
-            }
-        }
 
-        @media (max-width: 480px) {
-            .header h1 {
-                font-size: clamp(1rem, 5vw, 1.25rem);
-            }
-            
             .badge-bar {
                 flex-direction: column;
                 align-items: flex-start;
             }
-            
-            .official-badge {
-                align-self: flex-start;
-            }
-            
-            .evidence-title,
-            .section-title,
-            .significance-title,
-            .ar-title {
-                font-size: clamp(0.9rem, 4.5vw, 1.1rem);
-            }
-            
-            .section-content,
-            .significance-text {
-                text-align: left;
-            }
-            
-            .back-button {
-                width: 100%;
-                max-width: 300px;
+
+            .evidence-title {
+                flex-direction: column;
+                align-items: flex-start;
             }
         }
 
-        @media (min-width: 1440px) {
-            .container {
-                max-width: 1400px;
+        @media (min-width: 768px) and (max-width: 1024px) {
+            model-viewer {
+                height: 400px;
             }
         }
 
         @media print {
             .animated-background,
-            .back-button-container {
+            .back-button-container,
+            model-viewer {
                 display: none;
             }
-            
+
             body {
                 background: white;
             }
-            
+
             .evidence-card {
                 box-shadow: none;
-                border: 2px solid #000;
             }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            *,
-            *::before,
-            *::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
-        }
-
-        @media (prefers-color-scheme: dark) {
-		
         }
     </style>
 </head>
@@ -626,6 +581,10 @@
                 </model-viewer>
                 
                 <div id="debugInfo"></div>
+                
+                <p style="text-align: center; color: #666; font-size: clamp(12px, 2.5vw, 13px); margin-top: 10px; font-style: italic;">
+                    💡 Σύρετε για να περιστρέψετε • Zoom με δύο δάχτυλα
+                </p>
             </div>
 
             <section class="details">
@@ -669,7 +628,7 @@
                     
                     <div style="margin-bottom: 25px;">
                         <p class="section-content" style="margin-bottom: 15px;">
-                            <strong style="color: #0f3460; font-size: 16px;">Ποτήρι Α (Δημητρίου)</strong>
+                            <strong style="color: #0f3460; font-size: clamp(15px, 3vw, 16px);">Ποτήρι Α (Δημητρίου)</strong>
                         </p>
                         <p class="section-content" style="margin-bottom: 10px;">
                             <strong>Πλήρη & Καθαρά Αποτυπώματα:</strong>
@@ -687,7 +646,7 @@
 
                     <div style="margin-top: 35px;">
                         <p class="section-content" style="margin-bottom: 15px;">
-                            <strong style="color: #0f3460; font-size: 16px;">Ποτήρι Β (Δεύτερου ατόμου)</strong>
+                            <strong style="color: #0f3460; font-size: clamp(15px, 3vw, 16px);">Ποτήρι Β (Δεύτερου ατόμου)</strong>
                         </p>
                         <p class="section-content" style="margin-bottom: 10px;">
                             <strong>Μερικά Αποτυπώματα (70% σβησμένα με πανί):</strong>
@@ -737,7 +696,7 @@
                     <ul class="section-content">
                         <li>Τα δύο ποτήρια ήταν από το ΙΔΙΟ «ποτό» την ίδια στιγμή ή το Ποτήρι Β είναι από προηγούμενη μέρα;</li>
                         <li>Αν το Ποτήρι Β είναι παλιό, γιατί δεν το μάζεψαν; Λησμονιά ή σκηνοθεσία;</li>
-                        <li>Διατί το Ποτήρι Β βρίσκεται στο ΡΑΦΙ και όχι στο γραφείο;</li>
+                        <li>Γιατί το Ποτήρι Β βρίσκεται στο ΡΑΦΙ και όχι στο γραφείο;</li>
                     </ul>
                 </div>
             </section>
@@ -746,7 +705,7 @@
 
     <footer class="back-button-container">
         <button onclick="window.goBackToCaseFile()" class="back-button">
-            ← ΕΠΙΣΤΡΟΦΗ ΣΤΟΝ ΦΑΚΕΛΟ
+            ← ΕΠΙΣΤΡΟΦΗ ΣΤΟ ΦΑΚΕΛΟ
         </button>
     </footer>
 
@@ -767,152 +726,177 @@
             const ctx = canvas.getContext('2d');
             const container = canvas.parentElement;
             const containerWidth = container.clientWidth;
-            const baseWidth = 800;
-            const baseHeight = 400;
-            const scale = Math.min(containerWidth / baseWidth, 1.5);
+            const aspectRatio = 2;
             
-            canvas.width = baseWidth;
-            canvas.height = baseHeight;
-            canvas.style.width = '100%';
-            canvas.style.height = 'auto';
+            canvas.width = Math.min(containerWidth, 800);
+            canvas.height = canvas.width / aspectRatio;
+
+            const scale = canvas.width / 800;
+
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const floorWidth = canvas.width * 1;
+            const floorX = (canvas.width - floorWidth) / 2;
             
-            const floorGradient = ctx.createLinearGradient(0, 0, 0, baseHeight);
+            const floorGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
             floorGradient.addColorStop(0, '#8b7355');
             floorGradient.addColorStop(1, '#6b5345');
             ctx.fillStyle = floorGradient;
-            ctx.fillRect(0, 0, baseWidth, baseHeight);
+            ctx.fillRect(floorX, 0, floorWidth, canvas.height);
             ctx.strokeStyle = 'rgba(101, 67, 33, 0.3)';
-            ctx.lineWidth = 2;
-            for (let i = 0; i < baseHeight; i += 40) {
+            ctx.lineWidth = 2 * scale;
+            for (let i = 0; i < canvas.height; i += 40 * scale) {
                 ctx.beginPath();
-                ctx.moveTo(0, i);
-                ctx.lineTo(baseWidth, i + Math.random() * 10);
+                ctx.moveTo(floorX, i);
+                ctx.lineTo(floorX + floorWidth, i + Math.random() * 10 * scale);
                 ctx.stroke();
             }
 
+            const centerX = canvas.width / 2;
+			
             ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
             ctx.beginPath();
-            ctx.ellipse(280, 320, 35, 15, 0, 0, Math.PI * 2);
+            ctx.ellipse(centerX - 100 * scale, 320 * scale, 35 * scale, 15 * scale, 0, 0, Math.PI * 2);
             ctx.fill();
             ctx.beginPath();
-            ctx.ellipse(520, 330, 40, 15, -0.3, 0, Math.PI * 2);
+            ctx.ellipse(centerX + 100 * scale, 330 * scale, 40 * scale, 15 * scale, -0.3, 0, Math.PI * 2);
             ctx.fill();
             
-            const glass1Gradient = ctx.createLinearGradient(240, 260, 320, 260);
+            const glass1X = centerX - 100 * scale;
+            const glass1Gradient = ctx.createLinearGradient(glass1X - 40 * scale, 260 * scale, glass1X + 40 * scale, 260 * scale);
             glass1Gradient.addColorStop(0, 'rgba(200, 220, 255, 0.3)');
             glass1Gradient.addColorStop(0.5, 'rgba(220, 235, 255, 0.5)');
             glass1Gradient.addColorStop(1, 'rgba(200, 220, 255, 0.3)');
             ctx.fillStyle = glass1Gradient;
             ctx.beginPath();
-            ctx.moveTo(245, 320);
-            ctx.lineTo(250, 260);
-            ctx.lineTo(310, 260);
-            ctx.lineTo(315, 320);
+            ctx.moveTo(glass1X - 35 * scale, 320 * scale);
+            ctx.lineTo(glass1X - 30 * scale, 260 * scale);
+            ctx.lineTo(glass1X + 30 * scale, 260 * scale);
+            ctx.lineTo(glass1X + 35 * scale, 320 * scale);
             ctx.closePath();
             ctx.fill();
+
             ctx.strokeStyle = 'rgba(180, 200, 230, 0.8)';
-            ctx.lineWidth = 3;
+            ctx.lineWidth = 3 * scale;
             ctx.beginPath();
-            ctx.ellipse(280, 260, 32, 8, 0, 0, Math.PI * 2);
+            ctx.ellipse(glass1X, 260 * scale, 32 * scale, 8 * scale, 0, 0, Math.PI * 2);
             ctx.stroke();
+			
             ctx.fillStyle = 'rgba(180, 200, 230, 0.4)';
             ctx.beginPath();
-            ctx.ellipse(280, 320, 35, 12, 0, 0, Math.PI * 2);
+            ctx.ellipse(glass1X, 320 * scale, 35 * scale, 12 * scale, 0, 0, Math.PI * 2);
             ctx.fill();
+
             ctx.fillStyle = 'rgba(200, 150, 80, 0.5)';
             ctx.beginPath();
-            ctx.moveTo(252, 305);
-            ctx.lineTo(255, 285);
-            ctx.lineTo(305, 285);
-            ctx.lineTo(308, 305);
+            ctx.moveTo(glass1X - 28 * scale, 305 * scale);
+            ctx.lineTo(glass1X - 25 * scale, 285 * scale);
+            ctx.lineTo(glass1X + 25 * scale, 285 * scale);
+            ctx.lineTo(glass1X + 28 * scale, 305 * scale);
             ctx.closePath();
             ctx.fill();
+
             ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
-            ctx.lineWidth = 2;
+            ctx.lineWidth = 2 * scale;
             ctx.beginPath();
-            ctx.moveTo(253, 270);
-            ctx.lineTo(250, 310);
+            ctx.moveTo(glass1X - 27 * scale, 270 * scale);
+            ctx.lineTo(glass1X - 30 * scale, 310 * scale);
             ctx.stroke();
+
+            const glass2X = centerX + 100 * scale;
             ctx.save();
-            ctx.translate(520, 300);
+            ctx.translate(glass2X, 300 * scale);
             ctx.rotate(-0.4);
 
-            const glass2Gradient = ctx.createLinearGradient(-40, -30, 40, -30);
+            const glass2Gradient = ctx.createLinearGradient(-40 * scale, -30 * scale, 40 * scale, -30 * scale);
             glass2Gradient.addColorStop(0, 'rgba(200, 220, 255, 0.3)');
             glass2Gradient.addColorStop(0.5, 'rgba(220, 235, 255, 0.5)');
             glass2Gradient.addColorStop(1, 'rgba(200, 220, 255, 0.3)');
             ctx.fillStyle = glass2Gradient;
             ctx.beginPath();
-            ctx.moveTo(-35, 0);
-            ctx.lineTo(-30, -60);
-            ctx.lineTo(30, -60);
-            ctx.lineTo(35, 0);
+            ctx.moveTo(-35 * scale, 0);
+            ctx.lineTo(-30 * scale, -60 * scale);
+            ctx.lineTo(30 * scale, -60 * scale);
+            ctx.lineTo(35 * scale, 0);
             ctx.closePath();
             ctx.fill();
+
             ctx.strokeStyle = 'rgba(180, 200, 230, 0.8)';
-            ctx.lineWidth = 3;
+            ctx.lineWidth = 3 * scale;
             ctx.beginPath();
-            ctx.ellipse(0, -60, 32, 8, 0, 0, Math.PI * 2);
+            ctx.ellipse(0, -60 * scale, 32 * scale, 8 * scale, 0, 0, Math.PI * 2);
             ctx.stroke();
+
             ctx.fillStyle = 'rgba(180, 200, 230, 0.4)';
             ctx.beginPath();
-            ctx.ellipse(0, 0, 35, 12, 0, 0, Math.PI * 2);
+            ctx.ellipse(0, 0, 35 * scale, 12 * scale, 0, 0, Math.PI * 2);
             ctx.fill();
+
             ctx.fillStyle = 'rgba(100, 80, 60, 0.2)';
             for (let i = 0; i < 4; i++) {
                 ctx.beginPath();
-                ctx.ellipse(-10 + i * 8, -35 + i * 8, 8, 12, 0.5, 0, Math.PI * 2);
+                ctx.ellipse((-10 + i * 8) * scale, (-35 + i * 8) * scale, 8 * scale, 12 * scale, 0.5, 0, Math.PI * 2);
                 ctx.fill();
             }
             
             ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
-            ctx.lineWidth = 2;
+            ctx.lineWidth = 2 * scale;
             ctx.beginPath();
-            ctx.moveTo(-25, -45);
-            ctx.lineTo(-22, -10);
+            ctx.moveTo(-25 * scale, -45 * scale);
+            ctx.lineTo(-22 * scale, -10 * scale);
             ctx.stroke();
+            
             ctx.restore();
+
             ctx.fillStyle = 'rgba(220, 53, 69, 0.8)';
-            ctx.font = 'bold 16px monospace';
+            ctx.font = `bold ${16 * scale}px monospace`;
             ctx.textAlign = 'center';
-            ctx.fillText('A', 280, 345);
-            ctx.fillText('B', 500, 345);
+            ctx.fillText('A', glass1X, 345 * scale);
+            ctx.fillText('B', glass2X - 20 * scale, 345 * scale);
+
             ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-            ctx.fillRect(0, 0, baseWidth, 40);
+            ctx.fillRect(0, 0, canvas.width, 40 * scale);
             
             ctx.fillStyle = '#ff0000';
-            ctx.font = 'bold 14px monospace';
+            ctx.font = `bold ${Math.max(10, 14 * scale)}px monospace`;
             ctx.textAlign = 'left';
-            ctx.fillText('● REC', 10, 25);
+            ctx.fillText('● REC', 10 * scale, 25 * scale);
             
             ctx.fillStyle = '#fff';
-            ctx.fillText('22/09/2025  22:20:15  |  ΣΚΗΝΗ ΕΓΚΛΗΜΑΤΟΣ - ΓΡΑΦΕΙΟ ΘΥΜΑΤΟΣ', 80, 25);
+			
+            if (canvas.width < 600) {
+                ctx.font = `bold ${Math.max(8, 11 * scale)}px monospace`;
+                ctx.fillText('22/09/25  22:20  |  ΣΚΗΝΗ ΕΓΚΛ. - ΓΡΑΦΕΙΟ', 80 * scale, 25 * scale);
+            } else {
+                ctx.font = `bold ${Math.max(10, 14 * scale)}px monospace`;
+                ctx.fillText('22/09/2025  22:20:15  |  ΣΚΗΝΗ ΕΓΚΛΗΜΑΤΟΣ - ΓΡΑΦΕΙΟ ΘΥΜΑΤΟΣ', 80 * scale, 25 * scale);
+            }
             
             ctx.textAlign = 'right';
-            ctx.fillText('ΤΕΚ #002', 790, 25);
+            ctx.fillText('ΤΕΚ #002', (canvas.width - 10 * scale), 25 * scale);
         }
 
-        let resizeTimeout;
-        window.addEventListener('resize', function() {
-            clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(drawCrimeScene, 250);
-        });
+        function handleResize() {
+            drawCrimeScene();
+        }
+
+        window.addEventListener('resize', handleResize);
+        window.addEventListener('orientationchange', handleResize);
 
         window.onload = function() {
             drawCrimeScene();
-            
+
             const modelViewer = document.querySelector('model-viewer');
             const debugInfo = document.getElementById('debugInfo');
             
             if (modelViewer) {
-                debugInfo.style.display = 'block';
-                debugInfo.innerHTML = '🔍 Προσπάθεια φόρτωσης: whiskey_glass.glb<br>';
-                
                 modelViewer.addEventListener('progress', (event) => {
                     const percent = Math.round(event.detail.totalProgress * 100);
+                    debugInfo.style.display = 'block';
                     debugInfo.innerHTML = `⏳ Φόρτωση: ${percent}%<br>`;
                 });
-                
+
                 modelViewer.addEventListener('load', () => {
                     debugInfo.innerHTML = '✅ 3D μοντέλο φορτώθηκε επιτυχώς!<br>';
                     debugInfo.style.background = '#d4edda';
@@ -923,25 +907,15 @@
                 });
                 
                 modelViewer.addEventListener('error', (event) => {
+                    debugInfo.style.display = 'block';
                     debugInfo.innerHTML = '❌ ΣΦΑΛΜΑ: Το αρχείο δεν μπορεί να φορτώσει<br>';
                     debugInfo.innerHTML += 'Ελέγξτε:<br>';
                     debugInfo.innerHTML += '1. Το αρχείο υπάρχει στον ίδιο φάκελο<br>';
-                    debugInfo.innerHTML += '2. Το όνομα είναι: whiskey_glass.glb<br>';
+                    debugInfo.innerHTML += '2. Το όνομα είναι σωστό (με κεφαλαία/πεζά)<br>';
                     debugInfo.innerHTML += '3. Το αρχείο είναι έγκυρο .glb<br>';
                     debugInfo.style.background = '#f8d7da';
                     debugInfo.style.borderColor = '#dc3545';
                 });
-                
-                setTimeout(() => {
-                    if (debugInfo.innerHTML.includes('Φόρτωση')) {
-                        debugInfo.innerHTML = '⚠️ Το μοντέλο δεν φορτώνει...<br>';
-                        debugInfo.innerHTML += 'Πιθανές αιτίες:<br>';
-                        debugInfo.innerHTML += '• Το αρχείο δεν βρέθηκε<br>';
-                        debugInfo.innerHTML += '• Λάθος όνομα: whiskey_glass.glb<br>';
-                        debugInfo.style.background = '#fff3cd';
-                        debugInfo.style.borderColor = '#ffc107';
-                    }
-                }, 10000);
             }
         };
     </script>
