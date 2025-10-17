@@ -203,23 +203,82 @@
             height: clamp(20px, 4vw, 24px);
         }
 
+        .view-3d-button {
+            background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
+            color: white;
+            border: none;
+            padding: clamp(15px, 3vw, 18px) clamp(30px, 6vw, 40px);
+            border-radius: 10px;
+            font-size: clamp(15px, 3.5vw, 17px);
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255,107,0,0.4);
+            transition: all 0.3s ease;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            display: block;
+        }
+
+        .view-3d-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255,107,0,0.5);
+        }
+
+        .view-3d-button:active {
+            transform: translateY(0);
+        }
+
+        .close-3d-button {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: white;
+            border: none;
+            padding: clamp(10px, 2vw, 12px) clamp(20px, 4vw, 30px);
+            border-radius: 8px;
+            font-size: clamp(13px, 2.8vw, 15px);
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 3px 10px rgba(220,53,69,0.3);
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            display: block;
+            width: 100%;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .close-3d-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(220,53,69,0.4);
+        }
+
+        .model-viewer-container {
+            display: none;
+        }
+
+        .model-viewer-container.active {
+            display: block;
+        }
+
         model-viewer {
             width: 100%;
             height: clamp(300px, 50vh, 450px);
             background-color: #f5f5f5;
             border-radius: 8px;
             border: 2px solid #ddd;
+            margin-bottom: 15px;
         }
 
         model-viewer::part(default-ar-button) {
-            background-color: #ff6b00;
+            background-color: #0f3460;
             color: white;
             font-weight: bold;
             padding: clamp(10px, 2vw, 12px) clamp(20px, 4vw, 24px);
             border-radius: 8px;
             font-size: clamp(14px, 3vw, 16px);
             border: none;
-            box-shadow: 0 4px 12px rgba(255,107,0,0.3);
+            box-shadow: 0 4px 12px rgba(15,52,96,0.3);
         }
 
         .details {
@@ -591,67 +650,77 @@
                     ΠΡΟΒΟΛΗ ΣΕ 3D
                 </h3>
                 
-                <model-viewer
-                    src="latex_glove.glb"
-                    alt="Medical Latex Glove 3D Model - Evidence"
-                    ar
-                    ar-modes="webxr scene-viewer quick-look"
-                    camera-controls
-                    touch-action="pan-y"
-                    auto-rotate
-                    auto-rotate-delay="1000"
-                    rotation-per-second="30deg"
-                    shadow-intensity="1"
-                    exposure="0.8"
-                    camera-orbit="0deg 75deg 2.5m"
-                    min-camera-orbit="auto 0deg auto"
-                    max-camera-orbit="auto 180deg auto"
-                    loading="eager"
-                    reveal="auto"
-                    ar-scale="fixed">
-                    
-                    <div slot="poster" style="
-                        width: 100%;
-                        height: 100%;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        background: #f5f5f5;
-                        flex-direction: column;
-                        gap: 10px;
-                    ">
-                        <div style="
-                            border: 4px solid #f3f3f3;
-                            border-top: 4px solid #ff6b00;
-                            border-radius: 50%;
-                            width: 40px;
-                            height: 40px;
-                            animation: spin 1s linear infinite;
-                        "></div>
-                        <p style="color: #666; font-size: 14px;">Φόρτωση 3D μοντέλου...</p>
-                    </div>
-                    
-                    <div slot="error" style="
-                        width: 100%;
-                        height: 100%;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        background: #fff3cd;
-                        flex-direction: column;
-                        gap: 15px;
-                        padding: 20px;
-                        text-align: center;
-                    ">
-                        <p style="color: #856404; font-size: 16px; font-weight: bold;">⚠️ Σφάλμα Φόρτωσης</p>
-                        <p style="color: #856404; font-size: 13px;">
-                            Το 3D μοντέλο δεν μπορεί να φορτώσει.<br>
-                            Ελέγξτε το αρχείο: latex_glove.glb
-                        </p>
-                    </div>
-                </model-viewer>
+                <button class="view-3d-button" id="view3dBtn" onclick="load3DModel()">
+                    🎯 Κλικ για Προβολή σε 3D
+                </button>
                 
-                <div id="debugInfo"></div>
+                <div class="model-viewer-container" id="modelContainer">
+                    <model-viewer
+                        id="modelViewer"
+                        src="latex_glove.glb"
+                        alt="Medical Latex Glove 3D Model - Evidence"
+                        ar
+                        ar-modes="webxr scene-viewer quick-look"
+                        camera-controls
+                        touch-action="pan-y"
+                        auto-rotate
+                        auto-rotate-delay="1000"
+                        rotation-per-second="30deg"
+                        shadow-intensity="1"
+                        exposure="0.8"
+                        camera-orbit="0deg 75deg 2.5m"
+                        min-camera-orbit="auto 0deg auto"
+                        max-camera-orbit="auto 180deg auto"
+                        loading="lazy"
+                        reveal="interaction">
+                        
+                        <div slot="poster" style="
+                            width: 100%;
+                            height: 100%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            background: #f5f5f5;
+                            flex-direction: column;
+                            gap: 10px;
+                        ">
+                            <div style="
+                                border: 4px solid #f3f3f3;
+                                border-top: 4px solid #ff6b00;
+                                border-radius: 50%;
+                                width: 40px;
+                                height: 40px;
+                                animation: spin 1s linear infinite;
+                            "></div>
+                            <p style="color: #666; font-size: 14px;">Φόρτωση 3D μοντέλου...</p>
+                        </div>
+                        
+                        <div slot="error" style="
+                            width: 100%;
+                            height: 100%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            background: #fff3cd;
+                            flex-direction: column;
+                            gap: 15px;
+                            padding: 20px;
+                            text-align: center;
+                        ">
+                            <p style="color: #856404; font-size: 16px; font-weight: bold;">⚠️ Σφάλμα Φόρτωσης</p>
+                            <p style="color: #856404; font-size: 13px;">
+                                Το 3D μοντέλο δεν μπορεί να φορτώσει.<br>
+                                Ελέγξτε το αρχείο: latex_glove.glb
+                            </p>
+                        </div>
+                    </model-viewer>
+                    
+                    <button class="close-3d-button" onclick="close3DModel()">
+                        ✖️ Κλείσιμο 3D Προβολής
+                    </button>
+                    
+                    <div id="debugInfo"></div>
+                </div>
                 
                 <p style="text-align: center; color: #666; font-size: clamp(12px, 2.5vw, 13px); margin-top: 10px; font-style: italic;">
                     💡 Σύρετε για να περιστρέψετε • Zoom με δύο δάχτυλα
@@ -690,7 +759,7 @@
                     </div>
 
                     <div style="margin-top: 25px;">
-                        <p class="section-content" style="margin-bottom: 15px;"><strong style="color: #0f3460; font-size: clamp(15px, 3vw, 16px);">🔍 Τοποθεσία και Κατανομή Ιχνών</strong></p>
+                        <p class="section-content" style="margin-bottom: 15px;"><strong style="color: #0f3460; font-size: clamp(15px, 3vw, 16px);">📍 Τοποθεσία και Κατανομή Ιχνών</strong></p>
                         <p class="section-content" style="margin-bottom: 10px;">
                             <strong>Εσωτερικό Πόμολο:</strong> 8 διακριτά σημεία επαφής - συμβατό με αριστερό χέρι που περιστρέφει το πόμολο
                         </p>
@@ -813,6 +882,58 @@
     </div>
 
     <script>
+        let model3DLoaded = false;
+
+        function load3DModel() {
+            const container = document.getElementById('modelContainer');
+            const button = document.getElementById('view3dBtn');
+            const modelViewer = document.getElementById('modelViewer');
+            const debugInfo = document.getElementById('debugInfo');
+            
+            if (!model3DLoaded) {
+                button.style.display = 'none';
+                container.classList.add('active');
+                model3DLoaded = true;
+                
+                if (debugInfo) {
+                    debugInfo.style.display = 'block';
+                    debugInfo.innerHTML = '🔄 Προσπάθεια φόρτωσης: latex_glove.glb<br>';
+                    
+                    modelViewer.addEventListener('progress', (event) => {
+                        const percent = Math.round(event.detail.totalProgress * 100);
+                        debugInfo.innerHTML = `⏳ Φόρτωση: ${percent}%<br>`;
+                    });
+
+                    modelViewer.addEventListener('load', () => {
+                        debugInfo.innerHTML = '✅ 3D μοντέλο φορτώθηκε επιτυχώς!<br>';
+                        debugInfo.style.background = '#d4edda';
+                        debugInfo.style.borderColor = '#28a745';
+                        setTimeout(() => {
+                            debugInfo.style.display = 'none';
+                        }, 3000);
+                    });
+
+                    modelViewer.addEventListener('error', (event) => {
+                        debugInfo.innerHTML = '❌ ΣΦΑΛΜΑ: Το αρχείο δεν μπορεί να φορτώσει<br>';
+                        debugInfo.innerHTML += 'Ελέγξτε:<br>';
+                        debugInfo.innerHTML += '1. Το αρχείο υπάρχει στον ίδιο φάκελο<br>';
+                        debugInfo.innerHTML += '2. Το όνομα είναι σωστό (με κεφαλαία/πεζά)<br>';
+                        debugInfo.innerHTML += '3. Το αρχείο είναι έγκυρο .glb<br>';
+                        debugInfo.style.background = '#f8d7da';
+                        debugInfo.style.borderColor = '#dc3545';
+                    });
+                }
+            }
+        }
+
+        function close3DModel() {
+            const container = document.getElementById('modelContainer');
+            const button = document.getElementById('view3dBtn');
+            
+            container.classList.remove('active');
+            button.style.display = 'block';
+        }
+
         window.goBackToCaseFile = function() {
             const teamCode = sessionStorage.getItem('teamCode');
             console.log('🔙 Button clicked! Team:', teamCode);
@@ -972,51 +1093,6 @@
 
         window.onload = function() {
             drawCrimeScene();
-
-			const scale = 1;
-            const modelViewer = document.querySelector('model-viewer');
-            const debugInfo = document.getElementById('debugInfo');
-            
-            if (modelViewer && debugInfo) {
-                debugInfo.style.display = 'block';
-                debugInfo.innerHTML = '🔍 Προσπάθεια φόρτωσης: latex_glove.glb<br>';
-                
-                modelViewer.addEventListener('progress', (event) => {
-                    const percent = Math.round(event.detail.totalProgress * 100);
-                    debugInfo.innerHTML = `ⳠΦόρτωση: ${percent}%<br>`;
-                });
-
-                modelViewer.addEventListener('load', () => {
-                    debugInfo.innerHTML = '✅ 3D μοντέλο φορτώθηκε επιτυχώς!<br>';
-                    debugInfo.style.background = '#d4edda';
-                    debugInfo.style.borderColor = '#28a745';
-                    setTimeout(() => {
-                        debugInfo.style.display = 'none';
-                    }, 3000);
-                });
-
-                modelViewer.addEventListener('error', (event) => {
-                    debugInfo.innerHTML = '❌ ΣΦΑΛΜΑ: Το αρχείο δεν μπορεί να φορτώσει<br>';
-                    debugInfo.innerHTML += 'Ελέγξτε:<br>';
-                    debugInfo.innerHTML += '1. Το αρχείο υπάρχει στον ίδιο φάκελο<br>';
-                    debugInfo.innerHTML += '2. Το όνομα είναι σωστό (με κεφαλαία/πεζά)<br>';
-                    debugInfo.innerHTML += '3. Το αρχείο είναι έγκυρο .glb<br>';
-                    debugInfo.style.background = '#f8d7da';
-                    debugInfo.style.borderColor = '#dc3545';
-                });
-
-                setTimeout(() => {
-                    if (debugInfo.innerHTML.includes('Φόρτωση')) {
-                        debugInfo.innerHTML = '⚠️ Το μοντέλο δεν φορτώνει...<br>';
-                        debugInfo.innerHTML += 'Πιθανές αιτίες:<br>';
-                        debugInfo.innerHTML += '• Το αρχείο δεν βρέθηκε<br>';
-                        debugInfo.innerHTML += '• Λάθος όνομα αρχείου<br>';
-                        debugInfo.innerHTML += '• Το αρχείο δεν είναι στον σωστό φάκελο<br>';
-                        debugInfo.style.background = '#fff3cd';
-                        debugInfo.style.borderColor = '#ffc107';
-                    }
-                }, 10000);
-            }
         };
     </script>
 </body>

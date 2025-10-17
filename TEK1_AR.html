@@ -198,6 +198,51 @@
             flex-wrap: wrap;
         }
 
+        .view-3d-button {
+            background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
+            color: white;
+            padding: clamp(15px, 3vw, 18px) clamp(30px, 6vw, 40px);
+            border: none;
+            border-radius: 12px;
+            font-size: clamp(15px, 3.5vw, 18px);
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(255,107,0,0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            min-height: 60px;
+        }
+
+        .view-3d-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255,107,0,0.4);
+        }
+
+        .view-3d-button:active {
+            transform: translateY(0);
+        }
+
+        .view-3d-button svg {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+
+        .model-viewer-container {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .model-viewer-container.active {
+            display: block;
+        }
+
         model-viewer {
             width: 100%;
             height: clamp(300px, 50vw, 450px);
@@ -207,14 +252,40 @@
         }
 
         model-viewer::part(default-ar-button) {
-            background-color: #ff6b00;
+            background-color: #0f3460;
             color: white;
             font-weight: bold;
             padding: 12px 24px;
             border-radius: 8px;
             font-size: clamp(14px, 3vw, 16px);
             border: none;
-            box-shadow: 0 4px 12px rgba(255,107,0,0.3);
+            box-shadow: 0 4px 12px rgba(15, 52, 96, 0.3);
+        }
+
+        .close-3d-button {
+            background: #dc3545;
+            color: white;
+            padding: clamp(10px, 2vw, 12px) clamp(20px, 4vw, 30px);
+            border: none;
+            border-radius: 8px;
+            font-size: clamp(13px, 2.8vw, 15px);
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+            transition: all 0.3s ease;
+            display: block;
+            margin: 15px auto 0;
+            min-height: 44px;
+        }
+
+        .close-3d-button:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(220, 53, 69, 0.4);
+        }
+
+        .close-3d-button:active {
+            transform: translateY(0);
         }
 
         .details {
@@ -567,7 +638,7 @@
         @media print {
             .animated-background,
             .back-button-container,
-            model-viewer {
+            .ar-container {
                 display: none;
             }
 
@@ -615,73 +686,88 @@
                         <path d="M2 16.1A5 5 0 0 1 5.9 20M2 12.05A9 9 0 0 1 9.95 20M2 8V6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-6"></path>
                         <line x1="2" y1="20" x2="2.01" y2="20"></line>
                     </svg>
-                    ΠΡΟΒΟΛΗ ΣΕ 3D
+                    ΕΠΑΥΞΗΜΕΝΗ ΠΡΑΓΜΑΤΙΚΟΤΗΤΑ
                 </h3>
                 
-                <model-viewer
-                    src="whiskey_bottle.glb"
-                    alt="Jack Daniels Whiskey Bottle 3D Model - Evidence"
-                    ar
-                    ar-modes="webxr scene-viewer quick-look"
-                    camera-controls
-                    touch-action="pan-y"
-                    auto-rotate
-                    auto-rotate-delay="1000"
-                    rotation-per-second="30deg"
-                    shadow-intensity="1"
-                    exposure="0.8"
-                    camera-orbit="0deg 75deg 2.5m"
-                    min-camera-orbit="auto 0deg auto"
-                    max-camera-orbit="auto 180deg auto"
-                    loading="eager"
-                    reveal="auto"
-                    ar-scale="fixed">
+                <button class="view-3d-button" id="view3DBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                        <path d="M2 17l10 5 10-5"></path>
+                        <path d="M2 12l10 5 10-5"></path>
+                    </svg>
+                    <span>ΠΑΤΗΣΤΕ ΓΙΑ ΠΡΟΒΟΛΗ ΣΕ 3D</span>
+                </button>
+
+                <div class="model-viewer-container" id="modelViewerContainer">
+                    <model-viewer
+                        id="bottleModel"
+                        src="whiskey_bottle.glb"
+                        alt="Jack Daniels Whiskey Bottle 3D Model - Evidence"
+                        ar
+                        ar-modes="webxr scene-viewer quick-look"
+                        camera-controls
+                        touch-action="pan-y"
+                        auto-rotate
+                        auto-rotate-delay="1000"
+                        rotation-per-second="30deg"
+                        shadow-intensity="1"
+                        exposure="0.8"
+                        camera-orbit="0deg 75deg 2.5m"
+                        min-camera-orbit="auto 0deg auto"
+                        max-camera-orbit="auto 180deg auto"
+                        loading="lazy"
+                        reveal="interaction">
+                        
+                        <div slot="poster" style="
+                            width: 100%;
+                            height: 100%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            background: #f5f5f5;
+                            flex-direction: column;
+                            gap: 10px;
+                        ">
+                            <div style="
+                                border: 4px solid #f3f3f3;
+                                border-top: 4px solid #ff6b00;
+                                border-radius: 50%;
+                                width: 40px;
+                                height: 40px;
+                                animation: spin 1s linear infinite;
+                            "></div>
+                            <p style="color: #666; font-size: 14px;">Φόρτωση 3D μοντέλου...</p>
+                        </div>
+                        
+                        <div slot="error" style="
+                            width: 100%;
+                            height: 100%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            background: #fff3cd;
+                            flex-direction: column;
+                            gap: 15px;
+                            padding: 20px;
+                        ">
+                            <p style="color: #856404; font-size: 16px; font-weight: bold;">⚠️ Σφάλμα Φόρτωσης</p>
+                            <p style="color: #856404; font-size: 13px; text-align: center;">
+                                Το 3D μοντέλο δεν μπορεί να φορτώσει.<br>
+                                Ελέγξτε το αρχείο: whiskey_bottle.glb
+                            </p>
+                        </div>
+                    </model-viewer>
                     
-                    <div slot="poster" style="
-                        width: 100%;
-                        height: 100%;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        background: #f5f5f5;
-                        flex-direction: column;
-                        gap: 10px;
-                    ">
-                        <div style="
-                            border: 4px solid #f3f3f3;
-                            border-top: 4px solid #ff6b00;
-                            border-radius: 50%;
-                            width: 40px;
-                            height: 40px;
-                            animation: spin 1s linear infinite;
-                        "></div>
-                        <p style="color: #666; font-size: 14px;">Φόρτωση 3D μοντέλου...</p>
-                    </div>
+                    <div id="debugInfo"></div>
                     
-                    <div slot="error" style="
-                        width: 100%;
-                        height: 100%;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        background: #fff3cd;
-                        flex-direction: column;
-                        gap: 15px;
-                        padding: 20px;
-                    ">
-                        <p style="color: #856404; font-size: 16px; font-weight: bold;">⚠️ Σφάλμα Φόρτωσης</p>
-                        <p style="color: #856404; font-size: 13px; text-align: center;">
-                            Το 3D μοντέλο δεν μπορεί να φορτώσει.<br>
-                            Ελέγξτε το αρχείο: whiskey_bottle.glb
-                        </p>
-                    </div>
-                </model-viewer>
-                
-                <div id="debugInfo"></div>
-                
-                <p style="text-align: center; color: #666; font-size: clamp(12px, 2.5vw, 13px); margin-top: 10px; font-style: italic;">
-                    💡 Σύρετε για να περιστρέψετε • Zoom με δύο δάχτυλα
-                </p>
+                    <p style="text-align: center; color: #666; font-size: clamp(12px, 2.5vw, 13px); margin-top: 10px; font-style: italic;">
+                        💡 Σύρετε για να περιστρέψετε • Zoom με δύο δάχτυλα
+                    </p>
+
+                    <button class="close-3d-button" id="close3DBtn">
+                        ✕ Κλείσιμο 3D Προβολής
+                    </button>
+                </div>
             </div>
 
             <div class="details">
@@ -800,6 +886,58 @@
             }
         };
 
+        // 3D Viewer toggle functionality
+        const view3DBtn = document.getElementById('view3DBtn');
+        const close3DBtn = document.getElementById('close3DBtn');
+        const modelViewerContainer = document.getElementById('modelViewerContainer');
+        const modelViewer = document.getElementById('bottleModel');
+        const debugInfo = document.getElementById('debugInfo');
+
+        view3DBtn.addEventListener('click', function() {
+            modelViewerContainer.classList.add('active');
+            view3DBtn.style.display = 'none';
+            
+            // Scroll to the 3D viewer
+            modelViewerContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+
+        close3DBtn.addEventListener('click', function() {
+            modelViewerContainer.classList.remove('active');
+            view3DBtn.style.display = 'flex';
+            
+            // Scroll back to the button
+            view3DBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+
+        // Model viewer event handlers
+        if (modelViewer) {
+            modelViewer.addEventListener('progress', (event) => {
+                const percent = Math.round(event.detail.totalProgress * 100);
+                debugInfo.style.display = 'block';
+                debugInfo.innerHTML = `⏳ Φόρτωση: ${percent}%<br>`;
+            });
+
+            modelViewer.addEventListener('load', () => {
+                debugInfo.innerHTML = '✅ 3D μοντέλο φορτώθηκε επιτυχώς!<br>';
+                debugInfo.style.background = '#d4edda';
+                debugInfo.style.borderColor = '#28a745';
+                setTimeout(() => {
+                    debugInfo.style.display = 'none';
+                }, 3000);
+            });
+            
+            modelViewer.addEventListener('error', (event) => {
+                debugInfo.style.display = 'block';
+                debugInfo.innerHTML = '❌ ΣΦΑΛΜΑ: Το αρχείο δεν μπορεί να φορτώσει<br>';
+                debugInfo.innerHTML += 'Ελέγξτε:<br>';
+                debugInfo.innerHTML += '1. Το αρχείο υπάρχει στον ίδιο φάκελο<br>';
+                debugInfo.innerHTML += '2. Το όνομα είναι σωστό (με κεφαλαία/πεζά)<br>';
+                debugInfo.innerHTML += '3. Το αρχείο είναι έγκυρο .glb<br>';
+                debugInfo.style.background = '#f8d7da';
+                debugInfo.style.borderColor = '#dc3545';
+            });
+        }
+
         function drawCrimeScene() {
             const canvas = document.getElementById('crimeSceneCanvas');
             const ctx = canvas.getContext('2d');
@@ -884,37 +1022,6 @@
 
         window.onload = function() {
             drawCrimeScene();
-
-            const modelViewer = document.querySelector('model-viewer');
-            const debugInfo = document.getElementById('debugInfo');
-            
-            if (modelViewer) {
-                modelViewer.addEventListener('progress', (event) => {
-                    const percent = Math.round(event.detail.totalProgress * 100);
-                    debugInfo.style.display = 'block';
-                    debugInfo.innerHTML = `⏳ Φόρτωση: ${percent}%<br>`;
-                });
-
-                modelViewer.addEventListener('load', () => {
-                    debugInfo.innerHTML = '✅ 3D μοντέλο φορτώθηκε επιτυχώς!<br>';
-                    debugInfo.style.background = '#d4edda';
-                    debugInfo.style.borderColor = '#28a745';
-                    setTimeout(() => {
-                        debugInfo.style.display = 'none';
-                    }, 3000);
-                });
-                
-                modelViewer.addEventListener('error', (event) => {
-                    debugInfo.style.display = 'block';
-                    debugInfo.innerHTML = '❌ ΣΦΑΛΜΑ: Το αρχείο δεν μπορεί να φορτώσει<br>';
-                    debugInfo.innerHTML += 'Ελέγξτε:<br>';
-                    debugInfo.innerHTML += '1. Το αρχείο υπάρχει στον ίδιο φάκελο<br>';
-                    debugInfo.innerHTML += '2. Το όνομα είναι σωστό (με κεφαλαία/πεζά)<br>';
-                    debugInfo.innerHTML += '3. Το αρχείο είναι έγκυρο .glb<br>';
-                    debugInfo.style.background = '#f8d7da';
-                    debugInfo.style.borderColor = '#dc3545';
-                });
-            }
         };
     </script>
 </body>

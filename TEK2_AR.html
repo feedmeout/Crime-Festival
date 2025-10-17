@@ -237,6 +237,58 @@
             flex-wrap: wrap;
         }
 
+        .model-controls {
+            display: flex;
+            gap: var(--space-sm);
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: var(--space-md);
+        }
+
+        .view-3d-button, .close-3d-button {
+            background: linear-gradient(135deg, var(--primary-orange) 0%, var(--primary-orange-light) 100%);
+            color: white;
+            padding: clamp(12px, 2.5vw, 15px) clamp(24px, 5vw, 30px);
+            border: none;
+            border-radius: 10px;
+            font-size: clamp(14px, 3vw, 16px);
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(255,107,0,0.3);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 44px;
+        }
+
+        .close-3d-button {
+            background: linear-gradient(135deg, var(--danger-red) 0%, #c82333 100%);
+            box-shadow: 0 4px 12px rgba(220,53,69,0.3);
+            display: none;
+        }
+
+        .view-3d-button:hover, .close-3d-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(255,107,0,0.4);
+        }
+
+        .close-3d-button:hover {
+            box-shadow: 0 6px 16px rgba(220,53,69,0.4);
+        }
+
+        .view-3d-button:active, .close-3d-button:active {
+            transform: translateY(0);
+        }
+
+        .model-viewer-wrapper {
+            display: none;
+        }
+
+        .model-viewer-wrapper.active {
+            display: block;
+        }
+
         model-viewer {
             width: 100%;
             height: clamp(300px, 50vh, 450px);
@@ -244,6 +296,16 @@
             border-radius: 8px;
             border: 2px solid #ddd;
             display: block;
+        }
+
+        model-viewer::part(default-ar-button) {
+            background-color: var(--medium-blue);
+            border: 2px solid var(--medium-blue);
+        }
+
+        model-viewer::part(default-ar-button):hover {
+            background-color: var(--dark-blue);
+            border-color: var(--dark-blue);
         }
 
         .details {
@@ -521,70 +583,90 @@
                     ΠΡΟΒΟΛΗ ΣΕ 3D
                 </h3>
                 
-                <model-viewer
-                    src="whiskey_glass.glb"
-                    alt="Crystal Glasses 3D Model - Evidence"
-                    ar
-                    ar-modes="webxr scene-viewer quick-look"
-                    camera-controls
-                    touch-action="pan-y"
-                    auto-rotate
-                    auto-rotate-delay="1000"
-                    rotation-per-second="30deg"
-                    shadow-intensity="1"
-                    exposure="0.8"
-                    camera-orbit="0deg 75deg 2.5m"
-                    min-camera-orbit="auto 0deg auto"
-                    max-camera-orbit="auto 180deg auto"
-                    loading="eager"
-                    reveal="auto"
-                    ar-scale="fixed">
+                <div class="model-controls">
+                    <button id="view3DBtn" class="view-3d-button">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                            <polyline points="2 17 12 22 22 17"></polyline>
+                            <polyline points="2 12 12 17 22 12"></polyline>
+                        </svg>
+                        Κλικ για Προβολή σε 3D
+                    </button>
+                    <button id="close3DBtn" class="close-3d-button">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                        Κλείσιμο 3D Προβολής
+                    </button>
+                </div>
+
+                <div id="modelViewerWrapper" class="model-viewer-wrapper">
+                    <model-viewer
+                        id="glassModel"
+                        src="whiskey_glass.glb"
+                        alt="Crystal Glasses 3D Model - Evidence"
+                        ar
+                        ar-modes="webxr scene-viewer quick-look"
+                        camera-controls
+                        touch-action="pan-y"
+                        auto-rotate
+                        auto-rotate-delay="1000"
+                        rotation-per-second="30deg"
+                        shadow-intensity="1"
+                        exposure="0.8"
+                        camera-orbit="0deg 75deg 2.5m"
+                        min-camera-orbit="auto 0deg auto"
+                        max-camera-orbit="auto 180deg auto"
+                        loading="lazy"
+                        reveal="interaction">
+                        
+                        <div slot="poster" style="
+                            width: 100%;
+                            height: 100%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            background: #f5f5f5;
+                            flex-direction: column;
+                            gap: 10px;
+                        ">
+                            <div style="
+                                border: 4px solid #f3f3f3;
+                                border-top: 4px solid #ff6b00;
+                                border-radius: 50%;
+                                width: 40px;
+                                height: 40px;
+                                animation: spin 1s linear infinite;
+                            "></div>
+                            <p style="color: #666; font-size: 14px;">Φόρτωση 3D μοντέλου...</p>
+                        </div>
+                        
+                        <div slot="error" style="
+                            width: 100%;
+                            height: 100%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            background: #fff3cd;
+                            flex-direction: column;
+                            gap: 15px;
+                            padding: 20px;
+                        ">
+                            <p style="color: #856404; font-size: 16px; font-weight: bold;">⚠️ Σφάλμα Φόρτωσης</p>
+                            <p style="color: #856404; font-size: 13px; text-align: center;">
+                                Το 3D μοντέλο δεν μπορεί να φορτώσει.<br>
+                                Ελέγξτε το αρχείο: whiskey_glass.glb
+                            </p>
+                        </div>
+                    </model-viewer>
                     
-                    <div slot="poster" style="
-                        width: 100%;
-                        height: 100%;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        background: #f5f5f5;
-                        flex-direction: column;
-                        gap: 10px;
-                    ">
-                        <div style="
-                            border: 4px solid #f3f3f3;
-                            border-top: 4px solid #ff6b00;
-                            border-radius: 50%;
-                            width: 40px;
-                            height: 40px;
-                            animation: spin 1s linear infinite;
-                        "></div>
-                        <p style="color: #666; font-size: 14px;">Φόρτωση 3D μοντέλου...</p>
-                    </div>
+                    <div id="debugInfo"></div>
                     
-                    <div slot="error" style="
-                        width: 100%;
-                        height: 100%;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        background: #fff3cd;
-                        flex-direction: column;
-                        gap: 15px;
-                        padding: 20px;
-                    ">
-                        <p style="color: #856404; font-size: 16px; font-weight: bold;">⚠️ Σφάλμα Φόρτωσης</p>
-                        <p style="color: #856404; font-size: 13px; text-align: center;">
-                            Το 3D μοντέλο δεν μπορεί να φορτώσει.<br>
-                            Ελέγξτε το αρχείο: whiskey_glass.glb
-                        </p>
-                    </div>
-                </model-viewer>
-                
-                <div id="debugInfo"></div>
-                
-                <p style="text-align: center; color: #666; font-size: clamp(12px, 2.5vw, 13px); margin-top: 10px; font-style: italic;">
-                    💡 Σύρετε για να περιστρέψετε • Zoom με δύο δάχτυλα
-                </p>
+                    <p style="text-align: center; color: #666; font-size: clamp(12px, 2.5vw, 13px); margin-top: 10px; font-style: italic;">
+                        💡 Σύρετε για να περιστρέψετε • Zoom με δύο δάχτυλα
+                    </p>
+                </div>
             </div>
 
             <section class="details">
@@ -684,7 +766,7 @@
                        💡 ΣΗΜΑΣΙΑ ΓΙΑ ΤΗΝ ΕΡΕΥΝΑ
                     </h3>
                     <p class="significance-text">
-                        Δύο ποτήρια - ένα με κυάνιο, ένα καθαρό - αλλά ήταν από την ίδια στιγμή; Το Ποτήρι Β έχει αποτυπώματα από 48-72 ώρες πριν (Παπαδοπούλου) ΚΑΙ από 2-4 ώρες πριν (Αναγνώστου/Μαυρίδη). Μήπως το Ποτήρι Β δεν ήταν από το «τελευταίο ποτό» με τον Δημητρίου, αλλά από προηγούμενη μέρα που κάποιος ξέχασε να το μαζέψει ή μήπως το άφησαν σκόπιμα εκεί για να μπερδέψουν την έρευνα; Διατί κάποιος να το καθαρίσει μερικώς;
+                        Δύο ποτήρια - ένα με κυάνιο, ένα καθαρό - αλλά ήταν από την ίδια στιγμή; Το Ποτήρι Β έχει αποτυπώματα από 48-72 ώρες πριν (Παπαδοπούλου) ΚΑΙ από 2-4 ώρες πριν (Αναγνώστου/Μαυρίδη). Μήπως το Ποτήρι Β δεν ήταν από το «τελευταίο ποτό» με τον Δημητρίου, αλλά από προηγούμενη μέρα που κάποιος ξέχασε να το μαζέψει ή μήπως το άφησαν σκόπιμα εκεί για να μπερδέψουν την έρευνα; Γιατί κάποιος να το καθαρίσει μερικώς;
                     </p>
                 </div>
 
@@ -710,6 +792,59 @@
     </footer>
 
     <script>
+        // 3D Model Control Functions
+        const view3DBtn = document.getElementById('view3DBtn');
+        const close3DBtn = document.getElementById('close3DBtn');
+        const modelViewerWrapper = document.getElementById('modelViewerWrapper');
+        const modelViewer = document.getElementById('glassModel');
+        const debugInfo = document.getElementById('debugInfo');
+
+        view3DBtn.addEventListener('click', function() {
+            modelViewerWrapper.classList.add('active');
+            view3DBtn.style.display = 'none';
+            close3DBtn.style.display = 'inline-flex';
+            
+            // Trigger model load
+            if (modelViewer && !modelViewer.loaded) {
+                modelViewer.dismissPoster();
+            }
+        });
+
+        close3DBtn.addEventListener('click', function() {
+            modelViewerWrapper.classList.remove('active');
+            view3DBtn.style.display = 'inline-flex';
+            close3DBtn.style.display = 'none';
+        });
+
+        // Model Viewer Event Listeners
+        if (modelViewer) {
+            modelViewer.addEventListener('progress', (event) => {
+                const percent = Math.round(event.detail.totalProgress * 100);
+                debugInfo.style.display = 'block';
+                debugInfo.innerHTML = `⏳ Φόρτωση: ${percent}%<br>`;
+            });
+
+            modelViewer.addEventListener('load', () => {
+                debugInfo.innerHTML = '✅ 3D μοντέλο φορτώθηκε επιτυχώς!<br>';
+                debugInfo.style.background = '#d4edda';
+                debugInfo.style.borderColor = '#28a745';
+                setTimeout(() => {
+                    debugInfo.style.display = 'none';
+                }, 3000);
+            });
+            
+            modelViewer.addEventListener('error', (event) => {
+                debugInfo.style.display = 'block';
+                debugInfo.innerHTML = '❌ ΣΦΑΛΜΑ: Το αρχείο δεν μπορεί να φορτώσει<br>';
+                debugInfo.innerHTML += 'Ελέγξτε:<br>';
+                debugInfo.innerHTML += '1. Το αρχείο υπάρχει στον ίδιο φάκελο<br>';
+                debugInfo.innerHTML += '2. Το όνομα είναι σωστό (με κεφαλαία/πεζά)<br>';
+                debugInfo.innerHTML += '3. Το αρχείο είναι έγκυρο .glb<br>';
+                debugInfo.style.background = '#f8d7da';
+                debugInfo.style.borderColor = '#dc3545';
+            });
+        }
+
         window.goBackToCaseFile = function() {
             const teamCode = sessionStorage.getItem('teamCode');
             console.log('🔙 Button clicked! Team:', teamCode);
@@ -880,37 +1015,6 @@
 
         window.onload = function() {
             drawCrimeScene();
-
-            const modelViewer = document.querySelector('model-viewer');
-            const debugInfo = document.getElementById('debugInfo');
-            
-            if (modelViewer) {
-                modelViewer.addEventListener('progress', (event) => {
-                    const percent = Math.round(event.detail.totalProgress * 100);
-                    debugInfo.style.display = 'block';
-                    debugInfo.innerHTML = `⏳ Φόρτωση: ${percent}%<br>`;
-                });
-
-                modelViewer.addEventListener('load', () => {
-                    debugInfo.innerHTML = '✅ 3D μοντέλο φορτώθηκε επιτυχώς!<br>';
-                    debugInfo.style.background = '#d4edda';
-                    debugInfo.style.borderColor = '#28a745';
-                    setTimeout(() => {
-                        debugInfo.style.display = 'none';
-                    }, 3000);
-                });
-                
-                modelViewer.addEventListener('error', (event) => {
-                    debugInfo.style.display = 'block';
-                    debugInfo.innerHTML = '❌ ΣΦΑΛΜΑ: Το αρχείο δεν μπορεί να φορτώσει<br>';
-                    debugInfo.innerHTML += 'Ελέγξτε:<br>';
-                    debugInfo.innerHTML += '1. Το αρχείο υπάρχει στον ίδιο φάκελο<br>';
-                    debugInfo.innerHTML += '2. Το όνομα είναι σωστό (με κεφαλαία/πεζά)<br>';
-                    debugInfo.innerHTML += '3. Το αρχείο είναι έγκυρο .glb<br>';
-                    debugInfo.style.background = '#f8d7da';
-                    debugInfo.style.borderColor = '#dc3545';
-                });
-            }
         };
     </script>
 </body>
