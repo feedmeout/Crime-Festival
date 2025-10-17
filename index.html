@@ -129,6 +129,17 @@ body {
     40% { opacity: 1; }
 }
 
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -60%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
 .header {
     background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
     padding: clamp(1.25rem, 4vw, 1.875rem);
@@ -1099,7 +1110,7 @@ button:focus-visible,
 
     <div class="container">
         <div class="timer-section" id="timerSection">
-            <h2>⏱️ΧΡΟΝΟΜΕΤΡΗΣΗ ΟΜΑΔΑΣ</h2>
+            <h2>⏱️ ΧΡΟΝΟΜΕΤΡΗΣΗ ΟΜΑΔΑΣ</h2>
             <div class="timer-grid">
                 <div class="timer-box">
                     <strong>Έναρξη</strong>
@@ -1368,6 +1379,17 @@ button:focus-visible,
             </p>
         </div>
     </div>
+
+<div id="alertNotification" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%); color: white; padding: 30px 40px; border-radius: 15px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); z-index: 10000; max-width: 500px; width: 90%; animation: slideIn 0.3s ease;">
+    <div style="font-size: 48px; text-align: center; margin-bottom: 15px;">📢</div>
+    <h3 style="color: white; text-align: center; margin-bottom: 15px; font-size: 20px;">ΕΙΔΟΠΟΙΗΣΗ ΑΠΟ ΔΙΟΡΓΑΝΩΤΕΣ</h3>
+    <div id="alertMessageContent" style="background: rgba(255,255,255,0.2); padding: 20px; border-radius: 10px; margin-bottom: 20px; font-size: 16px; line-height: 1.6; text-align: center;"></div>
+    <button onclick="closeAlert()" style="width: 100%; padding: 15px; background: white; color: #9c27b0; border: none; border-radius: 10px; font-weight: bold; font-size: 16px; cursor: pointer; transition: all 0.3s;">
+        ✓ ΚΑΤΑΝΟΗΣΑ
+    </button>
+</div>
+
+<div id="alertOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 9999; backdrop-filter: blur(3px);"></div>
 
 <script src="suspects.js"></script>
 
@@ -2003,29 +2025,29 @@ function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
         breakdown.push('');
     }
         
-if (missedSuspects.length > 0) {
-    breakdown.push(`🔍 ΧΑΣΑΤΕ ΠΡΑΓΜΑΤΙΚΟΥΣ ΔΡΑΣΤΕΣ`);
-    breakdown.push('');
-    const missedPenalty = missedSuspects.length * 20;
-    score -= missedPenalty;
-    
-    missedSuspects.forEach(name => {
-        breakdown.push(`   → ${name}`);
-        if (name === 'Αναγνώστου Κωνσταντίνος') {
-            breakdown.push('      • Τα αποτυπώματά του στο μπουκάλι και το κλειδί');
-            breakdown.push('      • Είχε υπεξαίρεση €1.5εκ να κρύψει');
-        } else if (name === 'Πετρόπουλος Γεώργιος') {
-            breakdown.push('      • Αγόρασε το κυάνιο (απόδειξη ΤΕΚ #9)');
-            breakdown.push('      • Απενεργοποίησε κάμερες 20:55');
-        } else if (name === 'Μαυρίδη Ελένη') {
-            breakdown.push('      • Έστειλε το πλαστό email "αυτοκτονίας"');
-            breakdown.push('      • Πλαστογράφησε το χειρόγραφο σημείωμα');
-        }
-    });
-    
-    breakdown.push('');
-    breakdown.push(`⚖️ Ποινή: -${missedPenalty} πόντοι (Δεν εντοπίσατε ${missedSuspects.length} δράστη${missedSuspects.length > 1 ? 'ς' : ''})`);
-}
+    if (missedSuspects.length > 0) {
+        breakdown.push(`🔍 ΧΑΣΑΤΕ ΠΡΑΓΜΑΤΙΚΟΥΣ ΔΡΑΣΤΕΣ`);
+        breakdown.push('');
+        const missedPenalty = missedSuspects.length * 20;
+        score -= missedPenalty;
+        
+        missedSuspects.forEach(name => {
+            breakdown.push(`   → ${name}`);
+            if (name === 'Αναγνώστου Κωνσταντίνος') {
+                breakdown.push('      • Τα αποτυπώματά του στο μπουκάλι και το κλειδί');
+                breakdown.push('      • Είχε υπεξαίρεση €1.5εκ να κρύψει');
+            } else if (name === 'Πετρόπουλος Γεώργιος') {
+                breakdown.push('      • Αγόρασε το κυάνιο (απόδειξη ΤΕΚ #9)');
+                breakdown.push('      • Απενεργοποίησε κάμερες 20:55');
+            } else if (name === 'Μαυρίδη Ελένη') {
+                breakdown.push('      • Έστειλε το πλαστό email "αυτοκτονίας"');
+                breakdown.push('      • Πλαστογράφησε το χειρόγραφο σημείωμα');
+            }
+        });
+        
+        breakdown.push('');
+        breakdown.push(`⚖️ Ποινή: -${missedPenalty} πόντοι (Δεν εντοπίσατε ${missedSuspects.length} δράστη${missedSuspects.length > 1 ? 'ς' : ''})`);
+    }
     
     breakdown.push('');
     breakdown.push(`🏁 ΤΕΛΙΚΗ ΒΑΘΜΟΛΟΓΙΑ: ${score}/${140}`);
@@ -2281,65 +2303,63 @@ function displaySolutionResult(solution) {
     statsHTML += '</div>';
     statsHTML += '</div>';
 
+    const breakdownHTML = solution.breakdown.map(function(item) {
+        if (item.trim() === '') {
+            return '<div style="height: 8px;"></div>';
+        }
 
-const breakdownHTML = solution.breakdown.map(function(item) {
-    if (item.trim() === '') {
-        return '<div style="height: 8px;"></div>';
-    }
+        if (item.includes('═')) {
+            return '<hr style="border: none; border-top: 2px solid #ff6b00; margin: 15px 0; opacity: 0.3;">';
+        }
 
-    if (item.includes('═')) {
-        return '<hr style="border: none; border-top: 2px solid #ff6b00; margin: 15px 0; opacity: 0.3;">';
-    }
+        if (item.match(/^[🎯🧩👥⚡⚠️🔍❌]/)) {
+            return '<div style="background: linear-gradient(135deg, #0f3460 0%, #16213e 100%); color: white; padding: 12px 15px; margin: 20px 0 10px 0; border-radius: 8px; font-weight: bold; font-size: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">' + item + '</div>';
+        }
 
-    if (item.match(/^[🎯🧩👥⚡⚠️🔍❌]/)) {
-        return '<div style="background: linear-gradient(135deg, #0f3460 0%, #16213e 100%); color: white; padding: 12px 15px; margin: 20px 0 10px 0; border-radius: 8px; font-weight: bold; font-size: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">' + item + '</div>';
-    }
+        if (item.startsWith('   •') || item.startsWith('   →')) {
+            return '<div style="padding: 6px 6px 6px 35px; margin: 3px 0; color: #555; font-size: 13px; line-height: 1.6;">' + item + '</div>';
+        }
 
-    if (item.startsWith('   •') || item.startsWith('   →')) {
-        return '<div style="padding: 6px 6px 6px 35px; margin: 3px 0; color: #555; font-size: 13px; line-height: 1.6;">' + item + '</div>';
-    }
+        if (item.startsWith('   ')) {
+            return '<div style="padding: 5px 5px 5px 30px; margin: 2px 0; color: #666; font-size: 13px;">' + item + '</div>';
+        }
 
-    if (item.startsWith('   ')) {
-        return '<div style="padding: 5px 5px 5px 30px; margin: 2px 0; color: #666; font-size: 13px;">' + item + '</div>';
-    }
+        var bgColor = 'transparent';
+        var borderColor = 'transparent';
+        var textColor = '#333';
+        var fontWeight = 'normal';
+        var padding = '8px 12px';
+        var hasBorder = false;
 
-    var bgColor = 'transparent';
-    var borderColor = 'transparent';
-    var textColor = '#333';
-    var fontWeight = 'normal';
-    var padding = '8px 12px';
-    var hasBorder = false;
+        if (item.includes('🚫') || item.includes('❌')) {
+            bgColor = '#fff5f5';
+            borderColor = '#dc3545';
+            textColor = '#721c24';
+            fontWeight = 'bold';
+            hasBorder = true;
+        } else if (item.includes('✓') || item.includes('🎖️')) {
+            bgColor = '#f0fff4';
+            borderColor = '#28a745';
+            textColor = '#155724';
+            hasBorder = true;
+        } else if (item.includes('⚖️') || item.includes('📉')) {
+            bgColor = '#fff8e1';
+            borderColor = '#ff9800';
+            textColor = '#e65100';
+            hasBorder = true;
+        } else if (item.includes('💡')) {
+            bgColor = '#e3f2fd';
+            borderColor = '#2196f3';
+            textColor = '#0d47a1';
+            hasBorder = true;
+        }
 
-    if (item.includes('🚫') || item.includes('❌')) {
-        bgColor = '#fff5f5';
-        borderColor = '#dc3545';
-        textColor = '#721c24';
-        fontWeight = 'bold';
-        hasBorder = true;
-    } else if (item.includes('✓') || item.includes('🎖️')) {
-        bgColor = '#f0fff4';
-        borderColor = '#28a745';
-        textColor = '#155724';
-        hasBorder = true;
-    } else if (item.includes('⚖️') || item.includes('📉')) {
-        bgColor = '#fff8e1';
-        borderColor = '#ff9800';
-        textColor = '#e65100';
-        hasBorder = true;
-    } else if (item.includes('💡')) {
-        bgColor = '#e3f2fd';
-        borderColor = '#2196f3';
-        textColor = '#0d47a1';
-        hasBorder = true;
-    }
-
-    var borderStyle = hasBorder ? 'border-left: 4px solid ' + borderColor + ';' : '';
-    return '<div style="padding: ' + padding + '; margin: 5px 0; background: ' + bgColor + '; ' + borderStyle + ' border-radius: 4px; color: ' + textColor + '; font-weight: ' + fontWeight + '; line-height: 1.6;">' + item + '</div>';
-}).join('');
+        var borderStyle = hasBorder ? 'border-left: 4px solid ' + borderColor + ';' : '';
+        return '<div style="padding: ' + padding + '; margin: 5px 0; background: ' + bgColor + '; ' + borderStyle + ' border-radius: 4px; color: ' + textColor + '; font-weight: ' + fontWeight + '; line-height: 1.6;">' + item + '</div>';
+    }).join('');
 
     resultDiv.innerHTML = 
         '<div style="background: ' + headerGradient + '; color: white; padding: 30px; border-radius: 15px; margin: 20px 0; text-align: center; box-shadow: 0 10px 40px ' + headerShadow + ';">' +
-        
         '<h2 style="font-size: 32px; margin-bottom: 15px;">' +
         (isPerfect ? '🎉 ΤΕΛΕΙΑ ΛΥΣΗ!' : isContradiction ? '❌ ΛΟΓΙΚΗ ΑΝΤΙΦΑΣΗ' : solution.score === 0 ? '❌ ΛΑΘΟΣ ΑΠΑΝΤΗΣΗ' : 'ΑΠΟΤΕΛΕΣΜΑΤΑ ΕΡΕΥΝΑΣ') +
         '</h2>' +
@@ -2347,122 +2367,10 @@ const breakdownHTML = solution.breakdown.map(function(item) {
         '<div style="font-size: 28px; margin-bottom: 20px; color: ' + gradeColor + '; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">' + grade + '</div>' +
         statsHTML +
         '</div>' +
-        
         '<div style="background: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; border: 2px solid #28a745;">' +
         '<h4 style="color: #1a1a2e; margin-bottom: 15px; font-size: 18px; border-bottom: 2px solid #ff6b00; padding-bottom: 8px;">📊 ΑΝΑΛΥΣΗ ΤΗΣ ΒΑΘΜΟΛΟΓΙΑΣ ΣΑΣ</h4>' +
         '<div style="font-family: \'Courier New\', monospace; line-height: 1.8; font-size: 14px;">' +
         breakdownHTML +
-        '</div>' +
-        '</div>' +
-        
-        '<div style="background: white; padding: 20px; border-radius: 10px; border: 2px solid #dc3545;">' +
-        '<h4 style="color: #dc3545; margin-bottom: 15px; font-size: 18px; border-bottom: 2px solid #dc3545; padding-bottom: 8px;">🎯 ΛΥΣΗ: ΣΥΝΕΡΓΑΤΙΚΗ ΔΟΛΟΦΟΝΙΑ</h4>' +
-        '<h5 style="color: #1a1a2e; margin: 15px 0 10px 0; font-size: 15px; display: flex; align-items: center; gap: 8px;">⚠️ ΔΡΑΣΤΕΣ & ΡΟΛΟΣ</h5>' +
-        '<div style="background: #fff5f5; border-left: 4px solid #dc3545; padding: 15px; margin-bottom: 10px; border-radius: 6px; box-shadow: 0 2px 4px rgba(220,53,69,0.1);">' +
-        '<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">' +
-        '<strong style="color: #dc3545; font-size: 15px;">👨‍💼 Αναγνώστου Κωνσταντίνος</strong>' +
-        '<span style="background: #dc3545; color: white; padding: 2px 8px; border-radius: 12px; font-size: 10px; font-weight: bold;">ΜΑΣΤΡΟΣ</span>' +
-        '</div>' +
-        '<div style="color: #666; font-size: 13px; line-height: 1.5;">' +
-        '<div style="margin-bottom: 4px;"><strong style="color: #333;">Ρόλος:</strong> CFO εταιρείας • Χειριστής του σχεδίου</div>' +
-        '<div style="margin-bottom: 4px;"><strong style="color: #333;">Κίνητρο:</strong> Υπεξαίρεση €1.5εκ που επρόκειτο να αποκαλυφθεί</div>' +
-        '<div><strong style="color: #333;">Συμβολή:</strong> Έριξε το κυάνιο στο ουίσκι • Ενέκρινε την άδεια αγοράς</div>' +
-        '</div>' +
-        '</div>' +
-        '<div style="background: #fff5f5; border-left: 4px solid #dc3545; padding: 15px; margin-bottom: 10px; border-radius: 6px; box-shadow: 0 2px 4px rgba(220,53,69,0.1);">' +
-        '<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">' +
-        '<strong style="color: #dc3545; font-size: 15px;">👮 Πετρόπουλος Γεώργιος</strong>' +
-        '<span style="background: #ff6b00; color: white; padding: 2px 8px; border-radius: 12px; font-size: 10px; font-weight: bold;">ΣΥΝΕΡΓΟΣ</span>' +
-        '</div>' +
-        '<div style="color: #666; font-size: 13px; line-height: 1.5;">' +
-        '<div style="margin-bottom: 4px;"><strong style="color: #333;">Ρόλος:</strong> Φύλακας κτιρίου • Πρόσβαση παντού</div>' +
-        '<div style="margin-bottom: 4px;"><strong style="color: #333;">Κίνητρο:</strong> Χρέη €60k στους τοκογλύφους</div>' +
-        '<div><strong style="color: #333;">Συμβολή:</strong> Προμήθευσε το κυάνιο • Απενεργοποίησε κάμερες 20:55</div>' +
-        '</div>' +
-        '</div>' +
-        '<div style="background: #fff5f5; border-left: 4px solid #dc3545; padding: 15px; margin-bottom: 15px; border-radius: 6px; box-shadow: 0 2px 4px rgba(220,53,69,0.1);">' +
-        '<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">' +
-        '<strong style="color: #dc3545; font-size: 15px;">👩‍🦰 Μαυρίδη Ελένη</strong>' +
-        '<span style="background: #ff8800; color: white; padding: 2px 8px; border-radius: 12px; font-size: 10px; font-weight: bold;">ΣΥΓΚΑΛΥΨΗ</span>' +
-        '</div>' +
-        '<div style="color: #666; font-size: 13px; line-height: 1.5;">' +
-        '<div style="margin-bottom: 4px;"><strong style="color: #333;">Ρόλος:</strong> Πρώην ερωμένη θύματος • Συγγραφικές δεξιότητες</div>' +
-        '<div style="margin-bottom: 4px;"><strong style="color: #333;">Κίνητρο:</strong> Εκβιασμός με ερωτικές φωτογραφίες</div>' +
-        '<div><strong style="color: #333;">Συμβολή:</strong> Έστειλε fake email «αυτοκτονίας» 21:25 • Πλαστό σημείωμα</div>' +
-        '</div>' +
-        '</div>' +		
-        '<h5 style="color: #1a1a2e; margin: 20px 0 10px 0; font-size: 15px; display: flex; align-items: center; gap: 8px;">' +
-        '🔎 ΑΝΑΛΥΣΗ ΑΛΛΟΘΙ' +
-        '<span style="background: #dc3545; color: white; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-left: 10px;">ΩΡΑ ΔΟΛΟΦΟΝΙΑΣ: 21:30-21:50</span>' +
-        '</h5>' +
-        '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; margin-bottom: 15px;">' +
-        '<div style="background: #d4edda; padding: 12px; border-radius: 6px; border-left: 4px solid #28a745;">' +
-        '<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">' +
-        '<span style="font-size: 18px;">👩</span>' +
-        '<strong style="color: #155724; font-size: 13px;">Παπαδοπούλου Μαρία</strong>' +
-        '<span style="background: #28a745; color: white; padding: 2px 6px; border-radius: 8px; font-size: 9px; font-weight: bold; margin-left: auto;">✓ ΙΣΧΥΡΟ</span>' +
-        '</div>' +
-        '<div style="font-size: 11px; color: #155724; line-height: 1.5;">' +
-        '<div>• Γιατρός 18:30-19:30 (επιβεβαιωμένο)</div>' +
-        '<div>• Δείπνο με αδελφή 19:45-22:30</div>' +
-        '<div style="margin-top: 4px; padding: 4px 6px; background: rgba(40,167,69,0.1); border-radius: 3px;">✓ Κάλυψε όλο το κρίσιμο χρονικό παράθυρο!</div>' +
-        '</div>' +
-        '</div>' +
-        '<div style="background: #f8d7da; padding: 12px; border-radius: 6px; border-left: 4px solid #dc3545;">' +
-        '<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">' +
-        '<span style="font-size: 18px;">👨‍💼</span>' +
-        '<strong style="color: #721c24; font-size: 13px;">Αναγνώστου Κωνσταντίνος</strong>' +
-        '<span style="background: #dc3545; color: white; padding: 2px 6px; border-radius: 8px; font-size: 9px; font-weight: bold; margin-left: auto;">❌ ΑΣΘΕΝΕΣ</span>' +
-        '</div>' +
-        '<div style="font-size: 11px; color: #721c24; line-height: 1.5;">' +
-        '<div>• Δείπνο «Διόνυσος» 18:45-20:30</div>' +
-        '<div>• Εστιατόριο 200m από κτίριο!</div>' +
-        '<div style="margin-top: 4px; padding: 4px 6px; background: rgba(220,53,69,0.1); border-radius: 3px;">❌ Χρόνος 20:30-21:50: ΧΩΡΙΣ ΚΑΛΥΨΗ!</div>' +
-        '</div>' +
-        '</div>' +
-        '<div style="background: #f8d7da; padding: 12px; border-radius: 6px; border-left: 4px solid #dc3545;">' +
-        '<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">' +
-        '<span style="font-size: 18px;">👩‍🦰</span>' +
-        '<strong style="color: #721c24; font-size: 13px;">Μαυρίδη Ελένη</strong>' +
-        '<span style="background: #dc3545; color: white; padding: 2px 6px; border-radius: 8px; font-size: 9px; font-weight: bold; margin-left: auto;">❌ ΣΠΑΣΜΕΝΟ</span>' +
-        '</div>' +
-        '<div style="font-size: 11px; color: #721c24; line-height: 1.5;">' +
-        '<div>• Παρουσίαση βιβλίου 19:30-20:30</div>' +
-        '<div>• "Μετά στο κτίριο" (αόριστο)</div>' +
-        '<div style="margin-top: 4px; padding: 4px 6px; background: rgba(220,53,69,0.1); border-radius: 3px;">❌ Ομολογεί παρουσία στο κτίριο κατά τη δολοφονία!</div>' +
-        '</div>' +
-        '</div>' +
-        '<div style="background: #f8d7da; padding: 12px; border-radius: 6px; border-left: 4px solid #dc3545;">' +
-        '<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">' +
-        '<span style="font-size: 18px;">👮</span>' +
-        '<strong style="color: #721c24; font-size: 13px;">Πετρόπουλος Γεώργιος</strong>' +
-        '<span style="background: #dc3545; color: white; padding: 2px 6px; border-radius: 8px; font-size: 9px; font-weight: bold; margin-left: auto;">❌ ΨΕΥΔΕΣ</span>' +
-        '</div>' +
-        '<div style="font-size: 11px; color: #721c24; line-height: 1.5;">' +
-        '<div>• Ισχυρίζεται: Βάρδια όλο βράδυ</div>' +
-        '<div>• Ισχυρίζεται: Περιπολίες κάθε 2h</div>' +
-        '<div style="margin-top: 4px; padding: 4px 6px; background: rgba(220,53,69,0.1); border-radius: 3px;">❌ ΑΠΟΔΕΙΞΗ: Απενεργοποίησε κάμερες 20:55!</div>' +
-        '</div>' +
-        '</div>' +
-        '<div style="background: #fff3cd; padding: 12px; border-radius: 6px; border-left: 4px solid #ffc107;">' +
-        '<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">' +
-        '<span style="font-size: 18px;">👩‍💻</span>' +
-        '<strong style="color: #856404; font-size: 13px;">Νικολάου Αλεξάνδρα</strong>' +
-        '<span style="background: #ffc107; color: #000; padding: 2px 6px; border-radius: 8px; font-size: 9px; font-weight: bold; margin-left: auto;">⚠️ ΑΒΕΒΑΙΟ</span>' +
-        '</div>' +
-        '<div style="font-size: 11px; color: #856404; line-height: 1.5;">' +
-        '<div>• «Μικρό Καφέ» μέχρι 20:30</div>' +
-        '<div>• Δεν επιβεβαιώθηκε από μάρτυρες</div>' +
-        '<div style="margin-top: 4px; padding: 4px 6px; background: rgba(255,193,7,0.1); border-radius: 3px;">⚠️ Αδύναμο αλλά δεν βρέθηκαν άλλα τεκμήρια εναντίον της</div>' +
-        '</div>' +
-        '</div>' +
-        '</div>' +
-        '<div style="background: #e7f3ff; border: 2px solid #2196f3; padding: 15px; border-radius: 8px; margin-top: 10px;">' +
-        '<div style="font-weight: bold; color: #0d47a1; margin-bottom: 8px; font-size: 13px;">💡 ΣΥΜΠΕΡΑΣΜΑ</div>' +
-        '<div style="font-size: 12px; color: #1565c0; line-height: 1.6;">' +
-        'Οι <strong>τρεις δράστες</strong> είχαν <strong>ευκαιρία</strong> (21:30-21:50), <strong>κίνητρο</strong> (χρήματα/εκβιασμός), και ' +
-        '<strong>πρόσβαση</strong> στο κυάνιο. Η Παπαδοπούλου είχε σιδερένιο άλλοθι. Η Νικολάου δεν είχε κίνητρο ούτε πρόσβαση σε κυάνιο.' +
-        '</div>' +
         '</div>' +
         '</div>';
     
@@ -2621,6 +2529,7 @@ window.submitSolution = submitSolution;
 window.switchToSurveyTab = switchToSurveyTab;
 
 let resultsUnsubscribe = null;
+let alertsUnsubscribe = null;
 
 function switchToSurveyTab() {
     const tabButtons = document.querySelectorAll('.tab-button');
@@ -3082,6 +2991,83 @@ function setupResultsListener() {
     }
 }
 
+function setupAlertListener() {
+    if (!window.firebaseDB || !window.firebaseOnSnapshot) {
+        console.warn('Firebase not ready for alerts');
+        setTimeout(setupAlertListener, 1000);
+        return;
+    }
+    
+    try {
+        const alertsRef = window.firebaseCollection(window.firebaseDB, 'alerts');
+        
+        if (alertsUnsubscribe) {
+            alertsUnsubscribe();
+        }
+        
+        alertsUnsubscribe = window.firebaseOnSnapshot(alertsRef,
+            (snapshot) => {
+                snapshot.docChanges().forEach((change) => {
+                    if (change.type === 'added') {
+                        const alert = change.doc.data();
+                        
+                        if (alert.targetTeam === 'all' || alert.targetTeam === teamCode) {
+                            if (!alert.read) {
+                                showAlert(alert.message, change.doc.id);
+                            }
+                        }
+                    }
+                });
+            },
+            (error) => {
+                console.error('Error listening to alerts:', error);
+            }
+        );
+        
+        console.log('✅ Alert listener active for team:', teamCode);
+    } catch (error) {
+        console.error('Error setting up alert listener:', error);
+    }
+}
+
+function showAlert(message, alertId) {
+    const notification = document.getElementById('alertNotification');
+    const overlay = document.getElementById('alertOverlay');
+    const messageContent = document.getElementById('alertMessageContent');
+    
+    messageContent.textContent = message;
+    
+    overlay.style.display = 'block';
+    notification.style.display = 'block';
+    
+    notification.dataset.alertId = alertId;
+    
+    try {
+        const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTGH0fPTgjMGHm7A7+OZSA0PVajk7adaFQxKouHvumoiBTeP1PPRgzQFI3fH8NSMPwoVYbfo66tXFgxIoOLyu2sjBzKK0fPSgzUGImzA6+ScSg0OWKjl7qhbFgxKo+LvvWwjBjmO1fPQgTMFI3jH8NOOQAoVYbjp66tVFgtIpODxvGwiBlmH0PPUgjQHHm3B7+SbSg0PVqnl76hbFQxKpOPvwGwjBzmK0vPRgTMFJXfH8NSNQAoUYbjq66tYFwxIpODxvWwiBzaJ0fPThDQGHmzA6+ObSg0PV6jk7qhbFQxKpOHvwGwhBzaM0/PRgTMGI3fH8NONPwoUYbjq66tZFgtIpODxvWwiBjiK0vLSgzUGH23B6+ObTAwOWKjl76dcFQxKo+HvwGwiBzmL0fPShDUGI3fH8NOOQAoUYbfp66tZFgtIpN/xvGwiBjiJ0vLSgzUGH23A6+ObTAwOWKfk76dbFgxLpODvv2wiBzmM0/PRgzMGI3fH79ONPwoVYrjp66tZFgtFpODxvGwiBjiJ0vLSgzUGH23A6+ObTAwOWKjk76dcFQxLpODvv2wiBzmM0/PRgjMGJHbH79CNQAoVYrjp66tYFgtFpODxvGwiBjiJ0vLSgzUGH23A6+ObTAwOWKjk76dcFQxLpODvv2wiBzmM0vPRgjMGJHfH79CNQAoVYrjp66tYFgtFpODxvGwiBjiJ0vLSgzUGH23B6+OaTAwOWKjk76dbFgxMpODvv2wiBzmM0/PRgjMGJHfH79CNQAoVYrjp66tYFgtFpODxvGwiBjiJ0vLSgzUGH23B6+OaTAwOWKjk76dbFgxMpODvv2wiBzmM0/PRgjMGJHfH79CNQAoVYrjp66tYFgtFpODxvGwiBjiJ0vLSgzUGH23B6+OaTAwOWKjk76dbFgxMpODvv2wiBzmM0/PRgjMGJHfH79CNQAoVYrjp66tYFgtFpODxvGwiBjiJ0vLSgzUGH23B6+OaTAwOWKjk76dbFgxMpODvv2wiBzmM0/PRgjMGJHfH79CNQAoVYrjp66tYFgtFpODxvGwiBjiJ0vLSgzUGH23B6+OaTAwOWKjk76dbFgxMpODvv2wiBzmM0/PRgjMGJHfH79CNQAoVYrjp66tYFgtFpODxvGwiBjiJ0vLSgzUGH23B6+OaTAwOWKjk76dbFgxMpODvv2wiBzmM0/PRgjMGJHfH79CNQAoVYrjp66tYFgtFpODxvGwiBjiJ0vLSgzUGH23B6+OaTAwOWKjk76dbFgxMpODvv2wiBzmM0/PRgjMGJHfH79CNQAoVYrjp66tYFgtFpODxvGwiBjiJ0vLSgzUGH23B6+OaTAwOWKjk76dbFgxMpODvv2wiBzmM0/PRgjMGJHfH79CNQAoVYrjp66tYFgtFpODxvGwiBjiJ0vLSgzUGH23B6+OaTAwOWKjk76dbFgxMpODvv2wiBzmM0/PRgjMGJHfH79CNQAoVYrjp66tYFgtFpODxvGwiBjiJ0vLSgzUGH23B6+OaTAwOWKjk76dbFgxMpODvv2wiBzmM0/PRgjMGJHfH79CNQAoVYrjp66tYFgtFpODxvGwiBjiJ0vLSgzUGH23B6+OaTAwOWKjk76dbFgxMpODvv2wiBzmM0/PRgjMGJHfH79CNQAoVYrjp66tYFgtFpODxvGwiBjiJ0vLSgzUGH23B6+OaTAwOWKjk76dbFgxMpODvv2wiBzmM0/PRgjMGJHfH79CNQAoVYrjp66tYFgtFpODxvGwiBjiJ0vLSgzUGH23B6+OaTAwOWKjk76dbFgxMpODvv2wiBzmM0/PRgjMGJHfH79CNQAoVYrjp66tYFgtFpODxvGwiBjiJ0vLSgzUGH23B6+OaTAwOWKjk76dbFgxMpODvv2wiBzmM0/PRgjMGJHfH79CNQAoVYrjp66tYFgtFpODxvGwiBjiJ0vLSgzUGH23B6+OaTAwOWKjk76dbFgxMpODvv2wiBzmM0/PRgjMGJHfH79CNQAoVYrjp66tYFgtFpODxvGwiBjiJ0vLSgzUGH23B6+OaTAwOWKjk76dbFgxMpODvv2wiBzmM0/PRgjMGJHfH79CNQAoVYrjp66tYFgtFpODxvGwiBjiJ0vLSgzUGH23B6+OaTAwOWKjk76dbFgxMpODvv2wiBzmM0/PRgjMGJHfH79CNQAoVYrjp66tYFgtFpODxvGwiBjiJ0vLSgzUGH23B6+OaTAwOWKjk76dbFgxMpODvv2wiBzmM0/PRgjMGJHfH79CNQAoVYrjp66tYFgtFpODxvGwiBjiJ0vLSgzUGH23B6+OaTAwOWKjk76dbFgxMpODvv2wiBzmM0/PRgjMGJHfH79CNQAoVYrjp66tYFgtFpODxvGwiBjiJ0vLSgzUGH23B6+OaTAwOWKjk76dbFgxMpODvv2wiBzmM0/PRgjMGJHfH79CNQAoVYrjp66tYFgtFpODxvGw');
+        audio.play().catch(e => console.log('Audio play failed:', e));
+    } catch (e) {
+        console.log('Could not play notification sound:', e);
+    }
+}
+
+window.closeAlert = async function() {
+    const notification = document.getElementById('alertNotification');
+    const overlay = document.getElementById('alertOverlay');
+    const alertId = notification.dataset.alertId;
+    
+    if (alertId && window.firebaseDB) {
+        try {
+            const alertRef = window.firebaseDoc(window.firebaseDB, 'alerts', alertId);
+            await window.firebaseSetDoc(alertRef, { read: true }, { merge: true });
+        } catch (error) {
+            console.error('Error marking alert as read:', error);
+        }
+    }
+    
+    notification.style.display = 'none';
+    overlay.style.display = 'none';
+};
+
 function initTabsWithResults() {
     const tabButtons = document.querySelectorAll('.tab-button');
     const tabPanes = document.querySelectorAll('.tab-pane');
@@ -3269,6 +3255,10 @@ window.addEventListener('DOMContentLoaded', async () => {
     setTimeout(() => {
         setupResultsListener();
     }, 1000);
+    
+    setTimeout(() => {
+        setupAlertListener();
+    }, 1000);
 });
 
 window.addEventListener('resize', () => {
@@ -3293,6 +3283,9 @@ window.addEventListener('beforeunload', () => {
     }
     if (resultsUnsubscribe) {
         resultsUnsubscribe();
+    }
+    if (alertsUnsubscribe) {
+        alertsUnsubscribe();
     }
 });
 </script>
