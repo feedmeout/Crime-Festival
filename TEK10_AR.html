@@ -758,8 +758,6 @@
             canvas.height = canvas.width / aspectRatio;
 
             const scale = canvas.width / 800;
-
-            // Floor with wood texture
             const floorGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
             floorGradient.addColorStop(0, '#9d8569');
             floorGradient.addColorStop(0.3, '#8b7355');
@@ -768,7 +766,6 @@
             ctx.fillStyle = floorGradient;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Wood grain texture - simplified to match TEK1
             ctx.strokeStyle = 'rgba(101, 67, 33, 0.3)';
             ctx.lineWidth = 2 * scale;
             for (let i = 0; i < canvas.height; i += 40 * scale) {
@@ -778,7 +775,6 @@
                 ctx.stroke();
             }
 
-            // Vignette effect
             const vignette = ctx.createRadialGradient(canvas.width/2, canvas.height/2, 150 * scale, canvas.width/2, canvas.height/2, 550 * scale);
             vignette.addColorStop(0, 'rgba(0,0,0,0)');
             vignette.addColorStop(0.7, 'rgba(0,0,0,0.1)');
@@ -786,7 +782,6 @@
             ctx.fillStyle = vignette;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Key shadow
             const keyShadow = ctx.createRadialGradient(400 * scale, 240 * scale, 0, 400 * scale, 240 * scale, 90 * scale);
             keyShadow.addColorStop(0, 'rgba(0, 0, 0, 0.4)');
             keyShadow.addColorStop(0.6, 'rgba(0, 0, 0, 0.2)');
@@ -796,7 +791,6 @@
             ctx.ellipse(400 * scale, 240 * scale, 90 * scale, 20 * scale, 0, 0, Math.PI * 2);
             ctx.fill();
 
-            // Key head - outer circle with gradient
             const headOuterGradient = ctx.createRadialGradient(354 * scale, 194 * scale, 5 * scale, 360 * scale, 200 * scale, 28 * scale);
             headOuterGradient.addColorStop(0, '#ffd700');
             headOuterGradient.addColorStop(0.2, '#f4d03f');
@@ -812,7 +806,6 @@
             ctx.lineWidth = 2 * scale;
             ctx.stroke();
         
-            // Main highlight on key head
             const mainHighlight = ctx.createRadialGradient(353 * scale, 193 * scale, 0, 353 * scale, 193 * scale, 8 * scale);
             mainHighlight.addColorStop(0, 'rgba(255, 255, 255, 0.9)');
             mainHighlight.addColorStop(0.5, 'rgba(255, 255, 255, 0.6)');
@@ -826,8 +819,6 @@
             ctx.beginPath();
             ctx.arc(356 * scale, 195 * scale, 3 * scale, 0, Math.PI * 2);
             ctx.fill();
-
-            // Decorative rings
             ctx.strokeStyle = '#f4d03f';
             ctx.lineWidth = 1.2 * scale;
             ctx.beginPath();
@@ -839,8 +830,6 @@
             ctx.beginPath();
             ctx.arc(360 * scale, 200 * scale, 20 * scale, 0, Math.PI * 2);
             ctx.stroke();
-
-            // Inner hole
             ctx.save();
             ctx.globalCompositeOperation = 'destination-out';
             ctx.beginPath();
@@ -860,7 +849,6 @@
             ctx.arc(360 * scale, 200 * scale, 16.5 * scale, Math.PI * 1.2, Math.PI * 1.8);
             ctx.stroke();
             
-            // Key shaft
             const shaftGradient = ctx.createLinearGradient(380 * scale, 184 * scale, 380 * scale, 216 * scale);
             shaftGradient.addColorStop(0, '#8b6914');
             shaftGradient.addColorStop(0.1, '#a67c1b');
@@ -877,7 +865,6 @@
             ctx.lineWidth = 2.5 * scale;
             ctx.strokeRect(386 * scale, 186 * scale, 100 * scale, 28 * scale);
 
-            // Top highlight on shaft
             const topHighlight = ctx.createLinearGradient(386 * scale, 188 * scale, 386 * scale, 193 * scale);
             topHighlight.addColorStop(0, 'rgba(255, 245, 200, 0.8)');
             topHighlight.addColorStop(1, 'rgba(255, 245, 200, 0)');
@@ -887,14 +874,12 @@
             ctx.fillStyle = 'rgba(255, 235, 150, 0.5)';
             ctx.fillRect(388 * scale, 191 * scale, 96 * scale, 2 * scale);
 
-            // Bottom shadow on shaft
             const bottomShadow = ctx.createLinearGradient(386 * scale, 207 * scale, 386 * scale, 212 * scale);
             bottomShadow.addColorStop(0, 'rgba(60, 45, 15, 0)');
             bottomShadow.addColorStop(1, 'rgba(60, 45, 15, 0.6)');
             ctx.fillStyle = bottomShadow;
             ctx.fillRect(388 * scale, 207 * scale, 96 * scale, 5 * scale);
 
-            // Key teeth
             const teeth = [
                 {x: 486, y: 189, h: 7, w: 3.5},
                 {x: 490.5, y: 187, h: 10, w: 3.5},
@@ -934,7 +919,6 @@
                 }
             });
 
-            // Key tip
             ctx.beginPath();
             ctx.moveTo(486 * scale, 186 * scale);
             ctx.lineTo(531 * scale, 186 * scale);
@@ -956,8 +940,6 @@
             ctx.strokeStyle = '#5a4010';
             ctx.lineWidth = 2.5 * scale;
             ctx.stroke();
-
-            // Top highlight on tip
             ctx.beginPath();
             ctx.moveTo(488 * scale, 188 * scale);
             ctx.lineTo(529 * scale, 188 * scale);
@@ -976,8 +958,6 @@
             ctx.closePath();
             ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
             ctx.fill();
-
-            // Bottom shadow on tip
             ctx.beginPath();
             ctx.moveTo(488 * scale, 207 * scale);
             ctx.lineTo(529 * scale, 207 * scale);
@@ -988,7 +968,6 @@
             ctx.fillStyle = 'rgba(60, 45, 15, 0.4)';
             ctx.fill();
 
-            // Light sparkles
             ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
             for (let i = 0; i < 30; i++) {
                 const x = (375 + i * 5 + (Math.random() * 5 - 2.5)) * scale;
@@ -1019,7 +998,6 @@
                 ctx.fill();
             }
             
-            // Scale indicator
             ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
             ctx.fillRect(570 * scale, 350 * scale, 110 * scale, 2 * scale); 
             ctx.fillRect(570 * scale, 345 * scale, 2 * scale, 12 * scale);
@@ -1034,17 +1012,16 @@
             ctx.textAlign = 'center';
             ctx.fillText('5.2 cm', 624 * scale, 372 * scale);
 
-            // Crime scene metadata bar
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
-            ctx.fillRect(0, 0, canvas.width, 40 * scale);
-            ctx.fillStyle = '#ff0000';
-            ctx.font = `bold ${14 * scale}px monospace`;
-            ctx.textAlign = 'left';
-            ctx.fillText('● REC', 10 * scale, 25 * scale);
-            ctx.fillStyle = '#ffffff';
-            ctx.fillText('22/09/2025  22:35:42  |  ΣΚΗΝΗ ΕΓΚΛΗΜΑΤΟΣ - ΓΡΑΦΕΙΟ ΘΥΜΑΤΟΣ', 80 * scale, 25 * scale);
-            ctx.textAlign = 'right';
-            ctx.fillText('ΤΕΚ #010', (canvas.width - 10 * scale), 25 * scale);
+			ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
+			ctx.fillRect(0, 0, canvas.width, 40 * scale);
+			ctx.fillStyle = '#ff0000';
+			ctx.font = `bold ${14 * scale}px monospace`;
+			ctx.textAlign = 'left';
+			ctx.fillText('● REC', 10 * scale, 25 * scale);
+			ctx.fillStyle = '#ffffff';
+			ctx.fillText('31/10/2025  09:29:15  |  ΣΚΗΝΗ ΕΓΚΛΗΜΑΤΟΣ - ΓΡΑΦΕΙΟ ΘΥΜΑΤΟΣ', 80 * scale, 25 * scale);
+			ctx.textAlign = 'right';
+			ctx.fillText('ΤΕΚ #010', (canvas.width - 10 * scale), 25 * scale);
         }
 
         function handleResize() {

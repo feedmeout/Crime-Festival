@@ -915,20 +915,17 @@
             ctx.font = '10px monospace';
             ctx.textAlign = 'center';
             ctx.fillText('CH-2025-09847-KCN', receiptX + receiptWidth / 2, yPos);
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
-            ctx.fillRect(0, 0, 800, 45);
-            ctx.fillStyle = '#ff0000';
-            ctx.beginPath();
-            ctx.arc(25, 22, 6, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.fillStyle = '#fff';
-            ctx.font = 'bold 15px monospace';
-            ctx.textAlign = 'left';
-            ctx.fillText('REC', 40, 27);
-            ctx.font = '13px monospace';
-            ctx.fillText('19/09/2025  17:45:12  |  ΣΚΗΝΗ ΕΓΚΛΗΜΑΤΟΣ - ΛΟΓΙΣΤΗΡΙΟ', 100, 27);
-            ctx.textAlign = 'right';
-            ctx.fillText('ΤΕΚ #009', 780, 27);
+			
+			ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
+			ctx.fillRect(0, 0, 800, 40);
+			ctx.fillStyle = '#ff0000';
+			ctx.font = 'bold 14px monospace';
+			ctx.textAlign = 'left';
+			ctx.fillText('● REC', 10, 25);
+			ctx.fillStyle = '#fff';
+			ctx.fillText('31/10/2025  09:16:35  |  ΣΚΗΝΗ ΕΓΚΛΗΜΑΤΟΣ - ΛΟΓΙΣΤΗΡΙΟ', 80, 25);
+			ctx.textAlign = 'right';
+			ctx.fillText('ΤΕΚ #009', 780, 25);
         }
 
         let resizeTimer;

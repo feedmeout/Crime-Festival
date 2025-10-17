@@ -1228,12 +1228,23 @@
                 ctx.fillStyle = '#2d2d3d';
                 ctx.fillRect(x + (65 * scale), y + (120 * scale), 30 * scale, 40 * scale);
                 ctx.fillRect(x + (50 * scale), y + (160 * scale), 60 * scale, 10 * scale);
-                ctx.fillStyle = '#ffaa00';
-                ctx.font = `bold ${10 * scale}px monospace`;
-                ctx.fillText(`CAM #${i === 0 ? '03' : i === 1 ? '07' : '12'}`, x + (80 * scale), y + (115 * scale));
-            }
+				ctx.fillStyle = '#ffaa00';
+				ctx.font = `bold ${10 * scale}px monospace`;
+				ctx.fillText(`CAM #${i === 0 ? '03' : i === 1 ? '07' : '12'}`, x + (80 * scale), y + (115 * scale));
         }
 
+
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+        ctx.fillRect(0, 0, maxWidth, 40 * scale);
+        ctx.fillStyle = '#ff0000';
+        ctx.font = `bold ${14 * scale}px monospace`;
+        ctx.textAlign = 'left';
+        ctx.fillText('● REC', 10 * scale, 25 * scale);
+        ctx.fillStyle = '#fff';
+        ctx.fillText('31/10/2025  09:42:50  |  ΣΚΗΝΗ ΕΓΚΛΗΜΑΤΟΣ - ΔΩΜΑΤΙΟ ΑΣΦΑΛΕΙΑΣ', 80 * scale, 25 * scale);
+        ctx.textAlign = 'right';
+        ctx.fillText('ΤΕΚ #011', (maxWidth - 10 * scale), 25 * scale);
+    }
         window.onload = function() {
             drawCrimeScene();
             window.addEventListener('resize', drawCrimeScene);
