@@ -248,19 +248,26 @@
         }
 
         .model-viewer-container {
-            display: none;
+            visibility: hidden;
+            height: 0;
+            overflow: hidden;
+            transition: visibility 0s 0.3s, height 0.3s ease;
         }
 
         .model-viewer-container.active {
-            display: block;
+            visibility: visible;
+            height: auto;
+            margin-top: 20px;
+            transition: visibility 0s, height 0.3s ease;
         }
 
         model-viewer {
             width: 100%;
-            height: 450px;
+            height: clamp(300px, 50vw, 450px);
             background-color: #f5f5f5;
             border-radius: 8px;
             border: 2px solid #ddd;
+            display: block;
         }
 
         model-viewer::part(default-ar-button) {
@@ -624,7 +631,7 @@
             }
 
             model-viewer {
-                height: 350px;
+                height: clamp(250px, 60vw, 350px);
             }
             
             .ar-title {
@@ -915,48 +922,7 @@
                         exposure="0.8"
                         camera-orbit="0deg 75deg 2.5m"
                         min-camera-orbit="auto 0deg auto"
-                        max-camera-orbit="auto 180deg auto"
-                        loading="lazy"
-                        reveal="interaction">
-                        
-                        <div slot="poster" style="
-                            width: 100%;
-                            height: 100%;
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            background: #f5f5f5;
-                            flex-direction: column;
-                            gap: 10px;
-                        ">
-                            <div style="
-                                border: 4px solid #f3f3f3;
-                                border-top: 4px solid #ff6b00;
-                                border-radius: 50%;
-                                width: 40px;
-                                height: 40px;
-                                animation: spin 1s linear infinite;
-                            "></div>
-                            <p style="color: #666; font-size: 14px;">Φόρτωση 3D μοντέλου...</p>
-                        </div>
-                        
-                        <div slot="error" style="
-                            width: 100%;
-                            height: 100%;
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            background: #fff3cd;
-                            flex-direction: column;
-                            gap: 15px;
-                            padding: 20px;
-                        ">
-                            <p style="color: #856404; font-size: 16px; font-weight: bold;">⚠️ Σφάλμα Φόρτωσης</p>
-                            <p style="color: #856404; font-size: 13px; text-align: center;">
-                                Το 3D μοντέλο δεν μπορεί να φορτώσει.<br>
-                                Ελέγξτε το αρχείο: security_camera.glb
-                            </p>
-                        </div>
+                        max-camera-orbit="auto 180deg auto">
                     </model-viewer>
 
                     <button class="close-3d-button" id="close3DBtn">
@@ -1180,7 +1146,7 @@
                         <p class="section-content" style="margin-bottom: 15px;"><strong style="color: #0f3460; font-size: 16px;">🔎 Ψηφιακή Εγκληματολογική Ανάλυση</strong></p>
                         
                         <p class="section-content" style="margin-bottom: 10px;">
-                            <strong>1. Απόπειρα Επανεκκίνησης που Απέτυχε:</strong> Ο φύλακας ακολούθησε το πρωτόκολλο Α-12 για επανεκκίνηση συστήματος λόγω τεχνικών προβλημάτων. Η επανεκκίνηση ξεκίνησε κανονικά αλλά το σύστημα δεν μπόρεσε να επανέλθει. Παραμένει ασαφές αν τα αρχικά προβλήματα ήταν τυχαία ή προκληθέντα, και αν κάποιος εκμεταλλεύτηκε την ευπάθεια που δημιουργήσε η ενημέρωση του firmware των 15:20.
+                            <strong>1. Απόπειρα Επανεκκίνησης που Απέτυχε:</strong> Ο φύλακας ακολούθησε το πρωτόκολλο Α-12 για επανεκκίνηση συστήματος λόγω τεχνικών προβλημάτων. Η επανεκκίνηση ξεκίνησε κανονικά αλλά το σύστημα δεν μπόρεσε να επανέλθει. Παραμένει ασαφές αν τα αρχικά προβλήματα ήταν τυχαία ή προκλητά, και αν κάποιος εκμεταλλεύθηκε την ευπάθεια που δημιουργήσε η ενημέρωση του firmware των 15:20.
                         </p>
 						
                         <p class="section-content" style="margin-bottom: 10px;">
@@ -1218,7 +1184,7 @@
                             <strong style="color: #856404;">🕐 Ώρα:</strong> 20:50-21:45
                         </p>
                         <p class="section-content" style="margin-bottom: 10px;">
-                            <strong style="color: #856404;">✏️ Υπογραφή:</strong> Γ. ΠΕΤΡΟΠΟΥΛΟΣ
+                            <strong style="color: #856404;">✍️ Υπογραφή:</strong> Γ. ΠΕΤΡΟΠΟΥΛΟΣ
                         </p>
                         <p class="section-content" style="margin-bottom: 15px;">
                             <strong style="color: #856404;">📋 Περιγραφή Συμβάντος:</strong>
@@ -1248,7 +1214,7 @@
                         💡 ΣΗΜΑΣΙΑ ΓΙΑ ΤΗΝ ΕΡΕΥΝΑ
                     </h3>
                     <p class="significance-text">
-                        Το χρονικό παράθυρο 20:58-21:42 αποτελεί το "μαύρο κουτί" της έρευνας - 44 λεπτά χωρίς οπτική καταγραφή. Τα τεχνικά προβλήματα ξεκίνησαν στις 20:42, κλιμακώθηκαν στις 20:48, και οδήγησαν σε απόπειρα επανεκκίνησης στις 20:55 που ουσιαστικά απέτυχε. Κρίσιμα ερωτήματα: (1) Ήταν τα αρχικά προβλήματα τυχαία ή σκόπιμα προκληθέντα; (2) Γιατί μόνο η Κάμερα #03 έχασε metadata; (3) Ποιος από τους 4 φύλακες ήταν στο δωμάτιο ελέγχου στις 20:55; (4) Υπήρχε σχέση μεταξύ της ενημέρωσης λογισμικού και της αποτυχίας επανεκκίνησης;
+                        Το χρονικό παράθυρο 20:58-21:42 αποτελεί το "μαύρο κουτί" της έρευνας - 44 λεπτά χωρίς οπτική καταγραφή. Τα τεχνικά προβλήματα ξεκίνησαν στις 20:42, κλιμακώθηκαν στις 20:48, και οδήγησαν σε απόπειρα επανεκκίνησης στις 20:55 που ουσιαστικά απέτυχε. Κρίσιμα ερωτήματα: (1) Ήταν τα αρχικά προβλήματα τυχαία ή σκόπιμα προκλητά; (2) Γιατί μόνο η Κάμερα #03 έχασε metadata; (3) Ποιος από τους 4 φύλακες ήταν στο δωμάτιο ελέγχου στις 20:55; (4) Υπήρχε σχέση μεταξύ της ενημέρωσης λογισμικού και της αποτυχίας επανεκκίνησης;
                     </p>
                 </div>
 
@@ -1287,25 +1253,24 @@
             }
         };
 
-        // 3D Model Loading Controls
+        // 3D Model Loading Controls - FIXED VERSION
         const load3DBtn = document.getElementById('load3DBtn');
         const close3DBtn = document.getElementById('close3DBtn');
         const modelViewerContainer = document.getElementById('modelViewerContainer');
-        const modelViewer = document.getElementById('securityCameraModel');
 
         load3DBtn.addEventListener('click', function() {
-            load3DBtn.style.display = 'none';
             modelViewerContainer.classList.add('active');
+            load3DBtn.style.display = 'none';
             
-            // Trigger model loading
-            if (modelViewer && !modelViewer.loaded) {
-                modelViewer.dismissPoster();
-            }
+            setTimeout(() => {
+                modelViewerContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 100);
         });
 
         close3DBtn.addEventListener('click', function() {
             modelViewerContainer.classList.remove('active');
             load3DBtn.style.display = 'flex';
+            load3DBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         });
 
         function drawCrimeScene() {
