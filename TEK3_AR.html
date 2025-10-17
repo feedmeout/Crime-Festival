@@ -271,21 +271,27 @@
             text-align: center;
         }
 
-        .viewer-container {
-            display: none;
-            margin-top: 15px;
+        .model-viewer-container {
+            visibility: hidden;
+            height: 0;
+            overflow: hidden;
+            transition: visibility 0s 0.3s, height 0.3s ease;
         }
 
-        .viewer-container.active {
-            display: block;
+        .model-viewer-container.active {
+            visibility: visible;
+            height: auto;
+            margin-top: 20px;
+            transition: visibility 0s, height 0.3s ease;
         }
 
         model-viewer {
             width: 100%;
-            height: clamp(300px, 50vh, 500px);
+            height: clamp(300px, 50vw, 450px);
             background-color: #f5f5f5;
             border-radius: 8px;
             border: 2px solid #ddd;
+            display: block;
             --poster-color: #f5f5f5;
         }
 
@@ -514,7 +520,6 @@
             transform: translateY(0);
         }
 
-        /* Tablet breakpoint */
         @media (min-width: 769px) and (max-width: 1024px) {
             .container {
                 padding: 20px;
@@ -523,13 +528,8 @@
             .badge-bar {
                 flex-direction: row;
             }
-
-            model-viewer {
-                height: 400px;
-            }
         }
 
-        /* Small mobile breakpoint */
         @media (max-width: 480px) {
             .header h1 {
                 font-size: 14px;
@@ -555,7 +555,6 @@
             }
         }
 
-        /* Print styles */
         @media print {
             .animated-background,
             .back-button-container {
@@ -572,14 +571,12 @@
             }
         }
 
-        /* High DPI screens */
         @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
             .evidence-card {
                 border-width: 2px;
             }
         }
 
-        /* Accessibility - Reduced motion */
         @media (prefers-reduced-motion: reduce) {
             .animated-background,
             .check-icon,
@@ -631,7 +628,7 @@
                 </h3>
                 
                 <div class="button-container">
-                    <button id="view3DButton" class="view-3d-button" onclick="load3DModel()">
+                    <button id="view3DBtn" class="view-3d-button">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                             <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
                             <polyline points="2 17 12 22 22 17"></polyline>
@@ -641,7 +638,7 @@
                     </button>
                 </div>
 
-                <div id="viewerContainer" class="viewer-container">
+                <div id="modelViewerContainer" class="model-viewer-container">
                     <model-viewer
                         id="phoneModel"
                         src="mobile_phone.glb"
@@ -657,53 +654,11 @@
                         exposure="0.8"
                         camera-orbit="0deg 75deg 2.5m"
                         min-camera-orbit="auto 0deg auto"
-                        max-camera-orbit="auto 180deg auto"
-                        loading="lazy"
-                        reveal="interaction">
-                        
-                        <div slot="poster" style="
-                            width: 100%;
-                            height: 100%;
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            background: #f5f5f5;
-                            flex-direction: column;
-                            gap: 10px;
-                        ">
-                            <div style="
-                                border: 4px solid #f3f3f3;
-                                border-top: 4px solid #ff6b00;
-                                border-radius: 50%;
-                                width: 40px;
-                                height: 40px;
-                                animation: spin 1s linear infinite;
-                            " aria-label="Φόρτωση"></div>
-                            <p style="color: #666; font-size: 14px;">Φόρτωση 3D μοντέλου...</p>
-                        </div>
-                        
-                        <div slot="error" style="
-                            width: 100%;
-                            height: 100%;
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            background: #fff3cd;
-                            flex-direction: column;
-                            gap: 15px;
-                            padding: 20px;
-                            text-align: center;
-                        ">
-                            <p style="color: #856404; font-size: clamp(14px, 3vw, 16px); font-weight: bold;">⚠️ Σφάλμα Φόρτωσης</p>
-                            <p style="color: #856404; font-size: clamp(12px, 2.5vw, 13px);">
-                                Το 3D μοντέλο δεν μπορεί να φορτώσει.<br>
-                                Ελέγξτε το αρχείο: mobile_phone.glb
-                            </p>
-                        </div>
+                        max-camera-orbit="auto 180deg auto">
                     </model-viewer>
                     
                     <div class="button-container">
-                        <button class="close-3d-button" onclick="close3DModel()">
+                        <button id="close3DBtn" class="close-3d-button">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                                 <line x1="18" y1="6" x2="6" y2="18"></line>
                                 <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -850,29 +805,24 @@
     </div>
 
     <script>
-        let modelLoaded = false;
+        const view3DBtn = document.getElementById('view3DBtn');
+        const close3DBtn = document.getElementById('close3DBtn');
+        const modelViewerContainer = document.getElementById('modelViewerContainer');
 
-        function load3DModel() {
-            const viewerContainer = document.getElementById('viewerContainer');
-            const button = document.getElementById('view3DButton');
-            const modelViewer = document.getElementById('phoneModel');
+        view3DBtn.addEventListener('click', function() {
+            modelViewerContainer.classList.add('active');
+            view3DBtn.style.display = 'none';
             
-            viewerContainer.classList.add('active');
-            button.style.display = 'none';
-            
-            if (!modelLoaded) {
-                modelViewer.dismissPoster();
-                modelLoaded = true;
-            }
-        }
+            setTimeout(() => {
+                modelViewerContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 100);
+        });
 
-        function close3DModel() {
-            const viewerContainer = document.getElementById('viewerContainer');
-            const button = document.getElementById('view3DButton');
-            
-            viewerContainer.classList.remove('active');
-            button.style.display = 'inline-flex';
-        }
+        close3DBtn.addEventListener('click', function() {
+            modelViewerContainer.classList.remove('active');
+            view3DBtn.style.display = 'flex';
+            view3DBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
 
         window.goBackToCaseFile = function() {
             const teamCode = sessionStorage.getItem('teamCode');
