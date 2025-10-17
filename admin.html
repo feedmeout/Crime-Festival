@@ -1922,7 +1922,6 @@ async function exportSurveyDataToExcel() {
             <p style="margin-bottom: 15px;">Downloaded: <strong>${filename}</strong></p>
             <p style="font-size: 14px; opacity: 0.9;">Total responses: ${allResponses.length}</p>
             <p style="font-size: 14px; opacity: 0.9;">Pre-surveys: ${allResponses.filter(r => r.surveyType === 'pre').length} | Post-surveys: ${allResponses.filter(r => r.surveyType === 'post').length}</p>
-            <p style="font-size: 12px; opacity: 0.8; margin-top: 10px;">✓ Columns ordered by survey instrument</p>
         `;
         document.body.appendChild(successDiv);
 
