@@ -963,29 +963,25 @@
                             </div>
                         </div>
 
-                        <h3 style="margin-top: 25px; margin-bottom: 15px;">🎯 Αναλυτική Βαθμολογία:</h3>
-                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: clamp(11px, 2vw, 13px); line-height: 1.7; max-height: 400px; overflow-y: auto; word-wrap: break-word;">
+<h3 style="margin-top: 25px; margin-bottom: 15px;">🎯 Αναλυτική Βαθμολογία:</h3>
+<div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: clamp(11px, 2vw, 13px); line-height: 1.7; max-height: 400px; overflow-y: auto; word-wrap: break-word;">
 ${solution.breakdown.map(item => {
     if (item.trim() === '') {
         return '<div style="height: 8px;"></div>';
     }
 
-    // Decorative separators
     if (item.includes('═')) {
-        return '<div style="text-align: center; color: #ff6b00; font-weight: bold; font-size: clamp(13px, 2.5vw, 15px); margin: 15px 0 10px 0; letter-spacing: 1px; word-wrap: break-word;">' + item + '</div>';
+        return '<hr style="border: none; border-top: 2px solid #ff6b00; margin: 15px 0; opacity: 0.3;">';
     }
 
-    // Main section headers
-    if (item.match(/^[🎯🧩👥⚡⚠️🔍]/)) {
+    if (item.match(/^[🎯🧩👥⚡⚠️🔍❌]/)) {
         return '<div style="background: linear-gradient(135deg, #0f3460 0%, #16213e 100%); color: white; padding: clamp(10px, 2vw, 12px) clamp(12px, 2.5vw, 15px); margin: 15px 0 10px 0; border-radius: 8px; font-weight: bold; font-size: clamp(13px, 2.5vw, 15px); box-shadow: 0 2px 8px rgba(0,0,0,0.2); word-wrap: break-word;">' + item + '</div>';
     }
 
-    // Bullet points and arrows
     if (item.startsWith('   •') || item.startsWith('   →')) {
         return '<div style="padding: clamp(5px, 1vw, 6px) clamp(5px, 1vw, 6px) clamp(5px, 1vw, 6px) clamp(30px, 6vw, 35px); margin: 3px 0; color: #555; font-size: clamp(12px, 2.2vw, 13px); line-height: 1.6; word-wrap: break-word;">' + item + '</div>';
     }
 
-    // Indented text
     if (item.startsWith('   ')) {
         return '<div style="padding: clamp(4px, 1vw, 5px) clamp(4px, 1vw, 5px) clamp(4px, 1vw, 5px) clamp(25px, 5vw, 30px); margin: 2px 0; color: #666; font-size: clamp(11px, 2vw, 13px); word-wrap: break-word;">' + item + '</div>';
     }
