@@ -583,11 +583,7 @@
                 
                 breakdown.push(`🎖️ ΤΕΛΕΙΑ ΑΝΑΛΥΣΗ! (+${perpetratorSectionPoints} πόντοι)`);
                 breakdown.push('');
-                breakdown.push('Εντόπισαν και τους 3 συνεργούς ΧΩΡΙΣ ψευδή θετικά!');
-                breakdown.push('');
-                breakdown.push('   ✓ Αναγνώστου (Μαστρομυαλός)');
-                breakdown.push('   ✓ Πετρόπουλος (Προμηθευτής κυανίου)');
-                breakdown.push('   ✓ Μαυρίδη (Συγκάλυψη)');
+                breakdown.push('Εντόπισαν και τους 3 συνεργούς!');
                 breakdown.push('');
             } else {
                 // PARTIAL OR NO IDENTIFICATION
@@ -601,17 +597,6 @@
                 if (correctCount > 0) {
                     perpetratorSectionPoints += correctCount * SCORING.perpetrator;
                     breakdown.push(`Εντόπισαν ${correctCount}/3 Δράστες`);
-                    breakdown.push('');
-                    selectedSuspects.forEach(suspect => {
-                        if (CORRECT_SUSPECTS.includes(suspect)) {
-                            const name = SUSPECT_NAMES[suspect];
-                            let role = '';
-                            if (suspect === 'konstantinos') role = 'Μαστρομυαλός';
-                            else if (suspect === 'georgios') role = 'Προμηθευτής κυανίου';
-                            else if (suspect === 'eleni') role = 'Συγκάλυψη';
-                            breakdown.push(`   ✓ ${name} (${role})`);
-                        }
-                    });
                 } else {
                     breakdown.push('Δεν εντόπισαν κανέναν από τους πραγματικούς δράστες');
                 }
@@ -694,11 +679,6 @@
                 breakdown.push('');
                 wrongSuspects.forEach(name => {
                     breakdown.push(`   → ${name}`);
-                    if (name === 'Παπαδοπούλου Μαρία') {
-                        breakdown.push('      • Είχε σιδηρένιο άλλοθι (γιατρός + δείπνο με αδελφή)');
-                    } else if (name === 'Νικολάου Αλεξάνδρα') {
-                        breakdown.push('      • Δεν είχε πρόσβαση σε κυάνιο ούτε ισχυρό κίνητρο');
-                    }
                 });
                 
                 const originalScore = score;
@@ -727,16 +707,6 @@
                 
                 missedSuspects.forEach(name => {
                     breakdown.push(`   → ${name}`);
-                    if (name === 'Αναγνώστου Κωνσταντίνος') {
-                        breakdown.push('      • Τα αποτυπώματά του στο μπουκάλι και το κλειδί');
-                        breakdown.push('      • Είχε υπεξαίρεση €1.5εκ να κρύψει');
-                    } else if (name === 'Πετρόπουλος Γεώργιος') {
-                        breakdown.push('      • Αγόρασε το κυάνιο (απόδειξη ΤΕΚ #9)');
-                        breakdown.push('      • Απενεργοποίησε κάμερες 20:55');
-                    } else if (name === 'Μαυρίδη Ελένη') {
-                        breakdown.push('      • Έστειλε το πλαστό email "αυτοκτονίας"');
-                        breakdown.push('      • Πλαστογράφησε το χειρόγραφο σημείωμα');
-                    }
                 });
                 
                 breakdown.push('');
