@@ -1176,9 +1176,9 @@ window.timerInterval = setInterval(() => {
                 <div class="progress-bar">
                     <div class="progress-fill" style="width: ${progress}%;">${progress}%</div>
                 </div>
-                <div class="team-stats">📊 ΞΕΚΛΕΙΔΩΜΕΝΑ: ${team.unlocked.length} / ${TOTAL_TEKS} ΣΤΟΙΧΕΙΑ</div>
+                <div class="team-stats">📊 ΞΕΚΛΕΙΔΩΜΕΝΑ ΣΤΟΙΧΕΙΑ: ${team.unlocked.length} / ${TOTAL_TEKS}</div>
 				<div class="team-stats" style="color: ${memberStatusColor};">
-					${memberStatusIcon} ΜΕΛΗ ΣΥΝΔΕΔΕΜΕΝΑ: <strong>${loggedInCount} / ${teamSize || 'N/A'}</strong>
+					${memberStatusIcon} ΕΝΕΡΓΑ ΜΕΛΗ: <strong>${loggedInCount} / ${teamSize || 'N/A'}</strong>
 				</div>
                 <div class="team-stats">🔑 ΚΩΔΙΚΟΣ: <strong>${team.password || 'N/A'}</strong></div>
                 ${timingHtml}
@@ -1254,17 +1254,17 @@ async function showTimestamps(teamName) {
         html += '<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 10px;">';
         
         if (team.startTime) {
-            html += `<div><strong>🚀 Έναρξη:</strong> ${formatDateTime(team.startTime)}</div>`;
+            html += `<div><strong>🚀 ΕΝΑΡΞΗ:</strong> ${formatDateTime(team.startTime)}</div>`;
         }
         
         if (team.completedAt) {
-            html += `<div><strong>🏁 Ολοκλήρωση:</strong> ${formatDateTime(team.completedAt)}</div>`;
+            html += `<div><strong>🏁 ΟΛΟΚΛΗΡΩΣΗ:</strong> ${formatDateTime(team.completedAt)}</div>`;
         }
         
         html += '</div>';
         
         if (team.completedAt && team.totalTimeMs) {
-            html += `<div><strong>⏱️ Συνολικός Χρόνος:</strong> ${formatTime(team.totalTimeMs)}</div>`;
+            html += `<div><strong>⏱️ ΣΥΝΟΛΙΚΟΣ ΧΡΟΝΟΣ:</strong> ${formatTime(team.totalTimeMs)}</div>`;
         }
         
         html += '</div>';

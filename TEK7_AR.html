@@ -741,10 +741,10 @@
 				ctx.stroke();
 			}
 
-            const paperX = width * 0.375;
-            const paperY = height * 0.25;
-            const paperWidth = width * 0.25;
-            const paperHeight = height * 0.65;
+			const paperX = width * 0.3;
+			const paperY = height * 0.2;
+			const paperWidth = width * 0.4;
+			const paperHeight = height * 0.7;
             
             ctx.fillStyle = '#ffffff';
             ctx.fillRect(paperX, paperY, paperWidth, paperHeight);
@@ -755,11 +755,13 @@
             ctx.lineTo(paperX + paperWidth/2, paperY + paperHeight);
             ctx.stroke();
 
-            const fontSize = Math.max(width * 0.03, 14);
+            const fontSize = Math.min(Math.max(width * 0.025, 12), paperWidth * 0.15);
             ctx.fillStyle = '#1a3a8a';
             ctx.font = `italic ${fontSize}px Georgia, serif`;
             ctx.textAlign = 'center';
-            ctx.fillText('Συγχώρεσέ με Μ.', paperX + paperWidth/2, paperY + paperHeight/2);
+            const text = 'Συγχώρεσέ με Μ.';
+			const maxWidth = paperWidth * 0.9;
+			ctx.fillText(text, paperX + paperWidth/2, paperY + paperHeight/2, maxWidth);
             ctx.fillStyle = 'rgba(26, 58, 138, 0.1)';
             ctx.fillRect(paperX + paperWidth/2 - width * 0.075, paperY + paperHeight/2 - height * 0.05, width * 0.15, height * 0.0075);
 			

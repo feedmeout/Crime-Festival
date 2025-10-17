@@ -243,7 +243,7 @@
 
     <script>
         const tekInfo = {
-            '1': { name: 'Μπουκάλι Ουίσκι', icon: '🍾', page: 'TEK1_AR.html' },
+            '1': { name: 'Μπουκάλι Ουίσκι', icon: '🥃', page: 'TEK1_AR.html' },
             '2': { name: 'Κρυστάλλινα Ποτήρια', icon: '🥃', page: 'TEK2_AR.html' },
             '3': { name: 'Κινητό Θύματος', icon: '📱', page: 'TEK3_AR.html' },
             '4': { name: 'Email Αυτοκτονίας', icon: '💻', page: 'TEK4_AR.html' },
@@ -258,6 +258,14 @@
 
         const urlParams = new URLSearchParams(window.location.search);
         const tekNumber = urlParams.get('tek');
+
+        // SIMULATION MODE
+        const simulationMode = urlParams.get('simulate');
+        let simulatedUnlockCount = 1; // Default: simulate unlocking one TEK
+        
+        if (simulationMode === 'complete') {
+            simulatedUnlockCount = 11; // Simulate completing all TEKs
+        }
 
         // TIMEOUT WRAPPER FOR PROMISES
         function withTimeout(promise, ms, errorMsg) {
@@ -306,7 +314,7 @@
             }
             
             try {
-                console.log(`📥 Loading from Firebase...`);
+                console.log(`🔥 Loading from Firebase...`);
                 
                 const docRef = window.firebaseDoc(window.firebaseDB, 'teams', teamName);
                 const docSnap = await withTimeout(
@@ -334,6 +342,22 @@
 
         async function getTeamData(teamCode) {
             console.log('🔍 Getting team data for:', teamCode);
+            
+            // SIMULATION MODE
+            if (simulationMode) {
+                const mockUnlocked = [];
+                for (let i = 1; i <= simulatedUnlockCount - 1; i++) {
+                    mockUnlocked.push(i.toString());
+                }
+                return {
+                    unlocked: mockUnlocked,
+                    timestamps: {},
+                    evidenceTimestamps: {},
+                    startTime: new Date(Date.now() - 3600000).toISOString(),
+                    completedAt: null,
+                    totalTimeMs: null
+                };
+            }
             
             // Try Firebase first (with timeout)
             const firebaseData = await loadFromFirebase(teamCode);
@@ -374,6 +398,11 @@
         }
 
         async function saveTeamData(teamCode, data) {
+            // SIMULATION MODE - skip saving
+            if (simulationMode) {
+                return true;
+            }
+            
             // Always save to localStorage first (immediate)
             localStorage.setItem(getStorageKey(teamCode), JSON.stringify(data.unlocked || []));
             console.log('✅ Saved to localStorage');
@@ -409,8 +438,8 @@
             console.log('🚀 Starting processUnlock...');
             
             const container = document.getElementById('unlockContainer');
-            const teamCode = localStorage.getItem('teamCode');
-            const memberAuth = localStorage.getItem('memberAuth');
+            const teamCode = simulationMode ? 'DEMO-TEAM' : localStorage.getItem('teamCode');
+            const memberAuth = simulationMode ? 'true' : localStorage.getItem('memberAuth');
 
             if (!teamCode || memberAuth !== 'true') {
                 console.log('⚠️ Not logged in, redirecting...');
@@ -503,7 +532,7 @@
             }
             
             console.log('💾 Saving team data...');
-            const saved = await saveTeamData(teamCode, teamData);
+            await saveTeamData(teamCode, teamData);
             
             const container = document.getElementById('unlockContainer');
             
@@ -517,10 +546,6 @@
                     </div>
                 `;
             }
-            
-            let firebaseStatus = saved ? 
-                '<br>☁️ Αποθηκεύτηκε στο cloud' : 
-                '<br>💾 Αποθηκεύτηκε τοπικά';
             
             container.innerHTML = `
                 <div class="unlock-icon">✅</div>
@@ -537,7 +562,6 @@
                 ${completionMessage}
                 <p class="progress-info">
                     📊 Έχετε ξεκλειδώσει ${teamData.unlocked.length} από 11 τεκμήρια
-                    ${firebaseStatus}
                 </p>
                 <a href="${tek.page}?team=${teamCode}" class="btn">Προβολή Τεκμηρίου</a>
                 <a href="index.html?team=${teamCode}" class="btn btn-secondary">Επιστροφή στον Φάκελο</a>
@@ -549,7 +573,7 @@
             console.log('📱 Page loaded');
             
             setTimeout(() => {
-                if (!isFirebaseReady()) {
+                if (!simulationMode && !isFirebaseReady()) {
                     console.error('⚠️ Firebase failed');
                     document.getElementById('unlockContainer').innerHTML = `
                         <div class="error">
