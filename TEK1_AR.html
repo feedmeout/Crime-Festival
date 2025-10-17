@@ -732,7 +732,6 @@
             }
         };
 
-        // 3D Viewer toggle functionality
         const view3DBtn = document.getElementById('view3DBtn');
         const close3DBtn = document.getElementById('close3DBtn');
         const modelViewerContainer = document.getElementById('modelViewerContainer');
@@ -755,7 +754,6 @@
             view3DBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         });
 
-        // Model viewer event handlers
         if (modelViewer) {
             modelViewer.addEventListener('progress', (event) => {
                 const percent = Math.round(event.detail.totalProgress * 100);

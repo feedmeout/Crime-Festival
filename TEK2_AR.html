@@ -281,12 +281,18 @@
             transform: translateY(0);
         }
 
-        .model-viewer-wrapper {
-            display: none;
+        .model-viewer-container {
+            visibility: hidden;
+            height: 0;
+            overflow: hidden;
+            transition: visibility 0s 0.3s, height 0.3s ease;
         }
 
-        .model-viewer-wrapper.active {
-            display: block;
+        .model-viewer-container.active {
+            visibility: visible;
+            height: auto;
+            margin-top: 20px;
+            transition: visibility 0s, height 0.3s ease;
         }
 
         model-viewer {
@@ -494,18 +500,6 @@
             transform: translateY(0);
         }
 
-        #debugInfo {
-            margin-top: 10px;
-            padding: 10px;
-            background: #e7f3ff;
-            border: 1px solid #2196F3;
-            border-radius: 5px;
-            font-size: clamp(11px, 2.2vw, 12px);
-            font-family: monospace;
-            display: none;
-            word-wrap: break-word;
-        }
-
         @media (max-width: 375px) {
             .header-content {
                 flex-direction: column;
@@ -601,7 +595,7 @@
                     </button>
                 </div>
 
-                <div id="modelViewerWrapper" class="model-viewer-wrapper">
+                <div id="modelViewerContainer" class="model-viewer-container">
                     <model-viewer
                         id="glassModel"
                         src="whiskey_glass.glb"
@@ -617,9 +611,7 @@
                         exposure="0.8"
                         camera-orbit="0deg 75deg 2.5m"
                         min-camera-orbit="auto 0deg auto"
-                        max-camera-orbit="auto 180deg auto"
-                        loading="lazy"
-                        reveal="interaction">
+                        max-camera-orbit="auto 180deg auto">
                         
                         <div slot="poster" style="
                             width: 100%;
@@ -660,8 +652,6 @@
                             </p>
                         </div>
                     </model-viewer>
-                    
-                    <div id="debugInfo"></div>
                     
                     <p style="text-align: center; color: #666; font-size: clamp(12px, 2.5vw, 13px); margin-top: 10px; font-style: italic;">
                         💡 Σύρετε για να περιστρέψετε • Zoom με δύο δάχτυλα
@@ -766,7 +756,7 @@
                        💡 ΣΗΜΑΣΙΑ ΓΙΑ ΤΗΝ ΕΡΕΥΝΑ
                     </h3>
                     <p class="significance-text">
-                        Δύο ποτήρια - ένα με κυάνιο, ένα καθαρό - αλλά ήταν από την ίδια στιγμή; Το Ποτήρι Β έχει αποτυπώματα από 48-72 ώρες πριν (Παπαδοπούλου) ΚΑΙ από 2-4 ώρες πριν (Αναγνώστου/Μαυρίδη). Μήπως το Ποτήρι Β δεν ήταν από το «τελευταίο ποτό» με τον Δημητρίου, αλλά από προηγούμενη μέρα που κάποιος ξέχασε να το μαζέψει ή μήπως το άφησαν σκόπιμα εκεί για να μπερδέψουν την έρευνα; Γιατί κάποιος να το καθαρίσει μερικώς;
+                        Δύο ποτήρια - ένα με κυάνιο, ένα καθαρό - αλλά ήταν από την ίδια στιγμή; Το Ποτήρι Β έχει αποτυπώματα από 48-72 ώρες πριν (Παπαδοπούλου) ΚΑΙ από 2-4 ώρες πριν (Αναγνώστου/Μαυρίδη). Μήπως το Ποτήρι Β δεν ήταν από το «τελευταίο ποτό» με τον Δημητρίου, αλλά από προηγούμενη μέρα που κάποιος ξέχασε να το μαζέψει ή μήπως το άφησαν σκόπιμα εκεί για να μπερδέψουν την έρευνα; Διατί κάποιος να το καθαρίσει μερικώς;
                     </p>
                 </div>
 
@@ -778,7 +768,7 @@
                     <ul class="section-content">
                         <li>Τα δύο ποτήρια ήταν από το ΙΔΙΟ «ποτό» την ίδια στιγμή ή το Ποτήρι Β είναι από προηγούμενη μέρα;</li>
                         <li>Αν το Ποτήρι Β είναι παλιό, γιατί δεν το μάζεψαν; Λησμονιά ή σκηνοθεσία;</li>
-                        <li>Γιατί το Ποτήρι Β βρίσκεται στο ΡΑΦΙ και όχι στο γραφείο;</li>
+                        <li>Διατί το Ποτήρι Β βρίσκεται στο ΡΑΦΙ και όχι στο γραφείο;</li>
                     </ul>
                 </div>
             </section>
@@ -795,55 +785,25 @@
         // 3D Model Control Functions
         const view3DBtn = document.getElementById('view3DBtn');
         const close3DBtn = document.getElementById('close3DBtn');
-        const modelViewerWrapper = document.getElementById('modelViewerWrapper');
-        const modelViewer = document.getElementById('glassModel');
-        const debugInfo = document.getElementById('debugInfo');
+        const modelViewerContainer = document.getElementById('modelViewerContainer');
 
         view3DBtn.addEventListener('click', function() {
-            modelViewerWrapper.classList.add('active');
+            modelViewerContainer.classList.add('active');
             view3DBtn.style.display = 'none';
             close3DBtn.style.display = 'inline-flex';
             
-            // Trigger model load
-            if (modelViewer && !modelViewer.loaded) {
-                modelViewer.dismissPoster();
-            }
+            setTimeout(() => {
+                modelViewerContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 100);
         });
 
         close3DBtn.addEventListener('click', function() {
-            modelViewerWrapper.classList.remove('active');
+            modelViewerContainer.classList.remove('active');
             view3DBtn.style.display = 'inline-flex';
             close3DBtn.style.display = 'none';
-        });
-
-        // Model Viewer Event Listeners
-        if (modelViewer) {
-            modelViewer.addEventListener('progress', (event) => {
-                const percent = Math.round(event.detail.totalProgress * 100);
-                debugInfo.style.display = 'block';
-                debugInfo.innerHTML = `⏳ Φόρτωση: ${percent}%<br>`;
-            });
-
-            modelViewer.addEventListener('load', () => {
-                debugInfo.innerHTML = '✅ 3D μοντέλο φορτώθηκε επιτυχώς!<br>';
-                debugInfo.style.background = '#d4edda';
-                debugInfo.style.borderColor = '#28a745';
-                setTimeout(() => {
-                    debugInfo.style.display = 'none';
-                }, 3000);
-            });
             
-            modelViewer.addEventListener('error', (event) => {
-                debugInfo.style.display = 'block';
-                debugInfo.innerHTML = '❌ ΣΦΑΛΜΑ: Το αρχείο δεν μπορεί να φορτώσει<br>';
-                debugInfo.innerHTML += 'Ελέγξτε:<br>';
-                debugInfo.innerHTML += '1. Το αρχείο υπάρχει στον ίδιο φάκελο<br>';
-                debugInfo.innerHTML += '2. Το όνομα είναι σωστό (με κεφαλαία/πεζά)<br>';
-                debugInfo.innerHTML += '3. Το αρχείο είναι έγκυρο .glb<br>';
-                debugInfo.style.background = '#f8d7da';
-                debugInfo.style.borderColor = '#dc3545';
-            });
-        }
+            view3DBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
 
         window.goBackToCaseFile = function() {
             const teamCode = sessionStorage.getItem('teamCode');
