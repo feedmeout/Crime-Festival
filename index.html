@@ -2273,62 +2273,63 @@ function displaySolutionResult(solution) {
     statsHTML += '<div style="font-size: 24px; font-weight: bold;">' + solution.promptCount + '</div>';
     statsHTML += '</div>';
     statsHTML += '</div>';
-	
-    const breakdownHTML = solution.breakdown.map(function(item) {
-        if (item.trim() === '') {
-            return '<div style="height: 8px;"></div>';
-        }
 
-        if (item.includes('═')) {
-            return '<hr style="border: none; border-top: 2px solid #ff6b00; margin: 15px 0; opacity: 0.3;">';
-        }
 
-        if (item.match(/^[🎯🧩👥⚡⚠️🔍]/)) {
-            return '<div style="background: linear-gradient(135deg, #0f3460 0%, #16213e 100%); color: white; padding: 12px 15px; margin: 20px 0 10px 0; border-radius: 8px; font-weight: bold; font-size: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">' + item + '</div>';
-        }
+const breakdownHTML = solution.breakdown.map(function(item) {
+    if (item.trim() === '') {
+        return '<div style="height: 8px;"></div>';
+    }
 
-        if (item.startsWith('   •') || item.startsWith('   →')) {
-            return '<div style="padding: 6px 6px 6px 35px; margin: 3px 0; color: #555; font-size: 13px; line-height: 1.6;">' + item + '</div>';
-        }
+    if (item.includes('═')) {
+        return '<hr style="border: none; border-top: 2px solid #ff6b00; margin: 15px 0; opacity: 0.3;">';
+    }
 
-        if (item.startsWith('   ')) {
-            return '<div style="padding: 5px 5px 5px 30px; margin: 2px 0; color: #666; font-size: 13px;">' + item + '</div>';
-        }
+    if (item.match(/^[🎯🧩👥⚡⚠️🔍❌]/)) {
+        return '<div style="background: linear-gradient(135deg, #0f3460 0%, #16213e 100%); color: white; padding: 12px 15px; margin: 20px 0 10px 0; border-radius: 8px; font-weight: bold; font-size: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">' + item + '</div>';
+    }
 
-        var bgColor = 'transparent';
-        var borderColor = 'transparent';
-        var textColor = '#333';
-        var fontWeight = 'normal';
-        var padding = '8px 12px';
-        var hasBorder = false;
+    if (item.startsWith('   •') || item.startsWith('   →')) {
+        return '<div style="padding: 6px 6px 6px 35px; margin: 3px 0; color: #555; font-size: 13px; line-height: 1.6;">' + item + '</div>';
+    }
 
-        if (item.includes('🚫') || item.includes('❌')) {
-            bgColor = '#fff5f5';
-            borderColor = '#dc3545';
-            textColor = '#721c24';
-            fontWeight = 'bold';
-            hasBorder = true;
-        } else if (item.includes('✓') || item.includes('🎖️')) {
-            bgColor = '#f0fff4';
-            borderColor = '#28a745';
-            textColor = '#155724';
-            hasBorder = true;
-        } else if (item.includes('⚖️') || item.includes('📉')) {
-            bgColor = '#fff8e1';
-            borderColor = '#ff9800';
-            textColor = '#e65100';
-            hasBorder = true;
-        } else if (item.includes('💡')) {
-            bgColor = '#e3f2fd';
-            borderColor = '#2196f3';
-            textColor = '#0d47a1';
-            hasBorder = true;
-        }
+    if (item.startsWith('   ')) {
+        return '<div style="padding: 5px 5px 5px 30px; margin: 2px 0; color: #666; font-size: 13px;">' + item + '</div>';
+    }
 
-        var borderStyle = hasBorder ? 'border-left: 4px solid ' + borderColor + ';' : '';
-        return '<div style="padding: ' + padding + '; margin: 5px 0; background: ' + bgColor + '; ' + borderStyle + ' border-radius: 4px; color: ' + textColor + '; font-weight: ' + fontWeight + '; line-height: 1.6;">' + item + '</div>';
-    }).join('');
-    
+    var bgColor = 'transparent';
+    var borderColor = 'transparent';
+    var textColor = '#333';
+    var fontWeight = 'normal';
+    var padding = '8px 12px';
+    var hasBorder = false;
+
+    if (item.includes('🚫') || item.includes('❌')) {
+        bgColor = '#fff5f5';
+        borderColor = '#dc3545';
+        textColor = '#721c24';
+        fontWeight = 'bold';
+        hasBorder = true;
+    } else if (item.includes('✓') || item.includes('🎖️')) {
+        bgColor = '#f0fff4';
+        borderColor = '#28a745';
+        textColor = '#155724';
+        hasBorder = true;
+    } else if (item.includes('⚖️') || item.includes('📉')) {
+        bgColor = '#fff8e1';
+        borderColor = '#ff9800';
+        textColor = '#e65100';
+        hasBorder = true;
+    } else if (item.includes('💡')) {
+        bgColor = '#e3f2fd';
+        borderColor = '#2196f3';
+        textColor = '#0d47a1';
+        hasBorder = true;
+    }
+
+    var borderStyle = hasBorder ? 'border-left: 4px solid ' + borderColor + ';' : '';
+    return '<div style="padding: ' + padding + '; margin: 5px 0; background: ' + bgColor + '; ' + borderStyle + ' border-radius: 4px; color: ' + textColor + '; font-weight: ' + fontWeight + '; line-height: 1.6;">' + item + '</div>';
+}).join('');
+
     resultDiv.innerHTML = 
         '<div style="background: ' + headerGradient + '; color: white; padding: 30px; border-radius: 15px; margin: 20px 0; text-align: center; box-shadow: 0 10px 40px ' + headerShadow + ';">' +
         
