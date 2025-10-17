@@ -463,6 +463,15 @@ body {
     color: var(--color-text-gray);
     font-size: clamp(0.8125rem, 3vw, 1rem);
     text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 10px;
+    background: rgba(255, 107, 0, 0.05);
+    border-radius: 8px;
+    margin-top: 10px;
 }
 
 .section-title {
@@ -558,6 +567,7 @@ body {
     margin-bottom: 1.25rem;
     font-size: clamp(0.75rem, 2.8vw, 0.875rem);
     flex-grow: 1;
+    text-align: justify;
 }
 
 .evidence-card.locked .evidence-description {
@@ -569,6 +579,12 @@ body {
     gap: 0.625rem;
     flex-wrap: wrap;
     margin-top: auto;
+    width: 100%;
+}
+
+.evidence-actions .btn {
+    width: 100%;
+    text-align: center;
 }
 
 .critical-tag {
@@ -599,6 +615,8 @@ body {
     font-size: clamp(0.6875rem, 2.2vw, 0.75rem);
     font-weight: bold;
     margin-top: 0.625rem;
+    text-align: left;
+    width: 100%;
 }
 
 .status-unlocked {
@@ -1187,11 +1205,17 @@ button:focus-visible,
                         <div class="progress-bar">
                             <div class="progress-fill" id="progressFill">0%</div>
                         </div>
-                        <div class="progress-text" id="progressText">ΕΧΕΤΕ ΞΕΚΛΕΙΔΩΣΕΙ 0 ΑΠΟ 11 ΤΕΚΜΗΡΙΑ</div>
+<div class="progress-text" id="progressText">
+    <span style="font-weight: bold; color: #ff6b00;">ΕΧΕΤΕ ΞΕΚΛΕΙΔΩΣΕΙ</span>
+    <span id="unlockedCount" style="font-size: 1.3em; font-weight: bold; color: #28a745; margin: 0 8px;">0</span>
+    <span style="font-weight: bold; color: #ff6b00;">ΑΠΟ</span>
+    <span id="totalCount" style="font-size: 1.3em; font-weight: bold; color: #1a1a2e; margin: 0 8px;">11</span>
+    <span style="font-weight: bold; color: #ff6b00;">ΤΕΚΜΗΡΙΑ</span>
+    <span id="progressEmoji" style="font-size: 1.5em; margin-left: 10px;">🔒</span>
+</div>
                     </div>
 
                     <h2 class="section-title">📦 ΤΕΚΜΗΡΙΑ</h2>
-
                     <div class="evidence-grid" id="evidenceGrid"></div>
                 </div>
 
@@ -1778,10 +1802,25 @@ async function updateProgress(teamData) {
     const total = teks.length;
     const unlocked = unlockedTeks.length;
     const percentage = Math.round((unlocked / total) * 100);
+    
     document.getElementById('progressFill').style.width = percentage + '%';
     document.getElementById('progressFill').textContent = percentage + '%';
-    document.getElementById('progressText').textContent = 
-        `ΕΧΕΤΕ ΞΕΚΛΕΙΔΩΣΕΙ ${unlocked} ΑΠΟ ${total} ΤΕΚΜΗΡΙΑ`;
+
+    const unlockedCountEl = document.getElementById('unlockedCount');
+    const totalCountEl = document.getElementById('totalCount');
+    const progressEmoji = document.getElementById('progressEmoji');
+    
+    if (unlockedCountEl) unlockedCountEl.textContent = unlocked;
+    if (totalCountEl) totalCountEl.textContent = total;
+    
+    if (progressEmoji) {
+        if (percentage === 0) progressEmoji.textContent = '🔒';
+        else if (percentage < 30) progressEmoji.textContent = '🔓';
+        else if (percentage < 60) progressEmoji.textContent = '🔍';
+        else if (percentage < 90) progressEmoji.textContent = '📋';
+        else if (percentage < 100) progressEmoji.textContent = '⭐';
+        else progressEmoji.textContent = '🏆';
+    }
     
     const timerSection = document.getElementById('timerSection');
     if (teamData.startTime && unlocked > 0) {
@@ -2458,16 +2497,16 @@ function renderEvidence() {
                         <p>${tek.subtitle}</p>
                     </div>
                 </div>
-                <p class="evidence-description">
-                    ${isUnlocked ? tek.description : '🔒 Ξεκλειδώστε το τεκμήριο για να δείτε λεπτομέρειες'}
-                </p>
+				<p class="evidence-description">
+					${isUnlocked ? tek.description : ''}
+				</p>
                 <div class="evidence-actions">
-                    ${isUnlocked ? 
-                        `<a href="${buildUrl(tek.page)}" class="btn btn-ar">
-                            👀️ Προβολή Τεκμηρίου
-                        </a>` :
-                        `<button class="btn btn-ar" disabled>🔒 Κλειδωμένο</button>`
-                    }
+					${isUnlocked ? 
+						`<a href="${buildUrl(tek.page)}" class="btn btn-ar">
+							👀️ Προβολή Τεκμηρίου
+						</a>` :
+						`<button class="btn btn-ar" disabled></button>`
+					}
                 </div>
                 <span class="status-badge ${isUnlocked ? 'status-unlocked' : 'status-locked'}">
                     ${isUnlocked ? '✅ ΔΙΑΘΕΣΙΜΟ' : '🔒 ΚΛΕΙΔΩΜΕΝΟ'}
