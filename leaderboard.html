@@ -562,8 +562,7 @@
                     missedSuspects.push(SUSPECT_NAMES[suspect] || suspect);
                 }
             });
-            
-            // SECTION 1: BASIC ASSESSMENT
+
             let basicPoints = SCORING.murder_diagnosis;
             score += basicPoints;
             breakdown.push(`🧩 ΒΑΣΙΚΗ ΕΚΤΙΜΗΣΗ (+${basicPoints} πόντοι)`);
@@ -571,11 +570,9 @@
             breakdown.push('Σωστή Διάγνωση: ΔΟΛΟΦΟΝΙΑ');
             breakdown.push('');
             
-            // SECTION 2: PERPETRATOR IDENTIFICATION
             let perpetratorSectionPoints = 0;
             
             if (correctCount === 3 && selectedSuspects.length === 3) {
-                // PERFECT SOLUTION
                 perpetratorSectionPoints += SCORING.perpetrator * 3 + SCORING.perfect_solution_bonus;
                 if (correctCount >= 2) {
                     perpetratorSectionPoints += SCORING.cooperation;
@@ -586,7 +583,6 @@
                 breakdown.push('Εντόπισαν και τους 3 συνεργούς!');
                 breakdown.push('');
             } else {
-                // PARTIAL OR NO IDENTIFICATION
                 breakdown.push('👥 ΤΑΥΤΟΠΟΙΗΣΗ ΔΡΑΣΤΩΝ');
                 breakdown.push('');
                 
@@ -617,7 +613,6 @@
 
             score += perpetratorSectionPoints;
             
-            // SECTION 3: EFFICIENCY BONUSES
             if (correctCount >= 2) {
                 let efficiencyPoints = 0;
                 let efficiencyLines = [];
@@ -631,15 +626,15 @@
                     const minutes = totalTimeMs / 60000;
                     if (minutes < 30) {
                         efficiencyPoints += SCORING.time_under_30;
-                        efficiencyLines.push('⏱️ ΤΑΧΥΤΑΤΗ ΕΠΙΛΥΣΗ : Χρόνος: <30 λεπτά');
+                        efficiencyLines.push('⏱️ Ταχύτατη Επίλυση : Χρόνος: <30 λεπτά');
                         hasBonus = true;
                     } else if (minutes < 45) {
                         efficiencyPoints += SCORING.time_30_45;
-                        efficiencyLines.push('⏱️ ΓΡΗΓΟΡΗ ΕΠΙΛΥΣΗ : Χρόνος: 30-45 λεπτά');
+                        efficiencyLines.push('⏱️ Γρήγορη Επίλυση: Χρόνος: 30-45 λεπτά');
                         hasBonus = true;
                     } else if (minutes < 60) {
                         efficiencyPoints += SCORING.time_45_60;
-                        efficiencyLines.push('⏱️ ΚΑΛΟΣ ΧΡΟΝΟΣ : Χρόνος: 45-60 λεπτά');
+                        efficiencyLines.push('⏱️ Καλός Χρόνος : Χρόνος: 45-60 λεπτά');
                         hasBonus = true;
                     }
                 }
@@ -673,7 +668,6 @@
                 breakdown.push('');
             }
             
-            // PENALTIES
             if (wrongSuspects.length > 0) {
                 const originalScore = score;
                 let multiplier = 1.0;
@@ -700,7 +694,7 @@
                 const missedPenalty = missedSuspects.length * 20;
                 score -= missedPenalty;
                 
-                breakdown.push(`🔍 ΧΑΣΑΝ ΠΡΑΓΜΑΤΙΚΟΥΣ ΔΡΑΣΤΕΣ (-${missedPenalty} πόντοι)`);
+                breakdown.push(`🔍 ΕΧΑΣΑΝ ΠΡΑΓΜΑΤΙΚΟΥΣ ΔΡΑΣΤΕΣ (-${missedPenalty} πόντοι)`);
                 breakdown.push('');
                 
                 missedSuspects.forEach(name => {
@@ -714,7 +708,7 @@
         }
 
         function getGrade(percentage) {
-            if (percentage >= 90) return { name: 'ΑΡΧΙ-ΝΤΕΤΕΚΤΙΒΑΣ 🕵️', color: '#00d4ff' };
+            if (percentage >= 90) return { name: 'ΑΡΧΙ-ΝΤΕΤΕΚΤΙΒΣ 🕵️', color: '#00d4ff' };
             if (percentage >= 80) return { name: 'ΑΝΩΤΕΡΟΙ ΑΝΑΚΡΙΤΕΣ 🎖️', color: '#ffd700' };
             if (percentage >= 70) return { name: 'ΝΤΕΤΕΚΤΙΒΑΣ 🔎', color: '#c0c0c0' };
             if (percentage >= 60) return { name: 'ΑΣΤΥΝΟΜΟΙ 👮', color: '#cd7f32' };
@@ -947,7 +941,7 @@
                             </div>
                         ` : ''}
                         
-                        <h3 style="margin-top: 20px;">👥 ΔΡΑΣΤΕΣ ΠΟΥ ΕΠΕΛΕΞΑΝ:</h3>
+                        <h3 style="margin-top: 20px;">👥 ΔΡΑΣΤΕΣ ΠΟΥ ΕΠΕΛΕΞΑΝ</h3>
                         <div class="suspect-list">
                             ${suspects.map(s => `
                                 <span class="badge ${CORRECT_SUSPECTS.includes(s) ? 'badge-correct' : 'badge-incorrect'}" style="font-size: clamp(12px, 2.5vw, 14px); padding: 8px 12px;">
@@ -956,12 +950,12 @@
                             `).join('')}
                         </div>
 
-                        <h3 style="margin-top: 20px;">📝 ΑΙΤΙΟΛΟΓΗΣΗ:</h3>
+                        <h3 style="margin-top: 20px;">📝 ΑΙΤΙΟΛΟΓΗΣΗ</h3>
                         <div style="background: white; padding: 15px; border-radius: 8px; border: 1px solid #ddd; white-space: pre-wrap; word-wrap: break-word; line-height: 1.6; max-height: 300px; overflow-y: auto; font-size: clamp(12px, 2.5vw, 14px);">
                             ${solution.justification || 'Δεν παρασχέθηκε αιτιολόγηση'}
                         </div>
 
-                        <h3 style="margin-top: 20px;">⏱️ ΧΡΟΝΟΣ ΕΠΙΛΥΣΗΣ:</h3>
+                        <h3 style="margin-top: 20px;">⏱️ ΧΡΟΝΟΣ ΕΠΙΛΥΣΗΣ</h3>
                         <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; border-radius: 12px; text-align: center; margin-top: 10px; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);">
                             <div style="font-size: clamp(32px, 8vw, 48px); font-weight: bold; color: white; text-shadow: 0 2px 8px rgba(0,0,0,0.2);">
                                 ${formatTime(solution.completionTimeMs)}
