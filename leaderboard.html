@@ -966,55 +966,62 @@
                         <h3 style="margin-top: 25px; margin-bottom: 15px;">🎯 Αναλυτική Βαθμολογία:</h3>
                         <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: clamp(11px, 2vw, 13px); line-height: 1.7; max-height: 400px; overflow-y: auto; word-wrap: break-word;">
 ${solution.breakdown.map(item => {
-                            if (item.trim() === '') {
-                                return '<div style="height: 5px;"></div>';
-                            }
+    if (item.trim() === '') {
+        return '<div style="height: 8px;"></div>';
+    }
 
-                            if (item.includes('╔') || item.includes('║') || item.includes('─')) {
-                                return '';
-                            }
-                            
-                            let bgColor = '#f8f9fa';
-                            let borderColor = '#dee2e6';
-                            let textColor = '#333';
-                            let fontWeight = 'normal';
+    // Decorative separators
+    if (item.includes('═')) {
+        return '<div style="text-align: center; color: #ff6b00; font-weight: bold; font-size: clamp(13px, 2.5vw, 15px); margin: 15px 0 10px 0; letter-spacing: 1px; word-wrap: break-word;">' + item + '</div>';
+    }
 
-                            if (item.includes('ΛΟΓΙΚΗ ΑΝΤΙΦΑΣΗ') || item.includes('ΛΑΘΟΣ ΔΙΑΓΝΩΣΗ')) {
-                                bgColor = '#f8d7da';
-                                borderColor = '#dc3545';
-                                textColor = '#721c24';
-                                fontWeight = 'bold';
-                            } 
-                            else if (item.includes('✔') || item.includes('+')) {
-                                bgColor = '#d4edda';
-                                borderColor = '#28a745';
-                                textColor = '#155724';
-                            } 
-                            else if (item.includes('✗') || item.includes('-') || item.includes('❌')) {
-                                bgColor = '#fff3cd';
-                                borderColor = '#ffc107';
-                                textColor = '#856404';
-                            } 
-                            else if (item.includes('⚠️')) {
-                                bgColor = '#fff3cd';
-                                borderColor = '#ffc107';
-                                textColor = '#856404';
-                            } 
-                            else if (item.includes('💡')) {
-                                bgColor = '#e7f3ff';
-                                borderColor = '#2196f3';
-                                textColor = '#0d47a1';
-                            }
-                            else if (item.includes('ΘΕΤΙΚΑ ΣΤΟΙΧΕΙΑ') || item.includes('ΑΡΝΗΤΙΚΑ ΣΤΟΙΧΕΙΑ')) {
-                                return `<div style="color: #0f3460; font-weight: bold; margin: 15px 0 8px 0; font-size: clamp(12px, 2.5vw, 14px); word-wrap: break-word;">${item}</div>`;
-                            }
+    // Main section headers
+    if (item.match(/^[🎯🧩👥⚡⚠️🔍]/)) {
+        return '<div style="background: linear-gradient(135deg, #0f3460 0%, #16213e 100%); color: white; padding: clamp(10px, 2vw, 12px) clamp(12px, 2.5vw, 15px); margin: 15px 0 10px 0; border-radius: 8px; font-weight: bold; font-size: clamp(13px, 2.5vw, 15px); box-shadow: 0 2px 8px rgba(0,0,0,0.2); word-wrap: break-word;">' + item + '</div>';
+    }
 
-                            if (item.startsWith('   ')) {
-                                return `<div style="padding: 4px 4px 4px 20px; margin: 2px 0; color: ${textColor}; font-size: clamp(11px, 2vw, 13px); word-wrap: break-word;">${item}</div>`;
-                            }
+    // Bullet points and arrows
+    if (item.startsWith('   •') || item.startsWith('   →')) {
+        return '<div style="padding: clamp(5px, 1vw, 6px) clamp(5px, 1vw, 6px) clamp(5px, 1vw, 6px) clamp(30px, 6vw, 35px); margin: 3px 0; color: #555; font-size: clamp(12px, 2.2vw, 13px); line-height: 1.6; word-wrap: break-word;">' + item + '</div>';
+    }
 
-                            return `<div style="padding: 10px 12px; margin: 5px 0; background: ${bgColor}; border-left: 4px solid ${borderColor}; border-radius: 4px; color: ${textColor}; font-weight: ${fontWeight}; word-wrap: break-word;">${item}</div>`;
-                        }).join('')}
+    // Indented text
+    if (item.startsWith('   ')) {
+        return '<div style="padding: clamp(4px, 1vw, 5px) clamp(4px, 1vw, 5px) clamp(4px, 1vw, 5px) clamp(25px, 5vw, 30px); margin: 2px 0; color: #666; font-size: clamp(11px, 2vw, 13px); word-wrap: break-word;">' + item + '</div>';
+    }
+
+    let bgColor = 'transparent';
+    let borderColor = 'transparent';
+    let textColor = '#333';
+    let fontWeight = 'normal';
+    let hasBorder = false;
+
+    if (item.includes('🚫') || item.includes('❌')) {
+        bgColor = '#fff5f5';
+        borderColor = '#dc3545';
+        textColor = '#721c24';
+        fontWeight = 'bold';
+        hasBorder = true;
+    } else if (item.includes('✓') || item.includes('🎖️')) {
+        bgColor = '#f0fff4';
+        borderColor = '#28a745';
+        textColor = '#155724';
+        hasBorder = true;
+    } else if (item.includes('⚖️') || item.includes('📉')) {
+        bgColor = '#fff8e1';
+        borderColor = '#ff9800';
+        textColor = '#e65100';
+        hasBorder = true;
+    } else if (item.includes('💡')) {
+        bgColor = '#e3f2fd';
+        borderColor = '#2196f3';
+        textColor = '#0d47a1';
+        hasBorder = true;
+    }
+
+    const borderStyle = hasBorder ? `border-left: 4px solid ${borderColor};` : '';
+    return `<div style="padding: clamp(7px, 1.5vw, 10px) clamp(10px, 2vw, 12px); margin: 5px 0; background: ${bgColor}; ${borderStyle} border-radius: 4px; color: ${textColor}; font-weight: ${fontWeight}; line-height: 1.6; word-wrap: break-word; font-size: clamp(11px, 2vw, 13px);">${item}</div>`;
+}).join('')}
                         </div>
                     </div>
                 `;
