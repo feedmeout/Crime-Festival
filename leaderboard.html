@@ -646,17 +646,17 @@
                     const minutes = totalTimeMs / 60000;
                     if (minutes < 30) {
                         efficiencyPoints += SCORING.time_under_30;
-                        efficiencyLines.push('⏱️ ΤΑΧΥΤΑΤΗ ΕΠΙΛΥΣΗ');
+                        efficiencyLines.push(`⏱️ ΤΑΧΥΤΑΤΗ ΕΠΙΛΥΣΗ (+${SCORING.time_under_30} πόντοι)`);
                         efficiencyLines.push('   Χρόνος: <30 λεπτά');
                         hasBonus = true;
                     } else if (minutes < 45) {
                         efficiencyPoints += SCORING.time_30_45;
-                        efficiencyLines.push('⏱️ ΓΡΗΓΟΡΗ ΕΠΙΛΥΣΗ');
+                        efficiencyLines.push(`⏱️ ΓΡΗΓΟΡΗ ΕΠΙΛΥΣΗ (+${SCORING.time_30_45} πόντοι)`);
                         efficiencyLines.push('   Χρόνος: 30-45 λεπτά');
                         hasBonus = true;
                     } else if (minutes < 60) {
                         efficiencyPoints += SCORING.time_45_60;
-                        efficiencyLines.push('⏱️ ΚΑΛΟΣ ΧΡΟΝΟΣ');
+                        efficiencyLines.push(`⏱️ ΚΑΛΟΣ ΧΡΟΝΟΣ (+${SCORING.time_45_60} πόντοι)`);
                         efficiencyLines.push('   Χρόνος: 45-60 λεπτά');
                         hasBonus = true;
                     }
@@ -665,17 +665,17 @@
                 if (promptCount) {
                     if (promptCount <= 5) {
                         efficiencyPoints += SCORING.prompts_1_5;
-                        efficiencyLines.push('🎯 ΕΞΑΙΡΕΤΙΚΗ ΧΡΗΣΗ PROMPTS');
+                        efficiencyLines.push(`🎯 ΕΞΑΙΡΕΤΙΚΗ ΧΡΗΣΗ PROMPTS (+${SCORING.prompts_1_5} πόντοι)`);
                         efficiencyLines.push('   Prompts: ≤5');
                         hasBonus = true;
                     } else if (promptCount <= 10) {
                         efficiencyPoints += SCORING.prompts_6_10;
-                        efficiencyLines.push('🎯 ΚΑΛΗ ΧΡΗΣΗ PROMPTS');
+                        efficiencyLines.push(`🎯 ΚΑΛΗ ΧΡΗΣΗ PROMPTS (+${SCORING.prompts_6_10} πόντοι)`);
                         efficiencyLines.push('   Prompts: 6-10');
                         hasBonus = true;
                     } else if (promptCount <= 15) {
                         efficiencyPoints += SCORING.prompts_11_15;
-                        efficiencyLines.push('🎯 ΑΞΙΟΛΟΓΗ ΧΡΗΣΗ PROMPTS');
+                        efficiencyLines.push(`🎯 ΑΞΙΟΛΟΓΗ ΧΡΗΣΗ PROMPTS (+${SCORING.prompts_11_15} πόντοι)`);
                         efficiencyLines.push('   Prompts: 11-15');
                         hasBonus = true;
                     }
@@ -998,21 +998,13 @@
                             ${solution.justification || 'Δεν παρασχέθηκε αιτιολόγηση'}
                         </div>
 
-                        <h3 style="margin-top: 20px;">⏱️ ΣΤΑΤΙΣΤΙΚΑ:</h3>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr)); gap: 10px; margin-top: 10px;">
-                            <div style="background: #e3f2fd; padding: 12px; border-radius: 8px;">
-                                <strong>Χρόνος:</strong> ${formatTime(solution.completionTimeMs)}
+                        <h3 style="margin-top: 20px;">⏱️ ΧΡΟΝΟΣ ΕΠΙΛΥΣΗΣ:</h3>
+                        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; border-radius: 12px; text-align: center; margin-top: 10px; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);">
+                            <div style="font-size: clamp(32px, 8vw, 48px); font-weight: bold; color: white; text-shadow: 0 2px 8px rgba(0,0,0,0.2);">
+                                ${formatTime(solution.completionTimeMs)}
                             </div>
-                            <div style="background: #e3f2fd; padding: 12px; border-radius: 8px;">
-                                <strong>Prompts:</strong> ${solution.promptCount || 0}
-                            </div>
-                            <div style="background: #e3f2fd; padding: 12px; border-radius: 8px;">
-                                <strong>Υποβολή:</strong> ${new Date(solution.submittedAt).toLocaleString('el-GR', {
-                                    day: '2-digit',
-                                    month: '2-digit',
-                                    hour: '2-digit',
-                                    minute: '2-digit'
-                                })}
+                            <div style="font-size: clamp(12px, 2.5vw, 14px); color: rgba(255,255,255,0.9); margin-top: 8px; text-transform: uppercase; letter-spacing: 1px;">
+                                Συνολικός Χρόνος
                             </div>
                         </div>
 
