@@ -2279,9 +2279,25 @@ function showSyncStatus(message, type = 'success') {
 
 function toggleAdminMode() {
     const mode = document.getElementById('adminMode').value;
-    const testingSection = document.querySelector('h3:nth-of-type(3)');
+    const allH3 = document.querySelectorAll('.section h3');
+    let testingSection = null;
+    let dangerSection = null;
+    
+    allH3.forEach(h3 => {
+        if (h3.textContent.includes('Testing & Debug Tools') || h3.textContent.includes('🧪')) {
+            testingSection = h3;
+        }
+        if (h3.textContent.includes('Danger Zone') || h3.textContent.includes('⚠️')) {
+            dangerSection = h3;
+        }
+    });
+    
+    if (!testingSection || !dangerSection) {
+        console.warn('⚠️ Admin sections not found yet');
+        return;
+    }
+    
     const testingButtons = testingSection.nextElementSibling;
-    const dangerSection = document.querySelector('h3[style*="color: #dc3545"]');
     const dangerButtons = dangerSection.nextElementSibling;
     
     if (mode === 'live') {
