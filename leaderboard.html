@@ -751,17 +751,19 @@
                 }
             });
             
+            // SECTION 1: BASIC ASSESSMENT
             let basicPoints = SCORING.murder_diagnosis;
             score += basicPoints;
             breakdown.push(`🧩 ΒΑΣΙΚΗ ΕΚΤΙΜΗΣΗ (+${basicPoints} πόντοι)`);
             breakdown.push('');
-            breakdown.push('✓ Σωστή Διάγνωση: ΔΟΛΟΦΟΝΙΑ');
-            breakdown.push('   Αναγνώρισαν ότι δεν ήταν αυτοκτονία!');
+            breakdown.push('Σωστή Διάγνωση: ΔΟΛΟΦΟΝΙΑ');
             breakdown.push('');
             
+            // SECTION 2: SPECIAL ACHIEVEMENT (if perfect)
             let perpetratorSectionPoints = 0;
             
             if (correctCount === 3 && selectedSuspects.length === 3) {
+                // PERFECT SOLUTION - Show as achievement banner first!
                 perpetratorSectionPoints += SCORING.perpetrator * 3 + SCORING.perfect_solution_bonus;
                 if (correctCount >= 2) {
                     perpetratorSectionPoints += SCORING.cooperation;
@@ -776,6 +778,7 @@
                 breakdown.push('   ✓ Μαυρίδη (Συγκάλυψη - πλαστό email & σημείωμα)');
                 breakdown.push('');
             } else {
+                // PARTIAL OR NO IDENTIFICATION
                 breakdown.push('👥 ΤΑΥΤΟΠΟΙΗΣΗ ΔΡΑΣΤΩΝ');
                 breakdown.push('');
                 
@@ -818,6 +821,7 @@
                     breakdown.push(`   Όλες οι επιλογές τους ήταν σωστές - απλά χάσαν ${3 - correctCount}`);
                 }
                 
+                // Update header with total (only for non-perfect solutions)
                 const headerIndex = breakdown.indexOf('👥 ΤΑΥΤΟΠΟΙΗΣΗ ΔΡΑΣΤΩΝ');
                 breakdown[headerIndex] = `👥 ΤΑΥΤΟΠΟΙΗΣΗ ΔΡΑΣΤΩΝ (+${perpetratorSectionPoints} πόντοι)`;
                 breakdown.push('');
@@ -825,6 +829,7 @@
 
             score += perpetratorSectionPoints;
             
+            // SECTION 3: EFFICIENCY BONUSES
             if (correctCount >= 2) {
                 let efficiencyPoints = 0;
                 let efficiencyLines = [];
@@ -872,11 +877,13 @@
                 }
                 
                 score += efficiencyPoints;
+                // Update header with total
                 efficiencyLines[0] = `⚡ BONUSES ΑΠΟΔΟΤΙΚΟΤΗΤΑΣ (+${efficiencyPoints} πόντοι)`;
                 breakdown.push(...efficiencyLines);
                 breakdown.push('');
             }
             
+            // PENALTIES
             if (wrongSuspects.length > 0) {
                 breakdown.push('❌ ΚΑΤΗΓΟΡΗΣΑΝ ΑΘΩΟΥΣ');
                 breakdown.push('');
