@@ -696,7 +696,7 @@ body {
         </select>
     </div>
 
-    <h3 style="color: #0f3460; margin-top: 0;">🎮 LIVE EVENT CONTROLS</h3>
+    <h3 style="color: #0f3460; margin-top: 0;">🎮 LIVE EVENT</h3>
     <div class="quick-actions">
         <button class="btn" style="background: #ffc107; color: #000;" onclick="window.location.href='leaderboard.html'">🏆 LEADERBOARD (ADMIN)</button>
         <button class="btn" id="leaderboardToggleBtn" style="background: #dc3545; color: white;" onclick="toggleLeaderboard()">🔒 LOADING...</button>
@@ -712,7 +712,7 @@ body {
 
     <h3 style="color: #0f3460;">🧪 TESTING & DEBUG</h3>
     <div class="quick-actions">
-        <button class="btn btn-secondary" onclick="unlockAllForAll()">🔓 ΤΕΚΜΗΡΙΑ</button>
+        <button class="btn btn-secondary" onclick="unlockAllForAll()">🔓 ΤΕΚΜΗΡΙΑ (ΟΛΑ)</button>
         <button class="btn" style="background: #673ab7; color: white;" onclick="fakeAllSurveys()">🧪 FAKE ΕΡΩΤΗΜΑΤΟΛΟΓΙΑ (ΔΗΜΙΟΥΡΓΙΑ)</button>
         <button class="btn" style="background: #e91e63; color: white;" onclick="deleteFakeSurveys()">🗑️ FAKE ΕΡΩΤΗΜΑΤΟΛΟΓΙΑ (ΔΙΑΓΡΑΦΗ)</button>
     </div>
@@ -1485,7 +1485,7 @@ window.timerInterval = setInterval(() => {
                 <div class="team-actions">
                     <button class="btn btn-primary" onclick="viewTeam('${team.name}')">👁️ ΠΡΟΒΟΛΗ</button>
                     <button class="btn" style="background: #17a2b8; color: white;" onclick="showTimestamps('${team.name}')">🕐 ΧΡΟΝΙΚΑ</button>
-                    <button class="btn btn-success" onclick="unlockAll('${team.name}')">🔓 ΤΕΚΜΗΡΙΑ (ΟΛΑ)</button>
+                    <button class="btn btn-success" onclick="unlockAll('${team.name}')">🔓 ΤΕΚΜΗΡΙΑ</button>
                     <button class="btn btn-secondary" onclick="resetTeam('${team.name}')">🔄 RESET</button>
                     <button class="btn btn-danger" onclick="deleteTeam('${team.name}')">🗑️ ΔΙΑΦΡΑΦΗ</button>
                 </div>
