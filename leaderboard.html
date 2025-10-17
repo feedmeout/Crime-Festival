@@ -67,12 +67,6 @@
             line-height: 1.2;
         }
 
-        .header p {
-            color: rgba(255,255,255,0.9);
-            font-size: clamp(13px, 2.8vw, 16px);
-            line-height: 1.4;
-        }
-
         .action-bar {
             text-align: center;
             margin-bottom: clamp(15px, 3vw, 25px);
@@ -91,21 +85,16 @@
             cursor: pointer;
             transition: all 0.2s ease;
             text-decoration: none;
-            display: inline-block;
-            white-space: nowrap;
-            min-height: 44px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
+            white-space: nowrap;
+            min-height: 44px;
         }
 
         .btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        }
-
-        .btn:active {
-            transform: translateY(0);
         }
 
         .btn-primary {
@@ -164,7 +153,6 @@
             margin-bottom: clamp(15px, 3vw, 20px);
             padding-bottom: clamp(10px, 2vw, 15px);
             border-bottom: 3px solid #ff6b00;
-            word-wrap: break-word;
         }
 
         .table-container {
@@ -221,12 +209,6 @@
             padding: clamp(15px, 3vw, 20px);
             margin-bottom: 15px;
             box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .team-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
         }
 
         .card-header {
@@ -242,7 +224,6 @@
         .card-rank {
             font-size: clamp(28px, 7vw, 36px);
             font-weight: bold;
-            flex-shrink: 0;
         }
 
         .card-team-name {
@@ -252,64 +233,12 @@
             text-transform: uppercase;
             flex: 1;
             margin: 0 10px;
-            word-wrap: break-word;
-            line-height: 1.3;
         }
 
         .card-score {
             font-size: clamp(18px, 4.5vw, 24px);
             font-weight: bold;
             color: #28a745;
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
-
-        .card-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            padding: 10px 0;
-            border-bottom: 1px solid #f5f5f5;
-            gap: 10px;
-        }
-
-        .card-row:last-child {
-            border-bottom: none;
-        }
-
-        .card-label {
-            font-weight: bold;
-            color: #666;
-            font-size: clamp(12px, 2.5vw, 13px);
-            text-transform: uppercase;
-            flex-shrink: 0;
-        }
-
-        .card-value {
-            font-size: clamp(13px, 2.8vw, 14px);
-            color: #333;
-            text-align: right;
-            word-wrap: break-word;
-        }
-
-        .card-suspects {
-            display: flex;
-            gap: 5px;
-            flex-wrap: wrap;
-            justify-content: flex-end;
-            max-width: 65%;
-        }
-
-        .card-actions {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 2px solid #f0f0f0;
-        }
-
-        .card-actions .btn {
-            width: 100%;
-            padding: clamp(12px, 2.5vw, 14px);
-            font-size: clamp(13px, 2.8vw, 14px);
         }
 
         .rank-1 { color: #ffd700; }
@@ -321,15 +250,12 @@
             color: #1a1a2e;
             font-size: clamp(12px, 2.4vw, 16px);
             text-transform: uppercase;
-            word-wrap: break-word;
-            max-width: 200px;
         }
 
         .score {
             font-size: clamp(15px, 3vw, 20px);
             font-weight: bold;
             color: #28a745;
-            white-space: nowrap;
         }
 
         .grade-badge {
@@ -339,7 +265,6 @@
             font-size: clamp(10px, 2vw, 12px);
             font-weight: bold;
             white-space: nowrap;
-            line-height: 1.3;
         }
 
         .badge {
@@ -350,7 +275,6 @@
             font-weight: bold;
             margin: 2px;
             white-space: nowrap;
-            line-height: 1.3;
         }
 
         .badge-correct {
@@ -374,7 +298,6 @@
             color: #0f3460;
             margin-bottom: 12px;
             font-size: clamp(15px, 3vw, 18px);
-            word-wrap: break-word;
         }
 
         .suspect-list {
@@ -395,7 +318,6 @@
             z-index: 1000;
             overflow-y: auto;
             padding: clamp(10px, 2vw, 20px);
-            -webkit-overflow-scrolling: touch;
         }
 
         .modal.active {
@@ -414,7 +336,6 @@
             max-height: calc(100vh - 40px);
             overflow-y: auto;
             box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-            margin: auto;
         }
 
         .modal-header {
@@ -430,8 +351,6 @@
         .modal-header h2 {
             color: #1a1a2e;
             font-size: clamp(16px, 3.5vw, 24px);
-            word-wrap: break-word;
-            line-height: 1.3;
             flex: 1;
         }
 
@@ -439,16 +358,11 @@
             font-size: clamp(28px, 6vw, 32px);
             cursor: pointer;
             color: #999;
-            line-height: 1;
             background: none;
             border: none;
             padding: 0;
             min-width: clamp(28px, 6vw, 32px);
             min-height: 44px;
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         .close-modal:hover {
@@ -456,16 +370,8 @@
         }
 
         @media (max-width: 768px) {
-            body {
-                padding: 10px;
-            }
-
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
-            }
-
-            .leaderboard {
-                padding: 15px 10px;
             }
 
             .table-container {
@@ -475,105 +381,11 @@
             .mobile-cards {
                 display: block;
             }
-
-            .action-bar {
-                gap: 8px;
-            }
-
-            .btn {
-                padding: 12px 16px;
-                font-size: 13px;
-            }
         }
 
         @media (max-width: 480px) {
-            .header {
-                padding: 18px 12px;
-                margin-bottom: 12px;
-            }
-
             .stats-grid {
                 grid-template-columns: 1fr;
-                gap: 8px;
-            }
-
-            .action-bar {
-                flex-direction: column;
-            }
-
-            .btn {
-                width: 100%;
-            }
-
-            .card-header {
-                flex-wrap: wrap;
-            }
-
-            .card-team-name {
-                flex-basis: 100%;
-                order: -1;
-                margin: 0 0 10px 0;
-                text-align: center;
-            }
-
-            .card-suspects {
-                max-width: 100%;
-            }
-
-            .suspect-list {
-                gap: 6px;
-            }
-        }
-
-        @media (max-width: 360px) {
-            .grade-badge {
-                font-size: 9px;
-                padding: 4px 8px;
-            }
-
-            .badge {
-                font-size: 8px;
-                padding: 3px 6px;
-            }
-        }
-
-        @media (min-width: 769px) and (max-width: 1024px) {
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (orientation: landscape) and (max-height: 600px) {
-            .modal.active {
-                align-items: flex-start;
-                padding-top: 10px;
-            }
-
-            .modal-content {
-                max-height: calc(100vh - 20px);
-            }
-        }
-
-        @media print {
-            body {
-                background: white;
-            }
-
-            .action-bar,
-            .modal {
-                display: none !important;
-            }
-
-            .leaderboard {
-                box-shadow: none;
-            }
-
-            .table-container {
-                display: block !important;
-            }
-
-            .mobile-cards {
-                display: none !important;
             }
         }
     </style>
@@ -647,7 +459,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2 id="modalTeamName">Λύση Ομάδας</h2>
-                <button class="close-modal" onclick="closeModal()" aria-label="Close">&times;</button>
+                <button class="close-modal" onclick="closeModal()">&times;</button>
             </div>
             <div id="modalContent"></div>
         </div>
@@ -759,11 +571,11 @@
             breakdown.push('Σωστή Διάγνωση: ΔΟΛΟΦΟΝΙΑ');
             breakdown.push('');
             
-            // SECTION 2: SPECIAL ACHIEVEMENT (if perfect)
+            // SECTION 2: PERPETRATOR IDENTIFICATION
             let perpetratorSectionPoints = 0;
             
             if (correctCount === 3 && selectedSuspects.length === 3) {
-                // PERFECT SOLUTION - Show as achievement banner first!
+                // PERFECT SOLUTION
                 perpetratorSectionPoints += SCORING.perpetrator * 3 + SCORING.perfect_solution_bonus;
                 if (correctCount >= 2) {
                     perpetratorSectionPoints += SCORING.cooperation;
@@ -773,9 +585,9 @@
                 breakdown.push('');
                 breakdown.push('Εντόπισαν και τους 3 συνεργούς ΧΩΡΙΣ ψευδή θετικά!');
                 breakdown.push('');
-                breakdown.push('   ✓ Αναγνώστου (Μαστρομυαλός - έριξε το κυάνιο)');
-                breakdown.push('   ✓ Πετρόπουλος (Προμηθευτής - πήρε το κυάνιο, έσβησε κάμερες)');
-                breakdown.push('   ✓ Μαυρίδη (Συγκάλυψη - πλαστό email & σημείωμα)');
+                breakdown.push('   ✓ Αναγνώστου (Μαστρομυαλός)');
+                breakdown.push('   ✓ Πετρόπουλος (Προμηθευτής κυανίου)');
+                breakdown.push('   ✓ Μαυρίδη (Συγκάλυψη)');
                 breakdown.push('');
             } else {
                 // PARTIAL OR NO IDENTIFICATION
@@ -784,44 +596,35 @@
                 
                 if (correctCount >= 2) {
                     perpetratorSectionPoints += SCORING.cooperation;
-                    breakdown.push('✓ Εντοπισμός Συνεργασίας');
-                    breakdown.push('   Κατάλαβαν ότι ήταν ομαδική προσπάθεια!');
-                    breakdown.push('');
                 }
                 
                 if (correctCount > 0) {
                     perpetratorSectionPoints += correctCount * SCORING.perpetrator;
-                    breakdown.push(`✓ Εντόπισαν ${correctCount}/3 Δράστες`);
+                    breakdown.push(`Εντόπισαν ${correctCount}/3 Δράστες`);
                     breakdown.push('');
                     selectedSuspects.forEach(suspect => {
                         if (CORRECT_SUSPECTS.includes(suspect)) {
                             const name = SUSPECT_NAMES[suspect];
                             let role = '';
-                            if (suspect === 'konstantinos') role = 'Μαστρομυαλός της επιχείρησης';
-                            else if (suspect === 'georgios') role = 'Προμήθευσε το κυάνιο';
+                            if (suspect === 'konstantinos') role = 'Μαστρομυαλός';
+                            else if (suspect === 'georgios') role = 'Προμηθευτής κυανίου';
                             else if (suspect === 'eleni') role = 'Συγκάλυψη';
                             breakdown.push(`   ✓ ${name} (${role})`);
                         }
                     });
                 } else {
-                    breakdown.push('❌ Δεν εντόπισαν κανέναν από τους πραγματικούς δράστες');
+                    breakdown.push('Δεν εντόπισαν κανέναν από τους πραγματικούς δράστες');
                 }
                 
                 if (correctCount >= 2 && correctCount < 3) {
                     perpetratorSectionPoints += SCORING.evidence_use;
-                    breakdown.push('');
-                    breakdown.push('✓ Καλή Χρήση Τεκμηρίων');
                 }
                 
                 if (wrongSuspects.length === 0 && correctCount > 0 && correctCount < 3) {
                     const precisionBonus = correctCount * 15;
                     perpetratorSectionPoints += precisionBonus;
-                    breakdown.push('');
-                    breakdown.push('✓ Bonus Ακρίβειας');
-                    breakdown.push(`   Όλες οι επιλογές τους ήταν σωστές - απλά χάσαν ${3 - correctCount}`);
                 }
                 
-                // Update header with total (only for non-perfect solutions)
                 const headerIndex = breakdown.indexOf('👥 ΤΑΥΤΟΠΟΙΗΣΗ ΔΡΑΣΤΩΝ');
                 breakdown[headerIndex] = `👥 ΤΑΥΤΟΠΟΙΗΣΗ ΔΡΑΣΤΩΝ (+${perpetratorSectionPoints} πόντοι)`;
                 breakdown.push('');
@@ -843,15 +646,18 @@
                     const minutes = totalTimeMs / 60000;
                     if (minutes < 30) {
                         efficiencyPoints += SCORING.time_under_30;
-                        efficiencyLines.push('⏱️ Ταχύτατη Λύση: Χρόνος <30 λεπτά');
+                        efficiencyLines.push('⏱️ ΤΑΧΥΤΑΤΗ ΕΠΙΛΥΣΗ');
+                        efficiencyLines.push('   Χρόνος: <30 λεπτά');
                         hasBonus = true;
                     } else if (minutes < 45) {
                         efficiencyPoints += SCORING.time_30_45;
-                        efficiencyLines.push('⏱️ Γρήγορη Λύση: Χρόνος 30-45 λεπτά');
+                        efficiencyLines.push('⏱️ ΓΡΗΓΟΡΗ ΕΠΙΛΥΣΗ');
+                        efficiencyLines.push('   Χρόνος: 30-45 λεπτά');
                         hasBonus = true;
                     } else if (minutes < 60) {
                         efficiencyPoints += SCORING.time_45_60;
-                        efficiencyLines.push('⏱️ Καλός Χρόνος: Χρόνος 45-60 λεπτά');
+                        efficiencyLines.push('⏱️ ΚΑΛΟΣ ΧΡΟΝΟΣ');
+                        efficiencyLines.push('   Χρόνος: 45-60 λεπτά');
                         hasBonus = true;
                     }
                 }
@@ -859,15 +665,18 @@
                 if (promptCount) {
                     if (promptCount <= 5) {
                         efficiencyPoints += SCORING.prompts_1_5;
-                        efficiencyLines.push('🎯 Εξαιρετική Αποδοτικότητα: Prompts ≤5');
+                        efficiencyLines.push('🎯 ΕΞΑΙΡΕΤΙΚΗ ΧΡΗΣΗ PROMPTS');
+                        efficiencyLines.push('   Prompts: ≤5');
                         hasBonus = true;
                     } else if (promptCount <= 10) {
                         efficiencyPoints += SCORING.prompts_6_10;
-                        efficiencyLines.push('🎯 Καλή Αποδοτικότητα: Prompts 6-10');
+                        efficiencyLines.push('🎯 ΚΑΛΗ ΧΡΗΣΗ PROMPTS');
+                        efficiencyLines.push('   Prompts: 6-10');
                         hasBonus = true;
                     } else if (promptCount <= 15) {
                         efficiencyPoints += SCORING.prompts_11_15;
-                        efficiencyLines.push('🎯 Αξιόλογη Αποδοτικότητα: Prompts 11-15');
+                        efficiencyLines.push('🎯 ΑΞΙΟΛΟΓΗ ΧΡΗΣΗ PROMPTS');
+                        efficiencyLines.push('   Prompts: 11-15');
                         hasBonus = true;
                     }
                 }
@@ -877,7 +686,6 @@
                 }
                 
                 score += efficiencyPoints;
-                // Update header with total
                 efficiencyLines[0] = `⚡ BONUSES ΑΠΟΔΟΤΙΚΟΤΗΤΑΣ (+${efficiencyPoints} πόντοι)`;
                 breakdown.push(...efficiencyLines);
                 breakdown.push('');
@@ -995,18 +803,6 @@
 
             } catch (error) {
                 console.error('Error loading leaderboard:', error);
-                document.getElementById('leaderboardBody').innerHTML = `
-                    <tr>
-                        <td colspan="8" style="text-align: center; color: #dc3545; padding: 40px;">
-                            ❌ Σφάλμα φόρτωσης δεδομένων
-                        </td>
-                    </tr>
-                `;
-                document.getElementById('mobileCards').innerHTML = `
-                    <div style="text-align: center; color: #dc3545; padding: 40px;">
-                        ❌ Σφάλμα φόρτωσης δεδομένων
-                    </div>
-                `;
             }
         }
 
@@ -1062,11 +858,6 @@
                 const solution = team.solution;
                 const suspects = solution.suspects || [];
                 
-                let correctCount = 0;
-                suspects.forEach(s => {
-                    if (CORRECT_SUSPECTS.includes(s)) correctCount++;
-                });
-                
                 const maxScore = solution.maxScore || 140;
                 const percentage = Math.round((solution.score / maxScore) * 100);
                 const grade = getGrade(percentage);
@@ -1118,42 +909,9 @@
                             <div class="card-team-name">${team.name.toUpperCase()}</div>
                             <div class="card-score">${solution.score}/${maxScore}</div>
                         </div>
-
-                        <div class="card-row">
-                            <div class="card-label">Τίτλος</div>
-                            <div class="card-value">
-                                <span class="grade-badge" style="background: ${grade.color}; color: ${percentage >= 50 ? '#000' : '#fff'};">
-                                    ${grade.name}
-                                </span>
-                            </div>
-                        </div>
-
-                        <div class="card-row">
-                            <div class="card-label">Δράστες</div>
-                            <div class="card-suspects">
-                                ${suspects.map(s => `
-                                    <span class="badge ${CORRECT_SUSPECTS.includes(s) ? 'badge-correct' : 'badge-incorrect'}">
-                                        ${SUSPECT_NAMES[s] || s}
-                                    </span>
-                                `).join('')}
-                            </div>
-                        </div>
-
-                        <div class="card-row">
-                            <div class="card-label">Χρόνος</div>
-                            <div class="card-value">${formatTime(solution.completionTimeMs)}</div>
-                        </div>
-
-                        <div class="card-row">
-                            <div class="card-label">Prompts</div>
-                            <div class="card-value">${solution.promptCount || 0}</div>
-                        </div>
-
-                        <div class="card-actions">
-                            <button class="btn btn-primary" onclick="viewSolution('${team.name}')">
-                                👁️ Προβολή Λύσης
-                            </button>
-                        </div>
+                        <button class="btn btn-primary" style="width: 100%; margin-top: 15px;" onclick="viewSolution('${team.name}')">
+                            👁️ Προβολή Λύσης
+                        </button>
                     </div>
                 `;
             }).join('');
@@ -1258,22 +1016,18 @@
                             </div>
                         </div>
 
-<h3 style="margin-top: 25px; margin-bottom: 15px;">🎯 ΑΝΑΛΥΤΙΚΗ ΒΑΘΜΟΛΟΓΙΑ:</h3>
+<h3 style="margin-top: 25px; margin-bottom: 15px;">🎯 ΑΝΑΛΥΤΙΚΗ ΒΑΘΜΟΛΟΓΙΑ</h3>
 <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: clamp(11px, 2vw, 13px); line-height: 1.7; max-height: 400px; overflow-y: auto; word-wrap: break-word;">
 ${solution.breakdown.map(item => {
     if (item.trim() === '') {
         return '<div style="height: 8px;"></div>';
     }
 
-    if (item.includes('═')) {
-        return '<hr style="border: none; border-top: 2px solid #ff6b00; margin: 15px 0; opacity: 0.3;">';
-    }
-
-    if (item.match(/^[🎯🧩👥⚡⚠️🔍❌]/)) {
+    if (item.match(/^[🎯🧩👥⚡⚠️🔍❌🎖️]/)) {
         return '<div style="background: linear-gradient(135deg, #0f3460 0%, #16213e 100%); color: white; padding: clamp(10px, 2vw, 12px) clamp(12px, 2.5vw, 15px); margin: 15px 0 10px 0; border-radius: 8px; font-weight: bold; font-size: clamp(13px, 2.5vw, 15px); box-shadow: 0 2px 8px rgba(0,0,0,0.2); word-wrap: break-word;">' + item + '</div>';
     }
 
-    if (item.startsWith('   •') || item.startsWith('   →')) {
+    if (item.startsWith('   •') || item.startsWith('   →') || item.startsWith('   ✓')) {
         return '<div style="padding: clamp(5px, 1vw, 6px) clamp(5px, 1vw, 6px) clamp(5px, 1vw, 6px) clamp(30px, 6vw, 35px); margin: 3px 0; color: #555; font-size: clamp(12px, 2.2vw, 13px); line-height: 1.6; word-wrap: break-word;">' + item + '</div>';
     }
 
@@ -1298,7 +1052,7 @@ ${solution.breakdown.map(item => {
         borderColor = '#28a745';
         textColor = '#155724';
         hasBorder = true;
-    } else if (item.includes('⚖️') || item.includes('📉')) {
+    } else if (item.includes('⚖️')) {
         bgColor = '#fff8e1';
         borderColor = '#ff9800';
         textColor = '#e65100';
