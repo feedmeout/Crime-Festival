@@ -663,7 +663,7 @@
             'alexandra': 'Νικολάου Αλεξάνδρα',
             'suicide': 'Αυτοκτονία'
         };
-
+		
         const SCORING = {
             murder_diagnosis: 25,
             cooperation: 20,
@@ -685,7 +685,7 @@
             if (selectedSuspects.length === 0) {
                 return {
                     score: 0,
-                    breakdown: ['❌ Δεν επιλέξατε κανέναν ύποπτο ή αυτοκτονία'],
+                    breakdown: ['❌ Δεν επέλεξαν κανέναν ύποπτο ή αυτοκτονία'],
                     maxScore: 140,
                     correctCount: 0
                 };
@@ -705,9 +705,9 @@
                     breakdown: [
                         '🚫 ΛΟΓΙΚΗ ΑΝΤΙΦΑΣΗ - Η ΥΠΟΘΕΣΗ ΔΕΝ ΜΠΟΡΕΙ ΝΑ ΕΙΝΑΙ ΤΑΥΤΟΧΡΟΝΑ ΔΟΛΟΦΟΝΙΑ ΚΑΙ ΑΥΤΟΚΤΟΝΙΑ',
                         '',
-                        `Επιλέξατε: ${killerNames} + Αυτοκτονία`,
+                        `Επέλεξαν: ${killerNames} + Αυτοκτονία`,
                         '',
-                        '⚖️ Πρέπει να επιλέξετε ΕΙΤΕ δολοφονία ΕΙΤΕ αυτοκτονία, όχι και τα δύο.',
+                        '⚖️ Πρέπει να επιλέξουν ΕΙΤΕ δολοφονία ΕΙΤΕ αυτοκτονία, όχι και τα δύο.',
                     ],
                     maxScore: 140,
                     correctCount: 0
@@ -720,7 +720,7 @@
                     breakdown: [
                         '❌ ΕΣΦΑΛΜΕΝΗ ΘΕΩΡΙΑ - Αυτό δεν ήταν αυτοκτονία',
                         '',
-                        '🔍 Βασικά Στοιχεία που Αγνοήσατε:',
+                        '🔍 Βασικά Στοιχεία που Αγνόησαν:',
                         '   • Γάντια λάτεξ στην πόρτα (κάποιος προσπάθησε να μην αφήσει αποτυπώματα)',
                         '   • Πλαστό email "αυτοκτονίας" από κοινόχρηστο υπολογιστή',
                         '   • Απενεργοποίηση κάμερων ακριβώς πριν τη δολοφονία',
@@ -755,7 +755,7 @@
             breakdown.push('');
             score += SCORING.murder_diagnosis;
             breakdown.push(`✓ Σωστή Διάγνωση: ΔΟΛΟΦΟΝΙΑ (+${SCORING.murder_diagnosis} πόντοι)`);
-            breakdown.push('   Αναγνωρίσατε ότι δεν ήταν αυτοκτονία - σωστή εκκίνηση!');
+            breakdown.push('   Αναγνώρισαν ότι δεν ήταν αυτοκτονία - σωστή εκκίνηση!');
             breakdown.push('');
             breakdown.push('👥 ΤΑΥΤΟΠΟΙΗΣΗ ΔΡΑΣΤΩΝ');
             breakdown.push('');
@@ -763,7 +763,7 @@
             if (correctCount >= 2) {
                 score += SCORING.cooperation;
                 breakdown.push(`✓ Εντοπισμός Συνεργασίας (+${SCORING.cooperation} πόντοι)`);
-                breakdown.push('   Καταλάβατε ότι ήταν ομαδική προσπάθεια!');
+                breakdown.push('   Κατάλαβαν ότι ήταν ομαδική προσπάθεια!');
                 breakdown.push('');
             }
 
@@ -771,7 +771,7 @@
                 score += SCORING.perpetrator * 3;
                 score += SCORING.perfect_solution_bonus;
                 breakdown.push(`🎖️ ΤΕΛΕΙΑ ΑΝΑΛΥΣΗ! (+${SCORING.perpetrator * 3 + SCORING.perfect_solution_bonus} πόντοι)`);
-                breakdown.push('   Εντοπίσατε και τους 3 συνεργούς ΧΩΡΙΣ ψευδή θετικά!');
+                breakdown.push('   Εντόπισαν και τους 3 συνεργούς ΧΩΡΙΣ ψευδή θετικά!');
                 breakdown.push('');
                 breakdown.push('   ✓ Αναγνώστου (Μαστρομυαλός - έριξε το κυάνιο)');
                 breakdown.push('   ✓ Πετρόπουλος (Προμηθευτής - πήρε το κυάνιο, έσβησε κάμερες)');
@@ -780,7 +780,7 @@
                 if (correctCount > 0) {
                     const points = correctCount * SCORING.perpetrator;
                     score += points;
-                    breakdown.push(`✓ Εντοπίσατε ${correctCount}/3 Δράστες (+${points} πόντοι)`);
+                    breakdown.push(`✓ Εντόπισαν ${correctCount}/3 Δράστες (+${points} πόντοι)`);
                     breakdown.push('');
                     selectedSuspects.forEach(suspect => {
                         if (CORRECT_SUSPECTS.includes(suspect)) {
@@ -793,7 +793,7 @@
                         }
                     });
                 } else {
-                    breakdown.push(`❌ Δεν εντοπίσατε κανέναν από τους πραγματικούς δράστες (+0 πόντοι)`);
+                    breakdown.push(`❌ Δεν εντόπισαν κανέναν από τους πραγματικούς δράστες (+0 πόντοι)`);
                 }
                 
                 if (correctCount >= 2 && correctCount < 3) {
@@ -808,7 +808,7 @@
                 score += precisionBonus;
                 breakdown.push('');
                 breakdown.push(`🎯 Bonus Ακρίβειας (+${precisionBonus} πόντοι)`);
-                breakdown.push(`   Όλες οι επιλογές σας ήταν σωστές - απλά χάσατε ${3 - correctCount}`);
+                breakdown.push(`   Όλες οι επιλογές τους ήταν σωστές - απλά χάσαν ${3 - correctCount}`);
             }
             
             breakdown.push('');
@@ -866,7 +866,7 @@
             }
             
             if (wrongSuspects.length > 0) {
-                breakdown.push(`❌ ΚΑΤΗΓΟΡΗΣΑΤΕ ΑΘΩΟΥΣ`);
+                breakdown.push(`❌ ΚΑΤΗΓΟΡΗΣΑΝ ΑΘΩΟΥΣ`);
                 breakdown.push('');
                 wrongSuspects.forEach(name => {
                     breakdown.push(`   → ${name}`);
@@ -895,7 +895,7 @@
             }
                 
             if (missedSuspects.length > 0) {
-                breakdown.push(`🔍 ΧΑΣΑΤΕ ΠΡΑΓΜΑΤΙΚΟΥΣ ΔΡΑΣΤΕΣ`);
+                breakdown.push(`🔍 ΧΑΣΑΝ ΠΡΑΓΜΑΤΙΚΟΥΣ ΔΡΑΣΤΕΣ`);
                 breakdown.push('');
                 
                 const missedPenalty = missedSuspects.length * 20;
@@ -916,11 +916,9 @@
                 });
                 
                 breakdown.push('');
-                breakdown.push(`⚖️ Ποινή: -${missedPenalty} πόντοι (Δεν εντοπίσατε ${missedSuspects.length} δράστη${missedSuspects.length > 1 ? 'ς' : ''})`);
+                breakdown.push(`⚖️ Ποινή: -${missedPenalty} πόντοι (Δεν εντόπισαν ${missedSuspects.length} δράστη${missedSuspects.length > 1 ? 'ς' : ''})`);
             }
             
-            breakdown.push('');
-            breakdown.push(`🏁 ΤΕΛΙΚΗ ΒΑΘΜΟΛΟΓΙΑ: ${score}/${140}`);
             score = Math.max(0, Math.min(score, 140));
             return { score, breakdown, maxScore: 140, correctCount, wrongCount: wrongSuspects.length };
         }
@@ -1187,14 +1185,19 @@
                 document.getElementById('modalContent').innerHTML = `
                     <div class="solution-details">
                         <h3>📊 Βαθμολογία</h3>
-                        <div style="font-size: clamp(22px, 5vw, 32px); font-weight: bold; color: ${solution.score === 0 ? '#dc3545' : '#28a745'}; margin: 15px 0;">
-                            ${solution.score}/${maxScore} πόντοι
-                        </div>
-                        <div style="font-size: clamp(15px, 3.5vw, 20px); font-weight: bold; margin: 10px 0;">
-                            <span style="background: ${grade.color}; color: ${percentage >= 50 ? '#000' : '#fff'}; padding: 8px 16px; border-radius: 8px;">
-                                ${grade.name}
-                            </span>
-                            <span style="color: #666; margin-left: 10px;">(${percentage}%)</span>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr)); gap: 10px; margin: 15px 0;">
+                            <div style="background: ${solution.score === 0 ? '#f8d7da' : '#d4edda'}; padding: 15px; border-radius: 8px; text-align: center;">
+                                <strong style="color: #666; font-size: clamp(11px, 2.3vw, 13px); display: block; margin-bottom: 8px;">ΠΌΝΤΟΙ</strong>
+                                <span style="font-size: clamp(22px, 5vw, 32px); font-weight: bold; color: ${solution.score === 0 ? '#dc3545' : '#28a745'};">${solution.score}/${maxScore}</span>
+                            </div>
+                            <div style="background: ${grade.color}; padding: 15px; border-radius: 8px; text-align: center;">
+                                <strong style="color: ${percentage >= 50 ? '#000' : '#fff'}; font-size: clamp(11px, 2.3vw, 13px); display: block; margin-bottom: 8px;">ΤΊΤΛΟΣ</strong>
+                                <span style="font-size: clamp(14px, 3vw, 18px); font-weight: bold; color: ${percentage >= 50 ? '#000' : '#fff'};">${grade.name}</span>
+                            </div>
+                            <div style="background: #e3f2fd; padding: 15px; border-radius: 8px; text-align: center;">
+                                <strong style="color: #666; font-size: clamp(11px, 2.3vw, 13px); display: block; margin-bottom: 8px;">ΠΟΣΟΣΤΌ</strong>
+                                <span style="font-size: clamp(22px, 5vw, 32px); font-weight: bold; color: #1976d2;">${percentage}%</span>
+                            </div>
                         </div>
                         
                         ${isContradiction ? `
@@ -1219,15 +1222,15 @@
                         </div>
 
                         <h3 style="margin-top: 20px;">⏱️ Στατιστικά:</h3>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(130px, 100%), 1fr)); gap: 10px; margin-top: 10px;">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr)); gap: 10px; margin-top: 10px;">
                             <div style="background: #e3f2fd; padding: 12px; border-radius: 8px;">
-                                <strong>Χρόνος:</strong><br>${formatTime(solution.completionTimeMs)}
+                                <strong>Χρόνος:</strong> ${formatTime(solution.completionTimeMs)}
                             </div>
                             <div style="background: #e3f2fd; padding: 12px; border-radius: 8px;">
-                                <strong>Prompts:</strong><br>${solution.promptCount || 0}
+                                <strong>Prompts:</strong> ${solution.promptCount || 0}
                             </div>
                             <div style="background: #e3f2fd; padding: 12px; border-radius: 8px;">
-                                <strong>Υποβολή:</strong><br>${new Date(solution.submittedAt).toLocaleString('el-GR', {
+                                <strong>Υποβολή:</strong> ${new Date(solution.submittedAt).toLocaleString('el-GR', {
                                     day: '2-digit',
                                     month: '2-digit',
                                     hour: '2-digit',
