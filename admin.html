@@ -350,6 +350,8 @@ body {
     font-weight: 700;
     font-size: clamp(11px, 2.5vw, 13px);
     transition: width 0.3s ease;
+    min-width: fit-content;
+    padding: 0 8px;
 }
 
 .team-stats {
@@ -651,7 +653,7 @@ body {
         </div>
 
         <div class="section">
-            <h2>👥 ΕΝΕΡΓΕΣ ΟΜΑΔΕΣ</h2>
+            <h2> ΕΝΕΡΓΕΣ ΟΜΑΔΕΣ</h2>
             <div class="quick-actions">
                 <button class="btn" style="background: #17a2b8; color: white;" onclick="exportAllData()">💾 EXPORT DATA (GAME)</button>
                 <button class="btn" style="background: #6c757d; color: white;" onclick="importData()">📥 IMPORT DATA (GAME)</button>
@@ -894,29 +896,36 @@ async function getAllTeams() {
         return teams;
     }
 
-async function getLoggedInMembersCount(teamName) {
+async function getSurveyCompletionStatus(teamName) {
     if (!window.firebaseDB) {
-        return 0;
+        return { pre: 0, post: 0 };
     }
     
     try {
         const surveysRef = window.firebaseCollection(window.firebaseDB, 'surveys');
         const querySnapshot = await window.firebaseGetDocs(surveysRef);
         
-        const loggedInMembers = new Set();
+        const preMembers = new Set();
+        const postMembers = new Set();
         
         querySnapshot.forEach((doc) => {
             const docId = doc.id;
             if (docId.startsWith(`${teamName}_pre_`)) {
                 const memberName = docId.replace(`${teamName}_pre_`, '');
-                loggedInMembers.add(memberName);
+                preMembers.add(memberName);
+            } else if (docId.startsWith(`${teamName}_post_`)) {
+                const memberName = docId.replace(`${teamName}_post_`, '');
+                postMembers.add(memberName);
             }
         });
         
-        return loggedInMembers.size;
+        return {
+            pre: preMembers.size,
+            post: postMembers.size
+        };
     } catch (error) {
-        console.error(`Error counting logged-in members for ${teamName}:`, error);
-        return 0;
+        console.error(`Error counting surveys for ${teamName}:`, error);
+        return { pre: 0, post: 0 };
     }
 }
 
@@ -1095,10 +1104,10 @@ if (teams.length === 0) {
     }
     
     teams = sortTeams(teams, sortOrder);
-	const memberCounts = new Map();
+	const surveyCounts = new Map();
 	for (const team of teams) {
-		const loggedInCount = await getLoggedInMembersCount(team.name);
-		memberCounts.set(team.name, loggedInCount);
+		const counts = await getSurveyCompletionStatus(team.name);
+		surveyCounts.set(team.name, counts);
 	}
     container.innerHTML = '';    
     if (window.timerInterval) {
@@ -1127,21 +1136,21 @@ window.timerInterval = setInterval(() => {
         const progress = Math.round((team.unlocked.length / TOTAL_TEKS) * 100);
         const allEvidenceUnlocked = team.unlocked.length === TOTAL_TEKS;
         const solutionSubmitted = !!team.solution;
-		const loggedInCount = memberCounts.get(team.name) || 0;
+		const surveys = surveyCounts.get(team.name) || { pre: 0, post: 0 };
 		const teamSize = team.teamSize || 0;
-		let memberStatusColor = '#666';
-		let memberStatusIcon = '👥';
-		if (teamSize > 0) {
-			if (loggedInCount === teamSize) {
-				memberStatusColor = '#28a745';
-				memberStatusIcon = '✅';
-			} else if (loggedInCount > 0) {
-				memberStatusColor = '#ffc107';
-				memberStatusIcon = '⚠️';
-			} else {
-				memberStatusColor = '#dc3545';
-				memberStatusIcon = '❌';
-			}
+		
+		let preStatusIcon = '❌';
+		if (surveys.pre === teamSize && teamSize > 0) {
+			preStatusIcon = '✅';
+		} else if (surveys.pre > 0) {
+			preStatusIcon = '⚠️';
+		}
+		
+		let postStatusIcon = '❌';
+		if (surveys.post === teamSize && teamSize > 0) {
+			postStatusIcon = '✅';
+		} else if (surveys.post > 0) {
+			postStatusIcon = '⚠️';
 		}
         
         let timingHtml = '';
@@ -1166,7 +1175,7 @@ window.timerInterval = setInterval(() => {
         return `
             <div class="team-card ${solutionSubmitted ? 'completed' : ''}" data-team-id="${team.name}">
                 <h3>
-                    <span style="font-size: 24px;">👥</span> 
+                    <span style="font-size: 24px;"></span> 
                     ${team.name.toUpperCase()}
                     ${solutionSubmitted ? 
                         '<span class="completion-badge">✅ ΟΛΟΚΛΗΡΩΘΗΚΕ</span>' : 
@@ -1174,12 +1183,11 @@ window.timerInterval = setInterval(() => {
                     }
                 </h3>
                 <div class="progress-bar">
-                    <div class="progress-fill" style="width: ${progress}%;">${progress}%</div>
+                    <div class="progress-fill" style="width: ${progress === 0 ? '100' : progress}%; ${progress === 0 ? 'background: #e0e0e0; color: #666;' : ''}">${progress}%</div>
                 </div>
-                <div class="team-stats">📊 ΞΕΚΛΕΙΔΩΜΕΝΑ ΣΤΟΙΧΕΙΑ: ${team.unlocked.length} / ${TOTAL_TEKS}</div>
-				<div class="team-stats" style="color: ${memberStatusColor};">
-					${memberStatusIcon} ΕΝΕΡΓΑ ΜΕΛΗ: <strong>${loggedInCount} / ${teamSize || 'N/A'}</strong>
-				</div>
+                <div class="team-stats">📊 ΞΕΚΛΕΙΔΩΜΕΝΑ ΣΤΟΙΧΕΙΑ: <strong>${team.unlocked.length} / ${TOTAL_TEKS}</strong></div>
+				<div class="team-stats">${preStatusIcon} PRE-SURVEY: <strong>${surveys.pre} / ${teamSize || 'N/A'} μέλη</strong></div>
+				<div class="team-stats">${postStatusIcon} POST-SURVEY: <strong>${surveys.post} / ${teamSize || 'N/A'} μέλη</strong></div>
                 <div class="team-stats">🔑 ΚΩΔΙΚΟΣ: <strong>${team.password || 'N/A'}</strong></div>
                 ${timingHtml}
                 <div class="tek-grid">
