@@ -2274,6 +2274,63 @@ function displaySolutionResult(solution) {
     statsHTML += '</div>';
     
     statsHTML += '</div>';
+
+    // Generate breakdown HTML separately
+    const breakdownHTML = solution.breakdown.map(function(item) {
+        if (item.trim() === '') {
+            return '<div style="height: 8px;"></div>';
+        }
+
+        if (item.includes('═')) {
+            return '<hr style="border: none; border-top: 2px solid #ff6b00; margin: 15px 0; opacity: 0.3;">';
+        }
+
+        if (item.match(/^[🎯🧩👥⚡⚠️🔍]/)) {
+            return '<div style="background: linear-gradient(135deg, #0f3460 0%, #16213e 100%); color: white; padding: 12px 15px; margin: 20px 0 10px 0; border-radius: 8px; font-weight: bold; font-size: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">' + item + '</div>';
+        }
+
+        if (item.startsWith('   •') || item.startsWith('   →')) {
+            return '<div style="padding: 6px 6px 6px 35px; margin: 3px 0; color: #555; font-size: 13px; line-height: 1.6;">' + item + '</div>';
+        }
+
+        if (item.startsWith('   ')) {
+            return '<div style="padding: 5px 5px 5px 30px; margin: 2px 0; color: #666; font-size: 13px;">' + item + '</div>';
+        }
+
+        var bgColor = 'transparent';
+        var borderColor = 'transparent';
+        var textColor = '#333';
+        var fontWeight = 'normal';
+        var padding = '8px 12px';
+        var hasBorder = false;
+
+        if (item.includes('🚫') || item.includes('❌')) {
+            bgColor = '#fff5f5';
+            borderColor = '#dc3545';
+            textColor = '#721c24';
+            fontWeight = 'bold';
+            hasBorder = true;
+        } else if (item.includes('✓') || item.includes('🎖️')) {
+            bgColor = '#f0fff4';
+            borderColor = '#28a745';
+            textColor = '#155724';
+            hasBorder = true;
+        } else if (item.includes('⚖️') || item.includes('📉')) {
+            bgColor = '#fff8e1';
+            borderColor = '#ff9800';
+            textColor = '#e65100';
+            hasBorder = true;
+        } else if (item.includes('💡')) {
+            bgColor = '#e3f2fd';
+            borderColor = '#2196f3';
+            textColor = '#0d47a1';
+            hasBorder = true;
+        }
+
+        var borderStyle = hasBorder ? 'border-left: 4px solid ' + borderColor + ';' : '';
+        return '<div style="padding: ' + padding + '; margin: 5px 0; background: ' + bgColor + '; ' + borderStyle + ' border-radius: 4px; color: ' + textColor + '; font-weight: ' + fontWeight + '; line-height: 1.6;">' + item + '</div>';
+    }).join('');
+    
     resultDiv.innerHTML = 
         '<div style="background: ' + headerGradient + '; color: white; padding: 30px; border-radius: 15px; margin: 20px 0; text-align: center; box-shadow: 0 10px 40px ' + headerShadow + ';">' +
         
@@ -2287,65 +2344,11 @@ function displaySolutionResult(solution) {
         
         '<div style="background: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; border: 2px solid #28a745;">' +
         '<h4 style="color: #1a1a2e; margin-bottom: 15px; font-size: 18px; border-bottom: 2px solid #ff6b00; padding-bottom: 8px;">📊 ΑΝΑΛΥΣΗ ΤΗΣ ΒΑΘΜΟΛΟΓΙΑΣ ΣΑΣ</h4>' +
-		'<div style="font-family: \'Courier New\', monospace; line-height: 1.8; font-size: 14px;">' +
-		(function() {
-			return solution.breakdown.map(function(item) {
-				if (item.trim() === '') {
-					return '<div style="height: 8px;"></div>';
-				}
-
-				if (item.includes('═')) {
-					return '<hr style="border: none; border-top: 2px solid #ff6b00; margin: 15px 0; opacity: 0.3;">';
-				}
-
-				if (item.match(/^[🎯🧩👥⚡⚠️🔍]/)) {
-					return '<div style="background: linear-gradient(135deg, #0f3460 0%, #16213e 100%); color: white; padding: 12px 15px; margin: 20px 0 10px 0; border-radius: 8px; font-weight: bold; font-size: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">' + item + '</div>';
-				}
-
-				if (item.startsWith('   •') || item.startsWith('   →')) {
-					return '<div style="padding: 6px 6px 6px 35px; margin: 3px 0; color: #555; font-size: 13px; line-height: 1.6;">' + item + '</div>';
-				}
-
-				if (item.startsWith('   ')) {
-					return '<div style="padding: 5px 5px 5px 30px; margin: 2px 0; color: #666; font-size: 13px;">' + item + '</div>';
-				}
-
-				var bgColor = 'transparent';
-				var borderColor = 'transparent';
-				var textColor = '#333';
-				var fontWeight = 'normal';
-				var padding = '8px 12px';
-				var hasBorder = false;
-
-				if (item.includes('🚫') || item.includes('❌')) {
-					bgColor = '#fff5f5';
-					borderColor = '#dc3545';
-					textColor = '#721c24';
-					fontWeight = 'bold';
-					hasBorder = true;
-				} else if (item.includes('✓') || item.includes('🎖️')) {
-					bgColor = '#f0fff4';
-					borderColor = '#28a745';
-					textColor = '#155724';
-					hasBorder = true;
-				} else if (item.includes('⚖️') || item.includes('📉')) {
-					bgColor = '#fff8e1';
-					borderColor = '#ff9800';
-					textColor = '#e65100';
-					hasBorder = true;
-				} else if (item.includes('💡')) {
-					bgColor = '#e3f2fd';
-					borderColor = '#2196f3';
-					textColor = '#0d47a1';
-					hasBorder = true;
-				}
-
-				var borderStyle = hasBorder ? 'border-left: 4px solid ' + borderColor + ';' : '';
-				return '<div style="padding: ' + padding + '; margin: 5px 0; background: ' + bgColor + '; ' + borderStyle + ' border-radius: 4px; color: ' + textColor + '; font-weight: ' + fontWeight + '; line-height: 1.6;">' + item + '</div>';
-			}).join('');
-		})() +
-		'</div>' +
+        '<div style="font-family: \'Courier New\', monospace; line-height: 1.8; font-size: 14px;">' +
+        breakdownHTML +
         '</div>' +
+        '</div>' +
+        
         '<div style="background: white; padding: 20px; border-radius: 10px; border: 2px solid #dc3545;">' +
         '<h4 style="color: #dc3545; margin-bottom: 15px; font-size: 18px; border-bottom: 2px solid #dc3545; padding-bottom: 8px;">🎯 ΛΥΣΗ: ΣΥΝΕΡΓΑΤΙΚΗ ΔΟΛΟΦΟΝΙΑ</h4>' +
         '<h5 style="color: #1a1a2e; margin: 15px 0 10px 0; font-size: 15px; display: flex; align-items: center; gap: 8px;">⚠️ ΔΡΑΣΤΕΣ & ΡΟΛΟΣ</h5>' +
