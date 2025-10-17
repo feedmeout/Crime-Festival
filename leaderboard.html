@@ -675,12 +675,6 @@
             
             // PENALTIES
             if (wrongSuspects.length > 0) {
-                breakdown.push('❌ ΚΑΤΗΓΟΡΗΣΑΝ ΑΘΩΟΥΣ');
-                breakdown.push('');
-                wrongSuspects.forEach(name => {
-                    breakdown.push(`   → ${name}`);
-                });
-                
                 const originalScore = score;
                 let multiplier = 1.0;
                 if (wrongSuspects.length === 1) {
@@ -693,24 +687,26 @@
                 
                 score = Math.floor(score * multiplier);
                 const penalty = originalScore - score;
+                
+                breakdown.push(`❌ ΚΑΤΗΓΟΡΗΣΑΝ ΑΘΩΟΥΣ (-${penalty} πόντοι)`);
                 breakdown.push('');
-                breakdown.push(`⚖️ Ποινή: -${penalty} πόντοι`);
+                wrongSuspects.forEach(name => {
+                    breakdown.push(`   → ${name}`);
+                });
                 breakdown.push('');
             }
                 
             if (missedSuspects.length > 0) {
-                breakdown.push('🔍 ΧΑΣΑΝ ΠΡΑΓΜΑΤΙΚΟΥΣ ΔΡΑΣΤΕΣ');
-                breakdown.push('');
-                
                 const missedPenalty = missedSuspects.length * 20;
                 score -= missedPenalty;
+                
+                breakdown.push(`🔍 ΧΑΣΑΝ ΠΡΑΓΜΑΤΙΚΟΥΣ ΔΡΑΣΤΕΣ (-${missedPenalty} πόντοι)`);
+                breakdown.push('');
                 
                 missedSuspects.forEach(name => {
                     breakdown.push(`   → ${name}`);
                 });
-                
                 breakdown.push('');
-                breakdown.push(`⚖️ Ποινή: -${missedPenalty} πόντοι (Δεν εντόπισαν ${missedSuspects.length} δράστη${missedSuspects.length > 1 ? 'ς' : ''})`);
             }
             
             score = Math.max(0, Math.min(score, 140));
