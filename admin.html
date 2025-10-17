@@ -1741,6 +1741,7 @@ async function exportSurveyDataToExcel() {
             });
         });
 
+        // Sort by team, member, and survey type
         allResponses.sort((a, b) => {
             if (a.teamCode !== b.teamCode) {
                 return (a.teamCode || '').localeCompare(b.teamCode || '', 'el');
@@ -1752,6 +1753,86 @@ async function exportSurveyDataToExcel() {
             return (typeOrder[a.surveyType] || 3) - (typeOrder[b.surveyType] || 3);
         });
 
+        // Define column order matching your survey instrument
+        const SURVEY_COLUMN_ORDER = [
+            // Metadata
+            'Document_ID',
+            'Team_Code',
+            'Member_Name',
+            'Survey_Type',
+            'Submitted_At',
+            'Submission_Date',
+            'Submission_Time',
+            
+            // SECTION 1: Demographics (PRE only)
+            'group',
+            'gender',
+            'age',
+            'education',
+            
+            // SECTION 2: GenAI Experience (PRE only)
+            'genai-used',
+            
+            // Branch A (if genai-used = yes)
+            'genai-duration',
+            'genai-frequency',
+            'genai-tools',
+            'genai-tools-other',
+            'genai-purposes',
+            'genai-purposes-other',
+            'prompt-ability',
+            'trust-level',
+            'verify-frequency',
+            'biggest-challenge',
+            
+            // Branch B (if genai-used = no)
+            'non-use-reason',
+            'non-use-reason-other',
+            'genai-awareness',
+            'genai-concerns',
+            'future-likelihood',
+            'genai-motivators',
+            
+            // Branch C (if genai-used = unsure)
+            'services-used',
+            
+            // Common questions for all branches
+            'genai-importance',
+            'education-adequacy',
+            
+            // SECTION 3: AI Attitudes (PRE only)
+            'ai-attitude-1',
+            'ai-attitude-2',
+            'ai-attitude-3',
+            'ai-attitude-4',
+            'ai-attitude-5',
+            'ai-attitude-6',
+            'ai-attitude-7',
+            'ai-attitude-8',
+            
+            // SECTION 4: TAM - Perceived Usefulness (POST only)
+            'pu1',
+            'pu2',
+            'pu3',
+            'pu4',
+            'pu5',
+            'pu6',
+            
+            // SECTION 5: TAM - Perceived Ease of Use (POST only)
+            'peu1',
+            'peu2',
+            'peu3',
+            'peu4',
+            'peu5',
+            'peu6',
+            
+            // SECTION 6: Open-ended (POST only)
+            'open-strategy',
+            'open-difficulties',
+            'open-learning'
+        ];
+
+        // Process data with flattened responses
         const processedData = allResponses.map(survey => {
             const flatData = {
                 'Document_ID': survey.docId || '',
@@ -1763,6 +1844,7 @@ async function exportSurveyDataToExcel() {
                 'Submission_Time': survey.submittedAt ? new Date(survey.submittedAt).toLocaleTimeString('el-GR') : '',
             };
 
+            // Flatten responses
             if (survey.responses) {
                 Object.keys(survey.responses).forEach(key => {
                     const value = survey.responses[key];
@@ -1777,27 +1859,37 @@ async function exportSurveyDataToExcel() {
             return flatData;
         });
 
-        const allHeaders = new Set();
+        // Build final headers: defined order + any extras alphabetically
+        const allFieldsInData = new Set();
         processedData.forEach(row => {
-            Object.keys(row).forEach(key => allHeaders.add(key));
+            Object.keys(row).forEach(key => allFieldsInData.add(key));
         });
 
-        const metadataHeaders = ['Document_ID', 'Team_Code', 'Member_Name', 'Survey_Type', 'Submitted_At', 'Submission_Date', 'Submission_Time'];
-        const otherHeaders = Array.from(allHeaders)
-            .filter(h => !metadataHeaders.includes(h))
+        // Add any fields not in our predefined order (sorted alphabetically at the end)
+        const extraFields = Array.from(allFieldsInData)
+            .filter(field => !SURVEY_COLUMN_ORDER.includes(field))
             .sort();
-        const sortedHeaders = [...metadataHeaders, ...otherHeaders];
+
+        const finalHeaders = [
+            ...SURVEY_COLUMN_ORDER.filter(h => allFieldsInData.has(h)),
+            ...extraFields
+        ];
+
+        // Create worksheet data
         const worksheetData = [
-            sortedHeaders,
+            finalHeaders,
             ...processedData.map(row => 
-                sortedHeaders.map(header => row[header] !== undefined ? row[header] : '')
+                finalHeaders.map(header => row[header] !== undefined ? row[header] : '')
             )
         ];
 
+        // Export to Excel
         const XLSX = await import('https://cdn.sheetjs.com/xlsx-0.20.1/package/xlsx.mjs');
         const wb = XLSX.utils.book_new();
         const ws = XLSX.utils.aoa_to_sheet(worksheetData);
-        const colWidths = sortedHeaders.map(header => {
+        
+        // Set column widths
+        const colWidths = finalHeaders.map(header => {
             const maxLength = Math.max(
                 header.length,
                 ...processedData.map(row => 
@@ -1809,6 +1901,7 @@ async function exportSurveyDataToExcel() {
         ws['!cols'] = colWidths;
 
         XLSX.utils.book_append_sheet(wb, ws, 'Survey Responses');
+        
         const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
         const filename = `Crime_Festival_2025_Survey_Data_${timestamp}.xlsx`;
 
@@ -1819,6 +1912,8 @@ async function exportSurveyDataToExcel() {
         });
 
         document.body.removeChild(statusDiv);
+        
+        // Success message
         const successDiv = document.createElement('div');
         successDiv.style.cssText = 'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); z-index: 10000; text-align: center; max-width: 400px;';
         successDiv.innerHTML = `
@@ -1827,6 +1922,7 @@ async function exportSurveyDataToExcel() {
             <p style="margin-bottom: 15px;">Downloaded: <strong>${filename}</strong></p>
             <p style="font-size: 14px; opacity: 0.9;">Total responses: ${allResponses.length}</p>
             <p style="font-size: 14px; opacity: 0.9;">Pre-surveys: ${allResponses.filter(r => r.surveyType === 'pre').length} | Post-surveys: ${allResponses.filter(r => r.surveyType === 'post').length}</p>
+            <p style="font-size: 12px; opacity: 0.8; margin-top: 10px;">✓ Columns ordered by survey instrument</p>
         `;
         document.body.appendChild(successDiv);
 
@@ -1839,7 +1935,8 @@ async function exportSurveyDataToExcel() {
         - Total responses: ${allResponses.length}
         - Pre-surveys: ${allResponses.filter(r => r.surveyType === 'pre').length}
         - Post-surveys: ${allResponses.filter(r => r.surveyType === 'post').length}
-        - Columns: ${sortedHeaders.length}
+        - Columns: ${finalHeaders.length}
+        - Column order: Survey instrument order maintained
         `);
 
     } catch (error) {
