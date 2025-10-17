@@ -128,12 +128,6 @@
             letter-spacing: clamp(1px, 0.3vw, 2px);
         }
 
-        .category {
-            font-size: clamp(10px, 2.2vw, 12px);
-            color: #aaa;
-            margin-top: 2px;
-        }
-
         .official-badge {
             background: rgba(255,107,0,0.2);
             border: 2px solid #ff6b00;
@@ -234,21 +228,19 @@
             flex-shrink: 0;
         }
 
-		.model-viewer-container {
-			position: absolute;
-			left: -9999px;
-			opacity: 0;
-			pointer-events: none;
-			transition: opacity 0.3s ease;
-		}
+        .model-viewer-container {
+            visibility: hidden;
+            height: 0;
+            overflow: hidden;
+            transition: visibility 0s 0.3s, height 0.3s ease;
+        }
 
-		.model-viewer-container.active {
-			position: relative;
-			left: auto;
-			opacity: 1;
-			pointer-events: auto;
-			margin-top: 20px;
-		}
+        .model-viewer-container.active {
+            visibility: visible;
+            height: auto;
+            margin-top: 20px;
+            transition: visibility 0s, height 0.3s ease;
+        }
 
         model-viewer {
             width: 100%;
@@ -256,6 +248,7 @@
             background-color: #f5f5f5;
             border-radius: 8px;
             border: 2px solid #ddd;
+            display: block;
         }
 
         model-viewer::part(default-ar-button) {
@@ -311,122 +304,6 @@
             align-items: center;
             gap: 12px;
             flex-wrap: wrap;
-        }
-
-        .evidence-metadata {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
-            gap: clamp(12px, 2.5vw, 15px);
-            margin-bottom: clamp(25px, 4vw, 30px);
-        }
-
-        .metadata-item {
-            background: white;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            padding: clamp(12px, 2.5vw, 15px);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            transition: all 0.3s ease;
-            min-height: 70px;
-        }
-
-        .metadata-item:hover {
-            border-color: #0f3460;
-            box-shadow: 0 4px 12px rgba(15,52,96,0.1);
-            transform: translateY(-2px);
-        }
-
-        .metadata-icon {
-            font-size: clamp(24px, 5vw, 28px);
-            flex-shrink: 0;
-        }
-
-        .metadata-content {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .metadata-label {
-            font-size: clamp(10px, 2vw, 11px);
-            color: #999;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 3px;
-            font-weight: 600;
-        }
-
-        .metadata-value {
-            font-size: clamp(13px, 2.8vw, 14px);
-            color: #1a1a2e;
-            font-weight: 600;
-            line-height: 1.3;
-            word-wrap: break-word;
-        }
-
-        .critical-alert {
-            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
-            border-radius: 12px;
-            padding: clamp(18px, 3vw, 20px);
-            margin-bottom: clamp(25px, 4vw, 30px);
-            box-shadow: 0 6px 20px rgba(220,53,69,0.3);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .critical-alert::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: repeating-linear-gradient(
-                45deg,
-                transparent,
-                transparent 10px,
-                rgba(0,0,0,0.05) 10px,
-                rgba(0,0,0,0.05) 20px
-            );
-            pointer-events: none;
-        }
-
-        .alert-badge {
-            position: absolute;
-            top: clamp(12px, 2vw, 15px);
-            right: clamp(12px, 2vw, 15px);
-            background: rgba(0,0,0,0.3);
-            color: white;
-            padding: clamp(5px, 1vw, 6px) clamp(10px, 2vw, 12px);
-            border-radius: 20px;
-            font-size: clamp(10px, 2vw, 11px);
-            font-weight: 700;
-            letter-spacing: 1px;
-            z-index: 1;
-        }
-
-        .alert-content {
-            position: relative;
-            z-index: 1;
-        }
-
-        .alert-title {
-            color: white;
-            font-size: clamp(15px, 3vw, 16px);
-            font-weight: 700;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .alert-text {
-            color: white;
-            font-size: clamp(14px, 2.8vw, 15px);
-            line-height: 1.6;
-            font-weight: 500;
         }
 
         .section {
@@ -626,22 +503,6 @@
             }
         }
 
-        @media (min-width: 768px) and (max-width: 1024px) {
-            .evidence-metadata {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            model-viewer {
-                height: 400px;
-            }
-        }
-
-        @media (min-width: 1024px) {
-            .evidence-metadata {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-
         @media print {
             .animated-background,
             .back-button-container,
@@ -706,23 +567,22 @@
                 </button>
 
                 <div class="model-viewer-container" id="modelViewerContainer">
-<model-viewer
-    id="bottleModel"
-    alt="Jack Daniels Whiskey Bottle 3D Model - Evidence"
-    ar
-    ar-modes="webxr scene-viewer quick-look"
-    camera-controls
-    touch-action="pan-y"
-    auto-rotate
-    auto-rotate-delay="1000"
-    rotation-per-second="30deg"
-    shadow-intensity="1"
-    exposure="0.8"
-    camera-orbit="0deg 75deg 2.5m"
-    min-camera-orbit="auto 0deg auto"
-    max-camera-orbit="auto 180deg auto"
-    loading="lazy"
-    reveal="interaction">
+                    <model-viewer
+                        id="bottleModel"
+                        src="whiskey_bottle.glb"
+                        alt="Jack Daniels Whiskey Bottle 3D Model - Evidence"
+                        ar
+                        ar-modes="webxr scene-viewer quick-look"
+                        camera-controls
+                        touch-action="pan-y"
+                        auto-rotate
+                        auto-rotate-delay="1000"
+                        rotation-per-second="30deg"
+                        shadow-intensity="1"
+                        exposure="0.8"
+                        camera-orbit="0deg 75deg 2.5m"
+                        min-camera-orbit="auto 0deg auto"
+                        max-camera-orbit="auto 180deg auto">
                         
                         <div slot="poster" style="
                             width: 100%;
@@ -781,7 +641,6 @@
 
                 <div class="section">
                     <h3 class="section-title">
-                        <span style="font-size: 24px;"></span>
                         🔬 ΕΓΚΛΗΜΑΤΟΛΟΓΙΚΗ ΑΝΑΛΥΣΗ
                     </h3>
                     <p class="section-content justified-text">
@@ -803,27 +662,10 @@
                             <strong>Προέλευση:</strong> Πιθανές πηγές - βιομηχανικά εργαστήρια, φωτογραφικά στούντιο, μεταλλουργικές μονάδες
                         </p>
                     </div>
-
-                    <div style="margin-top: 25px;">
-                        <p class="section-content" style="margin-bottom: 15px;"><strong style="color: #0f3460; font-size: clamp(15px, 3vw, 16px);">📦 Φυσική Κατάσταση Μπουκαλιού</strong></p>
-                        <p class="section-content" style="margin-bottom: 10px;">
-                            <strong>Περιεχόμενο:</strong> Πολλαπλές χρήσεις/κατανάλωση (~200ml από αρχικά 700ml)
-                        </p>
-                        <p class="section-content" style="margin-bottom: 10px;">
-                            <strong>Πώμα:</strong> Ίχνη επανειλημμένου ανοίγματος/κλεισίματος
-                        </p>
-                        <p class="section-content" style="margin-bottom: 10px;">
-                            <strong>Ετικέτα:</strong> Ελαφρώς φθαρμένη
-                        </p>
-                        <p class="section-content">
-                            <strong>Θέση εύρεσης:</strong> Στο ντουλάπι του γραφείου, όχι στο ράφι επίδειξης
-                        </p>
-                    </div>
                 </div>
 
                 <div class="section">
                     <h3 class="section-title">
-                        <span style="font-size: 24px;"></span>
                         👆 ΑΠΟΤΥΠΩΜΑΤΑ ΚΑΙ ΧΡΟΝΟΛΟΓΙΟ
                     </h3>
                     <div>
@@ -848,7 +690,6 @@
 
                 <div class="significance-box">
                     <h3 class="significance-title">
-                        <span style="font-size: 20px;"></span>
                         💡 ΣΗΜΑΣΙΑ ΓΙΑ ΤΗΝ ΕΡΕΥΝΑ
                     </h3>
                     <p class="significance-text">
@@ -861,7 +702,6 @@
 
                 <div class="section">
                     <h3 class="section-title">
-                        <span style="font-size: 24px;"></span>
                         ❓ ΕΡΩΤΗΜΑΤΑ ΔΙΕΡΕΥΝΗΣΗΣ
                     </h3>
                     <ul class="section-content">
@@ -879,172 +719,161 @@
             </button>
         </div>
     </div>
-<script>
-    window.goBackToCaseFile = function() {
-        const teamCode = sessionStorage.getItem('teamCode');
-        console.log('🔙 Button clicked! Team:', teamCode);
-        
-        if (teamCode) {
-            window.location.href = `index.html?team=${teamCode}&tab=evidence`;
-        } else {
-            window.location.href = 'index.html?tab=evidence';
-        }
-    };
 
-    // 3D Viewer toggle functionality
-    const view3DBtn = document.getElementById('view3DBtn');
-    const close3DBtn = document.getElementById('close3DBtn');
-    const modelViewerContainer = document.getElementById('modelViewerContainer');
-    const modelViewer = document.getElementById('bottleModel');
-    const debugInfo = document.getElementById('debugInfo');
-
-    let modelInitialized = false;
-
-    view3DBtn.addEventListener('click', function() {
-        console.log('Button clicked, showing 3D model...');
-        
-        if (!modelInitialized) {
-            console.log('Setting model source...');
-            modelViewer.src = 'whiskey_bottle.glb';
-            modelInitialized = true;
+    <script>
+        window.goBackToCaseFile = function() {
+            const teamCode = sessionStorage.getItem('teamCode');
+            console.log('🔙 Button clicked! Team:', teamCode);
             
-            // Wait a bit for the model to start loading
-            setTimeout(() => {
-                modelViewerContainer.classList.add('active');
-                view3DBtn.style.display = 'none';
-                modelViewerContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            }, 100);
-        } else {
+            if (teamCode) {
+                window.location.href = `index.html?team=${teamCode}&tab=evidence`;
+            } else {
+                window.location.href = 'index.html?tab=evidence';
+            }
+        };
+
+        // 3D Viewer toggle functionality
+        const view3DBtn = document.getElementById('view3DBtn');
+        const close3DBtn = document.getElementById('close3DBtn');
+        const modelViewerContainer = document.getElementById('modelViewerContainer');
+        const modelViewer = document.getElementById('bottleModel');
+        const debugInfo = document.getElementById('debugInfo');
+
+        view3DBtn.addEventListener('click', function() {
+            console.log('Button clicked, showing container...');
             modelViewerContainer.classList.add('active');
             view3DBtn.style.display = 'none';
-            modelViewerContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
-    });
-
-    close3DBtn.addEventListener('click', function() {
-        modelViewerContainer.classList.remove('active');
-        view3DBtn.style.display = 'flex';
-        view3DBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    });
-
-    // Model viewer event handlers
-    if (modelViewer) {
-        modelViewer.addEventListener('progress', (event) => {
-            const percent = Math.round(event.detail.totalProgress * 100);
-            console.log('Loading progress:', percent + '%');
-            debugInfo.style.display = 'block';
-            debugInfo.innerHTML = `⏳ Φόρτωση: ${percent}%<br>`;
-        });
-
-        modelViewer.addEventListener('load', () => {
-            console.log('✅ Model loaded and ready!');
-            debugInfo.innerHTML = '✅ 3D μοντέλο φορτώθηκε επιτυχώς!<br>';
-            debugInfo.style.background = '#d4edda';
-            debugInfo.style.borderColor = '#28a745';
             
             setTimeout(() => {
-                debugInfo.style.display = 'none';
-            }, 2000);
+                modelViewerContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 100);
         });
-        
-        modelViewer.addEventListener('error', (event) => {
-            console.error('❌ Model loading error:', event);
-            debugInfo.style.display = 'block';
-            debugInfo.innerHTML = '❌ ΣΦΑΛΜΑ: Το αρχείο δεν μπορεί να φορτώσει<br>';
-            debugInfo.innerHTML += 'Ελέγξτε:<br>';
-            debugInfo.innerHTML += '1. Το αρχείο υπάρχει στον ίδιο φάκελο<br>';
-            debugInfo.innerHTML += '2. Το όνομα είναι σωστό (με κεφαλαία/πεζά)<br>';
-            debugInfo.innerHTML += '3. Το αρχείο είναι έγκυρο .glb<br>';
-            debugInfo.style.background = '#f8d7da';
-            debugInfo.style.borderColor = '#dc3545';
+
+        close3DBtn.addEventListener('click', function() {
+            modelViewerContainer.classList.remove('active');
+            view3DBtn.style.display = 'flex';
+            view3DBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         });
-    }
 
-    function drawCrimeScene() {
-        const canvas = document.getElementById('crimeSceneCanvas');
-        const ctx = canvas.getContext('2d');
-        const container = canvas.parentElement;
-        const containerWidth = container.clientWidth;
-        const aspectRatio = 2;
-        
-        canvas.width = Math.min(containerWidth, 800);
-        canvas.height = canvas.width / aspectRatio;
+        // Model viewer event handlers
+        if (modelViewer) {
+            modelViewer.addEventListener('progress', (event) => {
+                const percent = Math.round(event.detail.totalProgress * 100);
+                console.log('Loading progress:', percent + '%');
+                debugInfo.style.display = 'block';
+                debugInfo.innerHTML = `⏳ Φόρτωση: ${percent}%<br>`;
+            });
 
-        const scale = canvas.width / 800;
-
-        const floorGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-        floorGradient.addColorStop(0, '#8b7355');
-        floorGradient.addColorStop(1, '#6b5345');
-        ctx.fillStyle = floorGradient;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        ctx.strokeStyle = 'rgba(101, 67, 33, 0.3)';
-        ctx.lineWidth = 2 * scale;
-        for (let i = 0; i < canvas.height; i += 40 * scale) {
-            ctx.beginPath();
-            ctx.moveTo(0, i);
-            ctx.lineTo(canvas.width, i);
-            ctx.stroke();
+            modelViewer.addEventListener('load', () => {
+                console.log('✅ Model loaded successfully!');
+                console.log('Model viewer dimensions:', modelViewer.getBoundingClientRect());
+                debugInfo.innerHTML = '✅ 3D μοντέλο φορτώθηκε επιτυχώς!<br>';
+                debugInfo.style.background = '#d4edda';
+                debugInfo.style.borderColor = '#28a745';
+                
+                setTimeout(() => {
+                    debugInfo.style.display = 'none';
+                }, 2000);
+            });
+            
+            modelViewer.addEventListener('error', (event) => {
+                console.error('❌ Model loading error:', event);
+                debugInfo.style.display = 'block';
+                debugInfo.innerHTML = '❌ ΣΦΑΛΜΑ: Το αρχείο δεν μπορεί να φορτώσει<br>';
+                debugInfo.innerHTML += 'Ελέγξτε:<br>';
+                debugInfo.innerHTML += '1. Το αρχείο υπάρχει στον ίδιο φάκελο<br>';
+                debugInfo.innerHTML += '2. Το όνομα είναι σωστό (με κεφαλαία/πεζά)<br>';
+                debugInfo.innerHTML += '3. Το αρχείο είναι έγκυρο .glb<br>';
+                debugInfo.style.background = '#f8d7da';
+                debugInfo.style.borderColor = '#dc3545';
+            });
         }
 
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
-        ctx.beginPath();
-        ctx.ellipse(canvas.width/2, 320 * scale, 35 * scale, 15 * scale, 0, 0, Math.PI * 2);
-        ctx.fill();
+        function drawCrimeScene() {
+            const canvas = document.getElementById('crimeSceneCanvas');
+            const ctx = canvas.getContext('2d');
+            const container = canvas.parentElement;
+            const containerWidth = container.clientWidth;
+            const aspectRatio = 2;
+            
+            canvas.width = Math.min(containerWidth, 800);
+            canvas.height = canvas.width / aspectRatio;
 
-        const bottleGradient = ctx.createLinearGradient(360 * scale, 150 * scale, 440 * scale, 150 * scale);
-        bottleGradient.addColorStop(0, '#1a1a1a');
-        bottleGradient.addColorStop(0.5, '#2d2d2d');
-        bottleGradient.addColorStop(1, '#1a1a1a');
+            const scale = canvas.width / 800;
 
-        ctx.fillStyle = bottleGradient;
-        ctx.fillRect(365 * scale, 180 * scale, 70 * scale, 140 * scale);
-        ctx.fillRect(385 * scale, 140 * scale, 30 * scale, 40 * scale);
-        
-        ctx.fillStyle = '#8b4513';
-        ctx.fillRect(382 * scale, 130 * scale, 36 * scale, 10 * scale);
-        ctx.fillRect(385 * scale, 125 * scale, 30 * scale, 5 * scale);
-        
-        ctx.fillStyle = '#d4af37';
-        ctx.fillRect(370 * scale, 220 * scale, 60 * scale, 60 * scale);
+            const floorGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            floorGradient.addColorStop(0, '#8b7355');
+            floorGradient.addColorStop(1, '#6b5345');
+            ctx.fillStyle = floorGradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        ctx.strokeStyle = '#000';
-        ctx.lineWidth = 2 * scale;
-        ctx.strokeRect(370 * scale, 220 * scale, 60 * scale, 60 * scale);
+            ctx.strokeStyle = 'rgba(101, 67, 33, 0.3)';
+            ctx.lineWidth = 2 * scale;
+            for (let i = 0; i < canvas.height; i += 40 * scale) {
+                ctx.beginPath();
+                ctx.moveTo(0, i);
+                ctx.lineTo(canvas.width, i);
+                ctx.stroke();
+            }
 
-        ctx.fillStyle = '#000';
-        ctx.font = `bold ${24 * scale}px serif`;
-        ctx.textAlign = 'center';
-        ctx.fillText('JD', 400 * scale, 255 * scale);
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+            ctx.beginPath();
+            ctx.ellipse(canvas.width/2, 320 * scale, 35 * scale, 15 * scale, 0, 0, Math.PI * 2);
+            ctx.fill();
 
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
-        ctx.fillRect(375 * scale, 185 * scale, 8 * scale, 80 * scale);
-        
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-        ctx.fillRect(0, 0, canvas.width, 40 * scale);
+            const bottleGradient = ctx.createLinearGradient(360 * scale, 150 * scale, 440 * scale, 150 * scale);
+            bottleGradient.addColorStop(0, '#1a1a1a');
+            bottleGradient.addColorStop(0.5, '#2d2d2d');
+            bottleGradient.addColorStop(1, '#1a1a1a');
 
-        ctx.fillStyle = '#ff0000';
-        ctx.font = `bold ${14 * scale}px monospace`;
-        ctx.textAlign = 'left';
-        ctx.fillText('● REC', 10 * scale, 25 * scale);
+            ctx.fillStyle = bottleGradient;
+            ctx.fillRect(365 * scale, 180 * scale, 70 * scale, 140 * scale);
+            ctx.fillRect(385 * scale, 140 * scale, 30 * scale, 40 * scale);
+            
+            ctx.fillStyle = '#8b4513';
+            ctx.fillRect(382 * scale, 130 * scale, 36 * scale, 10 * scale);
+            ctx.fillRect(385 * scale, 125 * scale, 30 * scale, 5 * scale);
+            
+            ctx.fillStyle = '#d4af37';
+            ctx.fillRect(370 * scale, 220 * scale, 60 * scale, 60 * scale);
 
-        ctx.fillStyle = '#fff';
-        ctx.fillText('31/10/2025  07:15:20  |  ΣΚΗΝΗ ΕΓΚΛΗΜΑΤΟΣ - ΓΡΑΦΕΙΟ ΘΥΜΑΤΟΣ', 80 * scale, 25 * scale);
+            ctx.strokeStyle = '#000';
+            ctx.lineWidth = 2 * scale;
+            ctx.strokeRect(370 * scale, 220 * scale, 60 * scale, 60 * scale);
 
-        ctx.textAlign = 'right';
-        ctx.fillText('ΤΕΚ #001', (canvas.width - 10 * scale), 25 * scale);
-    }
+            ctx.fillStyle = '#000';
+            ctx.font = `bold ${24 * scale}px serif`;
+            ctx.textAlign = 'center';
+            ctx.fillText('JD', 400 * scale, 255 * scale);
 
-    function handleResize() {
-        drawCrimeScene();
-    }
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+            ctx.fillRect(375 * scale, 185 * scale, 8 * scale, 80 * scale);
+            
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+            ctx.fillRect(0, 0, canvas.width, 40 * scale);
 
-    window.addEventListener('resize', handleResize);
-    window.addEventListener('orientationchange', handleResize);
+            ctx.fillStyle = '#ff0000';
+            ctx.font = `bold ${14 * scale}px monospace`;
+            ctx.textAlign = 'left';
+            ctx.fillText('● REC', 10 * scale, 25 * scale);
 
-    window.onload = function() {
-        drawCrimeScene();
-    };
-</script>
+            ctx.fillStyle = '#fff';
+            ctx.fillText('31/10/2025  07:15:20  |  ΣΚΗΝΗ ΕΓΚΛΗΜΑΤΟΣ - ΓΡΑΦΕΙΟ ΘΥΜΑΤΟΣ', 80 * scale, 25 * scale);
+
+            ctx.textAlign = 'right';
+            ctx.fillText('ΤΕΚ #001', (canvas.width - 10 * scale), 25 * scale);
+        }
+
+        function handleResize() {
+            drawCrimeScene();
+        }
+
+        window.addEventListener('resize', handleResize);
+        window.addEventListener('orientationchange', handleResize);
+
+        window.onload = function() {
+            drawCrimeScene();
+        };
+    </script>
 </body>
 </html>
