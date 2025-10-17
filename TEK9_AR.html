@@ -693,14 +693,15 @@
             floorGradient.addColorStop(1, '#6b5345');
             ctx.fillStyle = floorGradient;
             ctx.fillRect(0, 0, 800, 600);
-            ctx.strokeStyle = 'rgba(101, 67, 33, 0.2)';
-            ctx.lineWidth = 1.5;
-            for (let i = 0; i < 600; i += 35) {
-                ctx.beginPath();
-                ctx.moveTo(0, i);
-                ctx.bezierCurveTo(200, i + Math.random() * 8, 600, i - Math.random() * 8, 800, i + Math.random() * 5);
-                ctx.stroke();
-            }
+			
+			ctx.strokeStyle = 'rgba(101, 67, 33, 0.2)';
+			ctx.lineWidth = 1.5;
+			for (let i = 0; i < 600; i += 35) {
+				ctx.beginPath();
+				ctx.moveTo(0, i);
+				ctx.lineTo(800, i);
+				ctx.stroke();
+			}
 
             for (let i = 0; i < 5; i++) {
                 const x = Math.random() * 800;

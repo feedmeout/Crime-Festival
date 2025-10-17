@@ -1191,14 +1191,15 @@
             floorGradient.addColorStop(1, '#6b5345');
             ctx.fillStyle = floorGradient;
             ctx.fillRect(0, 0, 800, 400);
-            ctx.strokeStyle = 'rgba(101, 67, 33, 0.3)';
-            ctx.lineWidth = 2;
-            for (let i = 0; i < 400; i += 40) {
-                ctx.beginPath();
-                ctx.moveTo(0, i);
-                ctx.lineTo(800, i + Math.random() * 10);
-                ctx.stroke();
-            }
+			
+			ctx.strokeStyle = 'rgba(101, 67, 33, 0.3)';
+			ctx.lineWidth = 2;
+			for (let i = 0; i < 400; i += 40) {
+				ctx.beginPath();
+				ctx.moveTo(0, i);
+				ctx.lineTo(800, i);
+				ctx.stroke();
+			}
 
             ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
             ctx.beginPath();

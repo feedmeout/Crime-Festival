@@ -732,14 +732,14 @@
             floorGradient.addColorStop(1, '#6b5345');
             ctx.fillStyle = floorGradient;
             ctx.fillRect(0, 0, width, height);
-            ctx.strokeStyle = 'rgba(101, 67, 33, 0.3)';
-            ctx.lineWidth = 2;
-            for (let i = 0; i < height; i += height * 0.1) {
-                ctx.beginPath();
-                ctx.moveTo(0, i);
-                ctx.lineTo(width, i + Math.random() * 10);
-                ctx.stroke();
-            }
+			ctx.strokeStyle = 'rgba(101, 67, 33, 0.3)';
+			ctx.lineWidth = 2;
+			for (let i = 0; i < height; i += height * 0.1) {
+				ctx.beginPath();
+				ctx.moveTo(0, i);
+				ctx.lineTo(width, i);
+				ctx.stroke();
+			}
 
             const paperX = width * 0.375;
             const paperY = height * 0.25;
