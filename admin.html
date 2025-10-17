@@ -671,7 +671,7 @@ body {
 <body>
     <div class="container">
         <div class="header">
-            <h1>🔒 CRIME MANAGEMENT - ADMIN PANEL</h1>
+            <h1>🔒 CRIME MANAGEMENT</h1>
             <p>ΔΙΑΧΕΙΡΙΣΗ ΟΜΑΔΩΝ & ΠΑΡΑΚΟΛΟΥΘΗΣΗ ΠΡΟΟΔΟΥ</p>
         </div>
     
@@ -687,7 +687,7 @@ body {
         </div>
 
         <div class="section">
-            <h2>📊 ΕΝΕΡΓΕΣ ΟΜΑΔΕΣ</h2>
+            <h2>📊 ADMIN PANEL</h2>
             <div class="quick-actions">
                 <button class="btn" style="background: #17a2b8; color: white;" onclick="exportAllData()">💾 EXPORT DATA (GAME)</button>
                 <button class="btn" style="background: #6c757d; color: white;" onclick="importData()">📥 IMPORT DATA (GAME)</button>
@@ -700,6 +700,9 @@ body {
                 <button class="btn btn-danger" onclick="resetAll()">🗑️ ΔΙΑΓΡΑΦΗ ΟΜΑΔΩΝ (ΟΛΕΣ)</button>
                 <button class="btn" style="background: #9c27b0; color: white;" onclick="openAlertModal()">📢 ΑΠΟΣΤΟΛΗ ΕΙΔΟΠΟΙΗΣΗΣ</button>
 				<button class="btn" style="background: #e91e63; color: white;" onclick="deleteAllAlerts()">🗑️ ΔΙΑΓΡΑΦΗ ΕΙΔΟΠΟΙΗΣΕΩΝ</button>
+				<button class="btn" style="background: #673ab7; color: white;" onclick="fakeAllSurveys()">🧪 FAKE ΕΡΩΤΗΜΑΤΟΛΟΓΙΑ (ΔΗΜΙΟΥΡΓΙΑ)</button>
+				<button class="btn" style="background: #e91e63; color: white;" onclick="deleteFakeSurveys()">🗑️ FAKE ΕΡΩΤΗΜΑΤΟΛΟΓΙΑ (ΔΙΑΓΡΑΦΗ)</button>
+				<button class="btn" style="background: #b91c1c; color: white;" onclick="deleteALLSurveysNuclear()">🗑️ ΚΑΘΑΡΙΣΜΟΣ ΕΡΩΤΗΜΑΤΟΛΟΓΙΩΝ (ΟΛΑ)</button>
             </div>
             
             <div class="sort-controls">
@@ -897,6 +900,159 @@ async function deleteAllAlerts() {
         console.error('❌ Error deleting alerts:', error);
         alert(`❌ Σφάλμα διαγραφής: ${error.message}`);
     }
+}
+
+async function fakeAllSurveys() {
+    if (!window.firebaseDB) {
+        alert('❌ Firebase δεν είναι διαθέσιμο!');
+        return;
+    }
+    
+    if (!confirm('ΔΗΜΙΟΥΡΓΙΑ FAKE ΕΡΩΤΗΜΑΤΟΛΟΓΙΩΝ ΓΙΑ ΟΛΕΣ ΤΙΣ ΟΜΑΔΕΣ;')) {
+        return;
+    }
+    
+    try {
+        const teams = await getAllTeams();
+        let totalCreated = 0;
+        
+        for (const team of teams) {
+            const teamSize = team.teamSize || 0;
+            
+            if (teamSize === 0) {
+                console.log(`⚠️ Team ${team.name} has no teamSize, skipping`);
+                continue;
+            }
+            
+            // Create fake pre and post surveys for each team member
+            for (let i = 1; i <= teamSize; i++) {
+                const memberName = `Member${i}`;
+                
+                // Pre-survey
+                const preDocId = `${team.name}_pre_${memberName}`;
+                const preDocRef = window.firebaseDoc(window.firebaseDB, 'surveys', preDocId);
+                await window.firebaseSetDoc(preDocRef, {
+                    teamCode: team.name,
+                    memberName: memberName,
+                    surveyType: 'pre',
+                    submittedAt: new Date().toISOString(),
+                    responses: {
+                        'group': 'Φοιτητές',
+                        'gender': 'Άλλο/Προτιμώ να μην απαντήσω',
+                        'age': '18-24',
+                        'education': 'Προπτυχιακές Σπουδές',
+                        'genai-used': 'Ναι',
+                        'genai-duration': '6-12 μήνες',
+                        'genai-frequency': 'Καθημερινά'
+                    }
+                });
+                totalCreated++;
+                
+                // Post-survey
+                const postDocId = `${team.name}_post_${memberName}`;
+                const postDocRef = window.firebaseDoc(window.firebaseDB, 'surveys', postDocId);
+                await window.firebaseSetDoc(postDocRef, {
+                    teamCode: team.name,
+                    memberName: memberName,
+                    surveyType: 'post',
+                    submittedAt: new Date().toISOString(),
+                    responses: {
+                        'open-strategy': 'Test strategy response',
+                        'open-difficulties': 'Test difficulties response',
+                        'open-learning': 'Test learning response'
+                    }
+                });
+                totalCreated++;
+            }
+            
+            console.log(`✅ Created fake surveys for team ${team.name} (${teamSize} members)`);
+        }
+        
+        alert(`✅ Δημιουργήθηκαν ${totalCreated} fake ερωτηματολόγια για ${teams.length} ομάδες!`);
+        refreshTeams(); // Refresh to show updated survey counts
+        
+    } catch (error) {
+        console.error('❌ Error creating fake surveys:', error);
+        alert(`❌ Σφάλμα: ${error.message}`);
+    }
+}
+
+
+async function deleteFakeSurveys() {
+    if (!confirm('ΔΙΑΓΡΑΦΗ ΜΟΝΟ ΤΩΝ FAKE ΕΡΩΤΗΜΑΤΟΛΟΓΙΩΝ (Member1, Member2, κτλ);')) {
+        return;
+    }
+    
+    if (!window.firebaseDB) {
+        alert('❌ Firebase δεν είναι διαθέσιμο!');
+        return;
+    }
+    
+    try {
+        const surveysRef = window.firebaseCollection(window.firebaseDB, 'surveys');
+        const querySnapshot = await window.firebaseGetDocs(surveysRef);
+        
+        const deletePromises = [];
+        let fakeCount = 0;
+        let realCount = 0;
+        
+        querySnapshot.forEach((doc) => {
+            const docId = doc.id;
+            
+            // Check if it's a fake survey (contains "Member1", "Member2", etc.)
+            if (docId.match(/_(?:pre|post)_Member\d+$/)) {
+                console.log(`🗑️ Deleting FAKE survey: ${docId}`);
+                deletePromises.push(
+                    window.firebaseDeleteDoc(
+                        window.firebaseDoc(window.firebaseDB, 'surveys', docId)
+                    )
+                );
+                fakeCount++;
+            } else {
+                console.log(`✅ Keeping REAL survey: ${docId}`);
+                realCount++;
+            }
+        });
+        
+        if (fakeCount === 0) {
+            alert('✅ Δεν βρέθηκαν fake ερωτηματολόγια για διαγραφή!');
+            return;
+        }
+        
+        await Promise.all(deletePromises);
+        
+        alert(`✅ Διαγράφηκαν ${fakeCount} fake ερωτηματολόγια!\n💾 Διατηρήθηκαν ${realCount} πραγματικές απαντήσεις.`);
+        console.log(`✅ Deleted ${fakeCount} fake surveys, kept ${realCount} real surveys`);
+        refreshTeams();
+        
+    } catch (error) {
+        console.error('❌ Error deleting fake surveys:', error);
+        alert(`❌ Σφάλμα: ${error.message}`);
+    }
+}
+
+async function deleteALLSurveysNuclear() {
+    const confirm1 = confirm('⚠️ ΠΡΟΣΟΧΗ! ΘΑ ΔΙΑΓΡΑΨΕΙ ΟΛΑ ΤΑ ΕΡΩΤΗΜΑΤΟΛΟΓΙΑ (FAKE ΚΑΙ ΠΡΑΓΜΑΤΙΚΑ)!\n\nΣΙΓΟΥΡΑ;');
+    if (!confirm1) return;
+    
+    const confirm2 = confirm('🚨 ΤΕΛΕΥΤΑΙΑ ΠΡΟΕΙΔΟΠΟΙΗΣΗ!\n\nΘΑ ΔΙΑΓΡΑΦΟΥΝ ΟΛΑ ΤΑ ΔΕΔΟΜΕΝΑ ΕΡΕΥΝΩΝ!\n\nΣΥΝΕΧΕΙΑ;');
+    if (!confirm2) return;
+    
+    const surveysRef = window.firebaseCollection(window.firebaseDB, 'surveys');
+    const querySnapshot = await window.firebaseGetDocs(surveysRef);
+    
+    const deletePromises = [];
+    querySnapshot.forEach((doc) => {
+        deletePromises.push(
+            window.firebaseDeleteDoc(
+                window.firebaseDoc(window.firebaseDB, 'surveys', doc.id)
+            )
+        );
+    });
+    
+    await Promise.all(deletePromises);
+    alert(`🗑️ Deleted ALL ${querySnapshot.size} surveys!`);
+    refreshTeams();
 }
 
 async function getAllTeams() {
