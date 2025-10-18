@@ -1776,7 +1776,7 @@ async function getTeamData() {
                 return {
                     password: parsed.password || null,
                     teamSize: parsed.teamSize || null,
-                    testingMode: parsed.testingMode || false,
+                    testingMode: parsed.testingMode || false,  // ✅ ADD THIS
                     unlocked: parsed.unlocked || [],
                     timestamps: parsed.timestamps || {},
                     startTime: parsed.startTime || null,
@@ -1791,7 +1791,7 @@ async function getTeamData() {
                 return {
                     password: null,
                     teamSize: null,
-                    testingMode: false,
+                    testingMode: false,  // ✅ ADD THIS
                     unlocked: parsed,
                     timestamps: {},
                     startTime: null,
@@ -1809,7 +1809,7 @@ async function getTeamData() {
     return {
         password: null,
         teamSize: null,
-        testingMode: false,
+        testingMode: false,  // ✅ ADD THIS
         unlocked: [],
         timestamps: {},
         startTime: null,
