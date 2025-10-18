@@ -1293,22 +1293,22 @@ async function addTeam() {
     const password = document.getElementById('newTeamPassword').value.trim();
     const teamSize = parseInt(document.getElementById('newTeamSize').value);
     const testingMode = document.getElementById('testingModeCheckbox').checked;
-
+    
+    // ✅ DEBUG: Show what we captured from the checkbox
+    console.log('🧪 Testing Mode Checkbox Value:', testingMode);
+    
     if (!teamName) {
         alertDiv.innerHTML = '<div class="alert alert-danger">⚠️ Παρακαλώ εισάγετε όνομα ομάδας</div>';
         return;
     }
-
     if (!password) {
         alertDiv.innerHTML = '<div class="alert alert-danger">⚠️ Παρακαλώ εισάγετε κωδικό ομάδας</div>';
         return;
     }
-
     if (!teamSize || teamSize < 1 || teamSize > 10) {
         alertDiv.innerHTML = '<div class="alert alert-danger">⚠️ Παρακαλώ εισάγετε αριθμό μελών (1-10)</div>';
         return;
     }
-
     if (isFirebaseReady()) {
         const docRef = window.firebaseDoc(window.firebaseDB, 'teams', teamName);
         const docSnap = await window.firebaseGetDoc(docRef);
@@ -1332,7 +1332,8 @@ async function addTeam() {
         createdAt: new Date().toISOString()
     };
     
-    console.log('Creating team with data:', teamData); 
+    // ✅ DEBUG: Show the complete team data being saved
+    console.log('📦 Creating team with data:', JSON.stringify(teamData, null, 2)); 
     
     await saveTeam(teamName, teamData);
     
