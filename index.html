@@ -2592,17 +2592,37 @@ async function checkSurveyCompletion() {
             postCount: 0, 
             bothCount: 0,
             teamSize: 0,
-            members: [] 
+            members: [],
+            testingMode: false  // NEW
         };
     }
 
     try {
         const teamDocRef = window.firebaseDoc(window.firebaseDB, 'teams', teamCode);
         const teamDoc = await window.firebaseGetDoc(teamDocRef);
-        const teamSize = teamDoc.exists() ? (teamDoc.data().teamSize || 0) : 0;
         
-        if (teamSize === 0) {
-            console.warn(`Team ${teamCode} has no teamSize configured. Please set teamSize in Firebase.`);
+        if (!teamDoc.exists()) {
+            console.warn(`Team ${teamCode} not found`);
+            return { pre: false, post: false, preCount: 0, postCount: 0, bothCount: 0, teamSize: 0, members: [], testingMode: false };
+        }
+        
+        const teamData = teamDoc.data();
+        const teamSize = teamData.teamSize || 0;
+        const testingMode = teamData.testingMode || false;  // NEW
+        
+        // NEW: If testing mode, bypass all survey checks
+        if (testingMode) {
+            console.log(`🧪 Team ${teamCode} is in testing mode - bypassing survey checks`);
+            return {
+                pre: true,
+                post: true,
+                preCount: teamSize,
+                postCount: teamSize,
+                bothCount: teamSize,
+                teamSize: teamSize,
+                members: [],
+                testingMode: true
+            };
         }
         
         const surveysRef = window.firebaseCollection(window.firebaseDB, 'surveys');
@@ -2710,19 +2730,22 @@ async function updateResultsTabState() {
     const leaderboardLocked = document.getElementById('leaderboardLocked');
     const leaderboardUnlockedDiv = document.getElementById('leaderboardUnlocked');
 
-    if (!memberCompletedPost) {
-        surveysIncomplete.innerHTML = `
-            <div class="intro-box" style="text-align: center; padding: 60px 30px;">
-                <div style="font-size: clamp(80px, 20vw, 120px); margin-bottom: 30px;">🔐</div>
-                <h2 style="color: #1a1a2e; font-size: clamp(20px, 5vw, 28px); margin-bottom: 20px;">
-                    Ολοκληρώστε Πρώτα την Τελική Έρευνα
-                </h2>
-                <a href="survey.html?team=${teamCode}&member=${encodeURIComponent(memberName)}" 
-                   class="btn btn-primary" 
-                   style="display: inline-block; text-decoration: none; font-size: clamp(16px, 3.5vw, 18px); padding: clamp(15px, 3vw, 18px) clamp(30px, 6vw, 40px);">
-                    📊 ΜΕΤΑΒΑΣΗ ΣΤΗΝ ΤΕΛΙΚΗ ΕΡΕΥΝΑ
-                </a>
-            </div>
+	if (!memberCompletedPost) {
+		surveysIncomplete.innerHTML = `
+			<div class="intro-box" style="text-align: center; padding: 60px 30px;">
+				<div style="font-size: clamp(80px, 20vw, 120px); margin-bottom: 30px;">🔐</div>
+				<h2 style="color: #1a1a2e; font-size: clamp(20px, 5vw, 28px); margin-bottom: 20px;">
+					Ολοκληρώστε Πρώτα την Τελική Έρευνα
+				</h2>
+				
+				${surveys.testingMode ? '<div style="background: #e3f2fd; border: 2px solid #2196f3; border-radius: 12px; padding: 15px; margin: 20px auto; max-width: 500px;"><div style="font-size: 20px; margin-bottom: 10px;">🧪</div><div style="color: #0d47a1; font-weight: bold;">ΛΕΙΤΟΥΡΓΙΑ ΔΟΚΙΜΩΝ ΕΝΕΡΓΗ</div><div style="color: #1565c0; font-size: 13px; margin-top: 8px;">Η ομάδα σας δεν χρειάζεται να ολοκληρώσει ερωτηματολόγια</div></div>' : ''}
+				
+				<a href="survey.html?team=${teamCode}&member=${encodeURIComponent(memberName)}" 
+				   class="btn btn-primary" 
+				   style="display: inline-block; text-decoration: none; font-size: clamp(16px, 3.5vw, 18px); padding: clamp(15px, 3vw, 18px) clamp(30px, 6vw, 40px);">
+					📊 ΜΕΤΑΒΑΣΗ ΣΤΗΝ ΤΕΛΙΚΗ ΕΡΕΥΝΑ
+				</a>
+			</div>
         `;
         surveysIncomplete.style.display = 'block';
         leaderboardLocked.style.display = 'none';
