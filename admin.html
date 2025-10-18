@@ -735,11 +735,11 @@ body {
         <button class="btn" style="background: #059669; color: white;" onclick="exportSurveyDataToExcel()">📊 EXPORT SURVEYS (EXCEL)</button>
     </div>
 
-	<h3 style="color: #0f3460;">🧪 TESTING & DEBUG</h3>
+	<h3 style="color: #0f3460;">🧪 TESTING TOOLS</h3>
 	<div class="quick-actions">
-		<button class="btn btn-secondary" onclick="unlockAllForAll()">🔓 ΤΕΚΜΗΡΙΑ (ΟΛΑ)</button>
-		<button class="btn" style="background: #17a2b8; color: white;" onclick="resetAllProgress()">🔄 RESET ΠΡΟΟΔΟΥ (ΟΛΕΣ)</button>
-		<button class="btn" style="background: #6c757d; color: white;" onclick="clearAllSolutions()">📝 ΚΑΘΑΡΙΣΜΟΣ ΛΥΣΕΩΝ (ΟΛΕΣ)</button>
+		<button class="btn btn-secondary" onclick="unlockAllForAll()">🔓 ΞΕΚΛΕΙΔΩΜΑ ΤΕΚΜΗΡΙΩΝ (ΟΛΑ)</button>
+		<button class="btn" style="background: #17a2b8; color: white;" onclick="resetAllProgress()">🔄 RESET PROGRESS (ΟΛΕΣ)</button>
+		<button class="btn" style="background: #9c27b0; color: white;" onclick="setupTestEnvironment()">🧪 ΔΟΚΙΜΑΣΤΙΚΟ ΠΕΡΙΒΑΛΛΟΝ (ΟΛΕΣ)</button>
 	</div>
 
     <h3 style="color: #dc3545;">⚠️ DANGER ZONE</h3>
@@ -950,10 +950,10 @@ async function deleteAllAlerts() {
 }
 
 async function deleteALLSurveysNuclear() {
-    const confirm1 = confirm('⚠️ ΠΡΟΣΟΧΗ! ΘΑ ΔΙΑΓΡΑΨΕΙ ΟΛΑ ΤΑ ΕΡΩΤΗΜΑΤΟΛΟΓΙΑ (FAKE ΚΑΙ ΠΡΑΓΜΑΤΙΚΑ)!\n\nΣΙΓΟΥΡΑ;');
+    const confirm1 = confirm('⚠️ ΠΡΟΣΟΧΗ! ΘΑ ΔΙΑΓΡΑΨΕΙ ΟΛΑ ΤΑ ΕΡΩΤΗΜΑΤΟΛΟΓΙΑ!\n\nΣΙΓΟΥΡΑ;');
     if (!confirm1) return;
     
-    const confirm2 = confirm('🚨 ΤΕΛΕΥΤΑΙΑ ΠΡΟΕΙΔΟΠΟΙΗΣΗ!\n\nΘΑ ΔΙΑΓΡΑΦΟΥΝ ΟΛΑ ΤΑ ΔΕΔΟΜΕΝΑ ΕΡΕΥΝΩΝ!\n\nΣΥΝΕΧΕΙΣ;');
+    const confirm2 = confirm('🚨 ΤΕΛΕΥΤΑΙΑ ΠΡΟΕΙΔΟΠΟΙΗΣΗ!\n\nΘΑ ΔΙΑΓΡΑΦΟΥΝ ΟΛΑ ΤΑ ΔΕΔΟΜΕΝΑ ΕΡΕΥΝΩΝ!\n\nΣΥΝΕΧΕΙΑ;');
     if (!confirm2) return;
     
     const surveysRef = window.firebaseCollection(window.firebaseDB, 'surveys');
@@ -974,7 +974,7 @@ async function deleteALLSurveysNuclear() {
 }
 
 async function resetAllProgress() {
-    const confirm1 = confirm('🔄 RESET ΠΡΟΟΔΟΣ ΓΙΑ ΟΛΕΣ ΤΙΣ ΟΜΑΔΕΣ;\n\nΘα διαγραφούν: τεκμήρια, timestamps, λύσεις\nΘα διατηρηθούν: ομάδες, κωδικοί, μεγέθη');
+    const confirm1 = confirm('🔄 ΚΑΘΑΡΙΣΜΟΣ ΠΡΟΟΔΟΥ ΓΙΑ ΟΛΕΣ ΤΙΣ ΟΜΑΔΕΣ;\n\nΘΑ ΔΙΑΓΡΑΦΟΥΝ: ΤΕΚΜΗΡΙΑ, TIMESTAMPS, ΛΥΣΕΙΣ\nΘΑ ΔΙΑΤΗΡΗΘΟΥΝ: ΟΜΑΔΕΣ, ΚΩΔΙΚΟΙ, ΜΕΓΕΘΗ');
     if (!confirm1) return;
     
     if (!window.firebaseDB) {
@@ -1005,7 +1005,7 @@ async function resetAllProgress() {
             resetCount++;
         }
         
-        alert(`✅ ΠΡΟΟΔΟΣ RESET ΓΙΑ ${resetCount} ΟΜΑΔΕΣ!`);
+        alert(`✅ Η ΠΡΟΟΔΟΣ ΕΧΕΙ ΚΑΘΑΡΙΣΤΕΙ ΓΙΑ ΟΛΕΣ ΤΙΣ ΟΜΑΔΕΣ!`);
         console.log(`✅ Reset progress for ${resetCount} teams`);
         refreshTeams();
         
@@ -1015,8 +1015,8 @@ async function resetAllProgress() {
     }
 }
 
-async function clearAllSolutions() {
-    const confirm1 = confirm('📝 ΚΑΘΑΡΙΣΜΟΣ ΛΥΣΕΩΝ ΓΙΑ ΟΛΕΣ ΤΙΣ ΟΜΑΔΕΣ?\n\nΘα διαγραφούν: υποβληθείσες λύσεις, χρόνοι ολοκλήρωσης\nΘα διατηρηθούν: ξεκλειδωμένα τεκμήρια, timestamps');
+async function setupTestEnvironment() {
+    const confirm1 = confirm('🧪 ΔΗΜΙΟΥΡΓΙΑ ΔΟΚΙΜΑΣΤΙΚΟΥ ΠΕΡΙΒΑΛΛΟΝΤΟΣ?');
     if (!confirm1) return;
     
     if (!window.firebaseDB) {
@@ -1026,37 +1026,314 @@ async function clearAllSolutions() {
     
     try {
         const teams = await getAllTeams();
-        let clearedCount = 0;
+        let setupCount = 0;
+        
+        const allSuspects = ['maria', 'konstantinos', 'eleni', 'georgios', 'alexandra', 'suicide'];
+        const correctSuspects = ['konstantinos', 'georgios', 'eleni'];
         
         for (const team of teams) {
-            if (team.solution) {
-                const updatedData = {
-                    ...team,
-                    testingMode: team.testingMode || false, 
-                    solution: null,
-                    completedAt: null,
-                    totalTimeMs: null,
-                    lastUpdate: new Date().toISOString()
+            const teamSize = team.teamSize || 1;
+            
+            // 50% chance to have submitted solution
+            const hasSubmitted = Math.random() > 0.5;
+            
+            // If submitted, must have 6-11 evidence. If not submitted, can have 0-11
+            let randomCount;
+            if (hasSubmitted) {
+                randomCount = Math.floor(Math.random() * 6) + 6; // 6-11 evidence (REQUIRED for submission)
+            } else {
+                randomCount = Math.floor(Math.random() * (TOTAL_TEKS + 1)); // 0-11 evidence (in progress)
+            }
+            
+            const randomTeks = Array.from({length: randomCount}, (_, i) => (i + 1).toString());
+            
+            const timestamps = {};
+            const baseTime = Date.now() - Math.random() * 3600000;
+            randomTeks.forEach((tek, i) => {
+                timestamps[tek] = new Date(baseTime + i * 60000).toISOString();
+            });
+            
+            const startTime = new Date(baseTime).toISOString();
+            const completionTime = hasSubmitted ? baseTime + (randomCount * 60000) + Math.random() * 1800000 : null;
+            
+            let solutionObject = null;
+            
+            if (hasSubmitted) {
+                const selectedSuspects = [];
+                const quality = Math.random();
+                
+                if (quality > 0.7) {
+                    // 30% chance: Perfect or near-perfect solution
+                    selectedSuspects.push(...correctSuspects);
+                    if (Math.random() > 0.8) {
+                        const wrong = allSuspects.filter(s => !correctSuspects.includes(s));
+                        selectedSuspects.push(wrong[Math.floor(Math.random() * wrong.length)]);
+                    }
+                } else if (quality > 0.4) {
+                    // 30% chance: Partial solution (1-2 correct)
+                    const numCorrect = Math.floor(Math.random() * 2) + 1;
+                    for (let i = 0; i < numCorrect; i++) {
+                        selectedSuspects.push(correctSuspects[i]);
+                    }
+                    const wrong = allSuspects.filter(s => !selectedSuspects.includes(s));
+                    const numWrong = Math.floor(Math.random() * 2) + 1;
+                    for (let i = 0; i < numWrong; i++) {
+                        const randomWrong = wrong[Math.floor(Math.random() * wrong.length)];
+                        if (!selectedSuspects.includes(randomWrong)) {
+                            selectedSuspects.push(randomWrong);
+                        }
+                    }
+                } else {
+                    // 40% chance: Wrong solution
+                    const wrong = allSuspects.filter(s => !correctSuspects.includes(s));
+                    const numWrong = Math.floor(Math.random() * 3) + 1;
+                    for (let i = 0; i < numWrong; i++) {
+                        const randomWrong = wrong[Math.floor(Math.random() * wrong.length)];
+                        if (!selectedSuspects.includes(randomWrong)) {
+                            selectedSuspects.push(randomWrong);
+                        }
+                    }
+                }
+                
+                const randomPrompts = Math.floor(Math.random() * 20) + 1;
+                
+                solutionObject = {
+                    suspects: selectedSuspects,
+                    justification: `Αυτή είναι μια δοκιμαστική αιτιολόγηση που δημιουργήθηκε αυτόματα για testing. Η ομάδα ${team.name} επέλεξε ${selectedSuspects.length} ύποπτο(ους) βάσει της ανάλυσης των στοιχείων.`,
+                    completionTimeMs: completionTime - baseTime,
+                    promptCount: randomPrompts,
+                    score: 0,
+                    maxScore: 140,
+                    submittedAt: new Date(completionTime).toISOString()
                 };
                 
-                await saveTeam(team.name, updatedData);
-                clearedCount++;
+                const scoreResult = calculateScore(
+                    selectedSuspects,
+                    completionTime - baseTime,
+                    randomPrompts
+                );
+                
+                solutionObject.score = scoreResult.score;
+                solutionObject.breakdown = scoreResult.breakdown;
+            }
+            
+            await saveTeam(team.name, {
+                password: team.password || null,
+                teamSize: teamSize,
+                testingMode: true,
+                unlocked: randomTeks,
+                timestamps: timestamps,
+                evidenceTimestamps: team.evidenceTimestamps || {},
+                startTime: startTime,
+                completedAt: hasSubmitted ? new Date(completionTime).toISOString() : null,
+                totalTimeMs: hasSubmitted ? (completionTime - baseTime) : null,
+                solution: solutionObject,
+                lastUpdate: new Date().toISOString()
+            });
+            setupCount++;
+        }
+        
+        // Now create fake survey data for all teams
+        console.log('📋 Creating surveys...');
+        let preSurveyCount = 0;
+        let postSurveyCount = 0;
+        
+        for (const team of teams) {
+            const teamSize = team.teamSize || 1;
+            const hasSubmitted = team.solution !== null;
+            
+            // Create pre-survey for ALL team members (100% completion - required to start)
+            for (let i = 1; i <= teamSize; i++) {
+                const memberName = `Μέλος ${i}`;
+                const surveyId = `${team.name}_pre_${memberName.toLowerCase().replace(/\s+/g, '_')}`;
+                
+                const preSurveyData = {
+                    teamCode: team.name,
+                    memberName: memberName,
+                    surveyType: 'pre',
+                    submittedAt: new Date(Date.now() - Math.random() * 7200000).toISOString(),
+                    responses: {
+                        'group': Math.random() > 0.5 ? 'student' : 'professional',
+                        'gender': ['male', 'female', 'other'][Math.floor(Math.random() * 3)],
+                        'age': ['18-24', '25-34', '35-44', '45-54', '55+'][Math.floor(Math.random() * 5)],
+                        'education': ['high-school', 'bachelor', 'master', 'phd'][Math.floor(Math.random() * 4)],
+                        'genai-used': Math.random() > 0.3 ? 'yes' : 'no',
+                        'genai-frequency': ['daily', 'weekly', 'monthly', 'rarely'][Math.floor(Math.random() * 4)],
+                        'prompt-ability': Math.floor(Math.random() * 5) + 1,
+                        'trust-level': Math.floor(Math.random() * 5) + 1,
+                        'verify-frequency': Math.floor(Math.random() * 5) + 1,
+                        'ai-attitude-1': Math.floor(Math.random() * 5) + 1,
+                        'ai-attitude-2': Math.floor(Math.random() * 5) + 1,
+                        'ai-attitude-3': Math.floor(Math.random() * 5) + 1,
+                        'ai-attitude-4': Math.floor(Math.random() * 5) + 1,
+                        'pu1': Math.floor(Math.random() * 5) + 1,
+                        'pu2': Math.floor(Math.random() * 5) + 1,
+                        'peu1': Math.floor(Math.random() * 5) + 1,
+                        'peu2': Math.floor(Math.random() * 5) + 1
+                    }
+                };
+                
+                const preSurveyRef = window.firebaseDoc(window.firebaseDB, 'surveys', surveyId);
+                await window.firebaseSetDoc(preSurveyRef, preSurveyData);
+                preSurveyCount++;
+            }
+            
+            // Create post-survey only for teams that submitted solutions
+            // Random percentage of members complete it (40% - 100%)
+            if (hasSubmitted) {
+                const completionRate = Math.random() * 0.6 + 0.4; // 0.4 to 1.0
+                const numCompleted = Math.max(1, Math.floor(teamSize * completionRate));
+                
+                // Randomly select which members completed it
+                const memberIndices = Array.from({length: teamSize}, (_, i) => i + 1);
+                const completedMembers = [];
+                for (let i = 0; i < numCompleted; i++) {
+                    const randomIndex = Math.floor(Math.random() * memberIndices.length);
+                    completedMembers.push(memberIndices[randomIndex]);
+                    memberIndices.splice(randomIndex, 1);
+                }
+                
+                // Create post-surveys for selected members
+                for (const memberIndex of completedMembers) {
+                    const memberName = `Μέλος ${memberIndex}`;
+                    const surveyId = `${team.name}_post_${memberName.toLowerCase().replace(/\s+/g, '_')}`;
+                    
+                    const postSurveyData = {
+                        teamCode: team.name,
+                        memberName: memberName,
+                        surveyType: 'post',
+                        submittedAt: new Date(Date.now() - Math.random() * 1800000).toISOString(),
+                        responses: {
+                            'group': Math.random() > 0.5 ? 'student' : 'professional',
+                            'gender': ['male', 'female', 'other'][Math.floor(Math.random() * 3)],
+                            'age': ['18-24', '25-34', '35-44', '45-54', '55+'][Math.floor(Math.random() * 5)],
+                            'education': ['high-school', 'bachelor', 'master', 'phd'][Math.floor(Math.random() * 4)],
+                            'genai-used': 'yes',
+                            'genai-frequency': ['daily', 'weekly', 'monthly'][Math.floor(Math.random() * 3)],
+                            'prompt-ability': Math.floor(Math.random() * 5) + 1,
+                            'trust-level': Math.floor(Math.random() * 5) + 1,
+                            'verify-frequency': Math.floor(Math.random() * 5) + 1,
+                            'ai-attitude-1': Math.floor(Math.random() * 5) + 1,
+                            'ai-attitude-2': Math.floor(Math.random() * 5) + 1,
+                            'ai-attitude-3': Math.floor(Math.random() * 5) + 1,
+                            'ai-attitude-4': Math.floor(Math.random() * 5) + 1,
+                            'ai-attitude-5': Math.floor(Math.random() * 5) + 1,
+                            'ai-attitude-6': Math.floor(Math.random() * 5) + 1,
+                            'pu1': Math.floor(Math.random() * 5) + 1,
+                            'pu2': Math.floor(Math.random() * 5) + 1,
+                            'pu3': Math.floor(Math.random() * 5) + 1,
+                            'peu1': Math.floor(Math.random() * 5) + 1,
+                            'peu2': Math.floor(Math.random() * 5) + 1,
+                            'peu3': Math.floor(Math.random() * 5) + 1,
+                            'open-strategy': 'Χρησιμοποιήσαμε το AI για να αναλύσουμε τα στοιχεία και να εντοπίσουμε ασυνέπειες.',
+                            'open-difficulties': 'Κάποιες φορές το AI έδινε αντικρουόμενες απαντήσεις.',
+                            'open-learning': 'Μάθαμε να κάνουμε πιο συγκεκριμένες ερωτήσεις στο AI.'
+                        }
+                    };
+                    
+                    const postSurveyRef = window.firebaseDoc(window.firebaseDB, 'surveys', surveyId);
+                    await window.firebaseSetDoc(postSurveyRef, postSurveyData);
+                    postSurveyCount++;
+                }
             }
         }
         
-        if (clearedCount === 0) {
-            alert('ℹ️ ΔΕΝ ΥΠΑΡΧΟΥΝ ΛΥΣΕΙΣ ΓΙΑ ΚΑΘΑΡΙΣΜΟ');
-        } else {
-            alert(`✅ ΛΥΣΕΙΣ ΚΑΘΑΡΙΣΤΗΚΑΝ!`);
-            console.log(`✅ Cleared solutions for ${clearedCount} teams`);
-        }
-        
+        alert(`✅ ΔΟΚΙΜΑΣΤΙΚΟ ΠΕΡΙΒΑΛΛΟΝ ΔΗΜΙΟΥΡΓΗΘΗΚΕ!`);
+        console.log(`✅ Test environment setup: ${setupCount} teams, ${preSurveyCount} pre-surveys, ${postSurveyCount} post-surveys`);
         refreshTeams();
         
     } catch (error) {
-        console.error('❌ Error clearing solutions:', error);
-        alert(`❌ ΣΦΑΛΜΑ`);
+        console.error('❌ Error setting up test environment:', error);
+        alert(`❌ ΣΦΑΛΜΑ: ${error.message}`);
     }
+}
+
+function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
+    const CORRECT_SUSPECTS = ['konstantinos', 'georgios', 'eleni'];
+    const SCORING = {
+        murder_diagnosis: 25,
+        cooperation: 20,
+        perpetrator: 15,
+        perfect_solution_bonus: 20,
+        evidence_use: 5,
+        prompts_1_5: 15,
+        prompts_6_10: 10,
+        prompts_11_15: 5,
+        time_under_30: 15,
+        time_30_45: 10,
+        time_45_60: 5
+    };
+    
+    let score = 0;
+    let breakdown = [];
+    
+    if (selectedSuspects.length === 0) {
+        return { score: 0, breakdown: ['❌ Δεν επέλεξαν κανέναν ύποπτο'], maxScore: 140, correctCount: 0 };
+    }
+    
+    const hasSuicide = selectedSuspects.includes('suicide');
+    const hasKiller = selectedSuspects.some(s => s !== 'suicide');
+    
+    if (hasSuicide && hasKiller) {
+        return { score: 0, breakdown: ['🚫 ΛΟΓΙΚΗ ΑΝΤΙΦΑΣΗ'], maxScore: 140, correctCount: 0 };
+    }
+    
+    if (hasSuicide && !hasKiller) {
+        return { score: 0, breakdown: ['❌ ΕΣΦΑΛΜΕΝΗ ΘΕΩΡΙΑ'], maxScore: 140, correctCount: 0 };
+    }
+    
+    let correctCount = 0;
+    let wrongSuspects = [];
+    
+    selectedSuspects.forEach(suspect => {
+        if (CORRECT_SUSPECTS.includes(suspect)) {
+            correctCount++;
+        } else {
+            wrongSuspects.push(suspect);
+        }
+    });
+    
+    score += SCORING.murder_diagnosis;
+    breakdown.push(`🧩 ΒΑΣΙΚΗ ΕΚΤΙΜΗΣΗ (+${SCORING.murder_diagnosis})`);
+    
+    let perpetratorPoints = 0;
+    if (correctCount === 3 && selectedSuspects.length === 3) {
+        perpetratorPoints = SCORING.perpetrator * 3 + SCORING.perfect_solution_bonus + SCORING.cooperation;
+        breakdown.push(`🎖️ ΤΕΛΕΙΑ ΑΝΑΛΥΣΗ! (+${perpetratorPoints})`);
+    } else {
+        if (correctCount >= 2) perpetratorPoints += SCORING.cooperation;
+        perpetratorPoints += correctCount * SCORING.perpetrator;
+        breakdown.push(`👥 ΤΑΥΤΟΠΟΙΗΣΗ (+${perpetratorPoints})`);
+    }
+    score += perpetratorPoints;
+    
+    if (correctCount >= 2) {
+        let efficiencyPoints = 0;
+        const minutes = totalTimeMs / 60000;
+        
+        if (minutes < 30) efficiencyPoints += SCORING.time_under_30;
+        else if (minutes < 45) efficiencyPoints += SCORING.time_30_45;
+        else if (minutes < 60) efficiencyPoints += SCORING.time_45_60;
+        
+        if (promptCount <= 5) efficiencyPoints += SCORING.prompts_1_5;
+        else if (promptCount <= 10) efficiencyPoints += SCORING.prompts_6_10;
+        else if (promptCount <= 15) efficiencyPoints += SCORING.prompts_11_15;
+        
+        score += efficiencyPoints;
+        if (efficiencyPoints > 0) {
+            breakdown.push(`⚡ BONUSES (+${efficiencyPoints})`);
+        }
+    }
+    
+    if (wrongSuspects.length > 0) {
+        const multiplier = wrongSuspects.length === 1 ? 0.5 : wrongSuspects.length === 2 ? 0.2 : 0.05;
+        const originalScore = score;
+        score = Math.floor(score * multiplier);
+        breakdown.push(`❌ PENALTY (-${originalScore - score})`);
+    }
+    
+    score = Math.max(0, Math.min(score, 140));
+    return { score, breakdown, maxScore: 140, correctCount, wrongCount: wrongSuspects.length };
 }
 
 async function getAllTeams() {
