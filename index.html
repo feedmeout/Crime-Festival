@@ -1672,6 +1672,12 @@ if (teamCode !== 'default') {
 
 let timerInterval = null;
 
+// Global unsubscribe handlers - MUST be at script root level for cleanup
+let firestoreUnsubscribe = null;
+let resultsUnsubscribe = null;
+let alertsUnsubscribe = null;
+let pollingInterval = null;
+
 function getStorageKey() {
     return `unlocked_teks_${teamCode}`;
 }
@@ -3011,35 +3017,38 @@ function displayResultsLeaderboard(teams) {
 }
 
 function setupResultsListener() {
-    if (!window.firebaseDB) {
+    if (!window.firebaseDB || !window.firebaseOnSnapshot) {
         console.warn('Firebase not ready for results listener');
         setTimeout(setupResultsListener, 500);
         return;
     }
 
+    // Clean up existing listener
+    if (resultsUnsubscribe) {
+        console.log('🧹 Cleaning up old results listener');
+        resultsUnsubscribe();
+        resultsUnsubscribe = null;
+    }
+
     try {
         const docRef = window.firebaseDoc(window.firebaseDB, 'config', 'leaderboard');
         
-        if (resultsUnsubscribe) {
-            resultsUnsubscribe();
-        }
-
         resultsUnsubscribe = window.firebaseOnSnapshot(docRef, 
-            () => {
-                console.log('Leaderboard status changed, updating results tab...');
+            async () => {
+                console.log('⚡ Leaderboard status changed, updating results tab...');
                 const resultsTab = document.getElementById('tab-results');
                 if (resultsTab && resultsTab.classList.contains('active')) {
-                    updateResultsTabState();
+                    await updateResultsTabState();
                 }
             },
             (error) => {
-                console.error('Error listening to leaderboard status:', error);
+                console.error('❌ Error listening to leaderboard status:', error);
             }
         );
 
         console.log('✅ Results tab real-time listener active');
     } catch (error) {
-        console.error('Error setting up results listener:', error);
+        console.error('❌ Error setting up results listener:', error);
     }
 }
 
@@ -3050,12 +3059,15 @@ function setupAlertListener() {
         return;
     }
     
+    // Clean up existing listener
+    if (alertsUnsubscribe) {
+        console.log('🧹 Cleaning up old alerts listener');
+        alertsUnsubscribe();
+        alertsUnsubscribe = null;
+    }
+    
     try {
         const alertsRef = window.firebaseCollection(window.firebaseDB, 'alerts');
-        
-        if (alertsUnsubscribe) {
-            alertsUnsubscribe();
-        }
         
         alertsUnsubscribe = window.firebaseOnSnapshot(alertsRef,
             (snapshot) => {
@@ -3072,13 +3084,13 @@ function setupAlertListener() {
                 });
             },
             (error) => {
-                console.error('Error listening to alerts:', error);
+                console.error('❌ Error listening to alerts:', error);
             }
         );
         
         console.log('✅ Alert listener active for team:', teamCode);
     } catch (error) {
-        console.error('Error setting up alert listener:', error);
+        console.error('❌ Error setting up alert listener:', error);
     }
 }
 
@@ -3235,44 +3247,69 @@ window.addEventListener('DOMContentLoaded', async () => {
         }
     }, 5000);
 
-    let firestoreUnsubscribe = null;
-
-    function setupRealtimeListener() {
+function setupRealtimeListener() {
         if (!window.firebaseDB || !window.firebaseOnSnapshot) {
             console.warn('Firebase not ready, falling back to polling');
-            setInterval(checkForUpdates, 3000);
+            startPolling();
             return;
+        }
+        
+        // Clean up existing listener before creating new one
+        if (firestoreUnsubscribe) {
+            console.log('🧹 Cleaning up old Firestore listener');
+            firestoreUnsubscribe();
+            firestoreUnsubscribe = null;
         }
         
         try {
             const docRef = window.firebaseDoc(window.firebaseDB, 'teams', teamCode);
             
             firestoreUnsubscribe = window.firebaseOnSnapshot(docRef, 
-                (doc) => {
+                async (doc) => {
                     if (doc.exists()) {
                         const firebaseData = doc.data();
                         console.log('⚡ Real-time update received for team:', teamCode);
                         
                         localStorage.setItem(getStorageKey(), JSON.stringify(firebaseData));
                         renderEvidence();
-                        updateProgress(firebaseData);
+                        await updateProgress(firebaseData);
                         
                         const solutionTab = document.getElementById('tab-solution');
                         if (solutionTab && solutionTab.classList.contains('active')) {
-                            initSolutionTab(firebaseData);
+                            await initSolutionTab(firebaseData);
                         }
                     }
                 }, 
                 (error) => {
-                    console.error('Real-time listener error:', error);
-                    setInterval(checkForUpdates, 3000);
+                    console.error('❌ Real-time listener error:', error);
+                    console.log('📡 Falling back to polling mode');
+                    startPolling();
                 }
             );
             
             console.log('✅ Real-time listener active for team:', teamCode);
         } catch (error) {
-            console.error('Error setting up real-time listener:', error);
-            setInterval(checkForUpdates, 3000);
+            console.error('❌ Error setting up real-time listener:', error);
+            startPolling();
+        }
+    }
+
+    function startPolling() {
+        // Prevent multiple polling intervals
+        if (pollingInterval) {
+            console.log('⚠️ Polling already active');
+            return;
+        }
+        
+        console.log('📡 Starting polling mode (every 3 seconds)');
+        pollingInterval = setInterval(checkForUpdates, 3000);
+    }
+
+    function stopPolling() {
+        if (pollingInterval) {
+            clearInterval(pollingInterval);
+            pollingInterval = null;
+            console.log('🛑 Polling stopped');
         }
     }
 
@@ -3290,6 +3327,7 @@ window.addEventListener('DOMContentLoaded', async () => {
                 if (firebaseData.lastUpdate && 
                     (!localData.lastUpdate || firebaseData.lastUpdate > localData.lastUpdate)) {
                     
+                    console.log('🔄 Update detected via polling');
                     localStorage.setItem(getStorageKey(), JSON.stringify(firebaseData));
                     renderEvidence();
                     await updateProgress(firebaseData);
@@ -3329,16 +3367,27 @@ window.addEventListener('resize', () => {
 });
 
 window.addEventListener('beforeunload', () => {
+    console.log('🧹 Cleaning up all listeners before page unload...');
+    
     stopTimer();
-    if (typeof firestoreUnsubscribe === 'function') {
+    stopPolling();
+    
+    if (firestoreUnsubscribe) {
         firestoreUnsubscribe();
+        firestoreUnsubscribe = null;
     }
+    
     if (resultsUnsubscribe) {
         resultsUnsubscribe();
+        resultsUnsubscribe = null;
     }
+    
     if (alertsUnsubscribe) {
         alertsUnsubscribe();
+        alertsUnsubscribe = null;
     }
+    
+    console.log('✅ All listeners cleaned up');
 });
 </script>
 
