@@ -2220,7 +2220,6 @@ async function sendAlert() {
     }
 }
 
-// ✅ CORRECT - These are at module scope (outside any function)
 let firestoreUnsubscribe = null;
 let lastKnownTeamsState = {};
 let pollingInterval = null;
@@ -2363,39 +2362,35 @@ window.addEventListener('DOMContentLoaded', async () => {
         toggleAdminMode();
     }
     
-// Check Firestore connection status
-        function checkFirestoreConnection() {
-            if (!window.firebaseDB) return false;
-            
-            const testRef = window.firebaseDoc(window.firebaseDB, 'config', 'test');
-            window.firebaseGetDoc(testRef)
-                .then(() => {
-                    console.log('🟢 Firestore connection active');
-                    showSyncStatus('✅ Connected', 'success');
-                })
-                .catch((error) => {
-                    console.error('🔴 Firestore connection failed:', error);
-                    showSyncStatus('⚠️ Connection issues', 'error');
-                });
-        }
-
-        // Check connection every 30 seconds
-        setInterval(checkFirestoreConnection, 30000);
-		
-        await refreshTeams();
-        setupRealtimeListener();
-		setupLeaderboardButtonListener();
+    function checkFirestoreConnection() {
+        if (!window.firebaseDB) return false;
         
-        setTimeout(() => {
-            const status = document.getElementById('firebaseStatus');
-            if (status && !status.classList.contains('syncing')) {
-                status.style.display = 'none';
-            }
-        }, 5000);
-    }, 300);
+        const testRef = window.firebaseDoc(window.firebaseDB, 'config', 'test');
+        window.firebaseGetDoc(testRef)
+            .then(() => {
+                console.log('🟢 Firestore connection active');
+                showSyncStatus('✅ Connected', 'success');
+            })
+            .catch((error) => {
+                console.error('🔴 Firestore connection failed:', error);
+                showSyncStatus('⚠️ Connection issues', 'error');
+            });
+    }
+
+    setInterval(checkFirestoreConnection, 30000);
+    
+    await refreshTeams();
+    setupRealtimeListener();
+    setupLeaderboardButtonListener();
+    
+    setTimeout(() => {
+        const status = document.getElementById('firebaseStatus');
+        if (status && !status.classList.contains('syncing')) {
+            status.style.display = 'none';
+        }
+    }, 5000);
 });
 
-// Offline/Online Detection
 window.addEventListener('online', () => {
     console.log('🟢 Back online');
     showSyncStatus('🟢 Reconnecting...', 'syncing');
