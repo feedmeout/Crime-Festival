@@ -1671,8 +1671,6 @@ if (teamCode !== 'default') {
 }
 
 let timerInterval = null;
-
-// Global unsubscribe handlers - MUST be at script root level for cleanup
 let firestoreUnsubscribe = null;
 let resultsUnsubscribe = null;
 let alertsUnsubscribe = null;
@@ -2586,9 +2584,6 @@ function initTabs() {
 window.submitSolution = submitSolution;
 window.switchToSurveyTab = switchToSurveyTab;
 
-let resultsUnsubscribe = null;
-let alertsUnsubscribe = null;
-
 function switchToSurveyTab() {
     const tabButtons = document.querySelectorAll('.tab-button');
     const tabPanes = document.querySelectorAll('.tab-pane');
@@ -3023,7 +3018,6 @@ function setupResultsListener() {
         return;
     }
 
-    // Clean up existing listener
     if (resultsUnsubscribe) {
         console.log('🧹 Cleaning up old results listener');
         resultsUnsubscribe();
@@ -3059,7 +3053,6 @@ function setupAlertListener() {
         return;
     }
     
-    // Clean up existing listener
     if (alertsUnsubscribe) {
         console.log('🧹 Cleaning up old alerts listener');
         alertsUnsubscribe();
@@ -3254,7 +3247,6 @@ function setupRealtimeListener() {
             return;
         }
         
-        // Clean up existing listener before creating new one
         if (firestoreUnsubscribe) {
             console.log('🧹 Cleaning up old Firestore listener');
             firestoreUnsubscribe();
@@ -3295,7 +3287,6 @@ function setupRealtimeListener() {
     }
 
     function startPolling() {
-        // Prevent multiple polling intervals
         if (pollingInterval) {
             console.log('⚠️ Polling already active');
             return;
