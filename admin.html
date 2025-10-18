@@ -1060,60 +1060,82 @@ async function clearAllSolutions() {
 }
 
 async function getAllTeams() {
-        const allTeams = new Map();
-        for (let i = 0; i < localStorage.length; i++) {
-            const key = localStorage.key(i);
-            if (key.startsWith('unlocked_teks_')) {
-                const teamName = key.replace('unlocked_teks_', '');
-                const storedData = JSON.parse(localStorage.getItem(key));
+    const allTeams = new Map();
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key.startsWith('unlocked_teks_')) {
+            const teamName = key.replace('unlocked_teks_', '');
+            const storedData = JSON.parse(localStorage.getItem(key));
 
-                if (Array.isArray(storedData)) {
-                    allTeams.set(teamName, { 
-                        name: teamName, 
-                        unlocked: storedData,
-                        timestamps: {},
-                        startTime: null,
-                        completedAt: null,
-                        totalTimeMs: null,
-                        solution: null,
-                        lastUpdate: null,
-                        teamSize: null,
-                        password: null,
-                        evidenceTimestamps: {},
-                        source: 'localStorage-legacy'
-                    });
-                } else {
-                    allTeams.set(teamName, {
-                        name: teamName,
-                        password: storedData.password || null,
-                        teamSize: storedData.teamSize || null,
-                        unlocked: storedData.unlocked || [],
-                        timestamps: storedData.timestamps || {},
-                        evidenceTimestamps: storedData.evidenceTimestamps || {},
-                        startTime: storedData.startTime || null,
-                        completedAt: storedData.completedAt || null,
-                        totalTimeMs: storedData.totalTimeMs || null,
-                        solution: storedData.solution || null,
-                        lastUpdate: storedData.lastUpdate || null,
-                        source: 'localStorage'
-                    });
-                }
+            if (Array.isArray(storedData)) {
+                allTeams.set(teamName, { 
+                    name: teamName, 
+                    unlocked: storedData,
+                    timestamps: {},
+                    startTime: null,
+                    completedAt: null,
+                    totalTimeMs: null,
+                    solution: null,
+                    lastUpdate: null,
+                    teamSize: null,
+                    password: null,
+                    evidenceTimestamps: {},
+                    source: 'localStorage-legacy'
+                });
+            } else {
+                allTeams.set(teamName, {
+                    name: teamName,
+                    password: storedData.password || null,
+                    teamSize: storedData.teamSize || null,
+                    unlocked: storedData.unlocked || [],
+                    timestamps: storedData.timestamps || {},
+                    evidenceTimestamps: storedData.evidenceTimestamps || {},
+                    startTime: storedData.startTime || null,
+                    completedAt: storedData.completedAt || null,
+                    totalTimeMs: storedData.totalTimeMs || null,
+                    solution: storedData.solution || null,
+                    lastUpdate: storedData.lastUpdate || null,
+                    source: 'localStorage'
+                });
             }
         }
+    }
 
-        if (isFirebaseReady()) {
-            try {
-                const firebaseTeams = await getAllTeamsFromFirebase();
-                firebaseTeams.forEach(team => {
-                    console.log(`📦 Processing team ${team.name} from Firebase`);
+    if (isFirebaseReady()) {
+        try {
+            const firebaseTeams = await getAllTeamsFromFirebase();
+            firebaseTeams.forEach(team => {
+                console.log(`📦 Processing team ${team.name} from Firebase`);
+                
+                const localTeam = allTeams.get(team.name);
+                
+                if (!localTeam) {
+                    allTeams.set(team.name, {
+                        name: team.name,
+                        password: team.password || null,
+                        teamSize: team.teamSize || null,
+                        unlocked: team.unlocked || [],
+                        timestamps: team.timestamps || {},
+                        evidenceTimestamps: team.evidenceTimestamps || {},
+                        startTime: team.startTime || null,
+                        completedAt: team.completedAt || null,
+                        totalTimeMs: team.totalTimeMs || null,
+                        lastUpdate: team.lastUpdate || null,
+                        solution: team.solution || null,
+                        source: 'firebase'
+                    });
+                } else {
+                    const teamLastUpdate = team.lastUpdate || '0';
+                    const localLastUpdate = localTeam.lastUpdate || '0';
+                    const mergedTeamSize = team.teamSize || localTeam.teamSize || null;
+                    const mergedPassword = team.password || localTeam.password || null;
                     
-                    const localTeam = allTeams.get(team.name);
-                    
-                    if (!localTeam) {
+                    if (teamLastUpdate > localLastUpdate) {
+                        console.log(`🔥 Firebase data is newer for ${team.name}`);
                         allTeams.set(team.name, {
                             name: team.name,
-                            password: team.password || null,
-                            teamSize: team.teamSize || null,
+                            password: mergedPassword,
+                            teamSize: mergedTeamSize,
                             unlocked: team.unlocked || [],
                             timestamps: team.timestamps || {},
                             evidenceTimestamps: team.evidenceTimestamps || {},
@@ -1122,49 +1144,28 @@ async function getAllTeams() {
                             totalTimeMs: team.totalTimeMs || null,
                             lastUpdate: team.lastUpdate || null,
                             solution: team.solution || null,
-                            source: 'firebase'
+                            source: 'firebase-newer'
                         });
                     } else {
-                        const teamLastUpdate = team.lastUpdate || '0';
-                        const localLastUpdate = localTeam.lastUpdate || '0';
-                        const mergedTeamSize = team.teamSize || localTeam.teamSize || null;
-                        const mergedPassword = team.password || localTeam.password || null;
+                        console.log(`💾 localStorage data is current for ${team.name}, but preserving teamSize and testingMode`);
+                        localTeam.teamSize = mergedTeamSize;
+                        localTeam.password = mergedPassword;
                         
-                        if (teamLastUpdate > localLastUpdate) {
-                            console.log(`🔥 Firebase data is newer for ${team.name}`);
-                            allTeams.set(team.name, {
-                                name: team.name,
-                                password: mergedPassword,
-                                teamSize: mergedTeamSize,
-                                unlocked: team.unlocked || [],
-                                timestamps: team.timestamps || {},
-                                evidenceTimestamps: team.evidenceTimestamps || {},
-                                startTime: team.startTime || null,
-                                completedAt: team.completedAt || null,
-                                totalTimeMs: team.totalTimeMs || null,
-                                lastUpdate: team.lastUpdate || null,
-                                solution: team.solution || null,
-                                source: 'firebase-newer'
-                            });
-						} else {
-							console.log(`💾 localStorage data is current for ${team.name}, but preserving teamSize and testingMode`);
-							localTeam.teamSize = mergedTeamSize;
-							localTeam.password = mergedPassword;
-							
-							if (team.testingMode !== undefined && localTeam.testingMode === undefined) {
-								localTeam.testingMode = team.testingMode;
-							}
-						}
-                });
-            } catch (error) {
-                console.error('⚠️ Firebase load failed, using localStorage only:', error);
-            }
+                        if (team.testingMode !== undefined && localTeam.testingMode === undefined) {
+                            localTeam.testingMode = team.testingMode;
+                        }
+                    }
+                }
+            });
+        } catch (error) {
+            console.error('⚠️ Firebase load failed, using localStorage only:', error);
         }
-        
-        const teams = Array.from(allTeams.values());
-        console.log(`📊 Loaded ${teams.length} teams total`);
-        return teams;
     }
+    
+    const teams = Array.from(allTeams.values());
+    console.log(`📊 Loaded ${teams.length} teams total`);
+    return teams;
+}
 
 async function getSurveyCompletionStatus(teamName) {
     if (!window.firebaseDB) {
