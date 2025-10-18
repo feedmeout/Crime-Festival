@@ -1147,12 +1147,15 @@ async function getAllTeams() {
                                 solution: team.solution || null,
                                 source: 'firebase-newer'
                             });
-                        } else {
-                            console.log(`💾 localStorage data is current for ${team.name}, but preserving teamSize`);
-                            localTeam.teamSize = mergedTeamSize;
-                            localTeam.password = mergedPassword;
-                        }
-                    }
+						} else {
+							console.log(`💾 localStorage data is current for ${team.name}, but preserving teamSize and testingMode`);
+							localTeam.teamSize = mergedTeamSize;
+							localTeam.password = mergedPassword;
+							
+							if (team.testingMode !== undefined && localTeam.testingMode === undefined) {
+								localTeam.testingMode = team.testingMode;
+							}
+						}
                 });
             } catch (error) {
                 console.error('⚠️ Firebase load failed, using localStorage only:', error);
