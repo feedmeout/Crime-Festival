@@ -2185,13 +2185,14 @@ async function submitSolution() {
     };
     
     try {
-        const updatedData = {
-            ...teamData,
-            solution: solution,
-            completedAt: solution.submittedAt,
-            totalTimeMs: totalTimeMs,
-            lastUpdate: new Date().toISOString()
-        };
+		const updatedData = {
+			...teamData,
+			testingMode: teamData.testingMode || false,
+			solution: solution,
+			completedAt: solution.submittedAt,
+			totalTimeMs: totalTimeMs,
+			lastUpdate: new Date().toISOString()
+		};
         
         localStorage.setItem(getStorageKey(), JSON.stringify(updatedData));
         

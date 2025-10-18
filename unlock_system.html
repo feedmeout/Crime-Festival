@@ -337,74 +337,107 @@
             return `unlocked_teks_${teamCode}`;
         }
 
-        async function getTeamData(teamCode) {
-            console.log('🔍 Getting team data for:', teamCode);
-            
-            if (simulationMode) {
-                const mockUnlocked = [];
-                for (let i = 1; i <= simulatedUnlockCount - 1; i++) {
-                    mockUnlocked.push(i.toString());
-                }
-                return {
-                    unlocked: mockUnlocked,
-                    timestamps: {},
-                    evidenceTimestamps: {},
-                    startTime: new Date(Date.now() - 3600000).toISOString(),
-                    completedAt: null,
-                    totalTimeMs: null
-                };
-            }
-            
-            const firebaseData = await loadFromFirebase(teamCode);
-            if (firebaseData && firebaseData.unlocked) {
-                console.log('✅ Using Firebase data');
-                return firebaseData;
-            }
-            
-            const localData = localStorage.getItem(getStorageKey(teamCode));
-            if (localData) {
-                try {
-                    const unlocked = JSON.parse(localData);
-                    console.log('✅ Using localStorage data');
-                    return {
-                        unlocked: unlocked,
-                        timestamps: {},
-                        evidenceTimestamps: {},
-                        startTime: null,
-                        completedAt: null,
-                        totalTimeMs: null
-                    };
-                } catch (e) {
-                    console.error('Error parsing localStorage:', e);
-                }
-            }
+		async function getTeamData(teamCode) {
+			console.log('🔍 Getting team data for:', teamCode);
+			
+			if (simulationMode) {
+				const mockUnlocked = [];
+				for (let i = 1; i <= simulatedUnlockCount - 1; i++) {
+					mockUnlocked.push(i.toString());
+				}
+				return {
+					unlocked: mockUnlocked,
+					timestamps: {},
+					evidenceTimestamps: {},
+					startTime: new Date(Date.now() - 3600000).toISOString(),
+					completedAt: null,
+					totalTimeMs: null,
+					testingMode: false
+				};
+			}
+			
+			const firebaseData = await loadFromFirebase(teamCode);
+			if (firebaseData && firebaseData.unlocked) {
+				console.log('✅ Using Firebase data');
+				return firebaseData;
+			}
+			
+			const localData = localStorage.getItem(getStorageKey(teamCode));
+			if (localData) {
+				try {
+					const parsed = JSON.parse(localData);
+					console.log('✅ Using localStorage data');
 
-            console.log('✅ New team data');
-            return {
-                unlocked: [],
-                timestamps: {},
-                evidenceTimestamps: {},
-                startTime: null,
-                completedAt: null,
-                totalTimeMs: null
-            };
-        }
+					if (Array.isArray(parsed)) {
+						// Old format - just the unlocked array
+						return {
+							unlocked: parsed,
+							timestamps: {},
+							evidenceTimestamps: {},
+							startTime: null,
+							completedAt: null,
+							totalTimeMs: null,
+							testingMode: false
+						};
+					} else {
+						return {
+							password: parsed.password || null,
+							teamSize: parsed.teamSize || null,
+							testingMode: parsed.testingMode || false,
+							unlocked: parsed.unlocked || [],
+							timestamps: parsed.timestamps || {},
+							evidenceTimestamps: parsed.evidenceTimestamps || {},
+							startTime: parsed.startTime || null,
+							completedAt: parsed.completedAt || null,
+							totalTimeMs: parsed.totalTimeMs || null,
+							solution: parsed.solution || null
+						};
+					}
+				} catch (e) {
+					console.error('Error parsing localStorage:', e);
+				}
+			}
 
-        async function saveTeamData(teamCode, data) {
-            if (simulationMode) {
-                return true;
-            }
-            
-            localStorage.setItem(getStorageKey(teamCode), JSON.stringify(data.unlocked || []));
-            console.log('✅ Saved to localStorage');
-            
-            const saved = await saveToFirebase(teamCode, {
-                ...data,
-                lastUpdate: new Date().toISOString()
-            });
-            
-            return saved;
-        }
+			console.log('✅ New team data');
+			return {
+				unlocked: [],
+				timestamps: {},
+				evidenceTimestamps: {},
+				startTime: null,
+				completedAt: null,
+				totalTimeMs: null,
+				testingMode: false
+			};
+		}
+
+		async function saveTeamData(teamCode, data) {
+			if (simulationMode) {
+				return true;
+			}
+			
+			const dataToSave = {
+				password: data.password || null,
+				teamSize: data.teamSize || null,
+				testingMode: data.testingMode || false,
+				unlocked: data.unlocked || [],
+				timestamps: data.timestamps || {},
+				evidenceTimestamps: data.evidenceTimestamps || {},
+				startTime: data.startTime || null,
+				completedAt: data.completedAt || null,
+				totalTimeMs: data.totalTimeMs || null,
+				solution: data.solution || null
+			};
+			
+			localStorage.setItem(getStorageKey(teamCode), JSON.stringify(dataToSave));
+			console.log('✅ Saved to localStorage');
+			
+			const saved = await saveToFirebase(teamCode, {
+				...data,
+				lastUpdate: new Date().toISOString()
+			});
+			
+			return saved;
+		}
 
         function formatTime(ms) {
             const seconds = Math.floor(ms / 1000);
