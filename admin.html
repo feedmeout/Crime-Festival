@@ -354,15 +354,32 @@ body {
     padding: 0 8px;
 }
 
-.team-stats {
+.team-stats-grid {
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    gap: 8px 12px;
+    margin-bottom: 12px;
     font-size: clamp(12px, 2.5vw, 14px);
-    color: var(--text-light);
-    margin-bottom: 8px;
-    line-height: 1.5;
+    align-items: baseline;
 }
 
-.team-stats strong {
+.team-stat-label {
+    text-align: left;
+    color: var(--text-light);
+    white-space: nowrap;
+}
+
+.team-stat-colon {
+    color: var(--text-light);
+}
+
+.team-stat-value {
     color: var(--text-medium);
+}
+
+.team-stat-value strong {
+    font-weight: 700;
+    color: var(--text-dark);
 }
 
 .completion-badge {
@@ -1049,7 +1066,7 @@ async function deleteALLSurveysNuclear() {
     const confirm1 = confirm('⚠️ ΠΡΟΣΟΧΗ! ΘΑ ΔΙΑΓΡΑΨΕΙ ΟΛΑ ΤΑ ΕΡΩΤΗΜΑΤΟΛΟΓΙΑ (FAKE ΚΑΙ ΠΡΑΓΜΑΤΙΚΑ)!\n\nΣΙΓΟΥΡΑ;');
     if (!confirm1) return;
     
-    const confirm2 = confirm('🚨 ΤΕΛΕΥΤΑΙΑ ΠΡΟΕΙΔΟΠΟΙΗΣΗ!\n\nΘΑ ΔΙΑΓΡΑΦΟΥΝ ΟΛΑ ΤΑ ΔΕΔΟΜΕΝΑ ΕΡΕΥΝΩΝ!\n\nΣΥΝΕΧΕΙΑ;');
+    const confirm2 = confirm('🚨 ΤΕΛΕΥΤΑΙΑ ΠΡΟΕΙΔΟΠΟΙΗΣΗ!\n\nΘΑ ΔΙΑΓΡΑΦΟΥΝ ΟΛΑ ΤΑ ΔΕΔΟΜΕΝΑ ΕΡΕΥΝΩΝ!\n\nΣΥΝΕΧΕΙΣ;');
     if (!confirm2) return;
     
     const surveysRef = window.firebaseCollection(window.firebaseDB, 'surveys');
@@ -1397,12 +1414,10 @@ window.timerInterval = setInterval(() => {
         
         if (team && team.startTime && !team.completedAt && !team.solution) {
             const elapsed = Date.now() - new Date(team.startTime).getTime();
-            const timerStats = Array.from(teamCard.querySelectorAll('.team-stats')).find(
-                el => el.textContent.includes('ΣΕ ΕΞΕΛΙΞΗ')
-            );
+            const timerValue = teamCard.querySelector('.timer-value');
             
-            if (timerStats) {
-                timerStats.innerHTML = `⏱️ ΧΡΟΝΟΣ ΣΕ ΕΞΕΛΙΞΗ: <strong>${formatTime(elapsed)}</strong>`;
+            if (timerValue) {
+                timerValue.innerHTML = `<strong>${formatTime(elapsed)}</strong>`;
             }
         }
     });
@@ -1436,12 +1451,16 @@ window.timerInterval = setInterval(() => {
             
             if (solutionSubmitted && team.completedAt) {
                 timingHtml = `
-                    <div class="team-stats">⏱️ ΧΡΟΝΟΣ ΟΛΟΚΛΗΡΩΣΗΣ: <strong>${formatTime(team.totalTimeMs)}</strong></div>
+					<div class="team-stat-label">⏱️ ΧΡΟΝΟΣ ΟΛΟΚΛΗΡΩΣΗΣ</div>
+					<div class="team-stat-colon">:</div>
+					<div class="team-stat-value"><strong>${formatTime(team.totalTimeMs)}</strong></div>
                 `;
             } else {
                 const elapsed = now - startTime;
                 timingHtml = `
-                    <div class="team-stats">⏱️ ΧΡΟΝΟΣ ΣΕ ΕΞΕΛΙΞΗ: <strong>${formatTime(elapsed)}</strong></div>
+					<div class="team-stat-label">⏱️ ΧΡΟΝΟΣ ΣΕ ΕΞΕΛΙΞΗ</div>
+					<div class="team-stat-colon">:</div>
+					<div class="team-stat-value timer-value"><strong>${formatTime(elapsed)}</strong></div>
                 `;
             }
         }
@@ -1461,11 +1480,25 @@ window.timerInterval = setInterval(() => {
                 <div class="progress-bar">
                     <div class="progress-fill" style="width: ${progress === 0 ? '100' : progress}%; ${progress === 0 ? 'background: #e0e0e0; color: #666;' : ''}">${progress}%</div>
                 </div>
-                <div class="team-stats">📊 ΞΕΚΛΕΙΔΩΜΕΝΑ ΣΤΟΙΧΕΙΑ: <strong>${team.unlocked.length} / ${TOTAL_TEKS}</strong></div>
-				<div class="team-stats">${preStatusIcon} PRE-SURVEY: <strong>${surveys.pre} / ${teamSize || 'N/A'} μέλη</strong></div>
-				<div class="team-stats">${postStatusIcon} POST-SURVEY: <strong>${surveys.post} / ${teamSize || 'N/A'} μέλη</strong></div>
-                <div class="team-stats">🔑 ΚΩΔΙΚΟΣ: <strong>${team.password || 'N/A'}</strong></div>
-                ${timingHtml}
+                <div class="team-stats-grid">
+					<div class="team-stat-label">📊 ΞΕΚΛΕΙΔΩΜΕΝΑ ΣΤΟΙΧΕΙΑ</div>
+					<div class="team-stat-colon">:</div>
+					<div class="team-stat-value"><strong>${team.unlocked.length} / ${TOTAL_TEKS}</strong></div>
+
+					<div class="team-stat-label">${preStatusIcon} ΠΡΟΚΑΤΑΡΚΤΙΚΗ ΕΡΕΥΝΑ</div>
+					<div class="team-stat-colon">:</div>
+					<div class="team-stat-value"><strong>${surveys.pre} / ${teamSize || 'N/A'} μέλη</strong></div>
+
+					<div class="team-stat-label">${postStatusIcon} ΤΕΛΙΚΗ ΕΡΕΥΝΑ</div>
+					<div class="team-stat-colon">:</div>
+					<div class="team-stat-value"><strong>${surveys.post} / ${teamSize || 'N/A'} μέλη</strong></div>
+
+					<div class="team-stat-label">🔑 ΚΩΔΙΚΟΣ ΟΜΑΔΑΣ</div>
+					<div class="team-stat-colon">:</div>
+					<div class="team-stat-value"><strong>${team.password || 'N/A'}</strong></div>
+                    
+                    ${timingHtml}
+                </div>
                 <div class="tek-grid">
                     ${Array.from({length: TOTAL_TEKS}, (_, i) => {
                         const tekNum = (i + 1).toString();
@@ -1480,7 +1513,7 @@ window.timerInterval = setInterval(() => {
                     }).join('')}
                 </div>
                 <div class="team-actions">
-                    <button class="btn btn-primary" onclick="viewTeam('${team.name}')">👁️ ΠΡΟΒΟΛΗ</button>
+                    <button class="btn btn-primary" onclick="viewTeam('${team.name}')">👀 ΠΡΟΒΟΛΗ</button>
                     <button class="btn" style="background: #17a2b8; color: white;" onclick="showTimestamps('${team.name}')">🕐 ΧΡΟΝΙΚΑ</button>
                     <button class="btn btn-success" onclick="unlockAll('${team.name}')">🔓 ΤΕΚΜΗΡΙΑ</button>
                     <button class="btn btn-secondary" onclick="resetTeam('${team.name}')">🔄 RESET</button>
@@ -1835,7 +1868,7 @@ async function resetAll() {
                 console.log(`✅ Deleted ${teams.length} teams and ${surveyCount} surveys`);
             } catch (error) {
                 console.error('❌ Firebase delete error:', error);
-                alert(`⚠️ Σφάλμα: ${error.message}`);
+                alert(`⚠️ ΣΦΑΛΜΑ: ${error.message}`);
             }
         }
         
@@ -1912,7 +1945,7 @@ async function exportSurveyDataToExcel() {
     try {
         const statusDiv = document.createElement('div');
         statusDiv.style.cssText = 'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); z-index: 10000; text-align: center;';
-        statusDiv.innerHTML = '<div style="font-size: 48px; margin-bottom: 20px;">⏳</div><h3>Exporting Survey Data...</h3><p>Please wait...</p>';
+        statusDiv.innerHTML = '<div style="font-size: 48px; margin-bottom: 20px;">⳿</div><h3>Exporting Survey Data...</h3><p>Please wait...</p>';
         document.body.appendChild(statusDiv);
 
         const surveysRef = window.firebaseCollection(window.firebaseDB, 'surveys');
@@ -2167,7 +2200,7 @@ function setupRealtimeListener() {
                 
                 snapshot.docChanges().forEach((change) => {
                     if (change.type === 'added' || change.type === 'modified') {
-                        console.log(`📝 Team ${change.doc.id} was ${change.type}`);
+                        console.log(`🔍 Team ${change.doc.id} was ${change.type}`);
                         hasChanges = true;
                     }
                     if (change.type === 'removed') {
