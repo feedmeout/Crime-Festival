@@ -1199,9 +1199,15 @@ async function getSurveyCompletionStatus(teamName) {
 
 async function saveTeam(teamName, data) {
     const existingTeam = teamsData[teamName];
+    
     if (existingTeam && existingTeam.teamSize && !data.teamSize) {
         console.warn(`⚠️ teamSize missing in save, preserving existing value: ${existingTeam.teamSize}`);
         data.teamSize = existingTeam.teamSize;
+    }
+    
+    if (existingTeam && existingTeam.testingMode !== undefined && data.testingMode === undefined) {
+        console.warn(`⚠️ testingMode missing in save, preserving existing value: ${existingTeam.testingMode}`);
+        data.testingMode = existingTeam.testingMode;
     }
     
     if (data.teamSize !== undefined && data.teamSize !== null) {
@@ -1217,6 +1223,7 @@ async function saveTeam(teamName, data) {
     
     console.log(`💾 Saving team ${teamName} with data:`, {
         teamSize: data.teamSize,
+        testingMode: data.testingMode,
         unlocked: data.unlocked?.length,
         hasPassword: !!data.password
     });
@@ -1235,9 +1242,12 @@ async function saveTeam(teamName, data) {
         const verify = await window.firebaseGetDoc(docRef);
         if (verify.exists()) {
             const saved = verify.data();
-            console.log('✅ Verified team saved with teamSize:', saved.teamSize);
+            console.log('✅ Verified team saved with teamSize:', saved.teamSize, 'testingMode:', saved.testingMode);
             if (!saved.teamSize || saved.teamSize < 1) {
                 console.error('❌ teamSize not saved correctly!', saved);
+            }
+            if (saved.testingMode === undefined) {
+                console.error('❌ testingMode not saved correctly!', saved);
             }
         }
     }
@@ -1811,7 +1821,7 @@ async function unlockAllForAll() {
 await saveTeam(team.name, {
     password: team.password || null,
     teamSize: team.teamSize !== undefined ? team.teamSize : null,
-    testingMode: team.testingMode !== undefined ? team.testingMode : false, // ✅ ADD THIS
+    testingMode: team.testingMode !== undefined ? team.testingMode : false,
     unlocked: allTeks,
     timestamps: timestamps,
     startTime: earliestTime,
