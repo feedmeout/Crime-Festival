@@ -2362,14 +2362,25 @@ window.addEventListener('DOMContentLoaded', async () => {
         toggleAdminMode();
     }
     
-    setTimeout(async () => {
-        if (isFirebaseReady()) {
-            showSyncStatus('✅ Connected - Real-time sync active', 'success');
-        } else {
-            console.warn('⚠️ Firebase not loaded - using localStorage only');
-            showSyncStatus('⚠️ Local mode - No cloud sync', 'error');
+// Check Firestore connection status
+        function checkFirestoreConnection() {
+            if (!window.firebaseDB) return false;
+            
+            const testRef = window.firebaseDoc(window.firebaseDB, 'config', 'test');
+            window.firebaseGetDoc(testRef)
+                .then(() => {
+                    console.log('🟢 Firestore connection active');
+                    showSyncStatus('✅ Connected', 'success');
+                })
+                .catch((error) => {
+                    console.error('🔴 Firestore connection failed:', error);
+                    showSyncStatus('⚠️ Connection issues', 'error');
+                });
         }
-        
+
+        // Check connection every 30 seconds
+        setInterval(checkFirestoreConnection, 30000);
+		
         await refreshTeams();
         setupRealtimeListener();
 		setupLeaderboardButtonListener();

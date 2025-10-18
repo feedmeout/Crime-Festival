@@ -25,11 +25,30 @@
         window.firebaseCollection = collection;
         window.firebaseOnSnapshot = onSnapshot;
         
-        console.log("✅ Firebase connected!");
+console.log("✅ Firebase connected!");
         
-setTimeout(() => {
-    setupRealtimeListener(); // This will call refreshLeaderboard automatically
-}, 500);
+        // Check Firestore connection status
+        function checkFirestoreConnection() {
+            if (!window.firebaseDB) return false;
+            
+            const testRef = window.firebaseDoc(window.firebaseDB, 'config', 'test');
+            window.firebaseGetDoc(testRef)
+                .then(() => {
+                    console.log('🟢 Firestore connection active');
+                    showSyncStatus('✅ Connected', 'success');
+                })
+                .catch((error) => {
+                    console.error('🔴 Firestore connection failed:', error);
+                    showSyncStatus('⚠️ Connection issues', 'error');
+                });
+        }
+
+        // Check connection every 30 seconds
+        setInterval(checkFirestoreConnection, 30000);
+        
+        setTimeout(() => {
+            setupRealtimeListener(); // This will call refreshLeaderboard automatically
+        }, 500);
     </script>
     
     <style>

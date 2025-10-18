@@ -3174,6 +3174,25 @@ window.addEventListener('DOMContentLoaded', async () => {
     console.log('🔄 Initializing tabs...');
     initTabsWithResults();
     console.log('✅ Tabs initialized');
+    
+    // Check Firestore connection status
+    function checkFirestoreConnection() {
+        if (!window.firebaseDB) return false;
+        
+        const testRef = window.firebaseDoc(window.firebaseDB, 'config', 'test');
+        window.firebaseGetDoc(testRef)
+            .then(() => {
+                console.log('🟢 Firestore connection active');
+            })
+            .catch((error) => {
+                console.error('🔴 Firestore connection failed:', error);
+                alert('⚠️ Connection issues - Your progress may not save!');
+            });
+    }
+
+    // Check connection every 30 seconds
+    setInterval(checkFirestoreConnection, 30000);
+    
     const urlParams = new URLSearchParams(window.location.search);
     const requestedTab = urlParams.get('tab');
     if (requestedTab) {
@@ -3188,7 +3207,6 @@ window.addEventListener('DOMContentLoaded', async () => {
             targetPane.classList.add('active');
         }
     }
-
     if (!StorageManager.isAuthenticated()) {
         console.warn('⚠️ Not authenticated, redirecting to member entry...');
 		window.location.href = 'team_entry.html';
