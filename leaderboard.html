@@ -7,8 +7,8 @@
     
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getFirestore, getDocs, collection, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
-
+        import { getFirestore, getDocs, collection, onSnapshot, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        
         const firebaseConfig = {
             apiKey: "AIzaSyA_9_40aa_wO_19g-1bIrSB6742aMOPwjo",
             authDomain: "crime-festival-2025.firebaseapp.com",
@@ -17,17 +17,18 @@
             messagingSenderId: "663770004335",
             appId: "1:663770004335:web:e42dbd983ab9b5277bc69a"
         };
-
+        
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         window.firebaseDB = db;
         window.firebaseGetDocs = getDocs;
         window.firebaseCollection = collection;
         window.firebaseOnSnapshot = onSnapshot;
+        window.firebaseDoc = doc;
+        window.firebaseGetDoc = getDoc;
         
-console.log("✅ Firebase connected!");
+        console.log("✅ Firebase connected!");
         
-        // Check Firestore connection status
         function checkFirestoreConnection() {
             if (!window.firebaseDB) return false;
             
@@ -42,12 +43,11 @@ console.log("✅ Firebase connected!");
                     showSyncStatus('⚠️ Connection issues', 'error');
                 });
         }
-
-        // Check connection every 30 seconds
+        
         setInterval(checkFirestoreConnection, 30000);
         
         setTimeout(() => {
-            setupRealtimeListener(); // This will call refreshLeaderboard automatically
+            setupRealtimeListener();
         }, 500);
     </script>
     
@@ -602,7 +602,7 @@ firestoreUnsubscribe = window.firebaseOnSnapshot(teamsCollection,
     (snapshot) => {
         console.log('🔥 Firebase real-time update received');
         isFirestoreActive = true;
-        stopPolling(); // Stop polling when listener works
+        stopPolling();
         
         let hasChanges = false;
         
@@ -619,14 +619,14 @@ firestoreUnsubscribe = window.firebaseOnSnapshot(teamsCollection,
         
         if (hasChanges) {
             showSyncStatus('🔄 Updating...', 'syncing');
-            debouncedRefreshLeaderboard(); // Use debounced version
+            debouncedRefreshLeaderboard();
         }
     },
     (error) => {
         console.error('❌ Firebase listener error:', error);
         isFirestoreActive = false;
         showSyncStatus('⚠️ Connection lost - retrying...', 'error');
-        startPolling(); // Only poll on error
+        startPolling();
     }
 );
                 
@@ -1237,7 +1237,7 @@ ${solution.breakdown.map(item => {
                 firestoreUnsubscribe();
             }
         });
-// Offline/Online Detection
+
 window.addEventListener('online', () => {
     console.log('🟢 Back online');
     showSyncStatus('🟢 Reconnecting...', 'syncing');

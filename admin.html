@@ -2220,9 +2220,9 @@ async function sendAlert() {
     }
 }
 
+// ✅ CORRECT - These are at module scope (outside any function)
 let firestoreUnsubscribe = null;
 let lastKnownTeamsState = {};
-
 let pollingInterval = null;
 let isFirestoreActive = false;
 
@@ -2249,43 +2249,44 @@ function setupRealtimeListener() {
 
     try {
         const teamsCollection = window.firebaseCollection(window.firebaseDB, 'teams');
-		firestoreUnsubscribe = window.firebaseOnSnapshot(teamsCollection, 
-			(snapshot) => {
-				console.log('🔥 Firebase real-time update received');
-				isFirestoreActive = true;
-				stopPolling(); // Stop polling when listener works
-				
-				let hasChanges = false;
-				
-				snapshot.docChanges().forEach((change) => {
-					if (change.type === 'added' || change.type === 'modified') {
-						console.log(`🔍 Team ${change.doc.id} was ${change.type}`);
-						hasChanges = true;
-					}
-					if (change.type === 'removed') {
-						console.log(`🗑️ Team ${change.doc.id} was removed`);
-						hasChanges = true;
-					}
-				});
-				
-				if (hasChanges) {
-					debouncedRefreshTeams(); // Use debounced version
-				}
-			},
-			(error) => {
-				console.error('❌ Firebase listener error:', error);
-				isFirestoreActive = false;
-				startPolling(); // Only poll on error
-			}
-		);
+        firestoreUnsubscribe = window.firebaseOnSnapshot(teamsCollection, 
+            (snapshot) => {
+                console.log('🔥 Firebase real-time update received');
+                isFirestoreActive = true;
+                stopPolling();
+                
+                let hasChanges = false;
+                
+                snapshot.docChanges().forEach((change) => {
+                    if (change.type === 'added' || change.type === 'modified') {
+                        console.log(`🔍 Team ${change.doc.id} was ${change.type}`);
+                        hasChanges = true;
+                    }
+                    if (change.type === 'removed') {
+                        console.log(`🗑️ Team ${change.doc.id} was removed`);
+                        hasChanges = true;
+                    }
+                });
+                
+                if (hasChanges) {
+                    debouncedRefreshTeams();
+                }
+            },
+            (error) => {
+                console.error('❌ Firebase listener error:', error);
+                isFirestoreActive = false;
+                startPolling();
+            }
+        );
         
         console.log('✅ Real-time Firebase listener active');
-		
+        
     } catch (error) {
         console.error('❌ Failed to setup Firebase listener:', error);
         setInterval(refreshTeams, 2000);
     }
 }
+
 
 function showSyncStatus(message, type = 'success') {
     const status = document.getElementById('firebaseStatus');
