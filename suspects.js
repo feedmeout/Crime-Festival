@@ -1,8 +1,4 @@
-// suspects.js - Reusable module for suspect profiles
-// Save this as a separate file: suspects.js
-
 const SuspectsModule = {
-  // Suspect data
   suspects: [
     {
       id: 'maria',
@@ -20,7 +16,7 @@ const SuspectsModule = {
       canvasId: 'konstantinos-portrait',
       name: 'ΑΝΑΓΝΩΣΤΟΥ ΚΩΝΣΤΑΝΤΙΝΟΣ του ΣΠΥΡΟΥ',
       role: 'Συνεταίρος (40% μετοχές), CFO εταιρείας',
-	  alibi: 'Δείπνο με πελάτες 18:45-20:30 στο "Διόνυσος" (200μ από κτίριο), επέστρεψε 20:50 για ολοκλήρωση εργασιών',
+	  alibi: 'Δείπνο με πελάτες 18:45-20:30 στο «Διόνυσος» (200μ από κτίριο), επέστρεψε 20:49 για ολοκλήρωση εργασιών',
 	  motive: 'Φάκελος αποκαλύπτει οικονομικές ανωμαλίες - ελλείπουν €1,5εκ από λογαριασμούς',
 	  notes: 'Προσπάθησε να αγοράσει μετοχές του θύματος πριν 1 μήνα. Αποτυπώματά του στο μπουκάλι (λαιμός) και το κλειδί χρηματοκιβωτίου',
       financial: 'Απόκρυψη εσόδων €500.000 σε Ελβετία',
@@ -44,7 +40,7 @@ const SuspectsModule = {
       role: 'Νυχτοφύλακας (προϊστάμενος βάρδιας)',
       alibi: 'Περιπολία κάθε 2 ώρες - καταγραφή αρχείου σε όλα τα σημεία ελέγχου',
       motive: 'Χρέη €60.000 σε τοκογλύφους. Αγόρασε το κυάνιο για «μυοκτονία»',
-	  notes: 'Έλεγχος βάρδιας δείχνει ότι έκανε έλεγχο 7ου ορόφου 20:22 (ψηφιακό log). ΑΛΛΑ: Μάρτυρας τον είδε στον 3ο όροφο 20:48. Πρώην εργαζόμενος σε χημικό εργοστάσιο - γνώσεις χημικών ουσιών',
+	  notes: 'Έλεγχος βάρδιας: Σάρωσε κάρτα στον 7ο όροφο 20:22 (ψηφιακό log). ΩΣΤΟΣΟ: Μάρτυρας τον είδε στον 3ο όροφο 20:48 (26 λεπτά αργότερα). Πρώην εργαζόμενος σε χημικό εργοστάσιο - γνώσεις χημικών ουσιών',
       history: 'Απολύθηκε για κλοπή από χημικό εργοστάσιο (αθωώθηκε - έλλειψη αποδείξεων)',
       other: 'Πρόσβαση σε όλους τους ορόφους. Δικαιώματα διαχειριστή στο σύστημα ασφαλείας'
     },
@@ -61,7 +57,6 @@ const SuspectsModule = {
     }
   ],
 
-  // Canvas drawing functions
   drawMaria(canvasId) {
     const canvas = document.getElementById(canvasId);
     if (!canvas) return;
@@ -918,7 +913,6 @@ const SuspectsModule = {
     }
   },
 
-  // Render all suspects into a container
   renderSuspects(containerId) {
     const container = document.getElementById(containerId);
     if (!container) {
@@ -983,8 +977,7 @@ const SuspectsModule = {
     `;
 
     container.innerHTML = html;
-
-    // Draw all portraits after rendering
+	
     setTimeout(() => {
       this.drawMaria('maria-portrait');
       this.drawKonstantinos('konstantinos-portrait');
@@ -995,7 +988,6 @@ const SuspectsModule = {
   }
 };
 
-// For use in browsers
 if (typeof window !== 'undefined') {
   window.SuspectsModule = SuspectsModule;
 }
