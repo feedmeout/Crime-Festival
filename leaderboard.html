@@ -7,7 +7,7 @@
     
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getFirestore, getDocs, collection } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        import { getFirestore, getDocs, collection, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
         const firebaseConfig = {
             apiKey: "AIzaSyA_9_40aa_wO_19g-1bIrSB6742aMOPwjo",
@@ -23,10 +23,14 @@
         window.firebaseDB = db;
         window.firebaseGetDocs = getDocs;
         window.firebaseCollection = collection;
+        window.firebaseOnSnapshot = onSnapshot;
         
         console.log("✅ Firebase connected!");
         
-        setTimeout(refreshLeaderboard, 500);
+        setTimeout(() => {
+            refreshLeaderboard();
+            setupRealtimeListener();
+        }, 500);
     </script>
     
     <style>
@@ -65,6 +69,12 @@
             font-size: clamp(18px, 4.5vw, 32px);
             margin-bottom: 8px;
             line-height: 1.2;
+        }
+
+        .header p {
+            color: rgba(255,255,255,0.95);
+            font-size: clamp(11px, 2.5vw, 14px);
+            margin-top: 8px;
         }
 
         .action-bar {
@@ -369,6 +379,31 @@
             color: #333;
         }
 
+        #syncStatus {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            display: none;
+            z-index: 9999;
+            max-width: 250px;
+        }
+
+        #syncStatus.syncing {
+            background: #17a2b8;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
         @media (max-width: 768px) {
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
@@ -394,10 +429,10 @@
     <div class="container">
         <div class="header">
             <h1>🏆 ΠΙΝΑΚΑΣ ΚΑΤΑΤΑΞΗΣ</h1>
+            <p>🔴 REAL-TIME UPDATES ACTIVE</p>
         </div>
 
         <div class="action-bar">
-            <button class="btn btn-primary" onclick="refreshLeaderboard()">🔄 ΑΝΑΝΕΩΣΗ</button>
             <a href="admin.html" class="btn btn-secondary">⬅️ ADMIN PANEL</a>
         </div>
 
@@ -465,6 +500,8 @@
         </div>
     </div>
 
+    <div id="syncStatus">🔴 Connected - Real-time sync active</div>
+
     <script>
         const CORRECT_SUSPECTS = ['konstantinos', 'georgios', 'eleni'];
         const SUSPECT_NAMES = {
@@ -489,6 +526,81 @@
             time_30_45: 10,
             time_45_60: 5
         };
+
+        let firestoreUnsubscribe = null;
+
+        function showSyncStatus(message, type = 'success') {
+            const status = document.getElementById('syncStatus');
+            if (!status) return;
+            
+            status.classList.remove('syncing');
+            
+            if (type === 'syncing') {
+                status.classList.add('syncing');
+                status.style.background = '#17a2b8';
+            } else if (type === 'success') {
+                status.style.background = '#28a745';
+            } else if (type === 'error') {
+                status.style.background = '#dc3545';
+            }
+            
+            status.innerHTML = message;
+            status.style.display = 'block';
+            
+            if (type !== 'syncing') {
+                setTimeout(() => {
+                    status.style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        function setupRealtimeListener() {
+            if (!window.firebaseDB || !window.firebaseOnSnapshot) {
+                console.warn('⚠️ Firebase not ready - using periodic refresh');
+                setInterval(refreshLeaderboard, 10000);
+                return;
+            }
+
+            try {
+                const teamsCollection = window.firebaseCollection(window.firebaseDB, 'teams');
+                
+                firestoreUnsubscribe = window.firebaseOnSnapshot(teamsCollection, 
+                    (snapshot) => {
+                        console.log('🔥 Firebase real-time update received');
+                        let hasChanges = false;
+                        
+                        snapshot.docChanges().forEach((change) => {
+                            if (change.type === 'added' || change.type === 'modified') {
+                                console.log(`📝 Team ${change.doc.id} was ${change.type}`);
+                                hasChanges = true;
+                            }
+                            if (change.type === 'removed') {
+                                console.log(`🗑️ Team ${change.doc.id} was removed`);
+                                hasChanges = true;
+                            }
+                        });
+                        
+                        if (hasChanges) {
+                            showSyncStatus('🔄 Updating...', 'syncing');
+                            refreshLeaderboard();
+                        }
+                    },
+                    (error) => {
+                        console.error('❌ Firebase listener error:', error);
+                        showSyncStatus('⚠️ Connection lost - retrying...', 'error');
+                        setInterval(refreshLeaderboard, 10000);
+                    }
+                );
+                
+                console.log('✅ Real-time Firebase listener active');
+                showSyncStatus('🔴 Real-time sync active', 'success');
+                
+            } catch (error) {
+                console.error('❌ Failed to setup Firebase listener:', error);
+                showSyncStatus('⚠️ Using backup mode', 'error');
+                setInterval(refreshLeaderboard, 10000);
+            }
+        }
 
         function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
             let score = 0;
@@ -757,9 +869,12 @@
 
                 displayLeaderboard(teams);
                 displayStats(teams);
+                
+                showSyncStatus('✅ Updated', 'success');
 
             } catch (error) {
                 console.error('Error loading leaderboard:', error);
+                showSyncStatus('❌ Update failed', 'error');
             }
         }
 
@@ -1068,7 +1183,11 @@ ${solution.breakdown.map(item => {
             }
         });
 
-        setInterval(refreshLeaderboard, 30000);
+        window.addEventListener('beforeunload', function() {
+            if (firestoreUnsubscribe) {
+                firestoreUnsubscribe();
+            }
+        });
     </script>
 </body>
 </html>
