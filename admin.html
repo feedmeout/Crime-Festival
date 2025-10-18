@@ -1047,7 +1047,7 @@ async function clearAllSolutions() {
         if (clearedCount === 0) {
             alert('ℹ️ ΔΕΝ ΥΠΑΡΧΟΥΝ ΛΥΣΕΙΣ ΓΙΑ ΚΑΘΑΡΙΣΜΟ');
         } else {
-            alert(`✅ ΛΥΣΕΙΣ ΚΑΘΑΡΙΣΤΗΚΑΝ ΓΙΑ ${clearedCount} ΟΜΑΔΕΣ!`);
+            alert(`✅ ΛΥΣΕΙΣ ΚΑΘΑΡΙΣΤΗΚΑΝ!`);
             console.log(`✅ Cleared solutions for ${clearedCount} teams`);
         }
         
@@ -1055,7 +1055,7 @@ async function clearAllSolutions() {
         
     } catch (error) {
         console.error('❌ Error clearing solutions:', error);
-        alert(`❌ ΣΦΑΛΜΑ: ${error.message}`);
+        alert(`❌ ΣΦΑΛΜΑ`);
     }
 }
 
@@ -1504,19 +1504,25 @@ window.timerInterval = setInterval(() => {
                     
                     ${timingHtml}
                 </div>
-                <div class="tek-grid">
-                    ${Array.from({length: TOTAL_TEKS}, (_, i) => {
-                        const tekNum = (i + 1).toString();
-                        const isUnlocked = team.unlocked.includes(tekNum);
-                        const isLocked = !!team.solution;
-                        
-                        console.log(`  TEK ${tekNum}: unlocked=${isUnlocked}, array contains:`, team.unlocked);
-                        
-                        return `<div class="tek-box ${isUnlocked ? 'unlocked' : ''} ${isLocked ? 'disabled' : 'clickable'}" 
-                                     onclick="${isLocked ? '' : `toggleTek('${team.name}', ${i + 1})`}" 
-                                     title="${isLocked ? 'Κλειδωμένο (λύση υποβλήθηκε)' : (isUnlocked ? 'Κλικ για κλείδωμα' : 'Κλικ για ξεκλείδωμα')}">${i + 1}</div>`;
-                    }).join('')}
-                </div>
+				<div class="tek-grid">
+					${Array.from({length: TOTAL_TEKS}, (_, i) => {
+						const tekNum = (i + 1).toString();
+						const isUnlocked = team.unlocked.includes(tekNum);
+						const isLocked = !!team.solution;
+						console.log(`  TEK ${tekNum}: unlocked=${isUnlocked}, array contains:`, team.unlocked);
+						const onclickAttr = isLocked 
+							? '' 
+							: `toggleTek('${team.name}', ${i + 1})`;
+						
+						const titleText = isLocked 
+							? 'Κλειδωμένο (λύση υποβλήθηκε)' 
+							: (isUnlocked ? 'Κλικ για κλείδωμα' : 'Κλικ για ξεκλείδωμα');
+						
+						return `<div class="tek-box ${isUnlocked ? 'unlocked' : ''} ${isLocked ? 'disabled' : 'clickable'}" 
+									 onclick="${onclickAttr}" 
+									 title="${titleText}">${i + 1}</div>`;
+					}).join('')}
+				</div>
                 <div class="team-actions">
                     <button class="btn btn-primary" onclick="viewTeam('${team.name}')">👀 ΠΡΟΒΟΛΗ</button>
                     <button class="btn" style="background: #17a2b8; color: white;" onclick="showTimestamps('${team.name}')">🕐 ΧΡΟΝΙΚΑ</button>
