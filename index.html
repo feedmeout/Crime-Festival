@@ -1775,6 +1775,8 @@ async function getTeamData() {
             if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
                 return {
                     password: parsed.password || null,
+                    teamSize: parsed.teamSize || null,
+                    testingMode: parsed.testingMode || false,
                     unlocked: parsed.unlocked || [],
                     timestamps: parsed.timestamps || {},
                     startTime: parsed.startTime || null,
@@ -1788,6 +1790,8 @@ async function getTeamData() {
             if (Array.isArray(parsed)) {
                 return {
                     password: null,
+                    teamSize: null,
+                    testingMode: false,
                     unlocked: parsed,
                     timestamps: {},
                     startTime: null,
@@ -1804,6 +1808,8 @@ async function getTeamData() {
 
     return {
         password: null,
+        teamSize: null,
+        testingMode: false,
         unlocked: [],
         timestamps: {},
         startTime: null,
@@ -2608,14 +2614,9 @@ async function checkSurveyCompletion() {
         
         const teamData = teamDoc.data();
         const teamSize = teamData.teamSize || 0;
-        
-        // ✅ FIX: More robust testing mode check
         const testingMode = teamData.testingMode;
-        
-        // Log the ACTUAL value we got
         console.log(`🔍 Testing mode value for team ${teamCode}:`, testingMode, `(type: ${typeof testingMode})`);
-        
-        // Check for ANY truthy value (true, 'true', 1, etc.)
+		
         if (testingMode && testingMode !== false && testingMode !== 'false' && testingMode !== 0) {
             console.log(`🧪 Team ${teamCode} is in testing mode - bypassing survey checks`);
             return {
@@ -2630,7 +2631,6 @@ async function checkSurveyCompletion() {
             };
         }
         
-        // Continue with normal survey checking logic...
         const surveysRef = window.firebaseCollection(window.firebaseDB, 'surveys');
         const querySnapshot = await window.firebaseGetDocs(surveysRef);
         
