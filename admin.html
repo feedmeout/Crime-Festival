@@ -1369,6 +1369,17 @@ async function addTeam() {
     refreshTeams();
 }
 
+let refreshTimeout = null;
+
+function debouncedRefreshTeams() {
+    if (refreshTimeout) clearTimeout(refreshTimeout);
+    
+    refreshTimeout = setTimeout(() => {
+        refreshTeams();
+        refreshTimeout = null;
+    }, 300);
+}
+
 async function refreshTeams() {
     console.log('🔄 === REFRESH TEAMS START ===');
     showSyncStatus('🔄 Syncing data...', 'syncing');
@@ -2122,6 +2133,34 @@ async function exportSurveyDataToExcel() {
     }
 }
 
+function setupLeaderboardButtonListener() {
+    if (!window.firebaseDB) {
+        setTimeout(setupLeaderboardButtonListener, 500);
+        return;
+    }
+    
+    const docRef = window.firebaseDoc(window.firebaseDB, 'config', 'leaderboard');
+    
+    const unsubscribe = window.firebaseOnSnapshot(docRef, 
+        async (doc) => {
+            const btn = document.getElementById('leaderboardToggleBtn');
+            const isUnlocked = doc.data()?.unlocked || false;
+            
+            if (btn) {
+                btn.innerHTML = isUnlocked 
+                    ? '🔓 LEADERBOARD (TEAMS)' 
+                    : '🔒 LEADERBOARD (TEAMS)';
+                btn.style.background = isUnlocked ? '#28a745' : '#dc3545';
+            }
+        },
+        (error) => {
+            console.error('Error listening to leaderboard config:', error);
+        }
+    );
+    
+    console.log('✅ Leaderboard button listener active');
+}
+
 async function openAlertModal() {
     const modal = document.getElementById('alertModal');
     const select = document.getElementById('alertTarget');
@@ -2184,71 +2223,69 @@ async function sendAlert() {
 let firestoreUnsubscribe = null;
 let lastKnownTeamsState = {};
 
+let pollingInterval = null;
+let isFirestoreActive = false;
+
+function startPolling() {
+    if (pollingInterval) return;
+    console.log('📡 Starting polling mode (every 3 seconds)');
+    pollingInterval = setInterval(refreshTeams, 3000);
+}
+
+function stopPolling() {
+    if (pollingInterval) {
+        clearInterval(pollingInterval);
+        pollingInterval = null;
+        console.log('🛑 Polling stopped');
+    }
+}
+
 function setupRealtimeListener() {
     if (!isFirebaseReady()) {
         console.warn('⚠️ Firebase not ready - using periodic refresh');
-        setInterval(refreshTeams, 2000);
+        startPolling();
         return;
     }
 
     try {
         const teamsCollection = window.firebaseCollection(window.firebaseDB, 'teams');
-        firestoreUnsubscribe = window.firebaseOnSnapshot(teamsCollection, 
-            (snapshot) => {
-                console.log('🔥 Firebase real-time update received');
-                let hasChanges = false;
-                
-                snapshot.docChanges().forEach((change) => {
-                    if (change.type === 'added' || change.type === 'modified') {
-                        console.log(`🔍 Team ${change.doc.id} was ${change.type}`);
-                        hasChanges = true;
-                    }
-                    if (change.type === 'removed') {
-                        console.log(`🗑️ Team ${change.doc.id} was removed`);
-                        hasChanges = true;
-                    }
-                });
-                
-                if (hasChanges) {
-                    refreshTeams();
-                }
-            },
-            (error) => {
-                console.error('❌ Firebase listener error:', error);
-                setInterval(refreshTeams, 2000);
-            }
-        );
+		firestoreUnsubscribe = window.firebaseOnSnapshot(teamsCollection, 
+			(snapshot) => {
+				console.log('🔥 Firebase real-time update received');
+				isFirestoreActive = true;
+				stopPolling(); // Stop polling when listener works
+				
+				let hasChanges = false;
+				
+				snapshot.docChanges().forEach((change) => {
+					if (change.type === 'added' || change.type === 'modified') {
+						console.log(`🔍 Team ${change.doc.id} was ${change.type}`);
+						hasChanges = true;
+					}
+					if (change.type === 'removed') {
+						console.log(`🗑️ Team ${change.doc.id} was removed`);
+						hasChanges = true;
+					}
+				});
+				
+				if (hasChanges) {
+					debouncedRefreshTeams(); // Use debounced version
+				}
+			},
+			(error) => {
+				console.error('❌ Firebase listener error:', error);
+				isFirestoreActive = false;
+				startPolling(); // Only poll on error
+			}
+		);
         
         console.log('✅ Real-time Firebase listener active');
-        
-        setInterval(async () => {
-            const teams = await getAllTeams();
-            const currentState = JSON.stringify(teams.map(t => ({
-                name: t.name,
-                unlocked: t.unlocked.length,
-                teamSize: t.teamSize,
-                completedAt: t.completedAt
-            })));
-            
-            if (currentState !== lastKnownTeamsState) {
-                console.log('🔄 State change detected via polling');
-                lastKnownTeamsState = currentState;
-                refreshTeams();
-            }
-        }, 2000);
-        
+		
     } catch (error) {
         console.error('❌ Failed to setup Firebase listener:', error);
         setInterval(refreshTeams, 2000);
     }
 }
-
-window.addEventListener('storage', (e) => {
-    if (e.key && e.key.startsWith('unlocked_teks_')) {
-        console.log('💾 localStorage change detected from another tab');
-        refreshTeams();
-    }
-});
 
 function showSyncStatus(message, type = 'success') {
     const status = document.getElementById('firebaseStatus');
@@ -2335,8 +2372,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         
         await refreshTeams();
         setupRealtimeListener();
-        await updateLeaderboardButton();
-        setInterval(updateLeaderboardButton, 5000);
+		setupLeaderboardButtonListener();
         
         setTimeout(() => {
             const status = document.getElementById('firebaseStatus');
@@ -2345,6 +2381,21 @@ window.addEventListener('DOMContentLoaded', async () => {
             }
         }, 5000);
     }, 300);
+});
+
+// Offline/Online Detection
+window.addEventListener('online', () => {
+    console.log('🟢 Back online');
+    showSyncStatus('🟢 Reconnecting...', 'syncing');
+    if (!isFirestoreActive) {
+        stopPolling();
+        setupRealtimeListener();
+    }
+});
+
+window.addEventListener('offline', () => {
+    console.log('🔴 Offline');
+    showSyncStatus('🔴 Offline - Changes may not save', 'error');
 });
 
 </script>
