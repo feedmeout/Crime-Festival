@@ -1198,6 +1198,7 @@ async function getSurveyCompletionStatus(teamName) {
 }
 
 async function saveTeam(teamName, data) {
+	console.log('🔧 NEW CODE VERSION - saveTeam called');
     const existingTeam = teamsData[teamName];
     
     if (existingTeam && existingTeam.teamSize && !data.teamSize) {
