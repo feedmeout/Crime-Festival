@@ -1016,7 +1016,7 @@ async function resetAllProgress() {
 }
 
 async function clearAllSolutions() {
-    const confirm1 = confirm('📝 ΚΑΘΑΡΙΣΜΟΣ ΛΥΣΕΩΝ ΓΙΑ ΟΛΕΣ ΤΙΣ ΟΜΑΔΕΣ;\n\nΘα διαγραφούν: υποβληθείσες λύσεις, χρόνοι ολοκλήρωσης\nΘα διατηρηθούν: ξεκλειδωμένα τεκμήρια, timestamps');
+    const confirm1 = confirm('📝 ΚΑΘΑΡΙΣΜΟΣ ΛΥΣΕΩΝ ΓΙΑ ΟΛΕΣ ΤΙΣ ΟΜΑΔΕΣ?\n\nΘα διαγραφούν: υποβληθείσες λύσεις, χρόνοι ολοκλήρωσης\nΘα διατηρηθούν: ξεκλειδωμένα τεκμήρια, timestamps');
     if (!confirm1) return;
     
     if (!window.firebaseDB) {
@@ -1030,14 +1030,14 @@ async function clearAllSolutions() {
         
         for (const team of teams) {
             if (team.solution) {
-				const updatedData = {
-					...teamData,
-					testingMode: teamData.testingMode || false, 
-					solution: solution,
-					completedAt: solution.submittedAt,
-					totalTimeMs: totalTimeMs,
-					lastUpdate: new Date().toISOString()
-				};
+                const updatedData = {
+                    ...team,
+                    testingMode: team.testingMode || false, 
+                    solution: null,
+                    completedAt: null,
+                    totalTimeMs: null,
+                    lastUpdate: new Date().toISOString()
+                };
                 
                 await saveTeam(team.name, updatedData);
                 clearedCount++;
@@ -1058,7 +1058,6 @@ async function clearAllSolutions() {
         alert(`❌ ΣΦΑΛΜΑ: ${error.message}`);
     }
 }
-
 
 async function getAllTeams() {
         const allTeams = new Map();
