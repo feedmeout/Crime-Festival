@@ -1761,7 +1761,11 @@ async function getTeamData() {
             const docSnap = await window.firebaseGetDoc(docRef);
             
             if (docSnap.exists()) {
-                return docSnap.data();
+                const data = docSnap.data();
+                return {
+                    ...data,
+                    testingMode: data.testingMode !== undefined ? data.testingMode : false
+                };
             }
         } catch (error) {
             console.error('Firebase load error:', error);
@@ -1776,7 +1780,7 @@ async function getTeamData() {
                 return {
                     password: parsed.password || null,
                     teamSize: parsed.teamSize || null,
-                    testingMode: parsed.testingMode || false,  // ✅ ADD THIS
+                    testingMode: parsed.testingMode !== undefined ? parsed.testingMode : false,
                     unlocked: parsed.unlocked || [],
                     timestamps: parsed.timestamps || {},
                     startTime: parsed.startTime || null,
@@ -1791,7 +1795,7 @@ async function getTeamData() {
                 return {
                     password: null,
                     teamSize: null,
-                    testingMode: false,  // ✅ ADD THIS
+                    testingMode: false,
                     unlocked: parsed,
                     timestamps: {},
                     startTime: null,
@@ -1809,7 +1813,25 @@ async function getTeamData() {
     return {
         password: null,
         teamSize: null,
-        testingMode: false,  // ✅ ADD THIS
+        testingMode: false,
+        unlocked: [],
+        timestamps: {},
+        startTime: null,
+        completedAt: null,
+        totalTimeMs: null,
+        solution: null,
+        evidenceTimestamps: {}
+    };
+}
+        } catch (e) {
+            console.error('Error parsing localStorage data:', e);
+        }
+    }
+
+    return {
+        password: null,
+        teamSize: null,
+        testingMode: false,
         unlocked: [],
         timestamps: {},
         startTime: null,
@@ -3330,55 +3352,61 @@ function stopPolling() {
         console.log('🛑 Polling stopped');
     }
 }
-
+################################################################################
 function setupRealtimeListener() {
-        if (!window.firebaseDB || !window.firebaseOnSnapshot) {
-            console.warn('Firebase not ready, falling back to polling');
-            startPolling();
-            return;
-        }
-        
-        if (firestoreUnsubscribe) {
-            console.log('🧹 Cleaning up old Firestore listener');
-            firestoreUnsubscribe();
-            firestoreUnsubscribe = null;
-        }
-        
-        try {
-            const docRef = window.firebaseDoc(window.firebaseDB, 'teams', teamCode);
-            
-			firestoreUnsubscribe = window.firebaseOnSnapshot(docRef, 
-				async (doc) => {
-					if (doc.exists()) {
-						const firebaseData = doc.data();
-						console.log('⚡ Real-time update received for team:', teamCode);
-						isFirestoreActive = true;
-						stopPolling();
-						
-						localStorage.setItem(getStorageKey(), JSON.stringify(firebaseData));
-						renderEvidence();
-						await updateProgress(firebaseData);
-						
-						const solutionTab = document.getElementById('tab-solution');
-						if (solutionTab && solutionTab.classList.contains('active')) {
-							await initSolutionTab(firebaseData);
-						}
-					}
-				}, 
-				(error) => {
-					console.error('❌ Real-time listener error:', error);
-					isFirestoreActive = false;
-					console.log('📡 Falling back to polling mode');
-					startPolling();
-				}
-			);
-            
-            console.log('✅ Real-time listener active for team:', teamCode);
-        } catch (error) {
-            console.error('❌ Error setting up real-time listener:', error);
-            startPolling();
-        }
+    if (!window.firebaseDB || !window.firebaseOnSnapshot) {
+        console.warn('Firebase not ready, falling back to polling');
+        startPolling();
+        return;
     }
+    
+    if (firestoreUnsubscribe) {
+        console.log('🧹 Cleaning up old Firestore listener');
+        firestoreUnsubscribe();
+        firestoreUnsubscribe = null;
+    }
+    
+    try {
+        const docRef = window.firebaseDoc(window.firebaseDB, 'teams', teamCode);
+        
+        firestoreUnsubscribe = window.firebaseOnSnapshot(docRef, 
+            async (doc) => {
+                if (doc.exists()) {
+                    const firebaseData = doc.data();
+                    console.log('⚡ Real-time update received for team:', teamCode);
+                    console.log('📦 Firebase data testingMode:', firebaseData.testingMode, '(type:', typeof firebaseData.testingMode, ')');
+                    
+                    isFirestoreActive = true;
+                    stopPolling();
+                    const dataToSave = {
+                        ...firebaseData,
+                        testingMode: firebaseData.testingMode !== undefined ? firebaseData.testingMode : false
+                    };
+                    
+                    localStorage.setItem(getStorageKey(), JSON.stringify(dataToSave));
+                    renderEvidence();
+                    await updateProgress(dataToSave);
+                    
+                    const solutionTab = document.getElementById('tab-solution');
+                    if (solutionTab && solutionTab.classList.contains('active')) {
+                        await initSolutionTab(dataToSave);
+                    }
+                }
+            }, 
+            (error) => {
+                console.error('❌ Real-time listener error:', error);
+                isFirestoreActive = false;
+                console.log('📡 Falling back to polling mode');
+                startPolling();
+            }
+        );
+        
+        console.log('✅ Real-time listener active for team:', teamCode);
+    } catch (error) {
+        console.error('❌ Error setting up real-time listener:', error);
+        startPolling();
+    }
+}
 
     function startPolling() {
         if (pollingInterval) {

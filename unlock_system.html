@@ -369,7 +369,6 @@
 					console.log('✅ Using localStorage data');
 
 					if (Array.isArray(parsed)) {
-						// Old format - just the unlocked array
 						return {
 							unlocked: parsed,
 							timestamps: {},
@@ -377,10 +376,10 @@
 							startTime: null,
 							completedAt: null,
 							totalTimeMs: null,
-							testingMode: false  // ✅ OK for old format (no testingMode existed)
+							testingMode: false
 						};
 					} else {
-						// ✅ NEW FORMAT - preserve testingMode!
+					
 						return {
 							password: parsed.password || null,
 							teamSize: parsed.teamSize || null,
@@ -415,8 +414,7 @@
 			if (simulationMode) {
 				return true;
 			}
-			
-			// ✅ Construct the complete data object ONCE
+
 			const dataToSave = {
 				password: data.password || null,
 				teamSize: data.teamSize || null,
@@ -428,19 +426,14 @@
 				completedAt: data.completedAt || null,
 				totalTimeMs: data.totalTimeMs || null,
 				solution: data.solution || null,
-				lastUpdate: new Date().toISOString()  // ✅ ADDED HERE
+				lastUpdate: new Date().toISOString()
 			};
 			
-			// ✅ Debug log
 			console.log('💾 Saving team data with testingMode:', dataToSave.testingMode);
-			
-			// ✅ Save to localStorage
 			localStorage.setItem(getStorageKey(teamCode), JSON.stringify(dataToSave));
 			console.log('✅ Saved to localStorage');
 			
-			// ✅ Save to Firebase with the SAME structured data
-			const saved = await saveToFirebase(teamCode, dataToSave);  // ✅ FIXED: Use dataToSave instead of spreading data
-			
+			const saved = await saveToFirebase(teamCode, dataToSave);
 			return saved;
 		}
 		
