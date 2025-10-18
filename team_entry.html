@@ -545,62 +545,97 @@ async function enterGame(event) {
             return;
         }
 
-		const teamData = docSnap.data();
-				if (!teamData.password || teamData.password !== password) {
-					setLoading(false);
-					showAlert('Λάθος κωδικός! Προσπαθήστε ξανά.');
-					document.getElementById('teamPassword').value = '';
-					document.getElementById('teamPassword').focus();
-					return;
-				}
+        const teamData = docSnap.data();
+        
+        // 🔍 DEBUG: Log what we got from Firebase
+        console.log('=== TEAM LOGIN DEBUG ===');
+        console.log('Team name:', teamName);
+        console.log('Full team data:', teamData);
+        console.log('testingMode value:', teamData.testingMode);
+        console.log('testingMode type:', typeof teamData.testingMode);
+        console.log('All team keys:', Object.keys(teamData));
+        console.log('========================');
 
-				StorageManager.saveAuth(teamName, memberName);
+        if (!teamData.password || teamData.password !== password) {
+            setLoading(false);
+            showAlert('Λάθος κωδικός! Προσπαθήστε ξανά.');
+            document.getElementById('teamPassword').value = '';
+            document.getElementById('teamPassword').focus();
+            return;
+        }
 
-				const urlParams = new URLSearchParams(window.location.search);
-				const redirectUrl = urlParams.get('redirect');
+        StorageManager.saveAuth(teamName, memberName);
 
-				if (teamData.testingMode === true) {
-					console.log(`🧪 Testing mode enabled for team ${teamName} - bypassing all surveys`);
-					
-					if (redirectUrl) {
-						console.log(`🔄 Redirecting to: ${redirectUrl}`);
-						window.location.href = redirectUrl;
-					} else {
-						window.location.href = `index.html?team=${teamName}`;
-					}
-					return;
-				}
+        const urlParams = new URLSearchParams(window.location.search);
+        const redirectUrl = urlParams.get('redirect');
 
-				const preSurveyDoc = `${teamName}_pre_${memberName}`;
-				const preSurveyRef = window.firebaseDoc(window.firebaseDB, 'surveys', preSurveyDoc);
-				const preSurveySnap = await window.firebaseGetDoc(preSurveyRef);
+        // ✅ ROBUST TESTING MODE CHECK
+        // Check for multiple possible truthy values
+        const isTestingMode = teamData.testingMode === true || 
+                             teamData.testingMode === 'true' || 
+                             teamData.testingMode === 1 ||
+                             teamData.testingMode === '1';
+        
+        console.log('🧪 Testing mode check:', isTestingMode);
 
-				if (!preSurveySnap.exists()) {
-					alert('Πρώτα πρέπει να ολοκληρώσετε την προκαταρκτική έρευνα!');
-					const surveyUrl = `survey.html?team=${teamName}&member=${encodeURIComponent(memberName)}&type=pre`;
-					
-					if (redirectUrl) {
-						window.location.href = `${surveyUrl}&redirect=${encodeURIComponent(redirectUrl)}`;
-					} else {
-						window.location.href = surveyUrl;
-					}
-				} else {
-					console.log(`✅ Member authenticated: ${teamName}/${memberName}`);
-					
-					if (redirectUrl) {
-						console.log(`🔄 Redirecting to: ${redirectUrl}`);
-						window.location.href = redirectUrl;
-					} else {
-						window.location.href = `index.html?team=${teamName}`;
-					}
-				}
+        if (isTestingMode) {
+            console.log(`✅ Testing mode ACTIVE for team ${teamName}`);
+            console.log('🚀 Bypassing all survey requirements');
+            
+            // Show confirmation alert so user knows testing mode is working
+            setLoading(false);
+            alert('🧪 ΛΕΙΤΟΥΡΓΙΑ ΔΟΚΙΜΩΝ ΕΝΕΡΓΗ\n\nΠαράκαμψη ερωτηματολογίων...');
+            setLoading(true);
+            
+            // Wait a moment then redirect
+            setTimeout(() => {
+                if (redirectUrl) {
+                    console.log(`🔄 Redirecting to: ${redirectUrl}`);
+                    window.location.href = redirectUrl;
+                } else {
+                    console.log('🔄 Redirecting to index.html');
+                    window.location.href = `index.html?team=${teamName}`;
+                }
+            }, 500);
+            return;
+        }
 
-			} catch (error) {
-				setLoading(false);
-				console.error('Login error:', error);
-				showAlert('Σφάλμα σύνδεσης. Παρακαλώ δοκιμάστε ξανά.');
-			}
-		}
+        // ❌ NORMAL MODE: Survey requirement enforced
+        console.log('📋 Normal mode - checking survey requirements');
+        
+        const preSurveyDoc = `${teamName}_pre_${memberName}`;
+        const preSurveyRef = window.firebaseDoc(window.firebaseDB, 'surveys', preSurveyDoc);
+        const preSurveySnap = await window.firebaseGetDoc(preSurveyRef);
+
+        if (!preSurveySnap.exists()) {
+            console.log('❌ Pre-survey not found - redirecting to survey');
+            setLoading(false);
+            alert('Πρώτα πρέπει να ολοκληρώσετε την προκαταρκτική έρευνα!');
+            
+            const surveyUrl = `survey.html?team=${teamName}&member=${encodeURIComponent(memberName)}&type=pre`;
+            
+            if (redirectUrl) {
+                window.location.href = `${surveyUrl}&redirect=${encodeURIComponent(redirectUrl)}`;
+            } else {
+                window.location.href = surveyUrl;
+            }
+        } else {
+            console.log(`✅ Member authenticated: ${teamName}/${memberName}`);
+            
+            if (redirectUrl) {
+                console.log(`🔄 Redirecting to: ${redirectUrl}`);
+                window.location.href = redirectUrl;
+            } else {
+                window.location.href = `index.html?team=${teamName}`;
+            }
+        }
+
+    } catch (error) {
+        setLoading(false);
+        console.error('❌ Login error:', error);
+        showAlert('Σφάλμα σύνδεσης. Παρακαλώ δοκιμάστε ξανά.');
+    }
+}
 
 window.addEventListener('DOMContentLoaded', () => {
     if (StorageManager.isAuthenticated()) {
