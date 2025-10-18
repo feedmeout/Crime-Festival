@@ -1294,8 +1294,9 @@ async function addTeam() {
     const password = document.getElementById('newTeamPassword').value.trim();
     const teamSize = parseInt(document.getElementById('newTeamSize').value);
     const testingMode = document.getElementById('testingModeCheckbox').checked;
-    
+	
     console.log('🧪 Testing Mode Checkbox Value:', testingMode);
+	
     
     if (!teamName) {
         alertDiv.innerHTML = '<div class="alert alert-danger">⚠️ Παρακαλώ εισάγετε όνομα ομάδας</div>';

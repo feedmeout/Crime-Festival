@@ -377,9 +377,10 @@
 							startTime: null,
 							completedAt: null,
 							totalTimeMs: null,
-							testingMode: false
+							testingMode: false  // ✅ OK for old format (no testingMode existed)
 						};
 					} else {
+						// ✅ NEW FORMAT - preserve testingMode!
 						return {
 							password: parsed.password || null,
 							teamSize: parsed.teamSize || null,
