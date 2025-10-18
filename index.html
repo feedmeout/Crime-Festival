@@ -1823,6 +1823,39 @@ async function getTeamData() {
         evidenceTimestamps: {}
     };
 }
+            
+            if (Array.isArray(parsed)) {
+                return {
+                    password: null,
+                    teamSize: null,
+                    testingMode: false,
+                    unlocked: parsed,
+                    timestamps: {},
+                    startTime: null,
+                    completedAt: null,
+                    totalTimeMs: null,
+                    solution: null,
+                    evidenceTimestamps: {}
+                };
+            }
+        } catch (e) {
+            console.error('Error parsing localStorage data:', e);
+        }
+    }
+
+    return {
+        password: null,
+        teamSize: null,
+        testingMode: false,
+        unlocked: [],
+        timestamps: {},
+        startTime: null,
+        completedAt: null,
+        totalTimeMs: null,
+        solution: null,
+        evidenceTimestamps: {}
+    };
+}
         } catch (e) {
             console.error('Error parsing localStorage data:', e);
         }
