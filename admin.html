@@ -1738,19 +1738,19 @@ async function resetTeam(teamName) {
         const teams = await getAllTeams();
         const team = teams.find(t => t.name === teamName);
         
-await saveTeam(teamName, {
-    password: team?.password || null,
-    teamSize: team?.teamSize !== undefined ? team.teamSize : null,
-    testingMode: team?.testingMode !== undefined ? team.testingMode : false,
-    unlocked: [],
-    timestamps: {},
-    startTime: null,
-    completedAt: null,
-    totalTimeMs: null
-});
-            refreshTeams();
-        }
+        await saveTeam(teamName, {
+            password: team?.password || null,
+            teamSize: team?.teamSize !== undefined ? team.teamSize : null,
+            testingMode: team?.testingMode !== undefined ? team.testingMode : false,
+            unlocked: [],
+            timestamps: {},
+            startTime: null,
+            completedAt: null,
+            totalTimeMs: null
+        });
+        refreshTeams();
     }
+}
 
 async function deleteTeam(teamName) {
     if (confirm(`ΔΙΑΓΡΑΦΗ ΟΜΑΔΑΣ "${teamName}" ΚΑΙ ΟΛΩΝ ΤΩΝ ΣΥΝΔΕΔΕΜΕΝΩΝ ΕΡΕΥΝΩΝ;`)) {
