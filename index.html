@@ -2608,9 +2608,15 @@ async function checkSurveyCompletion() {
         
         const teamData = teamDoc.data();
         const teamSize = teamData.teamSize || 0;
-        const testingMode = teamData.testingMode || false;
         
-        if (testingMode === true || testingMode === 'true' || testingMode === 1) {
+        // ✅ FIX: More robust testing mode check
+        const testingMode = teamData.testingMode;
+        
+        // Log the ACTUAL value we got
+        console.log(`🔍 Testing mode value for team ${teamCode}:`, testingMode, `(type: ${typeof testingMode})`);
+        
+        // Check for ANY truthy value (true, 'true', 1, etc.)
+        if (testingMode && testingMode !== false && testingMode !== 'false' && testingMode !== 0) {
             console.log(`🧪 Team ${teamCode} is in testing mode - bypassing survey checks`);
             return {
                 pre: true,
@@ -2624,6 +2630,7 @@ async function checkSurveyCompletion() {
             };
         }
         
+        // Continue with normal survey checking logic...
         const surveysRef = window.firebaseCollection(window.firebaseDB, 'surveys');
         const querySnapshot = await window.firebaseGetDocs(surveysRef);
         
