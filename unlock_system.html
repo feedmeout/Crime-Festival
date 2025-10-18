@@ -416,6 +416,7 @@
 				return true;
 			}
 			
+			// ✅ Construct the complete data object ONCE
 			const dataToSave = {
 				password: data.password || null,
 				teamSize: data.teamSize || null,
@@ -426,20 +427,23 @@
 				startTime: data.startTime || null,
 				completedAt: data.completedAt || null,
 				totalTimeMs: data.totalTimeMs || null,
-				solution: data.solution || null
+				solution: data.solution || null,
+				lastUpdate: new Date().toISOString()  // ✅ ADDED HERE
 			};
 			
+			// ✅ Debug log
+			console.log('💾 Saving team data with testingMode:', dataToSave.testingMode);
+			
+			// ✅ Save to localStorage
 			localStorage.setItem(getStorageKey(teamCode), JSON.stringify(dataToSave));
 			console.log('✅ Saved to localStorage');
 			
-			const saved = await saveToFirebase(teamCode, {
-				...data,
-				lastUpdate: new Date().toISOString()
-			});
+			// ✅ Save to Firebase with the SAME structured data
+			const saved = await saveToFirebase(teamCode, dataToSave);  // ✅ FIXED: Use dataToSave instead of spreading data
 			
 			return saved;
 		}
-
+		
         function formatTime(ms) {
             const seconds = Math.floor(ms / 1000);
             const minutes = Math.floor(seconds / 60);
