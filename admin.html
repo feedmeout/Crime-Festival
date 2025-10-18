@@ -900,7 +900,7 @@ async function deleteAllAlerts() {
         console.log(`🗑️ Found ${querySnapshot.size} alerts to delete`);
         
         if (querySnapshot.size === 0) {
-            alert('✅ Δεν υπάρχουν ειδοποιήσεις προς διαγραφή!');
+            alert('✅ ΔΕΝ ΥΠΑΡΧΟΥΝ ΕΙΔΟΠΟΙΗΣΕΙΣ ΠΡΟΣ ΔΙΑΓΡΑΦΗ!');
             return;
         }
         
@@ -1031,7 +1031,7 @@ async function deleteFakeSurveys() {
         });
         
         if (fakeCount === 0) {
-            alert('✅ Δεν βρέθηκαν fake ερωτηματολόγια για διαγραφή!');
+            alert('✅ ΔΕΝ ΒΡΕΘΗΚΑΝ FAKE ΕΡΩΤΗΜΑΤΟΛΟΓΙΑ ΓΙΑ ΔΙΑΓΡΑΦΗ!');
             return;
         }
         
@@ -1274,7 +1274,7 @@ async function saveTeam(teamName, data) {
         a.click();
         URL.revokeObjectURL(url);
         
-        alert(`✅ Exported ${teams.length} teams to JSON file!`);
+        alert(`✅ ΕΞΗΧΘΗΣΑΝ ${teams.length} ΟΜΑΔΕΣ!`);
     }
 
     function importData() {
