@@ -379,11 +379,10 @@
 							testingMode: false
 						};
 					} else {
-					
 						return {
 							password: parsed.password || null,
 							teamSize: parsed.teamSize || null,
-							testingMode: parsed.testingMode || false,
+							testingMode: parsed.testingMode !== undefined ? parsed.testingMode : false,
 							unlocked: parsed.unlocked || [],
 							timestamps: parsed.timestamps || {},
 							evidenceTimestamps: parsed.evidenceTimestamps || {},
@@ -418,7 +417,7 @@
 			const dataToSave = {
 				password: data.password || null,
 				teamSize: data.teamSize || null,
-				testingMode: data.testingMode || false,
+				testingMode: data.testingMode !== undefined ? data.testingMode : false,
 				unlocked: data.unlocked || [],
 				timestamps: data.timestamps || {},
 				evidenceTimestamps: data.evidenceTimestamps || {},
