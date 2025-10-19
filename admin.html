@@ -721,7 +721,7 @@ body {
         </select>
     </div>
 
-    <h3 style="color: #0f3460; margin-top: 0;">🎮 LIVE EVENT</h3>
+    <h3 style="color: #0f3460; margin-top: 0;">🎪 EVENT OPERATIONS</h3>
     <div class="quick-actions">
         <button class="btn" style="background: #ffc107; color: #000;" onclick="window.location.href='leaderboard.html'">🏆 LEADERBOARD (ADMIN)</button>
         <button class="btn" id="leaderboardToggleBtn" style="background: #dc3545; color: white;" onclick="toggleLeaderboard()">🔒 LOADING...</button>
@@ -737,9 +737,9 @@ body {
 
 	<h3 style="color: #0f3460;">🧪 TESTING TOOLS</h3>
 	<div class="quick-actions">
-		<button class="btn btn-secondary" onclick="unlockAllForAll()">🔓 ΞΕΚΛΕΙΔΩΜΑ ΤΕΚΜΗΡΙΩΝ (ΟΛΑ)</button>
+		<button class="btn btn-secondary" onclick="unlockAllForAll()">🔓 ΞΕΚΛΕΙΔΩΜΑ ΤΕΚΜΗΡΙΩΝ (ΟΛΩΝ)</button>
 		<button class="btn" style="background: #17a2b8; color: white;" onclick="resetAllProgress()">🔄 RESET PROGRESS (ΟΛΕΣ)</button>
-		<button class="btn" style="background: #9c27b0; color: white;" onclick="setupTestEnvironment()">🧪 ΔΟΚΙΜΑΣΤΙΚΟ ΠΕΡΙΒΑΛΛΟΝ (ΟΛΕΣ)</button>
+		<button class="btn" style="background: #9c27b0; color: white;" onclick="setupTestEnvironment()">🧪 ΔΟΚΙΜΑΣΤΙΚΟ ΠΕΡΙΒΑΛΛΟΝ</button>
 	</div>
 
     <h3 style="color: #dc3545;">⚠️ DANGER ZONE</h3>
@@ -1016,16 +1016,82 @@ async function resetAllProgress() {
 }
 
 async function setupTestEnvironment() {
-    const confirm1 = confirm('🧪 ΔΗΜΙΟΥΡΓΙΑ ΔΟΚΙΜΑΣΤΙΚΟΥ ΠΕΡΙΒΑΛΛΟΝΤΟΣ?');
-    if (!confirm1) return;
-    
     if (!window.firebaseDB) {
         alert('❌ Firebase δεν είναι διαθέσιμο!');
         return;
     }
     
+    const mode = confirm('🧪 ΔΗΜΙΟΥΡΓΙΑ ΔΟΚΙΜΑΣΤΙΚΟΥ ΠΕΡΙΒΑΛΛΟΝΤΟΣ?\n\nOK = ΔΗΜΙΟΥΡΓΙΑ ΝΕΩΝ ΟΜΑΔΩΝ\nCANCEL = ΧΡΗΣΗ ΥΠΑΡΧΟΥΣΩΝ ΟΜΑΔΩΝ');
+    
+    let teams;
+    
     try {
-        const teams = await getAllTeams();
+        if (mode) {
+            const numTeams = parseInt(prompt('ΠΟΣΕΣ ΟΜΑΔΕΣ ΝΑ ΔΗΜΙΟΥΡΓΗΘΟΥΝ; (1-20)', '5'));
+            if (!numTeams || numTeams < 1 || numTeams > 20) {
+                alert('❌ ΜΗ ΕΓΚΥΡΟΣ ΑΡΙΘΜΟΣ ΟΜΑΔΩΝ!');
+                return;
+            }
+            
+            const clearFirst = confirm('ΔΙΑΓΡΑΦΗ ΥΠΑΡΧΟΥΣΩΝ ΟΜΑΔΩΝ ΠΡΩΤΑ;');
+            if (clearFirst) {
+                const existingTeams = await getAllTeams();
+                for (const team of existingTeams) {
+                    localStorage.removeItem(`unlocked_teks_${team.name}`);
+                    await window.firebaseDeleteDoc(
+                        window.firebaseDoc(window.firebaseDB, 'teams', team.name)
+                    );
+                }
+                
+                const surveysRef = window.firebaseCollection(window.firebaseDB, 'surveys');
+                const querySnapshot = await window.firebaseGetDocs(surveysRef);
+                const deletePromises = [];
+                querySnapshot.forEach((doc) => {
+                    deletePromises.push(
+                        window.firebaseDeleteDoc(
+                            window.firebaseDoc(window.firebaseDB, 'surveys', doc.id)
+                        )
+                    );
+                });
+                await Promise.all(deletePromises);
+                console.log('✅ Cleared all existing teams and surveys');
+            }
+            
+            teams = [];
+            for (let i = 0; i < numTeams; i++) {
+                const teamName = `ομαδα${i + 1}`;
+                const teamSize = Math.floor(Math.random() * 10) + 1;
+                const password = `pass${i + 1}`;
+                
+                const teamData = {
+                    password: password,
+                    teamSize: teamSize,
+                    testingMode: true,
+                    unlocked: [],
+                    timestamps: {},
+                    evidenceTimestamps: {},
+                    startTime: null,
+                    completedAt: null,
+                    totalTimeMs: null,
+                    solution: null,
+                    createdAt: new Date().toISOString()
+                };
+                
+                await saveTeam(teamName, teamData);
+                teams.push({ name: teamName, ...teamData });
+                console.log(`✅ Created test team: ${teamName} (${teamSize} members, password: ${password})`);
+            }
+            
+            alert(`✅ ΝΕΕΣ ΟΜΑΔΕΣ ΔΗΜΙΟΥΡΓΗΘΗΚΑΝ!`);
+            
+        } else {
+            teams = await getAllTeams();
+            if (teams.length === 0) {
+                alert('❌ ΔΕΝ ΥΠΑΡΧΟΥΝ ΟΜΑΔΕΣ! ΠΑΤΗΣΤΕ «OK» ΓΙΑ ΔΗΜΙΟΥΡΓΙΑ ΝΕΩΝ ΟΜΑΔΩΝ.');
+                return;
+            }
+        }
+        
         let setupCount = 0;
         
         const allSuspects = ['maria', 'konstantinos', 'eleni', 'georgios', 'alexandra', 'suicide'];
@@ -1033,16 +1099,13 @@ async function setupTestEnvironment() {
         
         for (const team of teams) {
             const teamSize = team.teamSize || 1;
-            
-            // 50% chance to have submitted solution
             const hasSubmitted = Math.random() > 0.5;
             
-            // If submitted, must have 6-11 evidence. If not submitted, can have 0-11
             let randomCount;
             if (hasSubmitted) {
-                randomCount = Math.floor(Math.random() * 6) + 6; // 6-11 evidence (REQUIRED for submission)
+                randomCount = Math.floor(Math.random() * 6) + 6;
             } else {
-                randomCount = Math.floor(Math.random() * (TOTAL_TEKS + 1)); // 0-11 evidence (in progress)
+                randomCount = Math.floor(Math.random() * (TOTAL_TEKS + 1));
             }
             
             const randomTeks = Array.from({length: randomCount}, (_, i) => (i + 1).toString());
@@ -1063,14 +1126,12 @@ async function setupTestEnvironment() {
                 const quality = Math.random();
                 
                 if (quality > 0.7) {
-                    // 30% chance: Perfect or near-perfect solution
                     selectedSuspects.push(...correctSuspects);
                     if (Math.random() > 0.8) {
                         const wrong = allSuspects.filter(s => !correctSuspects.includes(s));
                         selectedSuspects.push(wrong[Math.floor(Math.random() * wrong.length)]);
                     }
                 } else if (quality > 0.4) {
-                    // 30% chance: Partial solution (1-2 correct)
                     const numCorrect = Math.floor(Math.random() * 2) + 1;
                     for (let i = 0; i < numCorrect; i++) {
                         selectedSuspects.push(correctSuspects[i]);
@@ -1084,7 +1145,6 @@ async function setupTestEnvironment() {
                         }
                     }
                 } else {
-                    // 40% chance: Wrong solution
                     const wrong = allSuspects.filter(s => !correctSuspects.includes(s));
                     const numWrong = Math.floor(Math.random() * 3) + 1;
                     for (let i = 0; i < numWrong; i++) {
@@ -1099,7 +1159,7 @@ async function setupTestEnvironment() {
                 
                 solutionObject = {
                     suspects: selectedSuspects,
-                    justification: `Αυτή είναι μια δοκιμαστική αιτιολόγηση που δημιουργήθηκε αυτόματα για testing. Η ομάδα ${team.name} επέλεξε ${selectedSuspects.length} ύποπτο(ους) βάσει της ανάλυσης των στοιχείων.`,
+                    justification: `Δοκιμαστική αιτιολόγηση για testing`,
                     completionTimeMs: completionTime - baseTime,
                     promptCount: randomPrompts,
                     score: 0,
@@ -1133,7 +1193,6 @@ async function setupTestEnvironment() {
             setupCount++;
         }
         
-        // Now create fake survey data for all teams
         console.log('📋 Creating surveys...');
         let preSurveyCount = 0;
         let postSurveyCount = 0;
@@ -1142,7 +1201,6 @@ async function setupTestEnvironment() {
             const teamSize = team.teamSize || 1;
             const hasSubmitted = team.solution !== null;
             
-            // Create pre-survey for ALL team members (100% completion - required to start)
             for (let i = 1; i <= teamSize; i++) {
                 const memberName = `Μέλος ${i}`;
                 const surveyId = `${team.name}_pre_${memberName.toLowerCase().replace(/\s+/g, '_')}`;
@@ -1178,13 +1236,9 @@ async function setupTestEnvironment() {
                 preSurveyCount++;
             }
             
-            // Create post-survey only for teams that submitted solutions
-            // Random percentage of members complete it (40% - 100%)
             if (hasSubmitted) {
-                const completionRate = Math.random() * 0.6 + 0.4; // 0.4 to 1.0
+                const completionRate = Math.random() * 0.6 + 0.4;
                 const numCompleted = Math.max(1, Math.floor(teamSize * completionRate));
-                
-                // Randomly select which members completed it
                 const memberIndices = Array.from({length: teamSize}, (_, i) => i + 1);
                 const completedMembers = [];
                 for (let i = 0; i < numCompleted; i++) {
@@ -1193,7 +1247,6 @@ async function setupTestEnvironment() {
                     memberIndices.splice(randomIndex, 1);
                 }
                 
-                // Create post-surveys for selected members
                 for (const memberIndex of completedMembers) {
                     const memberName = `Μέλος ${memberIndex}`;
                     const surveyId = `${team.name}_post_${memberName.toLowerCase().replace(/\s+/g, '_')}`;
@@ -2637,7 +2690,7 @@ function toggleAdminMode() {
 }
 
 window.addEventListener('DOMContentLoaded', async () => {
-    const savedMode = localStorage.getItem('adminMode') || 'live';
+    const savedMode = localStorage.getItem('adminMode') || 'testing';
     const modeSelect = document.getElementById('adminMode');
     if (modeSelect) {
         modeSelect.value = savedMode;
