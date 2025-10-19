@@ -1993,7 +1993,7 @@ function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
                 }
             });
         } else {
-            breakdown.push(`ERROR:Δεν εντοπίσατε κανέναν από τους πραγματικούς δράστες (+0 πόντοι)`);
+            breakdown.push(`ERROR:Δεν εντοπίσατε κανέναν από τους πραγματικούς δράστες (0 πόντοι)`);
         }
         
         if (correctCount >= 2 && correctCount < 3) {
@@ -2007,7 +2007,7 @@ function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
         const precisionBonus = correctCount * 15;
         score += precisionBonus;
         breakdown.push('');
-        breakdown.push(`SUCCESS:Bonus Ακρίβειας (+${precisionBonus} πόντοι)`);
+        breakdown.push(`SUCCESS:Bonus Ακρίβειας (+ ${precisionBonus} πόντοι)`);
         breakdown.push(`ITEM:Όλες οι επιλογές σας ήταν σωστές - χάσατε ${3 - correctCount} δράστη`);
     }
     
@@ -2071,7 +2071,7 @@ function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
         wrongSuspects.forEach(name => {
             breakdown.push(`ITEM:→ ${name}`);
             if (name === 'Παπαδοπούλου Μαρία') {
-                breakdown.push('ITEM:  • Σιδηρένιο άλλοθι (γιατρός 18:30-19:30 + δείπνο με αδελφή 19:45-22:00)');
+                breakdown.push('ITEM:  • Σιδηρένιο άλλοθι (γιατρός 18:30-19:30 & δείπνο με αδελφή 19:45-22:00)');
                 breakdown.push('ITEM:  • Τα μόνα αποτυπώματά της στο μπουκάλι ήταν παλιά');
             } else if (name === 'Νικολάου Αλεξάνδρα') {
                 breakdown.push('ITEM:  • Έφυγε 18:30, πριν τη δολοφονία');
@@ -2088,7 +2088,7 @@ function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
         score = Math.floor(score * multiplier);
         const penalty = originalScore - score;
         breakdown.push('');
-        breakdown.push(`PENALTY:Ποινή Ψευδών Θετικών: -${penalty} πόντοι`);
+        breakdown.push(`PENALTY:Ποινή Λανθασμένων Κατηγοριών: - ${penalty} πόντοι`);
         breakdown.push('');
     }
         
@@ -2109,14 +2109,14 @@ function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
                 breakdown.push('ITEM:  • Απενεργοποίησε κάμερες 20:55 (ΤΕΚ #11)');
                 breakdown.push('ITEM:  • Χρέη €60.000 - το κίνητρο');
             } else if (name === 'Μαυρίδη Ελένη') {
-                breakdown.push('ITEM:  • Έστειλε πλαστό email "αυτοκτονίας" (ΤΕΚ #4)');
+                breakdown.push('ITEM:  • Έστειλε πλαστό email «αυτοκτονίας» (ΤΕΚ #4)');
                 breakdown.push('ITEM:  • Πλαστογράφησε χειρόγραφο σημείωμα (ΤΕΚ #7)');
                 breakdown.push('ITEM:  • Εκβιασμός €100.000 για ερωτικές φωτογραφίες');
             }
         });
         
         breakdown.push('');
-        breakdown.push(`PENALTY:Ποινή Ελλιπούς Ανάλυσης: -${missedPenalty} πόντοι`);
+        breakdown.push(`PENALTY:Ποινή Ελλιπούς Ανάλυσης: - ${missedPenalty} πόντοι`);
     }
     
     breakdown.push('');
