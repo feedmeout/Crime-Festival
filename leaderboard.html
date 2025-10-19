@@ -571,64 +571,64 @@
             }
         }
 
-function setupRealtimeListener() {
-    if (!window.firebaseDB || !window.firebaseOnSnapshot) {
-        console.warn('⚠️ Firebase not ready - using periodic refresh');
-        startPolling();
-        return;
-    }
+        function setupRealtimeListener() {
+            if (!window.firebaseDB || !window.firebaseOnSnapshot) {
+                console.warn('⚠️ Firebase not ready - using periodic refresh');
+                startPolling();
+                return;
+            }
 
             try {
                 const teamsCollection = window.firebaseCollection(window.firebaseDB, 'teams');
                 
-let pollingInterval = null;
-let isFirestoreActive = false;
+                let pollingInterval = null;
+                let isFirestoreActive = false;
 
-function startPolling() {
-    if (pollingInterval) return;
-    console.log('📡 Starting polling mode (every 10 seconds)');
-    pollingInterval = setInterval(refreshLeaderboard, 10000);
-}
+                function startPolling() {
+                    if (pollingInterval) return;
+                    console.log('📡 Starting polling mode (every 10 seconds)');
+                    pollingInterval = setInterval(refreshLeaderboard, 10000);
+                }
 
-function stopPolling() {
-    if (pollingInterval) {
-        clearInterval(pollingInterval);
-        pollingInterval = null;
-        console.log('🛑 Polling stopped');
-    }
-}
+                function stopPolling() {
+                    if (pollingInterval) {
+                        clearInterval(pollingInterval);
+                        pollingInterval = null;
+                        console.log('🛑 Polling stopped');
+                    }
+                }
 
-firestoreUnsubscribe = window.firebaseOnSnapshot(teamsCollection, 
-    (snapshot) => {
-        console.log('🔥 Firebase real-time update received');
-        isFirestoreActive = true;
-        stopPolling();
-        
-        let hasChanges = false;
-        
-        snapshot.docChanges().forEach((change) => {
-            if (change.type === 'added' || change.type === 'modified') {
-                console.log(`📝 Team ${change.doc.id} was ${change.type}`);
-                hasChanges = true;
-            }
-            if (change.type === 'removed') {
-                console.log(`🗑️ Team ${change.doc.id} was removed`);
-                hasChanges = true;
-            }
-        });
-        
-        if (hasChanges) {
-            showSyncStatus('🔄 Updating...', 'syncing');
-            debouncedRefreshLeaderboard();
-        }
-    },
-    (error) => {
-        console.error('❌ Firebase listener error:', error);
-        isFirestoreActive = false;
-        showSyncStatus('⚠️ Connection lost - retrying...', 'error');
-        startPolling();
-    }
-);
+                firestoreUnsubscribe = window.firebaseOnSnapshot(teamsCollection, 
+                    (snapshot) => {
+                        console.log('🔥 Firebase real-time update received');
+                        isFirestoreActive = true;
+                        stopPolling();
+                        
+                        let hasChanges = false;
+                        
+                        snapshot.docChanges().forEach((change) => {
+                            if (change.type === 'added' || change.type === 'modified') {
+                                console.log(`📝 Team ${change.doc.id} was ${change.type}`);
+                                hasChanges = true;
+                            }
+                            if (change.type === 'removed') {
+                                console.log(`🗑️ Team ${change.doc.id} was removed`);
+                                hasChanges = true;
+                            }
+                        });
+                        
+                        if (hasChanges) {
+                            showSyncStatus('🔄 Updating...', 'syncing');
+                            debouncedRefreshLeaderboard();
+                        }
+                    },
+                    (error) => {
+                        console.error('❌ Firebase listener error:', error);
+                        isFirestoreActive = false;
+                        showSyncStatus('⚠️ Connection lost - retrying...', 'error');
+                        startPolling();
+                    }
+                );
                 
                 console.log('✅ Real-time Firebase listener active');
                 showSyncStatus('🔴 Real-time sync active', 'success');
@@ -647,7 +647,7 @@ firestoreUnsubscribe = window.firebaseOnSnapshot(teamsCollection,
             if (selectedSuspects.length === 0) {
                 return {
                     score: 0,
-                    breakdown: ['❌ Δεν επέλεξαν κανέναν ύποπτο ή αυτοκτονία'],
+                    breakdown: ['Δεν επέλεξαν κανέναν ύποπτο ή αυτοκτονία'],
                     maxScore: 140,
                     correctCount: 0
                 };
@@ -656,6 +656,7 @@ firestoreUnsubscribe = window.firebaseOnSnapshot(teamsCollection,
             const hasSuicide = selectedSuspects.includes('suicide');
             const hasKiller = selectedSuspects.some(s => s !== 'suicide');
             
+            // Handle contradiction
             if (hasSuicide && hasKiller) {
                 const killerNames = selectedSuspects
                     .filter(s => s !== 'suicide')
@@ -665,36 +666,40 @@ firestoreUnsubscribe = window.firebaseOnSnapshot(teamsCollection,
                 return {
                     score: 0,
                     breakdown: [
-                        '🚫 ΛΟΓΙΚΗ ΑΝΤΙΦΑΣΗ - Η ΥΠΟΘΕΣΗ ΔΕΝ ΜΠΟΡΕΙ ΝΑ ΕΙΝΑΙ ΤΑΥΤΟΧΡΟΝΑ ΔΟΛΟΦΟΝΙΑ ΚΑΙ ΑΥΤΟΚΤΟΝΙΑ',
-                        '',
-                        `Επέλεξαν: ${killerNames} + Αυτοκτονία`,
-                        '',
-                        '⚖️ Πρέπει να επιλέξουν ΕΙΤΕ δολοφονία ΕΙΤΕ αυτοκτονία, όχι και τα δύο.',
+                        'HEADER:🚫 ΛΟΓΙΚΗ ΑΝΤΙΦΑΣΗ (+0 πόντοι)',
+                        'CONTRADICTION:Η υπόθεση δεν μπορεί να είναι ταυτόχρονα δολοφονία και αυτοκτονία',
+                        `INFO:Επέλεξαν: ${killerNames} + Αυτοκτονία`,
                     ],
                     maxScore: 140,
                     correctCount: 0
                 };
             }
 
+            // Handle suicide theory
             if (hasSuicide && !hasKiller) {
                 return {
                     score: 0,
                     breakdown: [
-                        '❌ ΕΣΦΑΛΜΕΝΗ ΘΕΩΡΙΑ - Αυτό δεν ήταν αυτοκτονία',
-                        '',
-                        '🔍 Βασικά Στοιχεία που Αγνόησαν:',
-                        '   • Γάντια λάτεξ στην πόρτα (κάποιος προσπάθησε να μην αφήσει αποτυπώματα)',
-                        '   • Πλαστό email "αυτοκτονίας" από κοινόχρηστο υπολογιστή',
-                        '   • Απενεργοποίηση κάμερων ακριβώς πριν τη δολοφονία',
-                        '   • Κυάνιο σε μπουκάλι που δεν ήταν του θύματος',
-                        '',
-                        '💡 Συμβουλή: Η υπόθεση δολοφονίας που μοιάζει με αυτοκτονία είναι κλασική τακτική συγκάλυψης.',
+                        'HEADER:❌ ΕΣΦΑΛΜΕΝΗ ΘΕΩΡΙΑ (+0 πόντοι)',
+                        'ERROR:Αυτό δεν ήταν αυτοκτονία',
+                        'SUBHEADER:Βασικά Στοιχεία που Αγνόησαν:',
+                        'ITEM:Γάντια λάτεξ στην πόρτα',
+                        'ITEM:Πλαστό email "αυτοκτονίας"',
+                        'ITEM:Απενεργοποίηση κάμερων',
+                        'ITEM:Κυάνιο σε μπουκάλι που δεν ήταν του θύματος',
                     ],
                     maxScore: 140,
                     correctCount: 0
                 };
             }
 
+            // Murder diagnosis - Basic points
+            let basicPoints = SCORING.murder_diagnosis;
+            score += basicPoints;
+            breakdown.push(`HEADER:🧩 ΒΑΣΙΚΗ ΕΚΤΙΜΗΣΗ (+${basicPoints} πόντοι)`);
+            breakdown.push('SUCCESS:Σωστή Διάγνωση: ΔΟΛΟΦΟΝΙΑ');
+            
+            // Count correct and wrong suspects
             let correctCount = 0;
             let wrongSuspects = [];
             let missedSuspects = [];
@@ -713,114 +718,94 @@ firestoreUnsubscribe = window.firebaseOnSnapshot(teamsCollection,
                 }
             });
 
-            let basicPoints = SCORING.murder_diagnosis;
-            score += basicPoints;
-            breakdown.push(`🧩 ΒΑΣΙΚΗ ΕΚΤΙΜΗΣΗ (+${basicPoints} πόντοι)`);
-            breakdown.push('');
-            breakdown.push('Σωστή Διάγνωση: ΔΟΛΟΦΟΝΙΑ');
-            breakdown.push('');
-            
-            let perpetratorSectionPoints = 0;
+            // Perpetrator identification
+            let perpetratorPoints = 0;
             
             if (correctCount === 3 && selectedSuspects.length === 3) {
-                perpetratorSectionPoints += SCORING.perpetrator * 3 + SCORING.perfect_solution_bonus;
-                if (correctCount >= 2) {
-                    perpetratorSectionPoints += SCORING.cooperation;
-                }
-                
-                breakdown.push(`🎖️ ΤΕΛΕΙΑ ΑΝΑΛΥΣΗ! (+${perpetratorSectionPoints} πόντοι)`);
-                breakdown.push('');
-                breakdown.push('Εντόπισαν και τους 3 συνεργούς!');
-                breakdown.push('');
+                // Perfect solution
+                perpetratorPoints = SCORING.perpetrator * 3 + SCORING.perfect_solution_bonus + SCORING.cooperation;
+                breakdown.push(`HEADER:🎖️ ΤΕΛΕΙΑ ΑΝΑΛΥΣΗ (+${perpetratorPoints} πόντοι)`);
+                breakdown.push('SUCCESS:Εντόπισαν και τους 3 συνεργούς');
             } else {
-                breakdown.push('👥 ΤΑΥΤΟΠΟΙΗΣΗ ΔΡΑΣΤΩΝ');
-                breakdown.push('');
-                
-                if (correctCount >= 2) {
-                    perpetratorSectionPoints += SCORING.cooperation;
-                }
+                // Partial solution
+                breakdown.push(`HEADER:👥 ΤΑΥΤΟΠΟΙΗΣΗ ΔΡΑΣΤΩΝ (+${perpetratorPoints} πόντοι - προσωρινό)`);
                 
                 if (correctCount > 0) {
-                    perpetratorSectionPoints += correctCount * SCORING.perpetrator;
-                    breakdown.push(`Εντόπισαν ${correctCount}/3 Δράστες`);
-                } else {
-                    breakdown.push('Δεν εντόπισαν κανέναν από τους πραγματικούς δράστες');
+                    perpetratorPoints += correctCount * SCORING.perpetrator;
+                    breakdown.push(`SUCCESS:Εντόπισαν ${correctCount}/3 Δράστες`);
+                }
+                
+                if (correctCount >= 2) {
+                    perpetratorPoints += SCORING.cooperation;
+                    breakdown.push('SUCCESS:Bonus Συνεργασίας Δραστών');
                 }
                 
                 if (correctCount >= 2 && correctCount < 3) {
-                    perpetratorSectionPoints += SCORING.evidence_use;
+                    perpetratorPoints += SCORING.evidence_use;
                 }
                 
                 if (wrongSuspects.length === 0 && correctCount > 0 && correctCount < 3) {
                     const precisionBonus = correctCount * 15;
-                    perpetratorSectionPoints += precisionBonus;
+                    perpetratorPoints += precisionBonus;
+                    breakdown.push('SUCCESS:Bonus Ακρίβειας (δεν κατηγόρησαν αθώους)');
                 }
                 
-                const headerIndex = breakdown.indexOf('👥 ΤΑΥΤΟΠΟΙΗΣΗ ΔΡΑΣΤΩΝ');
-                breakdown[headerIndex] = `👥 ΤΑΥΤΟΠΟΙΗΣΗ ΔΡΑΣΤΩΝ (+${perpetratorSectionPoints} πόντοι)`;
-                breakdown.push('');
+                // Update header with final points
+                const headerIndex = breakdown.findIndex(line => line.includes('👥 ΤΑΥΤΟΠΟΙΗΣΗ ΔΡΑΣΤΩΝ'));
+                if (headerIndex !== -1) {
+                    breakdown[headerIndex] = `HEADER:👥 ΤΑΥΤΟΠΟΙΗΣΗ ΔΡΑΣΤΩΝ (+${perpetratorPoints} πόντοι)`;
+                }
             }
 
-            score += perpetratorSectionPoints;
+            score += perpetratorPoints;
             
+            // Efficiency bonuses (only if 2+ correct suspects)
             if (correctCount >= 2) {
                 let efficiencyPoints = 0;
-                let efficiencyLines = [];
+                let efficiencyItems = [];
                 
-                efficiencyLines.push('⚡ BONUSES ΑΠΟΔΟΤΙΚΟΤΗΤΑΣ');
-                efficiencyLines.push('');
-                
-                let hasBonus = false;
-                
+                // Time bonus
                 if (totalTimeMs) {
                     const minutes = totalTimeMs / 60000;
                     if (minutes < 30) {
                         efficiencyPoints += SCORING.time_under_30;
-                        efficiencyLines.push('⏱️ Ταχύτατη Επίλυση : Χρόνος: <30 λεπτά');
-                        hasBonus = true;
+                        efficiencyItems.push('SUCCESS:Χρόνος: <30 λεπτά');
                     } else if (minutes < 45) {
                         efficiencyPoints += SCORING.time_30_45;
-                        efficiencyLines.push('⏱️ Γρήγορη Επίλυση: Χρόνος: 30-45 λεπτά');
-                        hasBonus = true;
+                        efficiencyItems.push('SUCCESS:Χρόνος: 30-45 λεπτά');
                     } else if (minutes < 60) {
                         efficiencyPoints += SCORING.time_45_60;
-                        efficiencyLines.push('⏱️ Καλός Χρόνος : Χρόνος: 45-60 λεπτά');
-                        hasBonus = true;
+                        efficiencyItems.push('SUCCESS:Χρόνος: 45-60 λεπτά');
                     }
                 }
 
+                // Prompts bonus
                 if (promptCount) {
                     if (promptCount <= 5) {
                         efficiencyPoints += SCORING.prompts_1_5;
-                        efficiencyLines.push(`🎯 ΕΞΑΙΡΕΤΙΚΗ ΧΡΗΣΗ PROMPTS (+${SCORING.prompts_1_5} πόντοι)`);
-                        efficiencyLines.push('   Prompts: ≤5');
-                        hasBonus = true;
+                        efficiencyItems.push('SUCCESS:Prompts: ≤5');
                     } else if (promptCount <= 10) {
                         efficiencyPoints += SCORING.prompts_6_10;
-                        efficiencyLines.push(`🎯 ΚΑΛΗ ΧΡΗΣΗ PROMPTS (+${SCORING.prompts_6_10} πόντοι)`);
-                        efficiencyLines.push('   Prompts: 6-10');
-                        hasBonus = true;
+                        efficiencyItems.push('SUCCESS:Prompts: 6-10');
                     } else if (promptCount <= 15) {
                         efficiencyPoints += SCORING.prompts_11_15;
-                        efficiencyLines.push(`🎯 ΑΞΙΟΛΟΓΗ ΧΡΗΣΗ PROMPTS (+${SCORING.prompts_11_15} πόντοι)`);
-                        efficiencyLines.push('   Prompts: 11-15');
-                        hasBonus = true;
+                        efficiencyItems.push('SUCCESS:Prompts: 11-15');
                     }
                 }
                 
-                if (!hasBonus) {
-                    efficiencyLines.push('(Κανένα bonus αποδοτικότητας)');
+                if (efficiencyPoints > 0) {
+                    breakdown.push(`HEADER:⚡ BONUSES ΑΠΟΔΟΤΙΚΟΤΗΤΑΣ (+${efficiencyPoints} πόντοι)`);
+                    breakdown.push(...efficiencyItems);
                 }
                 
                 score += efficiencyPoints;
-                efficiencyLines[0] = `⚡ BONUSES ΑΠΟΔΟΤΙΚΟΤΗΤΑΣ (+${efficiencyPoints} πόντοι)`;
-                breakdown.push(...efficiencyLines);
-                breakdown.push('');
             }
             
+            // Penalties for wrong accusations
             if (wrongSuspects.length > 0) {
                 const originalScore = score;
                 let multiplier = 1.0;
+                
                 if (wrongSuspects.length === 1) {
                     multiplier = 0.5;
                 } else if (wrongSuspects.length === 2) {
@@ -832,29 +817,33 @@ firestoreUnsubscribe = window.firebaseOnSnapshot(teamsCollection,
                 score = Math.floor(score * multiplier);
                 const penalty = originalScore - score;
                 
-                breakdown.push(`❌ ΚΑΤΗΓΟΡΗΣΑΝ ΑΘΩΟΥΣ (-${penalty} πόντοι)`);
-                breakdown.push('');
+                breakdown.push(`HEADER:❌ ΚΑΤΗΓΟΡΗΣΑΝ ΑΘΩΟΥΣ (-${penalty} πόντοι)`);
                 wrongSuspects.forEach(name => {
-                    breakdown.push(`   → ${name}`);
+                    breakdown.push(`PENALTY:${name}`);
                 });
-                breakdown.push('');
             }
                 
+            // Penalties for missed suspects
             if (missedSuspects.length > 0) {
                 const missedPenalty = missedSuspects.length * 20;
-                score -= missedPenalty;
+                score = Math.max(0, score - missedPenalty);
                 
-                breakdown.push(`🔍 ΕΧΑΣΑΝ ΠΡΑΓΜΑΤΙΚΟΥΣ ΔΡΑΣΤΕΣ (-${missedPenalty} πόντοι)`);
-                breakdown.push('');
-                
+                breakdown.push(`HEADER:🔍 ΕΧΑΣΑΝ ΠΡΑΓΜΑΤΙΚΟΥΣ ΔΡΑΣΤΕΣ (-${missedPenalty} πόντοι)`);
                 missedSuspects.forEach(name => {
-                    breakdown.push(`   → ${name}`);
+                    breakdown.push(`PENALTY:${name}`);
                 });
-                breakdown.push('');
             }
             
+            // Ensure score is never negative and not above max
             score = Math.max(0, Math.min(score, 140));
-            return { score, breakdown, maxScore: 140, correctCount, wrongCount: wrongSuspects.length };
+            
+            return { 
+                score, 
+                breakdown, 
+                maxScore: 140, 
+                correctCount, 
+                wrongCount: wrongSuspects.length 
+            };
         }
 
         function getGrade(percentage) {
@@ -886,16 +875,16 @@ firestoreUnsubscribe = window.firebaseOnSnapshot(teamsCollection,
             }
         }
 
-let refreshTimeout = null;
+        let refreshTimeout = null;
 
-function debouncedRefreshLeaderboard() {
-    if (refreshTimeout) clearTimeout(refreshTimeout);
-    
-    refreshTimeout = setTimeout(() => {
-        refreshLeaderboard();
-        refreshTimeout = null;
-    }, 500);
-}
+        function debouncedRefreshLeaderboard() {
+            if (refreshTimeout) clearTimeout(refreshTimeout);
+            
+            refreshTimeout = setTimeout(() => {
+                refreshLeaderboard();
+                refreshTimeout = null;
+            }, 500);
+        }
 
         async function refreshLeaderboard() {
             try {
@@ -1119,87 +1108,75 @@ function debouncedRefreshLeaderboard() {
                             ${solution.justification || 'Δεν παρασχέθηκε αιτιολόγηση'}
                         </div>
 
-<h3 style="margin-top: 20px;">⏱️ ΧΡΟΝΟΣ ΕΠΙΛΥΣΗΣ</h3>
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 12px; margin-top: 10px;">
-    ${(() => {
-        const ms = solution.completionTimeMs;
-        const seconds = Math.floor(ms / 1000);
-        const minutes = Math.floor(seconds / 60);
-        const hours = Math.floor(minutes / 60);
-        
-        const h = hours;
-        const m = minutes % 60;
-        const s = seconds % 60;
-        
-        let timeUnits = [];
-        if (h > 0) timeUnits.push({value: h, label: 'ΩΡΕΣ'});
-        if (m > 0 || h > 0) timeUnits.push({value: m, label: 'ΛΕΠΤΑ'});
-        timeUnits.push({value: s, label: 'ΔΕΥΤ.'});
-        
-        return timeUnits.map(unit => `
-            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 15px; border-radius: 12px; text-align: center; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);">
-                <div style="font-size: clamp(32px, 7vw, 42px); font-weight: bold; color: white; line-height: 1; text-shadow: 0 2px 8px rgba(0,0,0,0.2);">
-                    ${unit.value}
-                </div>
-                <div style="font-size: 10px; color: rgba(255,255,255,0.7); margin-top: 8px; text-transform: uppercase; letter-spacing: 1px;">
-                    ${unit.label}
-                </div>
-            </div>
-        `).join('');
-    })()}
-</div>
+                        <h3 style="margin-top: 20px;">⏱️ ΧΡΟΝΟΣ ΕΠΙΛΥΣΗΣ</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 12px; margin-top: 10px;">
+                            ${(() => {
+                                const ms = solution.completionTimeMs;
+                                const seconds = Math.floor(ms / 1000);
+                                const minutes = Math.floor(seconds / 60);
+                                const hours = Math.floor(minutes / 60);
+                                
+                                const h = hours;
+                                const m = minutes % 60;
+                                const s = seconds % 60;
+                                
+                                let timeUnits = [];
+                                if (h > 0) timeUnits.push({value: h, label: 'ΩΡΕΣ'});
+                                if (m > 0 || h > 0) timeUnits.push({value: m, label: 'ΛΕΠΤΑ'});
+                                timeUnits.push({value: s, label: 'ΔΕΥΤ.'});
+                                
+                                return timeUnits.map(unit => `
+                                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 15px; border-radius: 12px; text-align: center; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);">
+                                        <div style="font-size: clamp(32px, 7vw, 42px); font-weight: bold; color: white; line-height: 1; text-shadow: 0 2px 8px rgba(0,0,0,0.2);">
+                                            ${unit.value}
+                                        </div>
+                                        <div style="font-size: 10px; color: rgba(255,255,255,0.7); margin-top: 8px; text-transform: uppercase; letter-spacing: 1px;">
+                                            ${unit.label}
+                                        </div>
+                                    </div>
+                                `).join('');
+                            })()}
+                        </div>
 
-<h3 style="margin-top: 25px; margin-bottom: 15px;">🎯 ΑΝΑΛΥΤΙΚΗ ΒΑΘΜΟΛΟΓΙΑ</h3>
-<div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: clamp(11px, 2vw, 13px); line-height: 1.7; max-height: 400px; overflow-y: auto; word-wrap: break-word;">
-${solution.breakdown.map(item => {
-    if (item.trim() === '') {
-        return '<div style="height: 8px;"></div>';
-    }
-
-    if (item.match(/^[🎯🧩👥⚡⚠️🔍❌🎖️]/)) {
-        return '<div style="background: linear-gradient(135deg, #0f3460 0%, #16213e 100%); color: white; padding: clamp(10px, 2vw, 12px) clamp(12px, 2.5vw, 15px); margin: 15px 0 10px 0; border-radius: 8px; font-weight: bold; font-size: clamp(13px, 2.5vw, 15px); box-shadow: 0 2px 8px rgba(0,0,0,0.2); word-wrap: break-word;">' + item + '</div>';
-    }
-
-    if (item.startsWith('   •') || item.startsWith('   →') || item.startsWith('   ✓')) {
-        return '<div style="padding: clamp(5px, 1vw, 6px) clamp(5px, 1vw, 6px) clamp(5px, 1vw, 6px) clamp(30px, 6vw, 35px); margin: 3px 0; color: #555; font-size: clamp(12px, 2.2vw, 13px); line-height: 1.6; word-wrap: break-word;">' + item + '</div>';
-    }
-
-    if (item.startsWith('   ')) {
-        return '<div style="padding: clamp(4px, 1vw, 5px) clamp(4px, 1vw, 5px) clamp(4px, 1vw, 5px) clamp(25px, 5vw, 30px); margin: 2px 0; color: #666; font-size: clamp(11px, 2vw, 13px); word-wrap: break-word;">' + item + '</div>';
-    }
-
-    let bgColor = 'transparent';
-    let borderColor = 'transparent';
-    let textColor = '#333';
-    let fontWeight = 'normal';
-    let hasBorder = false;
-
-    if (item.includes('🚫') || item.includes('❌')) {
-        bgColor = '#fff5f5';
-        borderColor = '#dc3545';
-        textColor = '#721c24';
-        fontWeight = 'bold';
-        hasBorder = true;
-    } else if (item.includes('✓') || item.includes('🎖️')) {
-        bgColor = '#f0fff4';
-        borderColor = '#28a745';
-        textColor = '#155724';
-        hasBorder = true;
-    } else if (item.includes('⚖️')) {
-        bgColor = '#fff8e1';
-        borderColor = '#ff9800';
-        textColor = '#e65100';
-        hasBorder = true;
-    } else if (item.includes('💡')) {
-        bgColor = '#e3f2fd';
-        borderColor = '#2196f3';
-        textColor = '#0d47a1';
-        hasBorder = true;
-    }
-
-    const borderStyle = hasBorder ? `border-left: 4px solid ${borderColor};` : '';
-    return `<div style="padding: clamp(7px, 1.5vw, 10px) clamp(10px, 2vw, 12px); margin: 5px 0; background: ${bgColor}; ${borderStyle} border-radius: 4px; color: ${textColor}; font-weight: ${fontWeight}; line-height: 1.6; word-wrap: break-word; font-size: clamp(11px, 2vw, 13px);">${item}</div>`;
-}).join('')}
+                        <h3 style="margin-top: 25px; margin-bottom: 15px;">🎯 ΑΝΑΛΥΤΙΚΗ ΒΑΘΜΟΛΟΓΙΑ</h3>
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: clamp(11px, 2vw, 13px); line-height: 1.7; max-height: 400px; overflow-y: auto; word-wrap: break-word;">
+                            ${solution.breakdown.map(line => {
+                                const [type, content] = line.split(':');
+                                
+                                if (type === 'HEADER') {
+                                    return `<div style="background: linear-gradient(135deg, #0f3460 0%, #16213e 100%); color: white; padding: clamp(10px, 2vw, 12px) clamp(12px, 2.5vw, 15px); margin: 15px 0 10px 0; border-radius: 8px; font-weight: bold; font-size: clamp(13px, 2.5vw, 15px); box-shadow: 0 2px 8px rgba(0,0,0,0.2);">${content}</div>`;
+                                }
+                                
+                                if (type === 'SUCCESS') {
+                                    return `<div style="background: #fff8e1; padding: clamp(8px, 1.5vw, 10px) clamp(12px, 2.5vw, 15px); margin: 5px 0; border-left: 4px solid #ffc107; border-radius: 4px; color: #f57f17; font-weight: 500;">${content}</div>`;
+                                }
+                                
+                                if (type === 'PENALTY') {
+                                    return `<div style="background: #ffebee; padding: clamp(6px, 1.2vw, 8px) clamp(10px, 2vw, 12px); margin: 3px 0 3px 20px; border-left: 3px solid #dc3545; border-radius: 4px; color: #c62828;">→ ${content}</div>`;
+                                }
+                                
+                                if (type === 'ERROR') {
+                                    return `<div style="background: #ffebee; padding: clamp(8px, 1.5vw, 10px) clamp(12px, 2.5vw, 15px); margin: 5px 0; border-left: 4px solid #dc3545; border-radius: 4px; color: #c62828; font-weight: 500;">${content}</div>`;
+                                }
+                                
+                                if (type === 'CONTRADICTION') {
+                                    return `<div style="background: #fff3e0; padding: clamp(8px, 1.5vw, 10px) clamp(12px, 2.5vw, 15px); margin: 5px 0; border-left: 4px solid #ff9800; border-radius: 4px; color: #e65100; font-weight: 500;">${content}</div>`;
+                                }
+                                
+                                if (type === 'SUBHEADER') {
+                                    return `<div style="padding: clamp(8px, 1.5vw, 10px) clamp(5px, 1vw, 8px); margin: 10px 0 5px 0; color: #0f3460; font-weight: bold; font-size: clamp(12px, 2.2vw, 14px);">${content}</div>`;
+                                }
+                                
+                                if (type === 'ITEM') {
+                                    return `<div style="padding: clamp(4px, 1vw, 5px) clamp(5px, 1vw, 8px) clamp(4px, 1vw, 5px) clamp(20px, 4vw, 25px); margin: 2px 0; color: #555;">• ${content}</div>`;
+                                }
+                                
+                                if (type === 'INFO') {
+                                    return `<div style="background: #e3f2fd; padding: clamp(8px, 1.5vw, 10px) clamp(12px, 2.5vw, 15px); margin: 5px 0; border-left: 4px solid #2196f3; border-radius: 4px; color: #0d47a1;">${content}</div>`;
+                                }
+                                
+                                return `<div style="padding: 5px 0; color: #333;">${line}</div>`;
+                            }).join('')}
                         </div>
                     </div>
                 `;
@@ -1238,19 +1215,15 @@ ${solution.breakdown.map(item => {
             }
         });
 
-window.addEventListener('online', () => {
-    console.log('🟢 Back online');
-    showSyncStatus('🟢 Reconnecting...', 'syncing');
-    if (!isFirestoreActive) {
-        stopPolling();
-        setupRealtimeListener();
-    }
-});
+        window.addEventListener('online', () => {
+            console.log('🟢 Back online');
+            showSyncStatus('🟢 Reconnecting...', 'syncing');
+        });
 
-window.addEventListener('offline', () => {
-    console.log('🔴 Offline');
-    showSyncStatus('🔴 Offline - Data may be stale', 'error');
-});
+        window.addEventListener('offline', () => {
+            console.log('🔴 Offline');
+            showSyncStatus('🔴 Offline - Data may be stale', 'error');
+        });
     </script>
 </body>
 </html>
