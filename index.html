@@ -2060,10 +2060,9 @@ function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
 				breakdown.push('ITEM:Prompts AI: 11-15');
 				hasBonus = true;
 			} else {
-				// >15 prompts - no bonus but acknowledge it
 				breakdown.push(`INFO:Υπερβολική Χρήση AI (0 πόντοι)`);
 				breakdown.push(`ITEM:Prompts AI: ${promptCount} (>15)`);
-				hasBonus = true; // Set to true so we don't show "Κανένα bonus"
+				hasBonus = true;
 			}
 		}
         
@@ -2536,7 +2535,7 @@ function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
     if (selectedSuspects.length >= 4) {
         totalPenalties += SCORING.reckless_investigation;
         breakdown.push(`PENALTY:Απρόσεκτη Έρευνα (-${SCORING.reckless_investigation} πόντοι)`);
-        breakdown.push('ITEM:Επιλέξατε 4+ υπόπτους - "shotgun" προσέγγιση χωρίς ανάλυση');
+        breakdown.push('ITEM:Επιλέξατε 4+ υπόπτους - «shotgun» προσέγγιση χωρίς ανάλυση');
         breakdown.push('');
     }
     
@@ -2681,55 +2680,56 @@ function displaySolutionResult(solution) {
         caseStatus = 'CASE ARCHIVED';
     }
 
-    const sections = {
-        diagnosis: [],
-        suspects: [],
-        bonuses: [],
-        penalties: []
-    };
-    
-    let currentCategory = null;
-    
-    solution.breakdown.forEach(item => {
-        if (item.trim() === '') return;
-        if (item.includes('ΤΕΛΙΚΗ ΒΑΘΜΟΛΟΓΙΑ')) return;
-        
-        if (item.includes('ΒΑΣΙΚΗ ΕΚΤΙΜΗΣΗ')) {
-            currentCategory = 'diagnosis';
-        } else if (item.includes('ΤΑΥΤΟΠΟΙΗΣΗ ΔΡΑΣΤΩΝ')) {
-            currentCategory = 'suspects';
-        } else if (item.includes('BONUSES')) {
-            currentCategory = 'bonuses';
-        } else if (item.startsWith('PENALTY:') || item.startsWith('ERROR:')) {
-            currentCategory = 'penalties';
-        }
-        
-        if (currentCategory && !item.startsWith('HEADER:')) {
-            let cleanItem = item
-                .replace('SUCCESS:', '')
-                .replace('PENALTY:', '')
-                .replace('ERROR:', '')
-                .replace('INFO:', '')
-                .replace('ITEM:', '')
-                .replace('SUBHEADER:', '')
-                .replace('CONTRADICTION:', '')
-                .replace(/^→\s*/, '')
-                .replace(/^▸\s*/, '')
-                .replace(/^•\s*/, '')
-                .trim();
-            
-            if (cleanItem && !item.startsWith('HEADER:')) {
-                sections[currentCategory].push({
-                    text: cleanItem,
-                    type: item.startsWith('SUCCESS:') ? 'success' :
-                          item.startsWith('PENALTY:') ? 'penalty' :
-                          item.startsWith('ERROR:') ? 'error' :
-                          item.startsWith('ITEM:') ? 'detail' :
-                          'info'
-                });
-            }
-        }
-    });
+	const sections = {
+		diagnosis: [],
+		suspects: [],
+		bonuses: [],
+		penalties: []
+	};
+
+	let currentCategory = null;
+
+	solution.breakdown.forEach(item => {
+		if (item.trim() === '') return;
+		if (item.includes('ΤΕΛΙΚΗ ΒΑΘΜΟΛΟΓΙΑ')) return;
+		
+		if (item.includes('ΒΑΣΙΚΗ ΕΚΤΙΜΗΣΗ')) {
+			currentCategory = 'diagnosis';
+		} else if (item.includes('ΤΑΥΤΟΠΟΙΗΣΗ ΔΡΑΣΤΩΝ')) {
+			currentCategory = 'suspects';
+		} else if (item.includes('BONUSES')) {
+			currentCategory = 'bonuses';
+		} else if (item.startsWith('PENALTY:') || item.startsWith('ERROR:') || item.startsWith('CONTRADICTION:')) {
+			currentCategory = 'penalties';
+		}
+		
+		if (currentCategory && !item.startsWith('HEADER:')) {
+			let cleanItem = item
+				.replace('SUCCESS:', '')
+				.replace('PENALTY:', '')
+				.replace('ERROR:', '')
+				.replace('INFO:', '')
+				.replace('ITEM:', '')
+				.replace('SUBHEADER:', '')
+				.replace('CONTRADICTION:', '')  // ADD THIS LINE
+				.replace(/^→\s*/, '')
+				.replace(/^▸\s*/, '')
+				.replace(/^•\s*/, '')
+				.trim();
+			
+			if (cleanItem && !item.startsWith('HEADER:')) {
+				sections[currentCategory].push({
+					text: cleanItem,
+					type: item.startsWith('SUCCESS:') ? 'success' :
+						  item.startsWith('PENALTY:') ? 'penalty' :
+						  item.startsWith('ERROR:') ? 'error' :
+						  item.startsWith('CONTRADICTION:') ? 'error' :  // ADD THIS LINE
+						  item.startsWith('ITEM:') ? 'detail' :
+						  'info'
+				});
+			}
+		}
+	});
 
     resultDiv.innerHTML = `
         <style>
