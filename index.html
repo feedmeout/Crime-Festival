@@ -2043,24 +2043,29 @@ function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
             }
         }
 
-        if (promptCount !== null && promptCount !== undefined) {
-            if (promptCount <= 5) {
-                score += SCORING.prompts_1_5;
-                breakdown.push(`SUCCESS:Εξαιρετική Αποδοτικότητα (+${SCORING.prompts_1_5} πόντοι)`);
-                breakdown.push('ITEM:Prompts: ≤5');
-                hasBonus = true;
-            } else if (promptCount <= 10) {
-                score += SCORING.prompts_6_10;
-                breakdown.push(`SUCCESS:Καλή Αποδοτικότητα (+${SCORING.prompts_6_10} πόντοι)`);
-                breakdown.push('ITEM:Prompts: 6-10');
-                hasBonus = true;
-            } else if (promptCount <= 15) {
-                score += SCORING.prompts_11_15;
-                breakdown.push(`SUCCESS:Αξιόλογη Αποδοτικότητα (+${SCORING.prompts_11_15} πόντοι)`);
-                breakdown.push('ITEM:Prompts: 11-15');
-                hasBonus = true;
-            }
-        }
+		if (promptCount !== null && promptCount !== undefined) {
+			if (promptCount <= 5) {
+				score += SCORING.prompts_1_5;
+				breakdown.push(`SUCCESS:Ελάχιστη Χρήση AI (+${SCORING.prompts_1_5} πόντοι)`);
+				breakdown.push('ITEM:Prompts AI: ≤5');
+				hasBonus = true;
+			} else if (promptCount <= 10) {
+				score += SCORING.prompts_6_10;
+				breakdown.push(`SUCCESS:Μέτρια Χρήση AI (+${SCORING.prompts_6_10} πόντοι)`);
+				breakdown.push('ITEM:Prompts AI: 6-10');
+				hasBonus = true;
+			} else if (promptCount <= 15) {
+				score += SCORING.prompts_11_15;
+				breakdown.push(`SUCCESS:Συχνή Χρήση AI (+${SCORING.prompts_11_15} πόντοι)`);
+				breakdown.push('ITEM:Prompts AI: 11-15');
+				hasBonus = true;
+			} else {
+				// >15 prompts - no bonus but acknowledge it
+				breakdown.push(`INFO:Υπερβολική Χρήση AI (0 πόντοι)`);
+				breakdown.push(`ITEM:Prompts AI: ${promptCount} (>15)`);
+				hasBonus = true; // Set to true so we don't show "Κανένα bonus"
+			}
+		}
         
         if (!hasBonus) {
             breakdown.push('INFO:Κανένα bonus αποδοτικότητας');
