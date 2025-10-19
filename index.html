@@ -2503,19 +2503,22 @@ function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
         if (promptCount !== null && promptCount !== undefined) {
             if (promptCount <= 5) {
                 score += SCORING.prompts_1_5;
-                breakdown.push(`SUCCESS:Εξαιρετική Αποδοτικότητα (+${SCORING.prompts_1_5} πόντοι)`);
-                breakdown.push('ITEM:Prompts: ≤5');
+                breakdown.push(`SUCCESS:Ελάχιστη Χρήση AI (+${SCORING.prompts_1_5} πόντοι)`);
+                breakdown.push('ITEM:Prompts AI: ≤5');
                 hasEfficiencyBonus = true;
             } else if (promptCount <= 10) {
                 score += SCORING.prompts_6_10;
-                breakdown.push(`SUCCESS:Καλή Αποδοτικότητα (+${SCORING.prompts_6_10} πόντοι)`);
-                breakdown.push('ITEM:Prompts: 6-10');
+                breakdown.push(`SUCCESS:Μέτρια Χρήση AI (+${SCORING.prompts_6_10} πόντοι)`);
+                breakdown.push('ITEM:Prompts AI: 6-10');
                 hasEfficiencyBonus = true;
             } else if (promptCount <= 15) {
                 score += SCORING.prompts_11_15;
-                breakdown.push(`SUCCESS:Αξιόλογη Αποδοτικότητα (+${SCORING.prompts_11_15} πόντοι)`);
-                breakdown.push('ITEM:Prompts: 11-15');
+                breakdown.push(`SUCCESS:Συχνή Χρήση AI (+${SCORING.prompts_11_15} πόντοι)`);
+                breakdown.push('ITEM:Prompts AI: 11-15');
                 hasEfficiencyBonus = true;
+            } else {
+                breakdown.push(`INFO:Υπερβολική Χρήση AI (0 πόντοι)`);
+                breakdown.push(`ITEM:Prompts AI: ${promptCount}`);
             }
         }
         
@@ -2711,7 +2714,7 @@ function displaySolutionResult(solution) {
 				.replace('INFO:', '')
 				.replace('ITEM:', '')
 				.replace('SUBHEADER:', '')
-				.replace('CONTRADICTION:', '')  // ADD THIS LINE
+				.replace('CONTRADICTION:', '')
 				.replace(/^→\s*/, '')
 				.replace(/^▸\s*/, '')
 				.replace(/^•\s*/, '')
@@ -2723,7 +2726,7 @@ function displaySolutionResult(solution) {
 					type: item.startsWith('SUCCESS:') ? 'success' :
 						  item.startsWith('PENALTY:') ? 'penalty' :
 						  item.startsWith('ERROR:') ? 'error' :
-						  item.startsWith('CONTRADICTION:') ? 'error' :  // ADD THIS LINE
+						  item.startsWith('CONTRADICTION:') ? 'error' :
 						  item.startsWith('ITEM:') ? 'detail' :
 						  'info'
 				});
