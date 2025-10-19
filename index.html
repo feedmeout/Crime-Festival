@@ -1653,7 +1653,7 @@ const SCORING = {
     evidence_use: 5,
     wrong_accusation: 20,
     missed_suspect: 10,
-    reckless_investigation: 30,
+    reckless_investigation: 40,
     prompts_1_5: 12,
     prompts_6_10: 8,
     prompts_11_15: 4,
@@ -2318,7 +2318,6 @@ function displaySubmissionConfirmation() {
     stopTimer();
 }
 
-#################################
 function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
     let score = 0;
     let breakdown = [];
@@ -2571,7 +2570,7 @@ function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
     score -= totalPenalties;
     
     const scoreBeforeFloor = score;
-    score = Math.max(score, 15);
+    score = Math.max(score, 5);
     
     if (scoreBeforeFloor < 15 && totalPenalties > 0) {
         breakdown.push('INFO:Ελάχιστη βαθμολογία (15 πόντοι) εφαρμόστηκε');
