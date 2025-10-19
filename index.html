@@ -1649,6 +1649,7 @@ const SCORING = {
     cooperation: 18,
     perpetrator: 15,
     perfect_solution_bonus: 22,
+    perfect_investigation_bonus: 6,
     precision_bonus: 10,
     evidence_use: 5,
     wrong_accusation: 20,
@@ -2460,12 +2461,16 @@ function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
         breakdown.push('');
     }
     
-    if (correctCount === 3 && wrongSuspects.length === 0) {
-        score += SCORING.perfect_solution_bonus;
-        breakdown.push(`SUCCESS:ΤΕΛΕΙΑ ΛΥΣΗ! (+${SCORING.perfect_solution_bonus} πόντοι)`);
-        breakdown.push('ITEM:Εντοπίσατε και τους 3 συνεργούς χωρίς λανθασμένες κατηγορίες');
-        breakdown.push('');
-    }
+	if (correctCount === 3 && wrongSuspects.length === 0) {
+		score += SCORING.perfect_solution_bonus;
+		breakdown.push(`SUCCESS:ΤΕΛΕΙΑ ΛΥΣΗ! (+${SCORING.perfect_solution_bonus} πόντοι)`);
+		breakdown.push('ITEM:Εντοπίσατε και τους 3 συνεργούς χωρίς λανθασμένες κατηγορίες');
+		breakdown.push('');
+		score += SCORING.perfect_investigation_bonus;
+		breakdown.push(`SUCCESS:ΑΨΟΓΗ ΕΡΕΥΝΑ! (+${SCORING.perfect_investigation_bonus} πόντοι)`);
+		breakdown.push('ITEM:Τέλεια ακρίβεια χωρίς καμία λανθασμένη κατηγορία');
+		breakdown.push('');
+	}
     
     if (wrongSuspects.length === 0 && correctCount > 0 && correctCount < 3) {
         score += SCORING.precision_bonus;
@@ -2838,7 +2843,7 @@ function displaySolutionResult(solution) {
                             <div style="background: linear-gradient(90deg, ${gradeColor}, ${gradeColor}DD); height: 100%; width: ${percentage}%; border-radius: 20px; box-shadow: 0 0 20px ${gradeColor}80; transition: width 2s ease-out;"></div>
                         </div>
                         <div style="color: rgba(255,255,255,0.5); font-size: clamp(10px, 2.5vw, 12px); font-weight: 700; font-family: monospace;">
-                            ΑΚΡΙΒΕΙΑ: ${percentage}%
+                            ΕΠΙΔΟΣΗ: ${percentage}%
                         </div>
                     </div>
                 </div>
