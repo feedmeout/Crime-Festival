@@ -58,7 +58,7 @@
                 <div id="modelViewerContainer" class="model-viewer-container">
                     <model-viewer
                         id="keyModel"
-                        src="../../assets/models/safe_key.glb"
+                        src="../assets/models/safe_key.glb"
                         alt="Safe Key 3D Model - Evidence"
                         ar
                         ar-modes="webxr scene-viewer quick-look"

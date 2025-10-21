@@ -58,7 +58,7 @@
                 <div class="model-viewer-container" id="modelViewerContainer">
                     <model-viewer
                         id="securityCameraModel"
-                        src="../../assets/models/security_camera.glb"
+                        src="../assets/models/security_camera.glb"
                         alt="Security Camera System 3D Model - Evidence"
                         ar
                         ar-modes="webxr scene-viewer quick-look"

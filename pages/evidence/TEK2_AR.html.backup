@@ -67,7 +67,7 @@
                 <div id="modelViewerContainer" class="model-viewer-container">
                     <model-viewer
                         id="glassModel"
-                        src="../../assets/models/whiskey_glass.glb"
+                        src="../assets/models/whiskey_glass.glb"
                         alt="Crystal Glasses 3D Model - Evidence"
                         ar
                         ar-modes="webxr scene-viewer quick-look"

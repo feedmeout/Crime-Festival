@@ -53,7 +53,7 @@
                 <div class="model-viewer-container" id="modelContainer">
                     <model-viewer
                         id="modelViewer"
-                        src="../../assets/models/latex_glove.glb"
+                        src="../assets/models/latex_glove.glb"
                         alt="Medical Latex Glove 3D Model - Evidence"
                         ar
                         ar-modes="webxr scene-viewer quick-look"
