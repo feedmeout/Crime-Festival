@@ -1,10 +1,3 @@
-/* ========================================
-   TEK7.CSS - Handwritten Notes Evidence
-   Requires: base.css, evidence-shared.css
-   ======================================== */
-
-/* ===== ANALYSIS ITEMS ===== */
-
 .analysis-item {
     background: linear-gradient(135deg, var(--bg-white) 0%, var(--bg-light) 100%);
     border: 2px solid var(--border-light);
@@ -65,8 +58,6 @@
     word-wrap: break-word;
 }
 
-/* ===== HANDWRITTEN NOTE ===== */
-
 .handwritten-note {
     background: linear-gradient(135deg, #fffef8 0%, #fdfcf5 100%);
     border: 3px solid #ddd;
@@ -80,7 +71,6 @@
     justify-content: center;
 }
 
-/* Lined paper effect */
 .handwritten-note::before {
     content: '';
     position: absolute;
@@ -94,7 +84,6 @@
     pointer-events: none;
 }
 
-/* Fold line effect */
 .fold-line {
     position: absolute;
     left: 50%;
@@ -111,7 +100,6 @@
     transform: translateX(-50%);
 }
 
-/* Handwritten text */
 .note-text {
     font-family: 'Brush Script MT', 'Lucida Handwriting', cursive;
     font-size: clamp(24px, 6vw, 42px);
@@ -126,7 +114,6 @@
     word-wrap: break-word;
 }
 
-/* Ink bleed effect */
 .ink-bleed {
     position: absolute;
     width: clamp(100px, 25vw, 200px);
@@ -137,7 +124,6 @@
     bottom: clamp(80px, 15vw, 120px);
 }
 
-/* Evidence tag */
 .evidence-tag {
     position: absolute;
     bottom: 10px;
@@ -151,8 +137,6 @@
     font-weight: bold;
     font-family: monospace;
 }
-
-/* ===== RESPONSIVE ADJUSTMENTS ===== */
 
 @media (max-width: 480px) {
     .analysis-item:hover {

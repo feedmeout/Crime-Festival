@@ -1,11 +1,3 @@
-/* ========================================
-   EVIDENCE-SHARED.CSS
-   Common styles for all TEK evidence pages
-   Include AFTER base.css
-   Supports BOTH desktop and mobile
-   ======================================== */
-
-/* ===== LAYOUT ===== */
 body {
     min-height: 100vh;
     background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-darker) 100%);
@@ -20,7 +12,6 @@ body {
     margin: 0 auto;
 }
 
-/* ===== HEADER ===== */
 .header {
     background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
     padding: var(--space-md) var(--space-sm);
@@ -61,7 +52,6 @@ body {
     font-size: var(--font-sm);
 }
 
-/* ===== EVIDENCE CARD ===== */
 .evidence-card {
     background: rgba(255, 255, 255, 0.95);
     border-radius: clamp(10px, 2vw, 15px);
@@ -70,7 +60,6 @@ body {
     border: clamp(2px, 0.5vw, 3px) solid var(--primary);
 }
 
-/* ===== BADGE BAR ===== */
 .badge-bar {
     background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-medium) 100%);
     padding: var(--space-md) var(--space-sm);
@@ -112,7 +101,6 @@ body {
     white-space: nowrap;
 }
 
-/* ===== CRIME SCENE PHOTO ===== */
 .crime-scene-photo {
     background: #000;
     position: relative;
@@ -146,7 +134,6 @@ body {
     z-index: 10;
 }
 
-/* ===== AR CONTAINER ===== */
 .ar-container {
     margin: var(--space-md) 0;
     padding: var(--space-md);
@@ -168,7 +155,6 @@ body {
     flex-wrap: wrap;
 }
 
-/* ===== BUTTON CONTAINER FOR CENTERING ===== */
 .button-container {
     display: flex;
     justify-content: center;
@@ -176,7 +162,6 @@ body {
     width: 100%;
 }
 
-/* ===== 3D VIEWER BUTTONS ===== */
 .view-3d-button,
 .load-3d-button {
     background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
@@ -197,12 +182,10 @@ body {
     min-height: var(--min-touch);
 }
 
-/* CRITICAL FIX: Only hide the DIRECT CHILD button container, not nested ones */
 .ar-container:has(.model-viewer-container.active) > .button-container {
     display: none;
 }
 
-/* Desktop hover effect for buttons */
 @media (hover: hover) {
     .view-3d-button:hover,
     .load-3d-button:hover {
@@ -211,7 +194,6 @@ body {
     }
 }
 
-/* Mobile/Touch feedback */
 .view-3d-button:active,
 .load-3d-button:active {
     transform: scale(0.98);
@@ -237,7 +219,6 @@ body {
     min-height: var(--min-touch);
 }
 
-/* Desktop hover effect */
 @media (hover: hover) {
     .close-3d-button:hover {
         transform: translateY(-2px);
@@ -245,13 +226,11 @@ body {
     }
 }
 
-/* Mobile/Touch feedback */
 .close-3d-button:active {
     transform: scale(0.98);
     opacity: 0.9;
 }
 
-/* ===== MODEL VIEWER ===== */
 .model-viewer-container {
     visibility: hidden;
     height: 0;
@@ -285,7 +264,6 @@ model-viewer::part(default-ar-button) {
     border: none;
 }
 
-/* ===== DETAILS SECTION ===== */
 .details {
     padding: clamp(20px, 4vw, 30px);
     background: linear-gradient(to bottom, var(--bg-white) 0%, var(--bg-light) 100%);
@@ -344,7 +322,6 @@ model-viewer::part(default-ar-button) {
     margin-bottom: 0;
 }
 
-/* ===== LISTS ===== */
 ul {
     padding-left: clamp(20px, 4vw, 25px);
     line-height: 1.8;
@@ -355,7 +332,6 @@ ul li {
     word-wrap: break-word;
 }
 
-/* ===== SIGNIFICANCE BOX ===== */
 .significance-box {
     background: linear-gradient(135deg, #fff5f0 0%, #ffe8db 100%);
     border: 2px solid var(--primary);
@@ -386,7 +362,6 @@ ul li {
     overflow-wrap: break-word;
 }
 
-/* ===== BACK BUTTON ===== */
 .back-button-container {
     text-align: center;
     padding: var(--space-md);
@@ -417,7 +392,6 @@ ul li {
     min-width: 200px;
 }
 
-/* Desktop hover effect */
 @media (hover: hover) {
     .back-button:hover {
         transform: translateY(-2px);
@@ -425,13 +399,11 @@ ul li {
     }
 }
 
-/* Mobile/Touch feedback */
 .back-button:active {
     transform: scale(0.98);
     opacity: 0.9;
 }
 
-/* ===== RESPONSIVE ===== */
 @media (max-width: 480px) {
     .badge-bar {
         flex-direction: column;
@@ -453,7 +425,6 @@ ul li {
     }
 }
 
-/* ===== PRINT ===== */
 @media print {
     .back-button-container,
     .ar-container {

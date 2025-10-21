@@ -1,10 +1,3 @@
-/* ========================================
-   TEK6.CSS - Building/Floor Plans Evidence
-   Requires: base.css, evidence-shared.css
-   ======================================== */
-
-/* ===== EVIDENCE METADATA GRID ===== */
-
 .evidence-metadata {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
@@ -55,8 +48,6 @@
     line-height: 1.3;
     word-wrap: break-word;
 }
-
-/* ===== CRITICAL ALERT ===== */
 
 .critical-alert {
     background: linear-gradient(135deg, var(--danger) 0%, var(--danger-dark) 100%);
@@ -119,8 +110,6 @@
     font-weight: 500;
 }
 
-/* ===== FLOOR GRID ===== */
-
 .floor-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
@@ -163,8 +152,6 @@
     font-weight: 600;
     color: var(--bg-medium);
 }
-
-/* ===== RESPONSIVE ADJUSTMENTS ===== */
 
 @media (max-width: 480px) {
     .metadata-item:hover {

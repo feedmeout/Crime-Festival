@@ -1252,10 +1252,8 @@ function displaySolutionResult(solution) {
         caseStatus = 'CASE ARCHIVED';
     }
 
-    // Build HTML using DOM manipulation instead of template literals
     resultDiv.innerHTML = '';
-    
-    // Create score display
+
     const scoreCard = document.createElement('div');
     scoreCard.style.cssText = 'background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%); border-radius: 15px; padding: 30px; margin-bottom: 25px; border: 3px solid #ff6b00; box-shadow: 0 10px 40px rgba(0,0,0,0.4);';
     scoreCard.innerHTML = `
@@ -1273,7 +1271,6 @@ function displaySolutionResult(solution) {
     `;
     resultDiv.appendChild(scoreCard);
     
-    // Create stats display
     const statsCard = document.createElement('div');
     statsCard.style.cssText = 'background: white; border-radius: 15px; padding: 20px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);';
     let statsHTML = '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px;">';
@@ -1304,7 +1301,6 @@ function displaySolutionResult(solution) {
     statsCard.innerHTML = statsHTML;
     resultDiv.appendChild(statsCard);
     
-    // Create breakdown display
     const breakdownCard = document.createElement('div');
     breakdownCard.style.cssText = 'background: white; border-radius: 15px; padding: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);';
     

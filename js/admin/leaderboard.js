@@ -134,7 +134,6 @@ const CORRECT_SUSPECTS = ['konstantinos', 'georgios', 'eleni'];
             const hasSuicide = selectedSuspects.includes('suicide');
             const hasKiller = selectedSuspects.some(s => s !== 'suicide');
             
-            // Handle contradiction
             if (hasSuicide && hasKiller) {
                 const killerNames = selectedSuspects
                     .filter(s => s !== 'suicide')
@@ -153,7 +152,6 @@ const CORRECT_SUSPECTS = ['konstantinos', 'georgios', 'eleni'];
                 };
             }
 
-            // Handle suicide theory
             if (hasSuicide && !hasKiller) {
                 return {
                     score: 0,
@@ -171,13 +169,11 @@ const CORRECT_SUSPECTS = ['konstantinos', 'georgios', 'eleni'];
                 };
             }
 
-            // Murder diagnosis - Basic points
             let basicPoints = SCORING.murder_diagnosis;
             score += basicPoints;
             breakdown.push(`HEADER:🧩 ΒΑΣΙΚΗ ΕΚΤΙΜΗΣΗ (+${basicPoints} πόντοι)`);
             breakdown.push('SUCCESS:Σωστή Διάγνωση: ΔΟΛΟΦΟΝΙΑ');
             
-            // Count correct and wrong suspects
             let correctCount = 0;
             let wrongSuspects = [];
             let missedSuspects = [];
@@ -196,16 +192,13 @@ const CORRECT_SUSPECTS = ['konstantinos', 'georgios', 'eleni'];
                 }
             });
 
-            // Perpetrator identification
             let perpetratorPoints = 0;
             
             if (correctCount === 3 && selectedSuspects.length === 3) {
-                // Perfect solution
                 perpetratorPoints = SCORING.perpetrator * 3 + SCORING.perfect_solution_bonus + SCORING.cooperation;
                 breakdown.push(`HEADER:🎖️ ΤΕΛΕΙΑ ΑΝΑΛΥΣΗ (+${perpetratorPoints} πόντοι)`);
                 breakdown.push('SUCCESS:Εντόπισαν και τους 3 συνεργούς');
             } else {
-                // Partial solution
                 breakdown.push(`HEADER:👥 ΤΑΥΤΟΠΟΙΗΣΗ ΔΡΑΣΤΩΝ (+${perpetratorPoints} πόντοι - προσωρινό)`);
                 
                 if (correctCount > 0) {
@@ -228,7 +221,6 @@ const CORRECT_SUSPECTS = ['konstantinos', 'georgios', 'eleni'];
                     breakdown.push('SUCCESS:Bonus Ακρίβειας (δεν κατηγόρησαν αθώους)');
                 }
                 
-                // Update header with final points
                 const headerIndex = breakdown.findIndex(line => line.includes('👥 ΤΑΥΤΟΠΟΙΗΣΗ ΔΡΑΣΤΩΝ'));
                 if (headerIndex !== -1) {
                     breakdown[headerIndex] = `HEADER:👥 ΤΑΥΤΟΠΟΙΗΣΗ ΔΡΑΣΤΩΝ (+${perpetratorPoints} πόντοι)`;
@@ -237,12 +229,10 @@ const CORRECT_SUSPECTS = ['konstantinos', 'georgios', 'eleni'];
 
             score += perpetratorPoints;
             
-            // Efficiency bonuses (only if 2+ correct suspects)
             if (correctCount >= 2) {
                 let efficiencyPoints = 0;
                 let efficiencyItems = [];
                 
-                // Time bonus
                 if (totalTimeMs) {
                     const minutes = totalTimeMs / 60000;
                     if (minutes < 30) {
@@ -257,7 +247,6 @@ const CORRECT_SUSPECTS = ['konstantinos', 'georgios', 'eleni'];
                     }
                 }
 
-                // Prompts bonus
                 if (promptCount) {
                     if (promptCount <= 5) {
                         efficiencyPoints += SCORING.prompts_1_5;
@@ -279,7 +268,6 @@ const CORRECT_SUSPECTS = ['konstantinos', 'georgios', 'eleni'];
                 score += efficiencyPoints;
             }
             
-            // Penalties for wrong accusations
             if (wrongSuspects.length > 0) {
                 const originalScore = score;
                 let multiplier = 1.0;
@@ -301,7 +289,6 @@ const CORRECT_SUSPECTS = ['konstantinos', 'georgios', 'eleni'];
                 });
             }
                 
-            // Penalties for missed suspects
             if (missedSuspects.length > 0) {
                 const missedPenalty = missedSuspects.length * 20;
                 score = Math.max(0, score - missedPenalty);
@@ -311,8 +298,7 @@ const CORRECT_SUSPECTS = ['konstantinos', 'georgios', 'eleni'];
                     breakdown.push(`PENALTY:${name}`);
                 });
             }
-            
-            // Ensure score is never negative and not above max
+
             score = Math.max(0, Math.min(score, 140));
             
             return { 

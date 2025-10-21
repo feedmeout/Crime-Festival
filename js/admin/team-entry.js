@@ -100,8 +100,7 @@ async function enterGame(event) {
         }
 
         const teamData = docSnap.data();
-        
-        // 🔍 DEBUG: Log what we got from Firebase
+
         console.log('=== TEAM LOGIN DEBUG ===');
         console.log('Team name:', teamName);
         console.log('Full team data:', teamData);
@@ -122,9 +121,6 @@ async function enterGame(event) {
 
         const urlParams = new URLSearchParams(window.location.search);
         const redirectUrl = urlParams.get('redirect');
-
-        // ✅ ROBUST TESTING MODE CHECK
-        // Check for multiple possible truthy values
         const isTestingMode = teamData.testingMode === true || 
                              teamData.testingMode === 'true' || 
                              teamData.testingMode === 1 ||
@@ -135,13 +131,10 @@ async function enterGame(event) {
         if (isTestingMode) {
             console.log(`✅ Testing mode ACTIVE for team ${teamName}`);
             console.log('🚀 Bypassing all survey requirements');
-            
-            // Show confirmation alert so user knows testing mode is working
             setLoading(false);
             alert('🧪 ΛΕΙΤΟΥΡΓΙΑ ΔΟΚΙΜΩΝ ΕΝΕΡΓΗ\n\nΠαράκαμψη ερωτηματολογίων...');
             setLoading(true);
             
-            // Wait a moment then redirect
             setTimeout(() => {
                 if (redirectUrl) {
                     console.log(`🔄 Redirecting to: ${redirectUrl}`);
@@ -154,7 +147,6 @@ async function enterGame(event) {
             return;
         }
 
-        // ❌ NORMAL MODE: Survey requirement enforced
         console.log('📋 Normal mode - checking survey requirements');
         
         const preSurveyDoc = `${teamName}_pre_${memberName}`;

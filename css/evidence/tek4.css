@@ -1,10 +1,3 @@
-/* ========================================
-   TEK4.CSS - Email Evidence
-   Requires: base.css, evidence-shared.css
-   ======================================== */
-
-/* ===== EMAIL DISPLAY STYLES ===== */
-
 .email-display {
     background: linear-gradient(135deg, var(--bg-light) 0%, var(--bg-white) 100%);
     border: 3px solid var(--danger);
@@ -56,8 +49,6 @@
     overflow-wrap: break-word;
 }
 
-/* ===== METADATA GRID ===== */
-
 .metadata-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -98,8 +89,6 @@
     overflow-wrap: break-word;
 }
 
-/* ===== SUBSECTIONS ===== */
-
 .subsection {
     margin-top: clamp(20px, 4vw, 25px);
     padding-top: clamp(15px, 3vw, 20px);
@@ -112,8 +101,6 @@
     margin-bottom: 12px;
     font-weight: 700;
 }
-
-/* ===== RESPONSIVE ADJUSTMENTS ===== */
 
 @media (max-width: 480px) {
     .metadata-grid {
