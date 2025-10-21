@@ -24,7 +24,7 @@ const filesToFix = [
   },
   {
     path: 'js/pages/unlock-system.js',
-    relativeToRoot: '../',
+    relativeToRoot: '../../', // From pages/evidence/ to root
   },
   {
     path: 'js/admin/admin.js',
@@ -38,6 +38,30 @@ const filesToFix = [
 
 // Problematic patterns to find and fix
 const patterns = [
+  {
+    name: 'Random-numbered index.html files (e.g., 27525index.html)',
+    regex: /(['"`])\d+index\.html(\?[^'"`]*)?(['"`])/g,
+    getReplacement: (match, quote1, params, quote2, relativePath) => {
+      console.log(`  🔧 Found numbered index: ${match}`);
+      return `${quote1}${relativePath}index.html${params || ''}${quote2}`;
+    }
+  },
+  {
+    name: 'Template literal numbered index.html',
+    regex: /`\d+index\.html(\?[^`]*)?`/g,
+    getReplacement: (match, params, quote2, relativePath) => {
+      console.log(`  🔧 Found numbered index in template: ${match}`);
+      return `\`${relativePath}index.html${params || ''}\``;
+    }
+  },
+  {
+    name: 'Href attribute numbered index.html',
+    regex: /href=(['"])\d+index\.html(\?[^'"]*)?(['"])/g,
+    getReplacement: (match, quote1, params, quote2, relativePath) => {
+      console.log(`  🔧 Found numbered index in href: ${match}`);
+      return `href=${quote1}${relativePath}index.html${params || ''}${quote2}`;
+    }
+  },
   {
     name: 'Direct pages/index.html reference',
     regex: /(['"`])pages\/index\.html(\?[^'"`]*)?(['"`])/g,

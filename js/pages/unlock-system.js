@@ -232,7 +232,7 @@ const tekInfo = {
                         <h2>❌ Σφάλμα</h2>
                         <p>Μη έγκυρος κωδικός τεκμηρίου!</p>
                     </div>
-                    <a href="8073index.html?team=${teamCode}" class="btn">Επιστροφή</a>
+                    <a href="8068index.html?team=${teamCode}" class="btn">Επιστροφή</a>
                 `;
                 return;
             }
@@ -281,7 +281,7 @@ const tekInfo = {
                     ${timeInfo}
                 </div>
                 <a href="${tek.page}?team=${teamCode}" class="btn">Προβολή Τεκμηρίου</a>
-                <a href="10349index.html?team=${teamCode}" class="btn btn-secondary">Επιστροφή στον Φάκελο</a>
+                <a href="10348index.html?team=${teamCode}" class="btn btn-secondary">Επιστροφή στον Φάκελο</a>
             `;
         }
 
@@ -340,7 +340,7 @@ const tekInfo = {
                     📊 Έχετε ξεκλειδώσει ${teamData.unlocked.length} από 11 τεκμήρια
                 </p>
                 <a href="${tek.page}?team=${teamCode}" class="btn">Προβολή Τεκμηρίου</a>
-                <a href="12873index.html?team=${teamCode}" class="btn btn-secondary">Επιστροφή στον Φάκελο</a>
+                <a href="12877index.html?team=${teamCode}" class="btn btn-secondary">Επιστροφή στον Φάκελο</a>
             `;
         }
 

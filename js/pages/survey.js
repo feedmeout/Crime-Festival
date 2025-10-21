@@ -638,7 +638,7 @@ async function submitSurvey() {
                     </div>
                     
                     <div style="text-align: center; margin-top: 30px;">
-<button class="btn btn-primary" onclick="window.location.href='27525index.html?team=${TEAM_MEMBER.team}'" style="font-size: clamp(14px, 2.5vw, 16px);">
+<button class="btn btn-primary" onclick="window.location.href='27520index.html?team=${TEAM_MEMBER.team}'" style="font-size: clamp(14px, 2.5vw, 16px);">
     🎮 ΕΚΚΙΝΗΣΗ ΠΑΙΧΝΙΔΙΟΥ
 </button>
                     </div>
