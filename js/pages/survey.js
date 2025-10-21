@@ -166,7 +166,7 @@ function renderWelcome() {
                 </div>
                 
                 <div class="note-box">
-                    <p class="note-text"><strong>📌 ΣΗΜΑΝΤΙΚΟ</strong></p>
+                    <p class="note-text"><strong>📌 ΣΗΜΕΙΩΣΕΙΣ!</strong></p>
                     <p class="note-text">• Η έρευνα είναι ανώνυμη</p>
                     <p class="note-text">• Διάρκεια: 5-10 λεπτά</p>
                     <p class="note-text" style="color: #d32f2f; font-weight: 600;">• Παρακαλούμε απαντήστε ειλικρινά - δεν υπάρχουν σωστές ή λάθος απαντήσεις!</p>
