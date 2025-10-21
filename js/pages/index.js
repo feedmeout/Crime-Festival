@@ -913,19 +913,19 @@ function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
 				'SUBHEADER:Οι Πραγματικοί Δράστες που Παραβλέψατε:',
 				'',
 				'ITEM:→ Αναγνώστου Κωνσταντίνος (Μαστρομυαλός)',
-				'ITEM:  • Αποτυπώματά του στο μπουκάλι (λαιμός) και κλειδί χρηματοκιβωτίου (ΤΕΚ #1, #10)',
-				'ITEM:  • Υπεξαίρεση €500.000 σε Ελβετία - το κίνητρο (ΤΕΚ #8)',
-				'ITEM:  • Ο εγκέφαλος της επιχείρησης - έριξε το κυάνιο στο ποτήρι',
+				'ITEM:Αποτυπώματά του στο μπουκάλι (λαιμός) και κλειδί χρηματοκιβωτίου (ΤΕΚ #1, #10)',
+				'ITEM:Υπεξαίρεση €500.000 σε Ελβετία - το κίνητρο (ΤΕΚ #8)',
+				'ITEM:Ο εγκέφαλος της επιχείρησης - έριξε το κυάνιο στο ποτήρι',
 				'',
 				'ITEM:→ Πετρόπουλος Γεώργιος (Προμηθευτής)',
-				'ITEM:  • Αγόρασε κυάνιο 19/09 με επαγγελματική άδεια (ΤΕΚ #9)',
-				'ITEM:  • Απενεργοποίησε κάμερες ασφαλείας 20:55 (ΤΕΚ #11)',
-				'ITEM:  • Χρέη €60.000 - το κίνητρο (ΤΕΚ #8)',
+				'ITEM:Αγόρασε κυάνιο 19/09 με επαγγελματική άδεια (ΤΕΚ #9)',
+				'ITEM:Απενεργοποίησε κάμερες ασφαλείας 20:55 (ΤΕΚ #11)',
+				'ITEM:Χρέη €60.000 - το κίνητρο (ΤΕΚ #8)',
 				'',
 				'ITEM:→ Μαυρίδη Ελένη (Συγκάλυψη)',
-				'ITEM:  • Έστειλε πλαστό email «αυτοκτονίας» από κοινόχρηστο PC (ΤΕΚ #4)',
-				'ITEM:  • Πλαστογράφησε χειρόγραφο σημείωμα (ΤΕΚ #7)',
-				'ITEM:  • Εκβιασμός €100.000 για ερωτικές φωτογραφίες - το κίνητρο (ΤΕΚ #8)',
+				'ITEM:Έστειλε πλαστό email «αυτοκτονίας» από κοινόχρηστο PC (ΤΕΚ #4)',
+				'ITEM:Πλαστογράφησε χειρόγραφο σημείωμα (ΤΕΚ #7)',
+				'ITEM:Εκβιασμός €100.000 για ερωτικές φωτογραφίες - το κίνητρο (ΤΕΚ #8)',
 				'',
 				'INFO:Η δολοφονία σκηνοθετήθηκε επιμελώς να μοιάζει με αυτοκτονία.',
 				'INFO:Οι τρεις συνεργοί είχαν συντονισμένους ρόλους: προμήθεια δηλητηρίου, εκτέλεση, και συγκάλυψη.'
@@ -1090,11 +1090,11 @@ function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
         wrongSuspects.forEach(name => {
             breakdown.push(`ITEM:→ ${name}`);
             if (name === 'Παπαδοπούλου Μαρία') {
-                breakdown.push('ITEM:  • Σιδηρένιο άλλοθι (γιατρός 18:30-19:30 & δείπνο 19:45-22:00)');
-                breakdown.push('ITEM:  • Τα αποτυπώματά της στο μπουκάλι ήταν παλιά');
+                breakdown.push('ITEM: Σιδηρένιο άλλοθι (γιατρός 18:30-19:30 & δείπνο 19:45-22:00)');
+                breakdown.push('ITEM: Τα αποτυπώματά της στο μπουκάλι ήταν παλιά');
             } else if (name === 'Νικολάου Αλεξάνδρα') {
-                breakdown.push('ITEM:  • Έφυγε 18:30, πριν τη δολοφονία');
-                breakdown.push('ITEM:  • Δεν είχε πρόσβαση σε κυάνιο');
+                breakdown.push('ITEM: Έφυγε 18:30, πριν τη δολοφονία');
+                breakdown.push('ITEM: Δεν είχε πρόσβαση σε κυάνιο');
             }
         });
         breakdown.push('');
@@ -1114,17 +1114,17 @@ function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
         missedSuspects.forEach(name => {
             breakdown.push(`ITEM:→ ${name}`);
             if (name === 'Αναγνώστου Κωνσταντίνος') {
-                breakdown.push('ITEM:  • Αποτυπώματά του στο μπουκάλι και κλειδί χρηματοκιβωτίου');
-                breakdown.push('ITEM:  • Υπεξαίρεση €500.000 - το κίνητρο');
-                breakdown.push('ITEM:  • Ο μαστρομυαλός που έριξε το κυάνιο');
+                breakdown.push('ITEM: Αποτυπώματά του στο μπουκάλι και κλειδί χρηματοκιβωτίου');
+                breakdown.push('ITEM: Υπεξαίρεση €500.000 - το κίνητρο');
+                breakdown.push('ITEM: Ο μαστρομυαλός που έριξε το κυάνιο');
             } else if (name === 'Πετρόπουλος Γεώργιος') {
-                breakdown.push('ITEM:  • Αγόρασε κυάνιο 19/09 (ΤΕΚ #9)');
-                breakdown.push('ITEM:  • Απενεργοποίησε κάμερες 20:55 (ΤΕΚ #11)');
-                breakdown.push('ITEM:  • Χρέη €60.000 - το κίνητρο');
+                breakdown.push('ITEM: Αγόρασε κυάνιο 19/09 (ΤΕΚ #9)');
+                breakdown.push('ITEM: Απενεργοποίησε κάμερες 20:55 (ΤΕΚ #11)');
+                breakdown.push('ITEM: Χρέη €60.000 - το κίνητρο');
             } else if (name === 'Μαυρίδη Ελένη') {
-                breakdown.push('ITEM:  • Έστειλε πλαστό email «αυτοκτονίας» (ΤΕΚ #4)');
-                breakdown.push('ITEM:  • Πλαστογράφησε χειρόγραφο σημείωμα (ΤΕΚ #7)');
-                breakdown.push('ITEM:  • Εκβιασμός €100.000 για ερωτικές φωτογραφίες');
+                breakdown.push('ITEM: Έστειλε πλαστό email «αυτοκτονίας» (ΤΕΚ #4)');
+                breakdown.push('ITEM: Πλαστογράφησε χειρόγραφο σημείωμα (ΤΕΚ #7)');
+                breakdown.push('ITEM: Εκβιασμός €100.000 για ερωτικές φωτογραφίες');
             }
         });
         breakdown.push('');
@@ -1275,11 +1275,9 @@ function displaySolutionResult(solution) {
 	solution.breakdown.forEach(line => {
 		if (!line || line.trim() === '') return;
 		if (line.includes('ΤΕΛΙΚΗ ΒΑΘΜΟΛΟΓΙΑ')) return;
-		
-		// Split only on FIRST colon to preserve content with multiple colons
+
 		const colonIndex = line.indexOf(':');
 		if (colonIndex === -1) {
-			// No type prefix, just show content
 			breakdownHTML += `<div style="padding: 12px; margin-bottom: 8px; border-radius: 8px; font-size: 14px; line-height: 1.6; background: #fafafa; color: #333;">${line}</div>`;
 			return;
 		}
@@ -1308,7 +1306,6 @@ function displaySolutionResult(solution) {
 		} else if (type === 'SUBHEADER') {
 			style += 'background: transparent; color: #0f3460; font-weight: bold; padding-left: 8px;';
 		} else if (type === 'ITEM') {
-			// NO bullet point, just indented plain text
 			style += 'background: #f5f5f5; color: #555; margin-left: 30px; padding-left: 15px;';
 		} else {
 			style += 'background: #fafafa; color: #333;';
