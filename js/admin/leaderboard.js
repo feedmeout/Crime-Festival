@@ -125,7 +125,7 @@ const CORRECT_SUSPECTS = ['konstantinos', 'georgios', 'eleni'];
             if (selectedSuspects.length === 0) {
                 return {
                     score: 0,
-                    breakdown: ['Δεν επέλεξαν κανέναν ύποπτο ή αυτοκτονία'],
+                    breakdown: ['ERROR:Δεν επέλεξαν κανέναν ύποπτο ή αυτοκτονία'],
                     maxScore: 140,
                     correctCount: 0
                 };
@@ -158,7 +158,7 @@ const CORRECT_SUSPECTS = ['konstantinos', 'georgios', 'eleni'];
                     breakdown: [
                         'HEADER:❌ ΕΣΦΑΛΜΕΝΗ ΘΕΩΡΙΑ (+0 πόντοι)',
                         'ERROR:Αυτό δεν ήταν αυτοκτονία',
-                        'SUBHEADER:Βασικά Στοιχεία που Αγνόησαν:',
+                        'SUBHEADER:Βασικά Στοιχεία που Αγνόησαν',
                         'ITEM:Γάντια λάτεξ στην πόρτα',
                         'ITEM:Πλαστό email "αυτοκτονίας"',
                         'ITEM:Απενεργοποίηση κάμερων',
@@ -237,26 +237,26 @@ const CORRECT_SUSPECTS = ['konstantinos', 'georgios', 'eleni'];
                     const minutes = totalTimeMs / 60000;
                     if (minutes < 30) {
                         efficiencyPoints += SCORING.time_under_30;
-                        efficiencyItems.push('SUCCESS:Χρόνος: <30 λεπτά');
+                        efficiencyItems.push('SUCCESS:Χρόνος <30 λεπτά');
                     } else if (minutes < 45) {
                         efficiencyPoints += SCORING.time_30_45;
-                        efficiencyItems.push('SUCCESS:Χρόνος: 30-45 λεπτά');
+                        efficiencyItems.push('SUCCESS:Χρόνος 30-45 λεπτά');
                     } else if (minutes < 60) {
                         efficiencyPoints += SCORING.time_45_60;
-                        efficiencyItems.push('SUCCESS:Χρόνος: 45-60 λεπτά');
+                        efficiencyItems.push('SUCCESS:Χρόνος 45-60 λεπτά');
                     }
                 }
 
                 if (promptCount) {
                     if (promptCount <= 5) {
                         efficiencyPoints += SCORING.prompts_1_5;
-                        efficiencyItems.push('SUCCESS:Prompts: ≤5');
+                        efficiencyItems.push('SUCCESS:Prompts ≤5');
                     } else if (promptCount <= 10) {
                         efficiencyPoints += SCORING.prompts_6_10;
-                        efficiencyItems.push('SUCCESS:Prompts: 6-10');
+                        efficiencyItems.push('SUCCESS:Prompts 6-10');
                     } else if (promptCount <= 15) {
                         efficiencyPoints += SCORING.prompts_11_15;
-                        efficiencyItems.push('SUCCESS:Prompts: 11-15');
+                        efficiencyItems.push('SUCCESS:Prompts 11-15');
                     }
                 }
                 
@@ -612,7 +612,7 @@ const CORRECT_SUSPECTS = ['konstantinos', 'georgios', 'eleni'];
                                 }
                                 
                                 if (type === 'SUCCESS') {
-                                    return `<div style="background: #fff8e1; padding: clamp(8px, 1.5vw, 10px) clamp(12px, 2.5vw, 15px); margin: 5px 0; border-left: 4px solid #ffc107; border-radius: 4px; color: #f57f17; font-weight: 500;">${content}</div>`;
+                                    return `<div style="background: #fff8e1; padding: clamp(8px, 1.5vw, 10px) clamp(12px, 2.5vw, 15px); margin: 5px 0; border-left: 4px solid #ffc107; border-radius: 4px; color: #f57f17; font-weight: 500;">✓ ${content}</div>`;
                                 }
                                 
                                 if (type === 'PENALTY') {
@@ -620,7 +620,7 @@ const CORRECT_SUSPECTS = ['konstantinos', 'georgios', 'eleni'];
                                 }
                                 
                                 if (type === 'ERROR') {
-                                    return `<div style="background: #ffebee; padding: clamp(8px, 1.5vw, 10px) clamp(12px, 2.5vw, 15px); margin: 5px 0; border-left: 4px solid #dc3545; border-radius: 4px; color: #c62828; font-weight: 500;">${content}</div>`;
+                                    return `<div style="background: #ffebee; padding: clamp(8px, 1.5vw, 10px) clamp(12px, 2.5vw, 15px); margin: 5px 0; border-left: 4px solid #dc3545; border-radius: 4px; color: #c62828; font-weight: 500;">✗ ${content}</div>`;
                                 }
                                 
                                 if (type === 'CONTRADICTION') {
@@ -632,7 +632,7 @@ const CORRECT_SUSPECTS = ['konstantinos', 'georgios', 'eleni'];
                                 }
                                 
                                 if (type === 'ITEM') {
-                                    return `<div style="padding: clamp(4px, 1vw, 5px) clamp(5px, 1vw, 8px) clamp(4px, 1vw, 5px) clamp(20px, 4vw, 25px); margin: 2px 0; color: #555;">• ${content}</div>`;
+                                    return `<div style="padding: clamp(4px, 1vw, 5px) clamp(5px, 1vw, 8px) clamp(4px, 1vw, 5px) clamp(20px, 4vw, 25px); margin: 2px 0; color: #555;">${content}</div>`;
                                 }
                                 
                                 if (type === 'INFO') {
