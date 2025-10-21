@@ -619,7 +619,7 @@ function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
         }
         
         if (efficiencyPoints > 0 || efficiencyItems.length > 0) {
-            breakdown.push(`HEADER:⚡ BONUSES ΑΠΟΔΟΤΙΚΟΤΗΤΑΣ (+${efficiencyPoints} πόντοι)`);
+            breakdown.push(`HEADER:⚡ BONUS ΑΠΟΔΟΤΙΚΟΤΗΤΑΣ (+${efficiencyPoints} πόντοι)`);
             breakdown.push(...efficiencyItems);
         }
         
@@ -1013,7 +1013,7 @@ function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
     }
     
     if (correctCount >= 2) {
-        breakdown.push('HEADER:⚡ BONUSES ΑΠΟΔΟΤΙΚΟΤΗΤΑΣ');
+        breakdown.push('HEADER:⚡ BONUS ΑΠΟΔΟΤΙΚΟΤΗΤΑΣ');
         breakdown.push('');
         
         let hasEfficiencyBonus = false;
