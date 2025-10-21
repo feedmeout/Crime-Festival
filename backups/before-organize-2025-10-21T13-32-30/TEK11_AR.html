@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Τεκμήριο Ξεκλειδώθηκε</title>
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
+    
+    
+    <link rel="stylesheet" href="css/tek-evidence.css">
+</head>
+<body>
+    <div class="animated-background"></div>
+
+    <div class="header">
+        <div class="header-content">
+            <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+            <h1>ΤΕΚΜΗΡΙΟ ΞΕΚΛΕΙΔΩΘΗΚΕ!</h1>
+        </div>
+        <p>Προστέθηκε στον φάκελο υπόθεσης</p>
+    </div>
+
+    <div class="container">
+        <div class="evidence-card">
+            <div class="badge-bar">
+                <div class="badge-info">
+                    <div class="evidence-id">ΤΕΚ #011</div>
+                </div>
+                <div class="official-badge">ΕΠΙΣΗΜΟ ΤΕΚΜΗΡΙΟ</div>
+            </div>
+
+            <div class="crime-scene-photo">
+                <canvas id="crimeSceneCanvas"></canvas>
+                <div class="confidential-badge">ΑΠΟΡΡΗΤΟ</div>
+            </div>
+
+            <div class="ar-container">
+                <h3 class="ar-title">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M2 16.1A5 5 0 0 1 5.9 20M2 12.05A9 9 0 0 1 9.95 20M2 8V6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-6"></path>
+                        <line x1="2" y1="20" x2="2.01" y2="20"></line>
+                    </svg>
+                    ΕΠΑΥΞΗΜΕΝΗ ΠΡΑΓΜΑΤΙΚΟΤΗΤΑ
+                </h3>
+                
+                <button class="load-3d-button" id="load3DBtn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                        <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                        <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                    </svg>
+                    ΠΡΟΒΟΛΗ ΣΕ 3D
+                </button>
+
+                <div class="model-viewer-container" id="modelViewerContainer">
+                    <model-viewer
+                        id="securityCameraModel"
+                        src="security_camera.glb"
+                        alt="Security Camera System 3D Model - Evidence"
+                        ar
+                        ar-modes="webxr scene-viewer quick-look"
+                        camera-controls
+                        touch-action="pan-y"
+                        auto-rotate
+                        auto-rotate-delay="1000"
+                        rotation-per-second="30deg"
+                        shadow-intensity="1"
+                        exposure="0.8"
+                        camera-orbit="0deg 75deg 2.5m"
+                        min-camera-orbit="auto 0deg auto"
+                        max-camera-orbit="auto 180deg auto">
+                    </model-viewer>
+
+                    <button class="close-3d-button" id="close3DBtn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                        ΚΛΕΙΣΙΜΟ
+                    </button>
+
+                    <p style="text-align: center; color: #666; font-size: clamp(12px, 2.5vw, 13px); margin-top: 10px; font-style: italic;">
+                        💡 Σύρετε για να περιστρέψετε • Zoom με δύο δάχτυλα
+                    </p>
+                </div>
+            </div>
+
+            <div class="details">
+                <h2 class="evidence-title">🎥 ΣΥΣΤΗΜΑ ΚΛΕΙΣΤΟΥ ΚΥΚΛΩΜΑΤΟΣ (CCTV)</h2>
+
+                <div class="critical-alert">
+                    <div class="alert-badge">ΚΡΙΣΙΜΟ</div>
+                    <div class="alert-content">
+                        <h3 class="alert-title">
+                            <span style="font-size: 20px;"></span>
+                            ΑΠΕΝΕΡΓΟΠΟΙΗΣΗ ΣΥΣΤΗΜΑΤΟΣ
+                        </h3>
+                        <p class="alert-text">
+                            Το σύστημα ασφαλείας απενεργοποιήθηκε στις 20:55. Η καταγραφή επανήλθε αυτόματα στις 21:42.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">
+                        <span style="font-size: 24px;"></span>
+                        🔬 ΤΕΧΝΙΚΗ ΑΝΑΛΥΣΗ ΣΥΣΤΗΜΑΤΟΣ
+                    </h3>
+                    <p class="section-content" style="margin-bottom: 15px;">
+                        Το κτίριο διαθέτει σύστημα 12 καμερών υψηλής ευκρίνειας (1080p) με κεντρικό διακομιστή καταγραφής στο δωμάτιο ασφαλείας (ισόγειο). Το σύστημα διαθέτει διττή λειτουργία ασφαλείας: αυτόματη καταγραφή με εφεδρική τροφοδοσία (UPS) και σύστημα ανίχνευσης παραβίασης (tamper detection). Η χειροκίνητη απενεργοποίηση απαιτεί διπλή έγκριση - φυσική παρουσία στο δωμάτιο ελέγχου ΚΑΙ κωδικό πρόσβασης. Κάθε ενέργεια καταγράφεται αυτόματα στο ηλεκτρονικό αρχείο καταγραφής του διακομιστή (server log). Παράλληλα, υπάρχει και φυσικό Τετράδιο Συμβάντων που τηρείται χειρόγραφα από το προσωπικό ασφαλείας.
+                    </p>
+
+                    <div style="margin-top: 25px;">
+                        <p class="section-content" style="margin-bottom: 15px;"><strong style="color: #0f3460; font-size: 16px;">📊 Τεχνικά Χαρακτηριστικά</strong></p>
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong>Σύστημα:</strong> HIKVISION DS-7616NI-K2/16P (επαγγελματικό NVR)
+                        </p>
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong>Χωρητικότητα:</strong> 8TB αποθηκευτικός χώρος, 30 ημερών συνεχής καταγραφή
+                        </p>
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong>Κάλυψη:</strong> Όλοι οι κοινόχρηστοι χώροι, διάδρομοι, είσοδοι/έξοδοι, χώροι στάθμευσης
+                        </p>
+                        <p class="section-content">
+                            <strong>Τελευταία Συντήρηση:</strong> 10/08/2025 - Καμία αναφορά προβλήματος
+                        </p>
+                    </div>
+
+                    <div style="margin-top: 25px;">
+                        <p class="section-content" style="margin-bottom: 15px;"><strong style="color: #0f3460; font-size: 16px;">🔐 Εξουσιοδοτημένοι Χρήστες & Κωδικοί Πρόσβασης</strong></p>
+                        
+                        <table class="access-table">
+                            <thead>
+                                <tr>
+                                    <th>Κατηγορία</th>
+                                    <th>Username</th>
+                                    <th>Άτομα με Πρόσβαση</th>
+                                    <th>Τελευταία Αλλαγή</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td data-label="Κατηγορία"><strong>Διοικητικό Επίπεδο</strong></td>
+                                    <td data-label="Username">ADMIN_CEO</td>
+                                    <td data-label="Άτομα με Πρόσβαση">Δημητρίου Π. (CEO)</td>
+                                    <td data-label="Τελευταία Αλλαγή">12/01/2025</td>
+                                </tr>
+                                <tr>
+                                    <td data-label="Κατηγορία"><strong>Διοικητικό Επίπεδο</strong></td>
+                                    <td data-label="Username">ADMIN_CFO</td>
+                                    <td data-label="Άτομα με Πρόσβαση">Αναγνώστου Κ. (CFO)</td>
+                                    <td data-label="Τελευταία Αλλαγή">12/01/2025</td>
+                                </tr>
+                                <tr style="background: #fff5f5;">
+                                    <td data-label="Κατηγορία"><strong>Ομάδα Ασφαλείας</strong></td>
+                                    <td data-label="Username">SECURITY_01*</td>
+                                    <td data-label="Άτομα με Πρόσβαση">Πετρόπουλος Γ., Καραμάνης Σ., Γόρκας Α., Λυκορδής Π.</td>
+                                    <td data-label="Τελευταία Αλλαγή">08/09/2025</td>
+                                </tr>
+                                <tr style="background: #fffbf0;">
+                                    <td data-label="Κατηγορία"><strong>Τμήμα IT</strong></td>
+                                    <td data-label="Username">IT_VLACHOS</td>
+                                    <td data-label="Άτομα με Πρόσβαση">Βλάχος Μ. (Senior IT Administrator)</td>
+                                    <td data-label="Τελευταία Αλλαγή">20/07/2025</td>
+                                </tr>
+                                <tr style="background: #fffbf0;">
+                                    <td data-label="Κατηγορία"><strong>Τμήμα IT</strong></td>
+                                    <td data-label="Username">IT_SAVVIDIS</td>
+                                    <td data-label="Άτομα με Πρόσβαση">Σαββίδης Κ. (IT Technician)</td>
+                                    <td data-label="Τελευταία Αλλαγή">20/07/2025</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p class="section-content" style="margin-top: 10px; font-size: 13px; color: #856404; background: #fff3cd; padding: 10px; border-radius: 6px;">
+                            <strong>Σημείωση:</strong> Το username SECURITY_01 είναι κληρονομιά από παλαιότερο σύστημα (2018). Παρόλο που η IT ομάδα έχει συστήσει επανειλημμένα την υλοποίηση ατομικών κωδικών, η διοίκηση δεν έχει εγκρίνει το κόστος αναβάθμισης.
+                        </p>
+                    </div>
+
+                    <div style="margin-top: 25px;">
+                        <p class="section-content" style="margin-bottom: 15px;"><strong style="color: #0f3460; font-size: 16px;">🎥 Κάμερες Κρίσιμων Σημείων</strong></p>
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong>Κάμερα #03:</strong> Διάδρομος 7ου ορόφου (έξω από γραφείο Δημητρίου)
+                        </p>
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong>Κάμερα #04:</strong> Ασανσέρ 6ου ορόφου
+                        </p>
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong>Κάμερα #07:</strong> Κεντρική είσοδος κτιρίου
+                        </p>
+                        <p class="section-content">
+                            <strong>Κάμερα #12:</strong> Χώρος στάθμευσης υπογείου
+                        </p>
+                    </div>
+                </div>
+				
+                <div class="section">
+                    <h3 class="section-title">
+                        <span style="font-size: 24px;"></span>
+                        💾 ΗΛΕΚΤΡΟΝΙΚΟ ΑΡΧΕΙΟ ΔΙΑΚΟΜΙΣΤΗ (SERVER LOG)
+                    </h3>
+                    <p class="section-content" style="margin-bottom: 15px; font-style: italic; color: #666;">
+                        Το ηλεκτρονικό αρχείο καταγράφει αυτόματα κάθε τεχνική ενέργεια και εντολή συστήματος.
+                    </p>
+                    <div>
+                        <div class="log-item warning">
+                            <div class="log-time">15:20 - Προγραμματισμένη Συντήρηση</div>
+                            <div class="log-details">
+                                <div><strong>Χρήστης:</strong> IT_VLACHOS</div>
+                                <div><strong>Τερματικό:</strong> 192.168.1.201 (Τμήμα IT - Υπόγειο)</div>
+                                <div><strong>Ενέργεια:</strong> Ενημέρωση firmware καμερών #03, #07, #12</div>
+                                <div><strong>Έκδοση:</strong> v3.2.0 → v3.2.1</div>
+                                <div><strong>Σημείωση:</strong> Πιθανή ευπάθεια σε διακοπές δικτύου</div>
+                            </div>
+                        </div>
+
+						<div class="log-item">
+							<div class="log-time">20:50 - Πρώτα Σημάδια Αστάθειας</div>
+							<div class="log-details">
+								<div><strong>Κωδικός:</strong> NETWORK_FLUCTUATION</div>
+                                <div><strong>Απώλεια πακέτων:</strong> 3% → 7% → 12%</div>
+                                <div><strong>Επηρεαζόμενες κάμερες:</strong> CAM_03, CAM_07</div>
+                            </div>
+                        </div>
+
+                        <div class="log-item warning">
+                            <div class="log-time">20:52 - Κλιμάκωση Προβλήματος</div>
+                            <div class="log-details">
+                                <div><strong>Κωδικός:</strong> VIDEO_SIGNAL_DEGRADATION</div>
+                                <div><strong>Κάμερες με πρόβλημα:</strong> CAM_03, CAM_07, CAM_12</div>
+                                <div><strong>Περιγραφή:</strong> Διακοπτόμενο σήμα</div>
+                                <div><strong>Απώλεια πακέτων:</strong> 28% και αυξανόμενη</div>
+                            </div>
+                        </div>
+
+                        <div class="log-item critical">
+                            <div class="log-time">20:55 - Απόπειρα Επανεκκίνησης</div>
+                            <div class="log-details">
+                                <div><strong>Χρήστης:</strong> SECURITY_01</div>
+                                <div><strong>Τοποθεσία:</strong> Φυσικός Πίνακας Ελέγχου - Δωμάτιο Ασφαλείας</div>
+                                <div><strong>Εντολή:</strong> SYSTEM_RESTART</div>
+                                <div><strong>Αιτιολογία:</strong> «Αποκατάσταση σφαλμάτων δικτύου»</div>
+                                <div><strong>Κατάσταση:</strong> ΕΚΤΕΛΕΣΗ...</div>
+                            </div>
+                        </div>
+
+                        <div class="log-item critical">
+                            <div class="log-time">20:56 - Αποτυχία Επανεκκίνησης</div>
+                            <div class="log-details">
+                                <div><strong>Κωδικός σφάλματος:</strong> BOOT_FAILURE_0xE0434352</div>
+                                <div><strong>Περιγραφή:</strong> Το σύστημα δεν μπόρεσε να επανεκκινήσει</div>
+                                <div><strong>Προσπάθειες αυτόματης αποκατάστασης:</strong> 0/3</div>
+                                <div><strong>Σύστημα:</strong> ΕΚΤΟΣ ΛΕΙΤΟΥΡΓΙΑΣ</div>
+                            </div>
+                        </div>
+
+                        <div class="log-item critical">
+                            <div class="log-time">21:42 - Αυτόματη Αποκατάσταση</div>
+                            <div class="log-details">
+                                <div><strong>Ενεργοποίηση:</strong> Watchdog Timer</div>
+                                <div><strong>Διαδικασία:</strong> Εξαναγκασμένη επαναφορά από ROM</div>
+                                <div><strong>Αποτέλεσμα:</strong> Επιτυχής εκκίνηση - όλες οι κάμερες online</div>
+                                <div><strong>Σημείωση:</strong> Metadata CAM_03, CAM_07 κατεστραμμένα</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">
+                        <span style="font-size: 24px;"></span>
+                        🎬 ΑΝΑΣΚΟΠΗΣΗ ΔΙΑΘΕΣΙΜΩΝ ΚΑΤΑΓΡΑΦΩΝ
+                    </h3>
+                    <p class="section-content" style="margin-bottom: 15px;"><strong style="color: #0f3460; font-size: 16px;">🎥 Τελευταίες Διαθέσιμες Καταγραφές</strong></p>
+                    <p class="section-content" style="margin-bottom: 10px;">
+                        <strong>18:15 - Κάμερες Εισόδου:</strong> Ο τελευταίος εργαζόμενος φεύγει από το κτίριο
+                    </p>
+                    <p class="section-content" style="margin-bottom: 10px;">
+                        <strong>20:40 - Κάμερα #03:</strong> Μαυρίδη εισέρχεται στον 7ο όροφο από ασανσέρ
+                    </p>
+                    <p class="section-content" style="margin-bottom: 10px;">
+                        <strong>20:49 - Κάμερα #07:</strong> Αναγνώστου εισέρχεται στο κτίριο από κεντρική είσοδο, κρατά φάκελο
+                    </p>
+                    <p class="section-content" style="margin-bottom: 10px;">
+                        <strong>20:44 - Κάμερα #12:</strong> Όχημα φεύγει από υπόγειο χώρο στάθμευσης - ταυτοποιήθηκε ως υπάλληλος λογιστηρίου που έμεινε αργά για τετραμηνιαία απογραφή (επιβεβαιώθηκε)
+                    </p>
+
+                    <p class="section-content">
+                        <strong>20:54 - Κάμερα #03:</strong> Σκιά κίνησης στο τέλος διαδρόμου κοντά στο γραφείο Δημητρίου - τελευταία εικόνα πριν το blackout (metadata κατεστραμμένα)
+                    </p>
+
+                    <div style="margin-top: 25px;">
+                        <p class="section-content" style="margin-bottom: 15px;"><strong style="color: #0f3460; font-size: 16px;">🔎 Ψηφιακή Εγκληματολογική Ανάλυση</strong></p>
+                        
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong>1. Απόπειρα Επανεκκίνησης που Απέτυχε:</strong> Ο φύλακας ακολούθησε το πρωτόκολλο Α-12 για επανεκκίνηση συστήματος λόγω τεχνικών προβλημάτων. Η επανεκκίνηση ξεκίνησε κανονικά αλλά το σύστημα δεν μπόρεσε να επανέλθει. Παραμένει ασαφές αν τα αρχικά προβλήματα ήταν τυχαία ή προκλητά, και αν κάποιος εκμεταλλεύθηκε την ευπάθεια που δημιουργήσε η ενημέρωση του firmware των 15:20.
+                        </p>
+						
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong>2. Πρόβλημα Αναγνώρισης Χρήστη:</strong> Χρησιμοποιήθηκε το username «SECURITY_01» - κοινός κωδικός που μοιράζονται 4 φύλακες (Πετρόπουλος Γ., Καραμάνης Σ., Γόρκας Α., Λυκορδής Π.). Επομένως, δεν μπορούμε να προσδιορίσουμε με βεβαιότητα ΠΟΙΟΣ από τους 4 εκτέλεσε την απενεργοποίηση - ή αν κάποιος τρίτος είχε αποκτήσει πρόσβαση στον κωδικό.
+                        </p>
+
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong>3. Ύποπτη Δραστηριότητα IT Department:</strong> Το τμήμα IT (username: IT_VLACHOS) πραγματοποίησε ενημέρωση λογισμικού ακριβώς 5 ώρες και 35 λεπτά πριν την απενεργοποίηση (15:20). Η συντήρηση ήταν προγραμματισμένη και νόμιμη, αλλά δημιουργεί ερωτήματα: Ήταν δοκιμή συντονισμού; Μήπως η «τεχνική βλάβη» στις 20:55 ήταν συνέχεια της συντήρησης που «πήγε στραβά» - ή αντίθετα, η συντήρηση ήταν πρόλογος για να μην φανεί ύποπτο το μεταγενέστερο σφάλμα;
+                        </p>
+
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong>4. Κατεστραμμένα Metadata:</strong> Εντοπίστηκαν κατεστραμμένα αρχεία metadata στις 20:56 (1 λεπτό μετά την απενεργοποίηση). Τα αρχεία αφορούσαν τις τελευταίες καταγραφές της Κάμερας #03 (διάδρομος 7ου ορόφου) από 20:30-20:55. Η καταστροφή φαίνεται τυχαία (data corruption) αλλά το timing είναι ύποπτο.
+                        </p>
+
+                        <p class="section-content">
+                            <strong>5. Μυστηριώδης Μορφή με Κουκούλα:</strong> Στις 20:53 - ακριβώς λίγο πριν το blackout - εμφανίζεται άτομο με σκούρα ρούχα και κουκούλα που κρύβει συστηματικά το πρόσωπό του από τις κάμερες.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">
+                        <span style="font-size: 24px;"></span>
+                        📝 ΦΥΣΙΚΟ ΤΕΤΡΑΔΙΟ ΣΥΜΒΑΝΤΩΝ
+                    </h3>
+                    <p class="section-content" style="margin-bottom: 15px; font-style: italic; color: #666;">
+                        Χειρόγραφες καταχωρίσεις από το προσωπικό ασφαλείας.
+                    </p>
+                    
+                    <div style="background: #fff9e6; border: 2px solid #ffc107; border-radius: 10px; padding: 20px; margin-top: 15px;">
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong style="color: #856404;">📅 Ημερομηνία:</strong> 22/09/2025
+                        </p>
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong style="color: #856404;">🕐 Ώρα:</strong> 20:50-21:45
+                        </p>
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong style="color: #856404;">✍️ Υπογραφή:</strong> Γ. ΠΕΤΡΟΠΟΥΛΟΣ
+                        </p>
+                        <p class="section-content" style="margin-bottom: 15px;">
+                            <strong style="color: #856404;">📋 Περιγραφή Συμβάντος:</strong>
+                        </p>
+                        <div style="background: white; padding: 15px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: 14px; line-height: 1.8; border-left: 4px solid #ffc107;">
+                            20:50 - Σήμα άρχισε να τρεμοπαίζει..<br>
+                            20:52 - Προσπάθησα επικοινωνία με IT support (Βλάχος, Σαββίδης) - κανείς δεν απαντά.<br>
+                            20:55 - Ακολούθησα πρωτόκολλο Α-12. Εκτέλεσα επανεκκίνηση από κεντρικό πίνακα.<br>
+                            20:58 - Σύστημα δεν επανήλθε. Μαύρες οθόνες. Κόκκινο LED σφάλματος.<br>
+                            21:10 - Προσπάθεια χειροκίνητης επαναφοράς από server room - αποτυχία.<br>
+                            21:20 - Έλεγχος καλωδίων και συνδέσεων - όλα φαίνονται OK.<br>
+                            21:30 - Προσπάθεια επαναφοράς από backup configuration - αποτυχία.<br>
+                            21:42 - Σύστημα επανήλθε ΑΥΤΟΜΑΤΑ. Όλες οι κάμερες online.<br>
+                            21:45 - Ενημέρωσα βιβλίο συμβάντων. Θα χρειαστεί τεχνικός το πρωί.
+                        </div>
+                        <div style="margin-top: 15px; padding: 12px; background: #fff3cd; border-radius: 8px;">
+                            <p class="section-content" style="color: #856404; margin: 0;">
+                                <strong>🔬 Γραφολογική Ανάλυση:</strong> Η υπογραφή και το κείμενο δείχνουν σημάδια έντονου άγχους - τρεμάμενες γραμμές, ασυνεπές μέγεθος γραμμάτων, αυξανόμενη πίεση πένας στις κρίσιμες ώρες. Οι εγγραφές 21:10-21:30 εμφανίζουν ασυνήθιστα σταθερό γραφικό χαρακτήρα σε σχέση με τις προηγούμενες - σαν ο γράφων να ηρέμησε ξαφνικά εν μέσω κρίσης. Η τελευταία εγγραφή (21:45) επιστρέφει στον αρχικό «ταραγμένο» χαρακτήρα. Επίσης, η φράση «Θα χρειαστεί τεχνικός το πρωί» γράφτηκε και διαγράφηκε μερικώς πριν ξαναγραφτεί.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="significance-box">
+                    <h3 class="significance-title">
+                        <span style="font-size: 20px;"></span>
+                        💡 ΣΗΜΑΣΙΑ ΓΙΑ ΤΗΝ ΕΡΕΥΝΑ
+                    </h3>
+                    <p class="significance-text">
+                        Το χρονικό παράθυρο 20:55-21:42 αποτελεί το «μαύρο κουτί» της έρευνας - 47 λεπτά χωρίς οπτική καταγραφή. Τα τεχνικά προβλήματα ξεκίνησαν στις 20:50, κλιμακώθηκαν στις 20:52, και οδήγησαν σε απόπειρα επανεκκίνησης στις 20:55 που ουσιαστικά απέτυχε. Κρίσιμα ερωτήματα: (1) Ήταν τα αρχικά προβλήματα τυχαία ή σκόπιμα προκλητά; (2) Γιατί μόνο η Κάμερα #03 έχασε metadata; (3) Ποιος από τους 4 φύλακες ήταν στο δωμάτιο ελέγχου στις 20:55; (4) Υπήρχε σχέση μεταξύ της ενημέρωσης λογισμικού και της αποτυχίας επανεκκίνησης;
+                    </p>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">
+                        <span style="font-size: 24px;">❓</span>
+                        Βασικά Ερωτήματα Διερεύνησης
+                    </h3>
+                    <ul class="section-content">
+                        <li>Ποιος απενεργοποίησε πραγματικά το σύστημα; Ένας από τους 4 φύλακες, κάποιος από το τμήμα μηχανοργάνωσης, ή άλλο άτομο που απέκτησε πρόσβαση στους κωδικούς;</li>
+                        <li>Η συντήρηση στις 15:20 ήταν πραγματικά προγραμματισμένη τακτική συντήρηση ή ήταν δοκιμή/πρόλογος για την απενεργοποίηση των 20:55; Υπάρχει σύνδεση;</li>
+                        <li>Τα κατεστραμμένα metadata της Κάμερας #03 - είναι λόγο της τεχνικής βλάβης ή σκόπιμη διαγραφή για απόκρυψη αποδεικτικού στοιχείου; Τι έδειχναν αυτές οι τελευταίες λήψεις;</li>
+                        <li>Ποιο ήταν το άγνωστο άτομο με κουκούλα στο ασανσέρ στις 20:48 και γιατί έκρυβε συστηματικά το πρόσωπό από τις κάμερες;</li>
+                        <li>Η χειρόγραφη υπογραφή στο Τετράδιο Συμβάντων είναι γνήσια υπογραφή Πετρόπουλου ή πλαστογραφία;</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="text-align: center; padding: 20px; background: rgba(0,0,0,0.05); position: relative; z-index: 100;">
+        <button onclick="window.goBackToCaseFile()" class="back-button">
+            ← ΕΠΙΣΤΡΟΦΗ ΣΤΟ ΦΑΚΕΛΟ
+        </button>
+    </div>
+
+    
+    <script src="js/tek-common.js"></script>
+</body>
+</html>

@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard - Crime Festival 2025</title>
+    
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, getDocs, collection, onSnapshot, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyA_9_40aa_wO_19g-1bIrSB6742aMOPwjo",
+            authDomain: "crime-festival-2025.firebaseapp.com",
+            projectId: "crime-festival-2025",
+            storageBucket: "crime-festival-2025.firebasestorage.app",
+            messagingSenderId: "663770004335",
+            appId: "1:663770004335:web:e42dbd983ab9b5277bc69a"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        window.firebaseDB = db;
+        window.firebaseGetDocs = getDocs;
+        window.firebaseCollection = collection;
+        window.firebaseOnSnapshot = onSnapshot;
+        window.firebaseDoc = doc;
+        window.firebaseGetDoc = getDoc;
+        
+        console.log("✅ Firebase connected!");
+        
+        function checkFirestoreConnection() {
+            if (!window.firebaseDB) return false;
+            
+            const testRef = window.firebaseDoc(window.firebaseDB, 'config', 'test');
+            window.firebaseGetDoc(testRef)
+                .then(() => {
+                    console.log('🟢 Firestore connection active');
+                    showSyncStatus('✅ Connected', 'success');
+                })
+                .catch((error) => {
+                    console.error('🔴 Firestore connection failed:', error);
+                    showSyncStatus('⚠️ Connection issues', 'error');
+                });
+        }
+        
+        setInterval(checkFirestoreConnection, 30000);
+        
+        setTimeout(() => {
+            setupRealtimeListener();
+        }, 500);
+    </script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            padding: clamp(10px, 3vw, 20px);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
+            padding: clamp(20px, 4vw, 30px) clamp(15px, 3vw, 25px);
+            border-radius: clamp(10px, 2vw, 15px);
+            text-align: center;
+            margin-bottom: clamp(15px, 3vw, 25px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+            word-wrap: break-word;
+        }
+
+        .header h1 {
+            color: white;
+            font-size: clamp(18px, 4.5vw, 32px);
+            margin-bottom: 8px;
+            line-height: 1.2;
+        }
+
+        .header p {
+            color: rgba(255,255,255,0.95);
+            font-size: clamp(11px, 2.5vw, 14px);
+            margin-top: 8px;
+        }
+
+        .action-bar {
+            text-align: center;
+            margin-bottom: clamp(15px, 3vw, 25px);
+            display: flex;
+            flex-wrap: wrap;
+            gap: clamp(8px, 2vw, 12px);
+            justify-content: center;
+        }
+
+        .btn {
+            padding: clamp(10px, 2vw, 14px) clamp(16px, 3vw, 26px);
+            border: none;
+            border-radius: 8px;
+            font-size: clamp(13px, 2.5vw, 15px);
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+            min-height: 44px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(130px, 100%), 1fr));
+            gap: clamp(10px, 2vw, 15px);
+            margin-bottom: clamp(20px, 4vw, 30px);
+        }
+
+        .stat-card {
+            background: white;
+            padding: clamp(15px, 3vw, 22px) clamp(12px, 2.5vw, 18px);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            color: #666;
+            font-size: clamp(10px, 2.3vw, 13px);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            line-height: 1.3;
+        }
+
+        .stat-card .value {
+            font-size: clamp(22px, 5.5vw, 32px);
+            font-weight: bold;
+            color: #ff6b00;
+            line-height: 1.2;
+        }
+
+        .leaderboard {
+            background: white;
+            border-radius: clamp(10px, 2vw, 15px);
+            padding: clamp(15px, 3vw, 25px);
+            margin-bottom: clamp(20px, 4vw, 35px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .leaderboard h2 {
+            color: #1a1a2e;
+            font-size: clamp(17px, 3.8vw, 24px);
+            margin-bottom: clamp(15px, 3vw, 20px);
+            padding-bottom: clamp(10px, 2vw, 15px);
+            border-bottom: 3px solid #ff6b00;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin: 0 clamp(-15px, -3vw, -25px);
+            padding: 0 clamp(15px, 3vw, 25px);
+        }
+
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            min-width: 650px;
+        }
+
+        .leaderboard-table th {
+            background: linear-gradient(135deg, #0f3460 0%, #16213e 100%);
+            color: white;
+            padding: clamp(10px, 2vw, 14px) clamp(8px, 1.5vw, 12px);
+            text-align: center;
+            font-size: clamp(11px, 2vw, 13px);
+            text-transform: uppercase;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .leaderboard-table td {
+            padding: clamp(10px, 2vw, 14px) clamp(8px, 1.5vw, 12px);
+            border-bottom: 1px solid #ddd;
+            font-size: clamp(12px, 2.2vw, 14px);
+            vertical-align: middle;
+        }
+
+        .leaderboard-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .rank {
+            font-size: clamp(16px, 3.5vw, 24px);
+            font-weight: bold;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .mobile-cards {
+            display: none;
+        }
+
+        .team-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: clamp(15px, 3vw, 20px);
+            margin-bottom: 15px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+            gap: 10px;
+        }
+
+        .card-rank {
+            font-size: clamp(28px, 7vw, 36px);
+            font-weight: bold;
+        }
+
+        .card-team-name {
+            font-size: clamp(15px, 3.5vw, 18px);
+            font-weight: bold;
+            color: #1a1a2e;
+            text-transform: uppercase;
+            flex: 1;
+            margin: 0 10px;
+        }
+
+        .card-score {
+            font-size: clamp(18px, 4.5vw, 24px);
+            font-weight: bold;
+            color: #28a745;
+        }
+
+        .rank-1 { color: #ffd700; }
+        .rank-2 { color: #c0c0c0; }
+        .rank-3 { color: #cd7f32; }
+
+        .team-name {
+            font-weight: bold;
+            color: #1a1a2e;
+            font-size: clamp(12px, 2.4vw, 16px);
+            text-transform: uppercase;
+        }
+
+        .score {
+            font-size: clamp(15px, 3vw, 20px);
+            font-weight: bold;
+            color: #28a745;
+        }
+
+        .grade-badge {
+            display: inline-block;
+            padding: clamp(5px, 1.2vw, 7px) clamp(10px, 2vw, 14px);
+            border-radius: 6px;
+            font-size: clamp(10px, 2vw, 12px);
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: clamp(4px, 1vw, 6px) clamp(7px, 1.5vw, 10px);
+            border-radius: 4px;
+            font-size: clamp(9px, 1.9vw, 11px);
+            font-weight: bold;
+            margin: 2px;
+            white-space: nowrap;
+        }
+
+        .badge-correct {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-incorrect {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .solution-details {
+            background: #f8f9fa;
+            padding: clamp(15px, 3vw, 20px);
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+
+        .solution-details h3 {
+            color: #0f3460;
+            margin-bottom: 12px;
+            font-size: clamp(15px, 3vw, 18px);
+        }
+
+        .suspect-list {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 10px 0;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: clamp(10px, 2vw, 20px);
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding-top: clamp(20px, 5vh, 50px);
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: clamp(20px, 4vw, 30px);
+            max-width: 800px;
+            width: 100%;
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 18px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #ff6b00;
+            gap: 15px;
+        }
+
+        .modal-header h2 {
+            color: #1a1a2e;
+            font-size: clamp(16px, 3.5vw, 24px);
+            flex: 1;
+        }
+
+        .close-modal {
+            font-size: clamp(28px, 6vw, 32px);
+            cursor: pointer;
+            color: #999;
+            background: none;
+            border: none;
+            padding: 0;
+            min-width: clamp(28px, 6vw, 32px);
+            min-height: 44px;
+        }
+
+        .close-modal:hover {
+            color: #333;
+        }
+
+        #syncStatus {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            display: none;
+            z-index: 9999;
+            max-width: 250px;
+        }
+
+        #syncStatus.syncing {
+            background: #17a2b8;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .table-container {
+                display: none;
+            }
+
+            .mobile-cards {
+                display: block;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏆 ΠΙΝΑΚΑΣ ΚΑΤΑΤΑΞΗΣ</h1>
+        </div>
+
+        <div class="action-bar">
+            <a href="admin.html" class="btn btn-secondary">⬅️ ADMIN PANEL</a>
+        </div>
+
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card">
+                <h3>Σύνολο Υποβολών</h3>
+                <div class="value">-</div>
+            </div>
+            <div class="stat-card">
+                <h3>Τέλειες Λύσεις</h3>
+                <div class="value">-</div>
+            </div>
+            <div class="stat-card">
+                <h3>Μέσος Όρος Βαθμών</h3>
+                <div class="value">-</div>
+            </div>
+            <div class="stat-card">
+                <h3>Μέσος Χρόνος</h3>
+                <div class="value" style="font-size: clamp(16px, 4vw, 20px);">-</div>
+            </div>
+        </div>
+
+        <div class="leaderboard">
+            <h2>🏆 ΚΑΤΑΤΑΞΗ ΟΜΑΔΩΝ</h2>
+            
+            <div class="table-container">
+                <table class="leaderboard-table" id="leaderboardTable">
+                    <thead>
+                        <tr>
+                            <th>Θέση</th>
+                            <th>Ομάδα</th>
+                            <th>Βαθμολογία</th>
+                            <th>Τίτλος</th>
+                            <th>Δράστες</th>
+                            <th>Χρόνος</th>
+                            <th>Prompts</th>
+                            <th>Ενέργειες</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboardBody">
+                        <tr>
+                            <td colspan="8" style="text-align: center; padding: 40px; color: #666;">
+                                Φόρτωση δεδομένων...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mobile-cards" id="mobileCards">
+                <div style="text-align: center; padding: 40px; color: #666;">
+                    Φόρτωση δεδομένων...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="solutionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTeamName">Λύση Ομάδας</h2>
+                <button class="close-modal" onclick="closeModal()">&times;</button>
+            </div>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <div id="syncStatus">🔴 Connected - Real-time sync active</div>
+
+    <script>
+        const CORRECT_SUSPECTS = ['konstantinos', 'georgios', 'eleni'];
+        const SUSPECT_NAMES = {
+            'maria': 'Παπαδοπούλου Μαρία',
+            'konstantinos': 'Αναγνώστου Κωνσταντίνος',
+            'eleni': 'Μαυρίδη Ελένη',
+            'georgios': 'Πετρόπουλος Γεώργιος',
+            'alexandra': 'Νικολάου Αλεξάνδρα',
+            'suicide': 'Αυτοκτονία'
+        };
+		
+        const SCORING = {
+            murder_diagnosis: 25,
+            cooperation: 20,
+            perpetrator: 15,
+            perfect_solution_bonus: 20,
+            evidence_use: 5,
+            prompts_1_5: 15,
+            prompts_6_10: 10,
+            prompts_11_15: 5,
+            time_under_30: 15,
+            time_30_45: 10,
+            time_45_60: 5
+        };
+
+        let firestoreUnsubscribe = null;
+
+        function showSyncStatus(message, type = 'success') {
+            const status = document.getElementById('syncStatus');
+            if (!status) return;
+            
+            status.classList.remove('syncing');
+            
+            if (type === 'syncing') {
+                status.classList.add('syncing');
+                status.style.background = '#17a2b8';
+            } else if (type === 'success') {
+                status.style.background = '#28a745';
+            } else if (type === 'error') {
+                status.style.background = '#dc3545';
+            }
+            
+            status.innerHTML = message;
+            status.style.display = 'block';
+            
+            if (type !== 'syncing') {
+                setTimeout(() => {
+                    status.style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        function setupRealtimeListener() {
+            if (!window.firebaseDB || !window.firebaseOnSnapshot) {
+                console.warn('⚠️ Firebase not ready - using periodic refresh');
+                startPolling();
+                return;
+            }
+
+            try {
+                const teamsCollection = window.firebaseCollection(window.firebaseDB, 'teams');
+                
+                let pollingInterval = null;
+                let isFirestoreActive = false;
+
+                function startPolling() {
+                    if (pollingInterval) return;
+                    console.log('📡 Starting polling mode (every 10 seconds)');
+                    pollingInterval = setInterval(refreshLeaderboard, 10000);
+                }
+
+                function stopPolling() {
+                    if (pollingInterval) {
+                        clearInterval(pollingInterval);
+                        pollingInterval = null;
+                        console.log('🛑 Polling stopped');
+                    }
+                }
+
+                firestoreUnsubscribe = window.firebaseOnSnapshot(teamsCollection, 
+                    (snapshot) => {
+                        console.log('🔥 Firebase real-time update received');
+                        isFirestoreActive = true;
+                        stopPolling();
+                        
+                        let hasChanges = false;
+                        
+                        snapshot.docChanges().forEach((change) => {
+                            if (change.type === 'added' || change.type === 'modified') {
+                                console.log(`📝 Team ${change.doc.id} was ${change.type}`);
+                                hasChanges = true;
+                            }
+                            if (change.type === 'removed') {
+                                console.log(`🗑️ Team ${change.doc.id} was removed`);
+                                hasChanges = true;
+                            }
+                        });
+                        
+                        if (hasChanges) {
+                            showSyncStatus('🔄 Updating...', 'syncing');
+                            debouncedRefreshLeaderboard();
+                        }
+                    },
+                    (error) => {
+                        console.error('❌ Firebase listener error:', error);
+                        isFirestoreActive = false;
+                        showSyncStatus('⚠️ Connection lost - retrying...', 'error');
+                        startPolling();
+                    }
+                );
+                
+                console.log('✅ Real-time Firebase listener active');
+                showSyncStatus('🔴 Real-time sync active', 'success');
+                
+            } catch (error) {
+                console.error('❌ Failed to setup Firebase listener:', error);
+                showSyncStatus('⚠️ Using backup mode', 'error');
+                setInterval(refreshLeaderboard, 10000);
+            }
+        }
+
+        function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
+            let score = 0;
+            let breakdown = [];
+            
+            if (selectedSuspects.length === 0) {
+                return {
+                    score: 0,
+                    breakdown: ['Δεν επέλεξαν κανέναν ύποπτο ή αυτοκτονία'],
+                    maxScore: 140,
+                    correctCount: 0
+                };
+            }
+            
+            const hasSuicide = selectedSuspects.includes('suicide');
+            const hasKiller = selectedSuspects.some(s => s !== 'suicide');
+            
+            // Handle contradiction
+            if (hasSuicide && hasKiller) {
+                const killerNames = selectedSuspects
+                    .filter(s => s !== 'suicide')
+                    .map(s => SUSPECT_NAMES[s])
+                    .join(', ');
+                
+                return {
+                    score: 0,
+                    breakdown: [
+                        'HEADER:🚫 ΛΟΓΙΚΗ ΑΝΤΙΦΑΣΗ (+0 πόντοι)',
+                        'CONTRADICTION:Η υπόθεση δεν μπορεί να είναι ταυτόχρονα δολοφονία και αυτοκτονία',
+                        `INFO:Επέλεξαν: ${killerNames} + Αυτοκτονία`,
+                    ],
+                    maxScore: 140,
+                    correctCount: 0
+                };
+            }
+
+            // Handle suicide theory
+            if (hasSuicide && !hasKiller) {
+                return {
+                    score: 0,
+                    breakdown: [
+                        'HEADER:❌ ΕΣΦΑΛΜΕΝΗ ΘΕΩΡΙΑ (+0 πόντοι)',
+                        'ERROR:Αυτό δεν ήταν αυτοκτονία',
+                        'SUBHEADER:Βασικά Στοιχεία που Αγνόησαν:',
+                        'ITEM:Γάντια λάτεξ στην πόρτα',
+                        'ITEM:Πλαστό email "αυτοκτονίας"',
+                        'ITEM:Απενεργοποίηση κάμερων',
+                        'ITEM:Κυάνιο σε μπουκάλι που δεν ήταν του θύματος',
+                    ],
+                    maxScore: 140,
+                    correctCount: 0
+                };
+            }
+
+            // Murder diagnosis - Basic points
+            let basicPoints = SCORING.murder_diagnosis;
+            score += basicPoints;
+            breakdown.push(`HEADER:🧩 ΒΑΣΙΚΗ ΕΚΤΙΜΗΣΗ (+${basicPoints} πόντοι)`);
+            breakdown.push('SUCCESS:Σωστή Διάγνωση: ΔΟΛΟΦΟΝΙΑ');
+            
+            // Count correct and wrong suspects
+            let correctCount = 0;
+            let wrongSuspects = [];
+            let missedSuspects = [];
+            
+            selectedSuspects.forEach(suspect => {
+                if (CORRECT_SUSPECTS.includes(suspect)) {
+                    correctCount++;
+                } else {
+                    wrongSuspects.push(SUSPECT_NAMES[suspect] || suspect);
+                }
+            });
+            
+            CORRECT_SUSPECTS.forEach(suspect => {
+                if (!selectedSuspects.includes(suspect)) {
+                    missedSuspects.push(SUSPECT_NAMES[suspect] || suspect);
+                }
+            });
+
+            // Perpetrator identification
+            let perpetratorPoints = 0;
+            
+            if (correctCount === 3 && selectedSuspects.length === 3) {
+                // Perfect solution
+                perpetratorPoints = SCORING.perpetrator * 3 + SCORING.perfect_solution_bonus + SCORING.cooperation;
+                breakdown.push(`HEADER:🎖️ ΤΕΛΕΙΑ ΑΝΑΛΥΣΗ (+${perpetratorPoints} πόντοι)`);
+                breakdown.push('SUCCESS:Εντόπισαν και τους 3 συνεργούς');
+            } else {
+                // Partial solution
+                breakdown.push(`HEADER:👥 ΤΑΥΤΟΠΟΙΗΣΗ ΔΡΑΣΤΩΝ (+${perpetratorPoints} πόντοι - προσωρινό)`);
+                
+                if (correctCount > 0) {
+                    perpetratorPoints += correctCount * SCORING.perpetrator;
+                    breakdown.push(`SUCCESS:Εντόπισαν ${correctCount}/3 Δράστες`);
+                }
+                
+                if (correctCount >= 2) {
+                    perpetratorPoints += SCORING.cooperation;
+                    breakdown.push('SUCCESS:Bonus Συνεργασίας Δραστών');
+                }
+                
+                if (correctCount >= 2 && correctCount < 3) {
+                    perpetratorPoints += SCORING.evidence_use;
+                }
+                
+                if (wrongSuspects.length === 0 && correctCount > 0 && correctCount < 3) {
+                    const precisionBonus = correctCount * 15;
+                    perpetratorPoints += precisionBonus;
+                    breakdown.push('SUCCESS:Bonus Ακρίβειας (δεν κατηγόρησαν αθώους)');
+                }
+                
+                // Update header with final points
+                const headerIndex = breakdown.findIndex(line => line.includes('👥 ΤΑΥΤΟΠΟΙΗΣΗ ΔΡΑΣΤΩΝ'));
+                if (headerIndex !== -1) {
+                    breakdown[headerIndex] = `HEADER:👥 ΤΑΥΤΟΠΟΙΗΣΗ ΔΡΑΣΤΩΝ (+${perpetratorPoints} πόντοι)`;
+                }
+            }
+
+            score += perpetratorPoints;
+            
+            // Efficiency bonuses (only if 2+ correct suspects)
+            if (correctCount >= 2) {
+                let efficiencyPoints = 0;
+                let efficiencyItems = [];
+                
+                // Time bonus
+                if (totalTimeMs) {
+                    const minutes = totalTimeMs / 60000;
+                    if (minutes < 30) {
+                        efficiencyPoints += SCORING.time_under_30;
+                        efficiencyItems.push('SUCCESS:Χρόνος: <30 λεπτά');
+                    } else if (minutes < 45) {
+                        efficiencyPoints += SCORING.time_30_45;
+                        efficiencyItems.push('SUCCESS:Χρόνος: 30-45 λεπτά');
+                    } else if (minutes < 60) {
+                        efficiencyPoints += SCORING.time_45_60;
+                        efficiencyItems.push('SUCCESS:Χρόνος: 45-60 λεπτά');
+                    }
+                }
+
+                // Prompts bonus
+                if (promptCount) {
+                    if (promptCount <= 5) {
+                        efficiencyPoints += SCORING.prompts_1_5;
+                        efficiencyItems.push('SUCCESS:Prompts: ≤5');
+                    } else if (promptCount <= 10) {
+                        efficiencyPoints += SCORING.prompts_6_10;
+                        efficiencyItems.push('SUCCESS:Prompts: 6-10');
+                    } else if (promptCount <= 15) {
+                        efficiencyPoints += SCORING.prompts_11_15;
+                        efficiencyItems.push('SUCCESS:Prompts: 11-15');
+                    }
+                }
+                
+                if (efficiencyPoints > 0) {
+                    breakdown.push(`HEADER:⚡ BONUSES ΑΠΟΔΟΤΙΚΟΤΗΤΑΣ (+${efficiencyPoints} πόντοι)`);
+                    breakdown.push(...efficiencyItems);
+                }
+                
+                score += efficiencyPoints;
+            }
+            
+            // Penalties for wrong accusations
+            if (wrongSuspects.length > 0) {
+                const originalScore = score;
+                let multiplier = 1.0;
+                
+                if (wrongSuspects.length === 1) {
+                    multiplier = 0.5;
+                } else if (wrongSuspects.length === 2) {
+                    multiplier = 0.2;
+                } else {
+                    multiplier = 0.05;
+                }
+                
+                score = Math.floor(score * multiplier);
+                const penalty = originalScore - score;
+                
+                breakdown.push(`HEADER:❌ ΚΑΤΗΓΟΡΗΣΑΝ ΑΘΩΟΥΣ (-${penalty} πόντοι)`);
+                wrongSuspects.forEach(name => {
+                    breakdown.push(`PENALTY:${name}`);
+                });
+            }
+                
+            // Penalties for missed suspects
+            if (missedSuspects.length > 0) {
+                const missedPenalty = missedSuspects.length * 20;
+                score = Math.max(0, score - missedPenalty);
+                
+                breakdown.push(`HEADER:🔍 ΕΧΑΣΑΝ ΠΡΑΓΜΑΤΙΚΟΥΣ ΔΡΑΣΤΕΣ (-${missedPenalty} πόντοι)`);
+                missedSuspects.forEach(name => {
+                    breakdown.push(`PENALTY:${name}`);
+                });
+            }
+            
+            // Ensure score is never negative and not above max
+            score = Math.max(0, Math.min(score, 140));
+            
+            return { 
+                score, 
+                breakdown, 
+                maxScore: 140, 
+                correctCount, 
+                wrongCount: wrongSuspects.length 
+            };
+        }
+
+        function getGrade(percentage) {
+            if (percentage >= 90) return { name: 'ΑΡΧΙ-ΝΤΕΤΕΚΤΙΒΣ 🕵️', color: '#00d4ff' };
+            if (percentage >= 80) return { name: 'ΑΝΩΤΕΡΟΙ ΑΝΑΚΡΙΤΕΣ 🎖️', color: '#ffd700' };
+            if (percentage >= 70) return { name: 'ΝΤΕΤΕΚΤΙΒΑΣ 🔎', color: '#c0c0c0' };
+            if (percentage >= 60) return { name: 'ΑΣΤΥΝΟΜΟΙ 👮', color: '#cd7f32' };
+            if (percentage >= 50) return { name: 'ΕΡΕΥΝΗΤΕΣ 📋', color: '#ffcc00' };
+            if (percentage >= 40) return { name: 'ΑΣΚΟΥΜΕΝΟΙ 🎓', color: '#28a745' };
+            return { name: 'ΝΕΟΣΥΛΛΕΚΤΟΙ 🎯', color: '#6c757d' };
+        }
+
+        function formatTime(ms) {
+            if (!ms) return 'N/A';
+            const seconds = Math.floor(ms / 1000);
+            const minutes = Math.floor(seconds / 60);
+            const hours = Math.floor(minutes / 60);
+            
+            const h = hours;
+            const m = minutes % 60;
+            const s = seconds % 60;
+            
+            if (h > 0) {
+                return `${h}ω ${m}λ ${s}δ`;
+            } else if (m > 0) {
+                return `${m}λ ${s}δ`;
+            } else {
+                return `${s}δ`;
+            }
+        }
+
+        let refreshTimeout = null;
+
+        function debouncedRefreshLeaderboard() {
+            if (refreshTimeout) clearTimeout(refreshTimeout);
+            
+            refreshTimeout = setTimeout(() => {
+                refreshLeaderboard();
+                refreshTimeout = null;
+            }, 500);
+        }
+
+        async function refreshLeaderboard() {
+            try {
+                const querySnapshot = await window.firebaseGetDocs(
+                    window.firebaseCollection(window.firebaseDB, 'teams')
+                );
+                
+                const teams = [];
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    if (data.solution) {
+                        teams.push({
+                            name: doc.id,
+                            ...data
+                        });
+                    }
+                });
+
+                teams.sort((a, b) => b.solution.score - a.solution.score);
+
+                displayLeaderboard(teams);
+                displayStats(teams);
+                
+                showSyncStatus('✅ Updated', 'success');
+
+            } catch (error) {
+                console.error('Error loading leaderboard:', error);
+                showSyncStatus('❌ Update failed', 'error');
+            }
+        }
+
+        function displayStats(teams) {
+            const statsCards = document.querySelectorAll('.stat-card .value');
+            
+            const totalTeams = teams.length;
+            const perfectScores = teams.filter(t => {
+                const suspects = t.solution.suspects || [];
+                return suspects.length === 3 && 
+                       suspects.includes('konstantinos') && 
+                       suspects.includes('georgios') && 
+                       suspects.includes('eleni');
+            }).length;
+            
+            const avgScore = totalTeams > 0 
+                ? Math.round(teams.reduce((sum, t) => sum + t.solution.score, 0) / totalTeams)
+                : 0;
+            
+            const avgTime = totalTeams > 0
+                ? formatTime(teams.reduce((sum, t) => sum + (t.solution.completionTimeMs || 0), 0) / totalTeams)
+                : 'N/A';
+
+            statsCards[0].textContent = totalTeams;
+            statsCards[1].textContent = perfectScores;
+            statsCards[2].textContent = avgScore;
+            statsCards[3].textContent = avgTime;
+        }
+
+        function displayLeaderboard(teams) {
+            const tbody = document.getElementById('leaderboardBody');
+            const mobileCards = document.getElementById('mobileCards');
+            
+            if (teams.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8" style="text-align: center; padding: 40px; color: #666;">
+                            ΔΕΝ ΥΠΑΡΧΟΥΝ ΥΠΟΒΟΛΕΣ ΑΚΟΜΑ
+                        </td>
+                    </tr>
+                `;
+                mobileCards.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #666;">
+                        ΔΕΝ ΥΠΑΡΧΟΥΝ ΥΠΟΒΟΛΕΣ ΑΚΟΜΑ
+                    </div>
+                `;
+                return;
+            }
+			
+            tbody.innerHTML = teams.map((team, index) => {
+                const rank = index + 1;
+                const rankClass = rank <= 3 ? `rank-${rank}` : '';
+                const solution = team.solution;
+                const suspects = solution.suspects || [];
+                
+                const maxScore = solution.maxScore || 140;
+                const percentage = Math.round((solution.score / maxScore) * 100);
+                const grade = getGrade(percentage);
+
+                return `
+                    <tr>
+                        <td class="rank ${rankClass}">${rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : rank}</td>
+                        <td class="team-name">${team.name.toUpperCase()}</td>
+                        <td class="score">${solution.score}/${maxScore}</td>
+                        <td>
+                            <span class="grade-badge" style="background: ${grade.color}; color: ${percentage >= 50 ? '#000' : '#fff'};">
+                                ${grade.name}
+                            </span>
+                        </td>
+                        <td>
+                            ${suspects.map(s => `
+                                <span class="badge ${CORRECT_SUSPECTS.includes(s) ? 'badge-correct' : 'badge-incorrect'}">
+                                    ${SUSPECT_NAMES[s] || s}
+                                </span>
+                            `).join('')}
+                        </td>
+                        <td>${formatTime(solution.completionTimeMs)}</td>
+                        <td>${solution.promptCount || 0}</td>
+                        <td>
+                            <button class="btn btn-primary" style="padding: 8px 16px; font-size: 12px; min-height: 36px;" onclick="viewSolution('${team.name}')">
+                                👁️ Προβολή
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            mobileCards.innerHTML = teams.map((team, index) => {
+                const rank = index + 1;
+                const rankClass = rank <= 3 ? `rank-${rank}` : '';
+                const solution = team.solution;
+                const suspects = solution.suspects || [];
+                
+                const maxScore = solution.maxScore || 140;
+                const percentage = Math.round((solution.score / maxScore) * 100);
+                const grade = getGrade(percentage);
+
+                const rankEmoji = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `#${rank}`;
+
+                return `
+                    <div class="team-card">
+                        <div class="card-header">
+                            <div class="card-rank ${rankClass}">${rankEmoji}</div>
+                            <div class="card-team-name">${team.name.toUpperCase()}</div>
+                            <div class="card-score">${solution.score}/${maxScore}</div>
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%; margin-top: 15px;" onclick="viewSolution('${team.name}')">
+                            👁️ Προβολή Λύσης
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        window.viewSolution = async function(teamName) {
+            try {
+                const querySnapshot = await window.firebaseGetDocs(
+                    window.firebaseCollection(window.firebaseDB, 'teams')
+                );
+                
+                let teamData = null;
+                querySnapshot.forEach((doc) => {
+                    if (doc.id === teamName) {
+                        teamData = doc.data();
+                    }
+                });
+
+                if (!teamData || !teamData.solution) {
+                    alert('Δεν βρέθηκαν δεδομένα για αυτή την ομάδα');
+                    return;
+                }
+
+                const oldSolution = teamData.solution;
+                const recalculated = calculateScore(
+                    oldSolution.suspects || [],
+                    oldSolution.completionTimeMs,
+                    oldSolution.promptCount
+                );
+                
+                const solution = {
+                    ...oldSolution,
+                    breakdown: recalculated.breakdown,
+                    score: recalculated.score
+                };
+
+                const suspects = solution.suspects || [];
+                const maxScore = solution.maxScore || 140;
+                const percentage = Math.round((solution.score / maxScore) * 100);
+                const grade = getGrade(percentage);
+                const hasSuicide = suspects.includes('suicide');
+                const hasKiller = suspects.some(s => s !== 'suicide');
+                const isContradiction = hasSuicide && hasKiller;
+                
+                document.getElementById('modalTeamName').textContent = 
+                    `ΛΥΣΗ ΟΜΑΔΑΣ: ${teamName.toUpperCase()}`;
+
+                document.getElementById('modalContent').innerHTML = `
+                    <div class="solution-details">
+                        <h3>📊 ΒΑΘΜΟΛΟΓΙΑ</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr)); gap: 10px; margin: 15px 0;">
+                            <div style="background: ${solution.score === 0 ? '#f8d7da' : '#d4edda'}; padding: 15px; border-radius: 8px; text-align: center;">
+                                <strong style="color: #666; font-size: clamp(11px, 2.3vw, 13px); display: block; margin-bottom: 8px;">ΠΟΝΤΟΙ</strong>
+                                <span style="font-size: clamp(22px, 5vw, 32px); font-weight: bold; color: ${solution.score === 0 ? '#dc3545' : '#28a745'};">${solution.score}/${maxScore}</span>
+                            </div>
+                            <div style="background: ${grade.color}; padding: 15px; border-radius: 8px; text-align: center;">
+                                <strong style="color: ${percentage >= 50 ? '#000' : '#fff'}; font-size: clamp(11px, 2.3vw, 13px); display: block; margin-bottom: 8px;">ΤΙΤΛΟΣ</strong>
+                                <span style="font-size: clamp(14px, 3vw, 18px); font-weight: bold; color: ${percentage >= 50 ? '#000' : '#fff'};">${grade.name}</span>
+                            </div>
+                            <div style="background: #e3f2fd; padding: 15px; border-radius: 8px; text-align: center;">
+                                <strong style="color: #666; font-size: clamp(11px, 2.3vw, 13px); display: block; margin-bottom: 8px;">ΕΠΙΔΟΣΗ</strong>
+                                <span style="font-size: clamp(22px, 5vw, 32px); font-weight: bold; color: #1976d2;">${percentage}%</span>
+                            </div>
+                        </div>
+                        
+                        ${isContradiction ? `
+                            <div style="background: #f8d7da; border: 2px solid #dc3545; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                                <strong style="color: #721c24;">⚠️ ΛΟΓΙΚΗ ΑΝΤΙΦΑΣΗ:</strong>
+                                <p style="color: #721c24; margin: 5px 0;">Η ομάδα επέλεξε ταυτόχρονα δολοφονία ΚΑΙ αυτοκτονία</p>
+                            </div>
+                        ` : ''}
+                        
+                        <h3 style="margin-top: 20px;">👥 ΔΡΑΣΤΕΣ ΠΟΥ ΕΠΕΛΕΞΑΝ</h3>
+                        <div class="suspect-list">
+                            ${suspects.map(s => `
+                                <span class="badge ${CORRECT_SUSPECTS.includes(s) ? 'badge-correct' : 'badge-incorrect'}" style="font-size: clamp(12px, 2.5vw, 14px); padding: 8px 12px;">
+                                    ${CORRECT_SUSPECTS.includes(s) ? '✔' : '✗'} ${SUSPECT_NAMES[s] || s}
+                                </span>
+                            `).join('')}
+                        </div>
+
+                        <h3 style="margin-top: 20px;">📝 ΑΙΤΙΟΛΟΓΗΣΗ</h3>
+                        <div style="background: white; padding: 15px; border-radius: 8px; border: 1px solid #ddd; white-space: pre-wrap; word-wrap: break-word; line-height: 1.6; max-height: 300px; overflow-y: auto; font-size: clamp(12px, 2.5vw, 14px);">
+                            ${solution.justification || 'Δεν παρασχέθηκε αιτιολόγηση'}
+                        </div>
+
+                        <h3 style="margin-top: 20px;">⏱️ ΧΡΟΝΟΣ ΕΠΙΛΥΣΗΣ</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 12px; margin-top: 10px;">
+                            ${(() => {
+                                const ms = solution.completionTimeMs;
+                                const seconds = Math.floor(ms / 1000);
+                                const minutes = Math.floor(seconds / 60);
+                                const hours = Math.floor(minutes / 60);
+                                
+                                const h = hours;
+                                const m = minutes % 60;
+                                const s = seconds % 60;
+                                
+                                let timeUnits = [];
+                                if (h > 0) timeUnits.push({value: h, label: 'ΩΡΕΣ'});
+                                if (m > 0 || h > 0) timeUnits.push({value: m, label: 'ΛΕΠΤΑ'});
+                                timeUnits.push({value: s, label: 'ΔΕΥΤ.'});
+                                
+                                return timeUnits.map(unit => `
+                                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 15px; border-radius: 12px; text-align: center; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);">
+                                        <div style="font-size: clamp(32px, 7vw, 42px); font-weight: bold; color: white; line-height: 1; text-shadow: 0 2px 8px rgba(0,0,0,0.2);">
+                                            ${unit.value}
+                                        </div>
+                                        <div style="font-size: 10px; color: rgba(255,255,255,0.7); margin-top: 8px; text-transform: uppercase; letter-spacing: 1px;">
+                                            ${unit.label}
+                                        </div>
+                                    </div>
+                                `).join('');
+                            })()}
+                        </div>
+
+                        <h3 style="margin-top: 25px; margin-bottom: 15px;">🎯 ΑΝΑΛΥΤΙΚΗ ΒΑΘΜΟΛΟΓΙΑ</h3>
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: clamp(11px, 2vw, 13px); line-height: 1.7; max-height: 400px; overflow-y: auto; word-wrap: break-word;">
+                            ${solution.breakdown.map(line => {
+                                const [type, content] = line.split(':');
+                                
+                                if (type === 'HEADER') {
+                                    return `<div style="background: linear-gradient(135deg, #0f3460 0%, #16213e 100%); color: white; padding: clamp(10px, 2vw, 12px) clamp(12px, 2.5vw, 15px); margin: 15px 0 10px 0; border-radius: 8px; font-weight: bold; font-size: clamp(13px, 2.5vw, 15px); box-shadow: 0 2px 8px rgba(0,0,0,0.2);">${content}</div>`;
+                                }
+                                
+                                if (type === 'SUCCESS') {
+                                    return `<div style="background: #fff8e1; padding: clamp(8px, 1.5vw, 10px) clamp(12px, 2.5vw, 15px); margin: 5px 0; border-left: 4px solid #ffc107; border-radius: 4px; color: #f57f17; font-weight: 500;">${content}</div>`;
+                                }
+                                
+                                if (type === 'PENALTY') {
+                                    return `<div style="background: #ffebee; padding: clamp(6px, 1.2vw, 8px) clamp(10px, 2vw, 12px); margin: 3px 0 3px 20px; border-left: 3px solid #dc3545; border-radius: 4px; color: #c62828;">→ ${content}</div>`;
+                                }
+                                
+                                if (type === 'ERROR') {
+                                    return `<div style="background: #ffebee; padding: clamp(8px, 1.5vw, 10px) clamp(12px, 2.5vw, 15px); margin: 5px 0; border-left: 4px solid #dc3545; border-radius: 4px; color: #c62828; font-weight: 500;">${content}</div>`;
+                                }
+                                
+                                if (type === 'CONTRADICTION') {
+                                    return `<div style="background: #fff3e0; padding: clamp(8px, 1.5vw, 10px) clamp(12px, 2.5vw, 15px); margin: 5px 0; border-left: 4px solid #ff9800; border-radius: 4px; color: #e65100; font-weight: 500;">${content}</div>`;
+                                }
+                                
+                                if (type === 'SUBHEADER') {
+                                    return `<div style="padding: clamp(8px, 1.5vw, 10px) clamp(5px, 1vw, 8px); margin: 10px 0 5px 0; color: #0f3460; font-weight: bold; font-size: clamp(12px, 2.2vw, 14px);">${content}</div>`;
+                                }
+                                
+                                if (type === 'ITEM') {
+                                    return `<div style="padding: clamp(4px, 1vw, 5px) clamp(5px, 1vw, 8px) clamp(4px, 1vw, 5px) clamp(20px, 4vw, 25px); margin: 2px 0; color: #555;">• ${content}</div>`;
+                                }
+                                
+                                if (type === 'INFO') {
+                                    return `<div style="background: #e3f2fd; padding: clamp(8px, 1.5vw, 10px) clamp(12px, 2.5vw, 15px); margin: 5px 0; border-left: 4px solid #2196f3; border-radius: 4px; color: #0d47a1;">${content}</div>`;
+                                }
+                                
+                                return `<div style="padding: 5px 0; color: #333;">${line}</div>`;
+                            }).join('')}
+                        </div>
+                    </div>
+                `;
+
+                document.getElementById('solutionModal').classList.add('active');
+                document.body.style.overflow = 'hidden';
+
+            } catch (error) {
+                console.error('Error loading solution:', error);
+                alert('Σφάλμα φόρτωσης λύσης');
+            }
+        };
+
+        window.closeModal = function() {
+            document.getElementById('solutionModal').classList.remove('active');
+            document.body.style.overflow = '';
+        };
+
+        window.refreshLeaderboard = refreshLeaderboard;
+
+        document.getElementById('solutionModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        window.addEventListener('beforeunload', function() {
+            if (firestoreUnsubscribe) {
+                firestoreUnsubscribe();
+            }
+        });
+
+        window.addEventListener('online', () => {
+            console.log('🟢 Back online');
+            showSyncStatus('🟢 Reconnecting...', 'syncing');
+        });
+
+        window.addEventListener('offline', () => {
+            console.log('🔴 Offline');
+            showSyncStatus('🔴 Offline - Data may be stale', 'error');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Τεκμήριο Ξεκλειδώθηκε</title>
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .animated-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0.1;
+            background-image: repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,107,0,0.5) 35px, rgba(255,107,0,0.5) 70px);
+            animation: slide 20s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes slide {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(70px); }
+        }
+
+        @keyframes unlock {
+            0% { transform: scale(0) rotate(-180deg); opacity: 0; }
+            50% { transform: scale(1.2) rotate(10deg); }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
+            padding: clamp(15px, 4vw, 20px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            position: relative;
+            z-index: 10;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(8px, 2vw, 10px);
+            margin-bottom: 10px;
+        }
+
+        .check-icon {
+            width: clamp(24px, 6vw, 32px);
+            height: clamp(24px, 6vw, 32px);
+            color: #fff;
+            animation: unlock 0.6s ease-out;
+            flex-shrink: 0;
+        }
+
+        .header h1 {
+            color: #fff;
+            font-size: clamp(16px, 4.5vw, 24px);
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            line-height: 1.2;
+        }
+
+        .header p {
+            color: #fff;
+            text-align: center;
+            opacity: 0.9;
+            font-size: clamp(11px, 3vw, 14px);
+        }
+
+        .container {
+            padding: clamp(10px, 3vw, 20px);
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .evidence-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: clamp(10px, 2vw, 15px);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+            border: clamp(2px, 0.5vw, 3px) solid #ff6b00;
+        }
+
+        .badge-bar {
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+            padding: clamp(12px, 3vw, 15px) clamp(15px, 4vw, 20px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .badge-info {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .evidence-id {
+            font-size: clamp(20px, 5vw, 28px);
+            font-weight: bold;
+            color: #ff6b00;
+            font-family: monospace;
+            letter-spacing: clamp(1px, 0.3vw, 2px);
+        }
+
+        .category {
+            font-size: clamp(10px, 2.5vw, 12px);
+            color: #aaa;
+            margin-top: 2px;
+        }
+
+        .official-badge {
+            background: rgba(255,107,0,0.2);
+            border: 2px solid #ff6b00;
+            border-radius: 8px;
+            padding: clamp(6px, 1.5vw, 8px) clamp(10px, 2.5vw, 15px);
+            font-size: clamp(9px, 2vw, 11px);
+            color: #ff6b00;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .crime-scene-photo {
+            background: #000;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-top: 2px solid #333;
+            border-bottom: 2px solid #333;
+            overflow: hidden;
+            min-height: 200px;
+        }
+
+        #crimeSceneCanvas {
+            width: 100%;
+            height: auto;
+            display: block;
+            max-width: 800px;
+        }
+
+        .confidential-badge {
+            position: absolute;
+            top: clamp(5px, 2vw, 10px);
+            right: clamp(5px, 2vw, 10px);
+            background: rgba(255,0,0,0.9);
+            color: white;
+            padding: clamp(4px, 1vw, 5px) clamp(8px, 2vw, 10px);
+            font-size: clamp(9px, 2vw, 11px);
+            font-weight: bold;
+            border-radius: 5px;
+            border: 1px solid #fff;
+            z-index: 10;
+        }
+
+        .ar-container {
+            margin: clamp(15px, 3vw, 20px) 0;
+            padding: clamp(15px, 3vw, 20px);
+            background: linear-gradient(135deg, rgba(255,107,0,0.05) 0%, rgba(255,136,0,0.05) 100%);
+            border: 2px solid #ff6b00;
+            border-radius: 10px;
+        }
+
+        .ar-title {
+            font-size: clamp(16px, 3.5vw, 18px);
+            color: #ff6b00;
+            font-weight: bold;
+            margin: 0 0 15px 0;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .ar-title svg {
+            width: clamp(20px, 4vw, 24px);
+            height: clamp(20px, 4vw, 24px);
+        }
+
+        .view-3d-button {
+            background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
+            color: white;
+            border: none;
+            padding: clamp(15px, 3vw, 18px) clamp(30px, 6vw, 40px);
+            border-radius: 10px;
+            font-size: clamp(15px, 3.5vw, 17px);
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255,107,0,0.4);
+            transition: all 0.3s ease;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .view-3d-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255,107,0,0.5);
+        }
+
+        .view-3d-button:active {
+            transform: translateY(0);
+        }
+
+        .close-3d-button {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: white;
+            border: none;
+            padding: clamp(10px, 2vw, 12px) clamp(20px, 4vw, 30px);
+            border-radius: 8px;
+            font-size: clamp(13px, 2.8vw, 15px);
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 3px 10px rgba(220,53,69,0.3);
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            display: block;
+            width: 100%;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .close-3d-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(220,53,69,0.4);
+        }
+
+        .model-viewer-container {
+            visibility: hidden;
+            height: 0;
+            overflow: hidden;
+            transition: visibility 0s 0.3s, height 0.3s ease;
+        }
+
+        .model-viewer-container.active {
+            visibility: visible;
+            height: auto;
+            margin-top: 20px;
+            transition: visibility 0s, height 0.3s ease;
+        }
+
+        model-viewer {
+            width: 100%;
+            height: clamp(300px, 50vw, 450px);
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+            display: block;
+            margin-bottom: 15px;
+        }
+
+        model-viewer::part(default-ar-button) {
+            background-color: #0f3460;
+            color: white;
+            font-weight: bold;
+            padding: clamp(10px, 2vw, 12px) clamp(20px, 4vw, 24px);
+            border-radius: 8px;
+            font-size: clamp(14px, 3vw, 16px);
+            border: none;
+            box-shadow: 0 4px 12px rgba(15,52,96,0.3);
+        }
+
+        .details {
+            padding: clamp(20px, 4vw, 30px);
+            background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
+        }
+
+        .evidence-title {
+            margin: 0 0 clamp(20px, 4vw, 25px) 0;
+            font-size: clamp(18px, 4vw, 24px);
+            color: #1a1a2e;
+            border-bottom: 3px solid #ff6b00;
+            padding-bottom: clamp(10px, 2vw, 15px);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: clamp(8px, 2vw, 12px);
+            flex-wrap: wrap;
+        }
+
+        .evidence-metadata {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+            gap: clamp(12px, 2.5vw, 15px);
+            margin-bottom: clamp(25px, 4vw, 30px);
+        }
+
+        .metadata-item {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: clamp(12px, 2.5vw, 15px);
+            display: flex;
+            align-items: center;
+            gap: clamp(10px, 2vw, 12px);
+            transition: all 0.3s ease;
+        }
+
+        .metadata-item:hover {
+            border-color: #0f3460;
+            box-shadow: 0 4px 12px rgba(15,52,96,0.1);
+            transform: translateY(-2px);
+        }
+
+        .metadata-icon {
+            font-size: clamp(22px, 5vw, 28px);
+            flex-shrink: 0;
+        }
+
+        .metadata-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .metadata-label {
+            font-size: clamp(10px, 2vw, 11px);
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 3px;
+            font-weight: 600;
+        }
+
+        .metadata-value {
+            font-size: clamp(13px, 2.8vw, 14px);
+            color: #1a1a2e;
+            font-weight: 600;
+            line-height: 1.3;
+            word-wrap: break-word;
+        }
+
+        .critical-alert {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            border-radius: 12px;
+            padding: clamp(18px, 3vw, 20px);
+            margin-bottom: clamp(25px, 4vw, 30px);
+            box-shadow: 0 6px 20px rgba(220,53,69,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .critical-alert::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(0,0,0,0.05) 10px,
+                rgba(0,0,0,0.05) 20px
+            );
+            pointer-events: none;
+        }
+
+        .alert-badge {
+            position: absolute;
+            top: clamp(12px, 2vw, 15px);
+            right: clamp(12px, 2vw, 15px);
+            background: rgba(0,0,0,0.3);
+            color: white;
+            padding: clamp(5px, 1vw, 6px) clamp(10px, 2vw, 12px);
+            border-radius: 20px;
+            font-size: clamp(10px, 2vw, 11px);
+            font-weight: 700;
+            letter-spacing: 1px;
+            z-index: 1;
+        }
+
+        .alert-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .alert-title {
+            color: white;
+            font-size: clamp(15px, 3vw, 16px);
+            font-weight: 700;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .alert-text {
+            color: white;
+            font-size: clamp(14px, 2.8vw, 15px);
+            line-height: 1.6;
+            font-weight: 500;
+        }
+
+        .section {
+            margin-bottom: clamp(20px, 3vw, 25px);
+            background: white;
+            padding: clamp(15px, 3vw, 20px);
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        .section-title {
+            font-size: clamp(16px, 3.5vw, 18px);
+            color: #0f3460;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: clamp(8px, 2vw, 10px);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        .section-content {
+            font-size: clamp(14px, 2.8vw, 15px);
+            line-height: 1.8;
+            color: #333;
+            text-align: justify;
+        }
+
+        ul {
+            padding-left: clamp(20px, 4vw, 25px);
+            line-height: 2;
+        }
+
+        ul li {
+            margin-bottom: 8px;
+            font-size: clamp(14px, 2.8vw, 15px);
+        }
+
+        .significance-box {
+            background: linear-gradient(135deg, #fff5f0 0%, #ffe8db 100%);
+            border: 2px solid #ff6b00;
+            border-radius: 12px;
+            padding: clamp(20px, 3.5vw, 25px);
+            margin-bottom: clamp(20px, 3vw, 25px);
+            box-shadow: 0 4px 12px rgba(255,107,0,0.1);
+        }
+
+        .significance-title {
+            font-size: clamp(16px, 3.5vw, 18px);
+            color: #ff6b00;
+            margin: 0 0 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            flex-wrap: wrap;
+        }
+
+        .significance-text {
+            font-size: clamp(14px, 2.8vw, 15px);
+            line-height: 1.8;
+            color: #1a1a2e;
+            margin: 0;
+            text-align: justify;
+        }
+
+        .floor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+            gap: clamp(12px, 2.5vw, 15px);
+            margin-bottom: clamp(20px, 3vw, 25px);
+        }
+
+        .floor-box {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            padding: clamp(15px, 3vw, 18px);
+        }
+
+        .floor-title {
+            font-weight: 700;
+            font-size: clamp(14px, 3vw, 15px);
+            color: #0f3460;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .floor-content {
+            font-size: clamp(12px, 2.5vw, 13px);
+            color: #495057;
+            line-height: 1.6;
+        }
+
+        .floor-content div {
+            margin-bottom: 6px;
+        }
+
+        .floor-total {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #dee2e6;
+            font-weight: 600;
+            color: #0f3460;
+        }
+
+        .back-button-container {
+            text-align: center;
+            padding: clamp(15px, 3vw, 20px);
+            background: rgba(0,0,0,0.05);
+            position: relative;
+            z-index: 100;
+        }
+
+        .back-button {
+            background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
+            color: white;
+            padding: clamp(12px, 2.5vw, 15px) clamp(30px, 6vw, 40px);
+            border: none;
+            border-radius: 10px;
+            font-size: clamp(14px, 3vw, 16px);
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(255,107,0,0.3);
+            position: relative;
+            z-index: 101;
+            pointer-events: auto;
+            transition: transform 0.2s, box-shadow 0.2s;
+            min-height: 44px;
+            touch-action: manipulation;
+        }
+
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(255,107,0,0.4);
+        }
+
+        .back-button:active {
+            transform: translateY(0);
+        }
+
+        @media (max-width: 480px) {
+            .badge-bar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .official-badge {
+                align-self: flex-start;
+            }
+
+            .header h1 {
+                font-size: 16px;
+            }
+
+            .evidence-title {
+                font-size: 18px;
+            }
+        }
+
+        @media (min-width: 768px) and (max-width: 1024px) {
+            .evidence-metadata {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .floor-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1025px) {
+            .evidence-metadata {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .floor-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-background"></div>
+
+    <div class="header">
+        <div class="header-content">
+            <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+            <h1>ΤΕΚΜΗΡΙΟ ΞΕΚΛΕΙΔΩΘΗΚΕ!</h1>
+        </div>
+        <p>Προστέθηκε στον φάκελο υπόθεσης</p>
+    </div>
+
+    <div class="container">
+        <div class="evidence-card">
+            <div class="badge-bar">
+                <div class="badge-info">
+                    <div class="evidence-id">ΤΕΚ #006</div>
+                </div>
+                <div class="official-badge">ΕΠΙΣΗΜΟ ΤΕΚΜΗΡΙΟ</div>
+            </div>
+
+            <div class="crime-scene-photo">
+                <canvas id="crimeSceneCanvas"></canvas>
+                <div class="confidential-badge">ΑΠΟΡΡΗΤΟ</div>
+            </div>
+
+            <div class="ar-container">
+                <h3 class="ar-title">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M2 16.1A5 5 0 0 1 5.9 20M2 12.05A9 9 0 0 1 9.95 20M2 8V6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-6"></path>
+                        <line x1="2" y1="20" x2="2.01" y2="20"></line>
+                    </svg>
+                    ΕΠΑΥΞΗΜΕΝΗ ΠΡΑΓΜΑΤΙΚΟΤΗΤΑ
+                </h3>
+                
+                <button class="view-3d-button" id="view3dBtn">
+                    ΠΡΟΒΟΛΗ ΣΕ 3D
+                </button>
+                
+                <div class="model-viewer-container" id="modelContainer">
+                    <model-viewer
+                        id="modelViewer"
+                        src="latex_glove.glb"
+                        alt="Medical Latex Glove 3D Model - Evidence"
+                        ar
+                        ar-modes="webxr scene-viewer quick-look"
+                        camera-controls
+                        touch-action="pan-y"
+                        auto-rotate
+                        auto-rotate-delay="1000"
+                        rotation-per-second="30deg"
+                        shadow-intensity="1"
+                        exposure="0.8"
+                        camera-orbit="0deg 75deg 2.5m"
+                        min-camera-orbit="auto 0deg auto"
+                        max-camera-orbit="auto 180deg auto">
+                    </model-viewer>
+                    
+                    <button class="close-3d-button" id="close3dBtn">
+                        ΚΛΕΙΣΙΜΟ
+                    </button>
+                </div>
+                
+                <p style="text-align: center; color: #666; font-size: clamp(12px, 2.5vw, 13px); margin-top: 10px; font-style: italic;">
+                    💡 Σύρετε για να περιστρέψετε • Zoom με δύο δάχτυλα
+                </p>
+            </div>
+			
+            <div class="details">
+                <h2 class="evidence-title">🧤 ΙΧΝΗ ΛΑΤΕΞ ΣΤΟ ΠΟΜΟΛΟ</h2>
+
+                <div class="section">
+                    <h3 class="section-title">
+                        <span style="font-size: 24px;"></span>
+                        🔬 ΕΓΚΛΗΜΑΤΟΛΟΓΙΚΗ ΑΝΑΛΥΣΗ
+                    </h3>
+                    <p class="section-content">
+                        Εντοπίστηκαν μικροσκοπικά ίχνη λάτεξ στο εσωτερικό πόμολο της πόρτας του γραφείου του Δημητρίου. Η φασματοσκοπική ανάλυση επιβεβαίωσε ότι πρόκειται για λάτεξ καουτσούκ με πούδρα άμυλου καλαμποκιού — ο πιο συνηθισμένος τύπος γαντιών μιας χρήσης.
+                    </p>
+                    
+                    <div style="margin-top: 25px;">
+                        <p class="section-content" style="margin-bottom: 15px;"><strong style="color: #0f3460; font-size: clamp(15px, 3vw, 16px);">🔬 Χημική Ανάλυση Δειγμάτων</strong></p>
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong>Τύπος Λάτεξ:</strong> Φυσικό καουτσούκ με πούδρα
+                        </p>
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong>Πούδρα:</strong> Άμυλο καλαμποκιού 100% - γενικού τύπου
+                        </p>
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong>Ποσότητα:</strong> 0.8mg συνολικά
+                        </p>
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong>Χρονολόγηση:</strong> Τα μόρια πούδρας δεν είχαν διασπαρεί πλήρως (12-36 ώρες πριν την ανακάλυψη)
+                        </p>
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong>Συμβατότητα:</strong> Ταιριάζει με γάντια από κουτιά πρώτων βοηθειών, καθαριστικά είδη, και προμήθειες εκτυπωτηρίου
+                        </p>
+                    </div>
+
+                    <div style="margin-top: 25px;">
+                        <p class="section-content" style="margin-bottom: 15px;"><strong style="color: #0f3460; font-size: clamp(15px, 3vw, 16px);">🔍 Τοποθεσία και Κατανομή Ιχνών</strong></p>
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong>Εσωτερικό Πόμολο:</strong> 8 διακριτά σημεία επαφής - συμβατό με αριστερό χέρι που περιστρέφει το πόμολο
+                        </p>
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong>Εξωτερικό Πόμολο:</strong> ΔΕΝ εντοπίστηκαν ίχνη λάτεξ - ΜΟΝΟ δακτυλικά αποτυπώματα
+                        </p>
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong>Κλειδαριά:</strong> Καμία ένδειξη γαντιού στον μηχανισμό
+                        </p>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">
+                        <span style="font-size: 24px;"></span>
+                        🧤 ΑΝΑΛΥΣΗ ΑΠΟΘΕΜΑΤΩΝ ΚΑΙ ΔΙΑΘΕΣΙΜΟΤΗΤΑ
+                    </h3>
+                    
+                    <div class="floor-grid">
+                        <div class="floor-box">
+                            <div class="floor-title">
+                                <span style="font-size: 20px;">🏢</span> 3ος Όροφος - Εκτυπωτήριο
+                            </div>
+                            <div class="floor-content">
+                                <div>📦 Χώρος Εκτύπωσης (χειρισμός μελανιών)</div>
+                                <div>📦 Αποθήκη Αναλωσίμων</div>
+                                <div class="floor-total">
+                                    Σύνολο: 8 κουτιά
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="floor-box">
+                            <div class="floor-title">
+                                <span style="font-size: 20px;">🏢</span> Ισόγειο
+                            </div>
+                            <div class="floor-content">
+                                <div>📦 Ρεσεψιόν</div>
+                                <div>📦 Φαρμακείο/Πρώτες Βοήθειες</div>
+                                <div class="floor-total">
+                                    Σύνολο: 2 κουτιά
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="floor-box">
+                            <div class="floor-title">
+                                <span style="font-size: 20px;">🏢</span> Υπόγειο
+                            </div>
+                            <div class="floor-content">
+                                <div>📦 Αποθήκη Καθαριότητας (πρόσβαση καθαριστριών)</div>
+                                <div class="floor-total">
+                                    Σύνολο: 10 κουτία
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="floor-grid" style="grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));">
+                        <div class="floor-box">
+                            <div class="floor-title">
+                                <span style="font-size: 20px;">🔓</span> Πρόσβαση
+                            </div>
+                            <div class="floor-content">
+                                <div>• <strong>ΟΛΟ το προσωπικό</strong></div>
+                                <div>• <strong>Καθαρίστες</strong> (καθημερινά)</div>
+                                <div>• <strong>Εκτυπωτήριο</strong> (χειρισμός μελανιών)</div>
+                                <div style="font-size: clamp(11px, 2.2vw, 12px); font-style: italic; margin-top: 10px; padding-top: 10px; border-top: 1px solid #dee2e6;">
+                                    Καμία καταγραφή χρήσης
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="floor-box">
+                            <div class="floor-title">
+                                <span style="font-size: 20px;">📏</span> Μεγέθη
+                            </div>
+                            <div class="floor-content">
+                                <div>• Small (S)</div>
+                                <div>• Medium (M)</div>
+                                <div>• Large (L)</div>
+                                <div style="font-size: clamp(11px, 2.2vw, 12px); font-style: italic; margin-top: 10px; padding-top: 10px; border-top: 1px solid #dee2e6;">
+                                    Τα κουτιά περιέχουν ΜΙΚΤΑ μεγέθη
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="significance-box">
+                    <h3 class="significance-title">
+                        <span style="font-size: 20px;"></span>
+                        💡 ΣΗΜΑΣΙΑ ΓΙΑ ΤΗΝ ΕΡΕΥΝΑ
+                    </h3>
+                    <p class="significance-text">
+                        Το γεγονός ότι τα γάντια χρησιμοποιούνται καθημερινά από καθαριστές αλλά και το προσωπικό εκτυπωτηρίου (χειρισμός μελανιών) δημιουργεί σοβαρό πρόβλημα στην έρευνα. Το χρονικό παράθυρο 12-36 ώρες σημαίνει ότι τα ίχνη μπορεί απλώς να είναι υπολείμματα από το τελευταίο καθάρισμα. Επιπλέον, η απουσία ιχνών στο εξωτερικό πόμολο δεν είναι απαραίτητα ύποπτη - το εξωτερικό καθαρίζεται πιο συχνά, αγγίζεται από δεκάδες άτομα καθημερινά, και τυχόν ίχνη θα είχαν διαλυθεί γρήγορα. Το εσωτερικό πόμολο (μέσα στο ιδιωτικό γραφείο) έχει πολύ μικρότερη κίνηση και τα ίχνη διατηρούνται. Το τεκμήριο αυτό μπορεί να είναι κρίσιμο - ή εντελώς άνευ σημασίας.
+                    </p>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">
+                        <span style="font-size: 24px;">❓</span>
+                        Βασικά Ερωτήματα Διερεύνησης
+                    </h3>
+                    <ul class="section-content">
+                        <li>Τα ίχνη είναι από την καθαρίστρια ή από κάποιον άλλο;</li>
+                        <li>Γιατί τα ίχνη εμφανίζονται ΜΟΝΟ στο εσωτερικό πόμολο - τι σημαίνει αυτό;</li>
+                        <li>Ποιος από τους υπόπτους έχει συνήθεια να χρησιμοποιεί γάντια λάτεξ για την εργασία του;</li>
+                        <li>Μπορεί να είναι απλώς τυχαίο κατάλοιπο χωρίς σχέση με το έγκλημα;</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="back-button-container">
+        <button onclick="window.goBackToCaseFile()" class="back-button">
+            ← ΕΠΙΣΤΡΟΦΗ ΣΤΟ ΦΑΚΕΛΟ
+        </button>
+    </div>
+
+    <script>
+        const view3dBtn = document.getElementById('view3dBtn');
+        const close3dBtn = document.getElementById('close3dBtn');
+        const modelViewerContainer = document.getElementById('modelContainer');
+
+        view3dBtn.addEventListener('click', function() {
+            modelViewerContainer.classList.add('active');
+            view3dBtn.style.display = 'none';
+            
+            setTimeout(() => {
+                modelViewerContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 100);
+        });
+
+        close3dBtn.addEventListener('click', function() {
+            modelViewerContainer.classList.remove('active');
+            view3dBtn.style.display = 'flex';
+            view3dBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+
+        window.goBackToCaseFile = function() {
+            const teamCode = sessionStorage.getItem('teamCode');
+            console.log('🔙 Button clicked! Team:', teamCode);
+            
+            if (teamCode) {
+                window.location.href = `index.html?team=${teamCode}&tab=evidence`;
+            } else {
+                window.location.href = 'index.html?tab=evidence';
+            }
+        };
+
+        function drawCrimeScene() {
+            const canvas = document.getElementById('crimeSceneCanvas');
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            const container = canvas.parentElement;
+            const maxWidth = Math.min(container.clientWidth, 800);
+            const scale = maxWidth / 800;
+            
+            canvas.width = 800;
+            canvas.height = 400;
+            canvas.style.width = maxWidth + 'px';
+            canvas.style.height = (400 * scale) + 'px';
+			
+            const wallGradient = ctx.createLinearGradient(0, 0, 0, 400);
+            wallGradient.addColorStop(0, '#e8e4d9');
+            wallGradient.addColorStop(1, '#d4cfc0');
+            ctx.fillStyle = wallGradient;
+            ctx.fillRect(0, 0, 800, 400);
+            
+            ctx.fillStyle = '#5a4a3a';
+            ctx.fillRect(260, 60, 280, 300);
+            ctx.fillStyle = '#4a3a2a';
+            ctx.fillRect(275, 75, 250, 270);
+
+            const doorGradient = ctx.createLinearGradient(285, 85, 515, 85);
+            doorGradient.addColorStop(0, '#3d2f1f');
+            doorGradient.addColorStop(0.15, '#5d4e37');
+            doorGradient.addColorStop(0.5, '#6b5645');
+            doorGradient.addColorStop(0.85, '#5d4e37');
+            doorGradient.addColorStop(1, '#3d2f1f');
+            ctx.fillStyle = doorGradient;
+            ctx.fillRect(285, 85, 230, 255);
+            
+            ctx.strokeStyle = '#2d1f0f';
+            ctx.lineWidth = 3;
+            ctx.strokeRect(305, 105, 190, 100);
+            ctx.strokeStyle = '#7d6e57';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(307, 107, 186, 96);
+            ctx.strokeStyle = '#2d1f0f';
+            ctx.lineWidth = 3;
+            ctx.strokeRect(305, 220, 190, 100);
+            ctx.strokeStyle = '#7d6e57';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(307, 222, 186, 96);
+            
+            ctx.strokeStyle = 'rgba(45, 31, 15, 0.15)';
+            ctx.lineWidth = 0.5;
+            for (let i = 0; i < 12; i++) {
+                ctx.beginPath();
+                ctx.moveTo(305, 110 + i * 18);
+                ctx.quadraticCurveTo(400, 111 + i * 18, 495, 110 + i * 18);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(305, 225 + i * 18);
+                ctx.quadraticCurveTo(400, 226 + i * 18, 495, 225 + i * 18);
+                ctx.stroke();
+            }
+            
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+            ctx.beginPath();
+            ctx.ellipse(478, 223, 12, 3, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            const plateGradient = ctx.createRadialGradient(477, 218, 0, 477, 218, 10);
+            plateGradient.addColorStop(0, '#e0e0e0');
+            plateGradient.addColorStop(0.7, '#b0b0b0');
+            plateGradient.addColorStop(1, '#808080');
+            ctx.fillStyle = plateGradient;
+            ctx.beginPath();
+            ctx.arc(477, 218, 10, 0, Math.PI * 2);
+            ctx.fill();
+
+            const knobGradient = ctx.createRadialGradient(475, 216, 2, 477, 218, 12);
+            knobGradient.addColorStop(0, '#ffffff');
+            knobGradient.addColorStop(0.3, '#e8e8e8');
+            knobGradient.addColorStop(0.6, '#c0c0c0');
+            knobGradient.addColorStop(1, '#909090');
+            ctx.fillStyle = knobGradient;
+            ctx.beginPath();
+            ctx.arc(477, 218, 12, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+            ctx.beginPath();
+            ctx.arc(475, 216, 4, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+            ctx.beginPath();
+            ctx.arc(473, 214, 2, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+            ctx.beginPath();
+            ctx.arc(150, 280, 70, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#ff6b00';
+            ctx.lineWidth = 4;
+            ctx.stroke();
+            
+            ctx.fillStyle = '#d4af37';
+            ctx.beginPath();
+            ctx.ellipse(150, 280, 35, 12, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+            ctx.beginPath();
+            ctx.arc(140, 275, 4, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(155, 285, 3, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(145, 290, 3, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.fillStyle = 'rgba(138, 43, 226, 0.3)';
+            ctx.beginPath();
+            ctx.arc(150, 280, 60, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.fillStyle = '#ff6b00';
+            ctx.font = 'bold 12px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('ΙΧΝΗ ΛΑΤΕΞ', 150, 365);
+            ctx.fillText('(UV ΦΩΤΙΣΜΟΣ)', 150, 380);
+            
+			ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+			ctx.fillRect(0, 0, canvas.width, 40 * scale);
+			ctx.fillStyle = '#ff0000';
+			ctx.font = `bold ${14 * scale}px monospace`;
+			ctx.textAlign = 'left';
+			ctx.fillText('● REC', 10 * scale, 25 * scale);
+			ctx.fillStyle = '#fff';
+			ctx.fillText('31/10/2025  08:32:40  |  ΓΡΑΦΕΙΟ ΘΥΝΑΤΟΣ - ΠΟΡΤΑ', 80 * scale, 25 * scale);
+			ctx.textAlign = 'right';
+			ctx.fillText('ΤΕΚ #006', (canvas.width - 10 * scale), 25 * scale);
+        }
+
+        let resizeTimeout;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(drawCrimeScene, 250);
+        });
+
+        window.onload = function() {
+            drawCrimeScene();
+        };
+    </script>
+</body>
+</html>

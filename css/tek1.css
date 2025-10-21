@@ -1,0 +1,511 @@
+* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .animated-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0.1;
+            background-image: repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,107,0,0.5) 35px, rgba(255,107,0,0.5) 70px);
+            animation: slide 20s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes slide {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(70px); }
+        }
+
+        @keyframes unlock {
+            0% { transform: scale(0) rotate(-180deg); opacity: 0; }
+            50% { transform: scale(1.2) rotate(10deg); }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
+            padding: clamp(15px, 4vw, 20px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            position: relative;
+            z-index: 10;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(8px, 2vw, 10px);
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        .check-icon {
+            width: clamp(24px, 6vw, 32px);
+            height: clamp(24px, 6vw, 32px);
+            color: #fff;
+            animation: unlock 0.6s ease-out;
+            flex-shrink: 0;
+        }
+
+        .header h1 {
+            color: #fff;
+            font-size: clamp(16px, 4.5vw, 24px);
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .header p {
+            color: #fff;
+            text-align: center;
+            opacity: 0.9;
+            font-size: clamp(11px, 2.8vw, 14px);
+        }
+
+        .container {
+            padding: clamp(10px, 3vw, 20px);
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .evidence-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: clamp(10px, 2vw, 15px);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+            border: clamp(2px, 0.4vw, 3px) solid #ff6b00;
+        }
+
+        .badge-bar {
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+            padding: clamp(12px, 3vw, 15px) clamp(15px, 4vw, 20px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .badge-info {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .evidence-id {
+            font-size: clamp(20px, 5vw, 28px);
+            font-weight: bold;
+            color: #ff6b00;
+            font-family: monospace;
+            letter-spacing: clamp(1px, 0.3vw, 2px);
+        }
+
+        .official-badge {
+            background: rgba(255,107,0,0.2);
+            border: 2px solid #ff6b00;
+            border-radius: 8px;
+            padding: clamp(6px, 1.5vw, 8px) clamp(10px, 2.5vw, 15px);
+            font-size: clamp(9px, 2vw, 11px);
+            color: #ff6b00;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .crime-scene-photo {
+            background: #000;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-top: 2px solid #333;
+            border-bottom: 2px solid #333;
+            overflow: visible;
+            min-height: 200px;
+        }
+
+        #crimeSceneCanvas {
+            width: 100%;
+            height: auto;
+            display: block;
+            max-width: 800px;
+        }
+
+        .confidential-badge {
+            position: absolute;
+            top: clamp(5px, 2vw, 10px);
+            right: clamp(5px, 2vw, 10px);
+            background: rgba(255,0,0,0.9);
+            color: white;
+            padding: clamp(4px, 1vw, 5px) clamp(8px, 2vw, 10px);
+            font-size: clamp(9px, 2vw, 11px);
+            font-weight: bold;
+            border-radius: 5px;
+            border: 1px solid #fff;
+        }
+
+        .ar-container {
+            margin: clamp(15px, 3vw, 20px) 0;
+            padding: clamp(15px, 3vw, 20px);
+            background: linear-gradient(135deg, rgba(255,107,0,0.05) 0%, rgba(255,136,0,0.05) 100%);
+            border: 2px solid #ff6b00;
+            border-radius: 10px;
+        }
+
+        .ar-title {
+            font-size: clamp(16px, 3.5vw, 18px);
+            color: #ff6b00;
+            font-weight: bold;
+            margin: 0 0 15px 0;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .view-3d-button {
+            background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
+            color: white;
+            padding: clamp(15px, 3vw, 18px) clamp(30px, 6vw, 40px);
+            border: none;
+            border-radius: 12px;
+            font-size: clamp(15px, 3.5vw, 18px);
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(255,107,0,0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            min-height: 60px;
+        }
+
+        .view-3d-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255,107,0,0.4);
+        }
+
+        .view-3d-button:active {
+            transform: translateY(0);
+        }
+
+        .view-3d-button svg {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+
+        .model-viewer-container {
+            visibility: hidden;
+            height: 0;
+            overflow: hidden;
+            transition: visibility 0s 0.3s, height 0.3s ease;
+        }
+
+        .model-viewer-container.active {
+            visibility: visible;
+            height: auto;
+            margin-top: 20px;
+            transition: visibility 0s, height 0.3s ease;
+        }
+
+        model-viewer {
+            width: 100%;
+            height: clamp(300px, 50vw, 450px);
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+            display: block;
+        }
+
+        model-viewer::part(default-ar-button) {
+            background-color: #0f3460;
+            color: white;
+            font-weight: bold;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: clamp(14px, 3vw, 16px);
+            border: none;
+            box-shadow: 0 4px 12px rgba(15, 52, 96, 0.3);
+        }
+
+        .close-3d-button {
+            background: #dc3545;
+            color: white;
+            padding: clamp(10px, 2vw, 12px) clamp(20px, 4vw, 30px);
+            border: none;
+            border-radius: 8px;
+            font-size: clamp(13px, 2.8vw, 15px);
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+            transition: all 0.3s ease;
+            display: block;
+            margin: 15px auto 0;
+            min-height: 44px;
+        }
+
+        .close-3d-button:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(220, 53, 69, 0.4);
+        }
+
+        .close-3d-button:active {
+            transform: translateY(0);
+        }
+
+        .details {
+            padding: clamp(20px, 4vw, 30px);
+            background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
+        }
+
+        .evidence-title {
+            margin: 0 0 clamp(20px, 4vw, 25px) 0;
+            font-size: clamp(20px, 4.5vw, 24px);
+            color: #1a1a2e;
+            border-bottom: 3px solid #ff6b00;
+            padding-bottom: 15px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .section {
+            margin-bottom: clamp(20px, 3vw, 25px);
+            background: white;
+            padding: clamp(18px, 3vw, 20px);
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        .section-title {
+            font-size: clamp(16px, 3.5vw, 18px);
+            color: #0f3460;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: clamp(8px, 2vw, 10px);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        .section-content {
+            font-size: clamp(14px, 2.8vw, 15px);
+            line-height: 1.8;
+            color: #333;
+        }
+
+        .justified-text {
+            text-align: justify;
+            text-justify: inter-word;
+        }
+
+        ul {
+            padding-left: clamp(20px, 4vw, 25px);
+            line-height: 1.8;
+        }
+
+        ul li {
+            margin-bottom: 8px;
+            font-size: clamp(14px, 2.8vw, 15px);
+        }
+
+        .fingerprint-item {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            padding: clamp(12px, 2.5vw, 15px);
+            margin-bottom: 12px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .fingerprint-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .fingerprint-item.primary {
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe5e5 100%);
+            border-color: #ff6b00;
+            border-width: 3px;
+            box-shadow: 0 4px 12px rgba(255,107,0,0.15);
+        }
+
+        .fingerprint-item.primary:hover {
+            box-shadow: 0 6px 16px rgba(255,107,0,0.25);
+        }
+
+        .fingerprint-name {
+            font-weight: 700;
+            font-size: clamp(14px, 3vw, 15px);
+            color: #1a1a2e;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .fingerprint-name::before {
+            content: "👤";
+            font-size: clamp(16px, 3.5vw, 18px);
+        }
+
+        .fingerprint-item.primary .fingerprint-name {
+            color: #c00;
+            font-size: clamp(15px, 3.2vw, 16px);
+        }
+
+        .fingerprint-item.primary .fingerprint-name::before {
+            content: "⚠️";
+        }
+
+        .fingerprint-details {
+            font-size: clamp(12px, 2.5vw, 13px);
+            color: #666;
+            padding-left: clamp(24px, 5vw, 26px);
+            line-height: 1.5;
+        }
+
+        .significance-box {
+            background: linear-gradient(135deg, #fff5f0 0%, #ffe8db 100%);
+            border: 2px solid #ff6b00;
+            border-radius: 12px;
+            padding: clamp(20px, 3.5vw, 25px);
+            margin-bottom: clamp(20px, 3vw, 25px);
+            box-shadow: 0 4px 12px rgba(255,107,0,0.1);
+        }
+
+        .significance-title {
+            font-size: clamp(16px, 3.5vw, 18px);
+            color: #ff6b00;
+            margin: 0 0 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            flex-wrap: wrap;
+        }
+
+        .significance-text {
+            font-size: clamp(14px, 2.8vw, 15px);
+            line-height: 1.8;
+            color: #1a1a2e;
+            margin: 0;
+            text-align: justify;
+            text-justify: inter-word;
+        }
+
+        .back-button-container {
+            text-align: center;
+            padding: clamp(15px, 3vw, 20px);
+            background: rgba(0,0,0,0.05);
+            position: relative;
+            z-index: 100;
+        }
+
+        .back-button {
+            background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
+            color: white;
+            padding: clamp(12px, 2.5vw, 15px) clamp(30px, 6vw, 40px);
+            border: none;
+            border-radius: 10px;
+            font-size: clamp(14px, 3vw, 16px);
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(255,107,0,0.3);
+            position: relative;
+            z-index: 101;
+            pointer-events: auto;
+            transition: all 0.3s ease;
+            display: inline-block;
+            min-height: 44px;
+            min-width: 200px;
+        }
+
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(255,107,0,0.4);
+        }
+
+        .back-button:active {
+            transform: translateY(0);
+        }
+
+        #debugInfo {
+            margin-top: 10px;
+            padding: 10px;
+            background: #e7f3ff;
+            border: 1px solid #2196F3;
+            border-radius: 5px;
+            font-size: clamp(11px, 2.2vw, 12px);
+            font-family: monospace;
+            display: none;
+            word-wrap: break-word;
+        }
+
+        @media (max-width: 375px) {
+            .header-content {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .badge-bar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .evidence-title {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        @media print {
+            .animated-background,
+            .back-button-container,
+            .ar-container {
+                display: none;
+            }
+
+            body {
+                background: white;
+            }
+
+            .evidence-card {
+                box-shadow: none;
+            }
+        }

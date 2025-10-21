@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Τεκμήριο Ξεκλειδώθηκε</title>
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
+    
+    
+    <link rel="stylesheet" href="css/tek-evidence.css">
+</head>
+<body>
+    <div class="animated-background"></div>
+
+    <div class="header">
+        <div class="header-content">
+            <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+            <h1>ΤΕΚΜΗΡΙΟ ΞΕΚΛΕΙΔΩΘΗΚΕ!</h1>
+        </div>
+        <p>Προστέθηκε στον φάκελο υπόθεσης</p>
+    </div>
+
+    <div class="container">
+        <div class="evidence-card">
+            <div class="badge-bar">
+                <div class="badge-info">
+                    <div class="evidence-id">ΤΕΚ #010</div>
+                </div>
+                <div class="official-badge">ΕΠΙΣΗΜΟ ΤΕΚΜΗΡΙΟ</div>
+            </div>
+
+            <div class="crime-scene-photo">
+                <canvas id="crimeSceneCanvas"></canvas>
+                <div class="confidential-badge">ΑΠΟΡΡΗΤΟ</div>
+            </div>
+
+            <div class="ar-container">
+                <h3 class="ar-title">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M2 16.1A5 5 0 0 1 5.9 20M2 12.05A9 9 0 0 1 9.95 20M2 8V6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-6"></path>
+                        <line x1="2" y1="20" x2="2.01" y2="20"></line>
+                    </svg>
+                    ΕΠΑΥΞΗΜΕΝΗ ΠΡΑΓΜΑΤΙΚΟΤΗΤΑ
+                </h3>
+                
+                <button id="load3DButton" class="view-3d-button">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                        <polyline points="2 17 12 22 22 17"></polyline>
+                        <polyline points="2 12 12 17 22 12"></polyline>
+                    </svg>
+                    ΠΡΟΒΟΛΗ ΣΕ 3D
+                </button>
+
+                <div id="modelViewerContainer" class="model-viewer-container">
+                    <model-viewer
+                        id="keyModel"
+                        src="safe_key.glb"
+                        alt="Safe Key 3D Model - Evidence"
+                        ar
+                        ar-modes="webxr scene-viewer quick-look"
+                        camera-controls
+                        touch-action="pan-y"
+                        auto-rotate
+                        auto-rotate-delay="1000"
+                        rotation-per-second="30deg"
+                        shadow-intensity="1"
+                        exposure="0.8"
+                        camera-orbit="0deg 75deg 2.5m"
+                        min-camera-orbit="auto 0deg auto"
+                        max-camera-orbit="auto 180deg auto">
+                    </model-viewer>
+                    
+                    <button id="close3DButton" class="close-3d-button">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                        ΚΛΕΙΣΙΜΟ
+                    </button>
+                </div>
+
+                <p style="text-align: center; color: #666; font-size: clamp(12px, 2.5vw, 13px); margin-top: 10px; font-style: italic;">
+                    💡 Σύρετε για να περιστρέψετε • Zoom με δύο δάχτυλα
+                </p>
+            </div>
+
+            <div class="details">
+                <h2 class="evidence-title">🔑 ΚΛΕΙΔΙ ΧΡΗΜΑΤΟΚΙΒΩΤΙΟΥ</h2>
+
+                <div class="section">
+                    <h3 class="section-title">
+                        <span>🔬</span>
+                        Εγκληματολογική Ανάλυση
+                    </h3>
+                    <p class="section-content" style="margin-bottom: 15px;">
+                        Μικρό χάλκινο κλειδί ασφαλείας, μήκους 5,2cm, με χαρακτηριστικό οδοντωτό προφίλ υψηλής πολυπλοκότητας. Το κλειδί εντοπίστηκε στο δεξί συρτάρι του γραφείου του Δημητρίου, κάτω από έναν σωρό εγγράφων και παλιών λογαριασμών. Η θέση εύρεσης υποδηλώνει ότι το κλειδί είτε τοποθετήθηκε βιαστικά είτε κρύφτηκε σκόπιμα. Το χρηματοκιβώτιο στο οποίο αντιστοιχεί βρίσκεται στο ίδιο γραφείο, πίσω από έναν πίνακα ζωγραφικής.
+                    </p>
+                    
+                    <div style="margin-top: 25px;">
+                        <p class="section-content" style="margin-bottom: 15px;"><strong style="color: #0f3460; font-size: 16px;">🔍 Φυσικά Χαρακτηριστικά</strong></p>
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong>Υλικό:</strong> Ορείχαλκος (ανοξείδωτο κράμα χαλκού-ψευδαργύρου)
+                        </p>
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong>Διαστάσεις:</strong> 5,2cm x 1,1cm x 0,3cm
+                        </p>
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong>Βάρος:</strong> 8,7 γραμμάρια
+                        </p>
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong>Κατασκευαστής:</strong> SECUREX Pro-Lock Series (σειριακός αριθμός: PL-2847-K)
+                        </p>
+                        <p class="section-content">
+                            <strong>Κατάσταση:</strong> Ελαφριές γρατσουνιές από συχνή χρήση, αλλά καθαρό από σκουριά
+                        </p>
+                    </div>
+
+                    <div style="margin-top: 25px;">
+                        <p class="section-content" style="margin-bottom: 15px;"><strong style="color: #0f3460; font-size: 16px;">📍 Θέση & Περιβάλλον Εύρεσης</strong></p>
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong>Τοποθεσία:</strong> Δεξί συρτάρι γραφείου (δεύτερο από πάνω)
+                        </p>
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong>Βάθος:</strong> Κάτω από στοίβα εγγράφων (~15 φύλλα), λογαριασμών και παλιών αποδείξεων
+                        </p>
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong>Απόσταση από χρηματοκιβώτιο:</strong> 2,3 μέτρα (το χρηματοκιβώτιο βρίσκεται πίσω από πίνακα)
+                        </p>
+                        <p class="section-content">
+                            <strong>Παρατήρηση:</strong> Το συρτάρι ήταν μισάνοιχτο όταν εντοπίστηκε από την ομάδα έρευνας
+                        </p>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">
+                        <span>👆</span>
+                        ΑΠΟΤΥΠΩΜΑΤΑ ΚΑΙ ΧΡΟΝΟΛΟΓΙΟ
+                    </h3>
+                    <div>
+                        <div class="fingerprint-item critical">
+                            <div class="fingerprint-name">Δημητρίου Πέτρος</div>
+                            <div class="fingerprint-details">
+                                <div>• Πλήρη αποτυπώματα δεξιού χεριού (αντίχειρας + δείκτης)</div>
+                                <div>• Χρονολόγιο: 2-4 ώρες πριν τον θάνατο (18:00-20:00 εκτιμώμενη)</div>
+                                <div>• Θέση: Περιμετρικά στο σώμα του κλειδιού</div>
+                                <div>• Ποιότητα: Εξαιρετικά καθαρά - υποδηλώνει πρόσφατο χειρισμό</div>
+                            </div>
+                        </div>
+                        
+                        <div class="fingerprint-item critical">
+                            <div class="fingerprint-name">Αναγνώστου Κωνσταντίνος</div>
+                            <div class="fingerprint-details">
+                                <div>• Μερικό αποτύπωμα αριστερού χεριού (μέσος δάκτυλος)</div>
+                                <div>• Χρονολόγιο: 12-24 ώρες πριν (εκτιμώμενη 10:00-22:00 προηγούμενη μέρα)</div>
+                                <div>• Θέση: Στην κεφαλή του κλειδιού (σημείο λαβής)</div>
+                                <div>• Ποιότητα: Μέτρια - μερικώς αλληλεπικαλυμμένο από νεότερα αποτυπώματα</div>
+                            </div>
+                        </div>
+
+                        <div class="fingerprint-item">
+                            <div class="fingerprint-name">Ίχνη Σκόνης Ταλκ</div>
+                            <div class="fingerprint-details">
+                                <div>• Μικρές ποσότητες λευκής σκόνης ταλκ εντοπίστηκαν στις εσοχές του κλειδιού</div>
+                                <div>• Χρονολόγιο: Δύσκολο να προσδιοριστεί με ακρίβεια</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">
+                        <span>🔓</span>
+                        ΠΡΟΣΒΑΣΗ ΣΤΟ ΧΡΗΜΑΤΟΚΙΒΩΤΙΟ
+                    </h3>
+                    <p class="section-content" style="margin-bottom: 15px;">
+                        Το χρηματοκιβώτιο βρέθηκε <strong style="color: #dc3545;">ΑΝΟΙΧΤΟ</strong> κατά τον χρόνο της έρευνας. Η κλειδαριά δεν έφερε σημάδια παραβίασης, υποδηλώνοντας ότι άνοιξε με το σωστό κλειδί. Το χρηματοκιβώτιο περιείχε σημαντικά έγγραφα και προσωπικά αντικείμενα.
+                    </p>
+                    
+                    <div style="margin-top: 20px;">
+                        <p class="section-content" style="margin-bottom: 15px;"><strong style="color: #0f3460; font-size: 16px;">📋 Περιεχόμενα Χρηματοκιβωτίου</strong></p>
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong>Επιχειρηματικά:</strong> Συμβάσεις εταιρείας (3), μετοχικές συμφωνίες, διαθήκη (τελευταία αναθεώρηση 6 μήνες πριν)
+                        </p>
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong>Προσωπικά:</strong> Οικογενειακές φωτογραφίες, κοσμήματα μητέρας (€12.500 εκτιμώμενη αξία)
+                        </p>
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong>Μετρητά:</strong> €20.000 σε χαρτονομίσματα των €50 και €100
+                        </p>
+                    </div>
+                </div>
+
+                <div class="significance-box">
+                    <h3 class="significance-title">
+                        <span>💡</span>
+                        ΣΗΜΑΣΙΑ ΓΙΑ ΤΗΝ ΕΡΕΥΝΑ
+                    </h3>
+                    <p class="significance-text">
+                        Το κλειδί αποτελεί κρίσιμο στοιχείο για την κατανόηση των κινήσεων τις τελευταίες ώρες. Ο Δημητρίου χειρίστηκε το κλειδί 2-4 ώρες πριν τον θάνατό του - μήπως άνοιξε το χρηματοκιβώτιο για να πάρει ή να βάλει κάτι; Τα αποτυπώματα του Αναγνώστου είναι παλαιότερα αλλά σημαντικά - γιατί είχε πρόσβαση στο κλειδί; Εγκρίθηκε από τον Δημητρίου ή το πήρε κρυφά; Ακόμη πιο ανησυχητική είναι η σκόνη ταλκ από latex γάντια - κάποιος προσπάθησε να χειριστεί το κλειδί χωρίς να αφήσει αποτυπώματα. Ποιος; Το χρηματοκιβώτιο ήταν ανοιχτό - αυτό μπορεί να σημαίνει ότι το άνοιξε ο ίδιος, λίγο πριν πεθάνει, ή κάποιος μετά τον θάνατό του επειδή αναζητούσε κάτι συγκεκριμένο.
+                    </p>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">
+                        <span>❓</span>
+                        ΕΡΩΤΗΜΑΤΑ ΔΙΕΡΕΥΝΗΣΗΣ
+                    </h3>
+                    <ul class="section-content">
+                        <li>Γιατί το κλειδί βρέθηκε κρυμμένο κάτω από έγγραφα και όχι στη θέση του; Το έβαλε εκεί ο Δημητρίου ή κάποιος άλλος;</li>
+                        <li>Ο Αναγνώστου είχε νόμιμη πρόσβαση στο κλειδί ή το πήρε χωρίς άδεια; Τι έψαχνε στο χρηματοκιβώτιο;</li>
+                        <li>Ποιος χρησιμοποίησε latex γάντια για να χειριστεί το κλειδί και γιατί ήθελε να αποφύγει τα αποτυπώματα;</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="back-button-container">
+        <button onclick="window.goBackToCaseFile()" class="back-button">
+            ← ΕΠΙΣΤΡΟΦΗ ΣΤΟ ΦΑΚΕΛΟ
+        </button>
+    </div>
+
+    
+    <script src="js/tek-common.js"></script>
+</body>
+</html>

@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🖨️ QR Code Generator - All Evidence</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    
+    <style>
+        /* Print Styles */
+        @media print {
+            body { 
+                margin: 0; 
+                padding: 0;
+                background: white !important;
+            }
+            .no-print { display: none !important; }
+            .url-display { display: none !important; }
+            .qr-card { 
+                page-break-inside: avoid; 
+                box-shadow: none;
+                background: white !important;
+                border-width: 2px !important;
+            }
+            .qr-container {
+                background: white !important;
+                border: 2px solid #dee2e6;
+            }
+            .qr-code-wrapper {
+                background: white !important;
+            }
+            .page-break { page-break-after: always; }
+        }
+
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #f0f0f0;
+            padding: clamp(10px, 3vw, 20px);
+            line-height: 1.5;
+        }
+
+        /* Controls Section */
+        .controls {
+            background: white;
+            padding: clamp(15px, 4vw, 25px);
+            border-radius: clamp(10px, 2vw, 15px);
+            margin-bottom: clamp(20px, 4vw, 30px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            max-width: min(800px, 100%);
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .controls h1 {
+            color: #1a1a2e;
+            margin-bottom: clamp(15px, 3vw, 20px);
+            font-size: clamp(20px, 4vw, 28px);
+            display: flex;
+            align-items: center;
+            gap: clamp(5px, 1.5vw, 10px);
+            flex-wrap: wrap;
+        }
+
+        .form-group {
+            margin-bottom: clamp(15px, 3vw, 20px);
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: clamp(6px, 1.5vw, 8px);
+            font-weight: 600;
+            color: #333;
+            font-size: clamp(12px, 2.5vw, 14px);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: clamp(10px, 2vw, 12px);
+            border: 2px solid #ddd;
+            border-radius: clamp(6px, 1.5vw, 8px);
+            font-size: clamp(14px, 2.5vw, 16px);
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #ff6b00;
+        }
+
+        /* Button Styles */
+        .btn-group {
+            display: flex;
+            gap: clamp(8px, 2vw, 10px);
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
+            color: white;
+            border: none;
+            padding: clamp(12px, 2.5vw, 14px) clamp(20px, 4vw, 30px);
+            border-radius: clamp(6px, 1.5vw, 8px);
+            font-size: clamp(14px, 2.5vw, 16px);
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+            min-width: min(180px, 100%);
+            text-align: center;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255,107,0,0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #ff6b00;
+            border: 2px solid #ff6b00;
+        }
+
+        .btn-secondary:hover {
+            background: #fff5f0;
+        }
+
+        /* QR Grid */
+        .qr-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+            gap: clamp(15px, 3vw, 30px);
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* QR Cards */
+        .qr-card {
+            background: white;
+            border: clamp(2px, 0.5vw, 4px) solid #ff6b00;
+            border-radius: clamp(12px, 2.5vw, 20px);
+            padding: clamp(15px, 3vw, 30px);
+            text-align: center;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .qr-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .qr-card.critical {
+            border-color: #dc3545;
+            border-width: clamp(3px, 0.6vw, 5px);
+        }
+
+        .qr-card.entry {
+            border-color: #28a745;
+            border-width: clamp(3px, 0.6vw, 5px);
+        }
+
+        /* Critical Tags */
+        .critical-tag {
+            position: absolute;
+            top: clamp(8px, 1.5vw, 10px);
+            right: clamp(8px, 1.5vw, 10px);
+            padding: clamp(4px, 1vw, 5px) clamp(8px, 1.5vw, 12px);
+            border-radius: clamp(4px, 1vw, 5px);
+            font-size: clamp(9px, 1.8vw, 11px);
+            font-weight: bold;
+            color: white;
+            white-space: nowrap;
+            z-index: 10;
+        }
+
+        .tag-critical { background: #dc3545; }
+        .tag-secret { background: #6f42c1; }
+        .tag-threat { background: #e83e8c; }
+        .tag-forgery { background: #fd7e14; }
+        .tag-clue { background: #20c997; }
+        .tag-financial { background: #17a2b8; }
+        .tag-blackmail { background: #6c757d; }
+        .tag-sabotage { background: #343a40; }
+        .tag-entry { background: #28a745; }
+
+        /* TEK Number */
+        .tek-number {
+            font-size: clamp(24px, 5vw, 36px);
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            letter-spacing: clamp(1px, 0.3vw, 3px);
+            color: #ff6b00;
+            margin-bottom: clamp(8px, 1.5vw, 10px);
+            padding-top: clamp(15px, 2vw, 0);
+        }
+
+        /* TEK Icon */
+        .tek-icon {
+            font-size: clamp(40px, 7vw, 60px);
+            margin: clamp(10px, 2vw, 15px) 0;
+            line-height: 1;
+        }
+
+        /* TEK Name */
+        .tek-name {
+            font-size: clamp(16px, 3vw, 20px);
+            font-weight: bold;
+            color: #1a1a2e;
+            margin: clamp(10px, 2vw, 15px) 0;
+            line-height: 1.3;
+        }
+
+        /* QR Container */
+        .qr-container {
+            background: #f8f9fa;
+            border: clamp(2px, 0.4vw, 3px) solid #dee2e6;
+            border-radius: clamp(8px, 1.5vw, 12px);
+            padding: clamp(12px, 2.5vw, 20px);
+            margin: clamp(15px, 2.5vw, 20px) 0;
+            display: inline-block;
+            max-width: 100%;
+        }
+
+        .qr-code-wrapper {
+            background: white;
+            padding: clamp(8px, 1.5vw, 10px);
+            border-radius: clamp(6px, 1vw, 8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .qr-code-wrapper img,
+        .qr-code-wrapper canvas {
+            max-width: 100%;
+            height: auto !important;
+            width: auto !important;
+        }
+
+        /* Scan Instructions */
+        .scan-instruction {
+            background: linear-gradient(135deg, #fff5f0 0%, #ffe8db 100%);
+            border: 2px solid #ff6b00;
+            border-radius: clamp(6px, 1.5vw, 10px);
+            padding: clamp(10px, 2vw, 12px);
+            margin-top: clamp(12px, 2vw, 15px);
+            font-size: clamp(12px, 2.2vw, 14px);
+            font-weight: 600;
+            color: #ff6b00;
+            line-height: 1.4;
+        }
+
+        .scan-instruction.entry-instruction {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            border-color: #28a745;
+            color: #28a745;
+        }
+
+        /* URL Display */
+        .url-display {
+            font-size: clamp(8px, 1.5vw, 10px);
+            color: #999;
+            margin-top: clamp(8px, 1.5vw, 10px);
+            word-break: break-all;
+            font-family: 'Courier New', monospace;
+            background: #f8f9fa;
+            padding: clamp(6px, 1.5vw, 8px);
+            border-radius: clamp(4px, 1vw, 5px);
+            max-height: clamp(50px, 8vw, 60px);
+            overflow-y: auto;
+            line-height: 1.4;
+        }
+
+        /* Mobile Specific (up to 480px) */
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .controls {
+                padding: 15px;
+                border-radius: 10px;
+            }
+
+            .controls h1 {
+                font-size: 18px;
+            }
+
+            .qr-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .btn {
+                min-width: 100%;
+                padding: 12px 15px;
+            }
+
+            .tek-number {
+                font-size: 22px;
+                letter-spacing: 1px;
+            }
+
+            .tek-icon {
+                font-size: 40px;
+            }
+
+            .tek-name {
+                font-size: 15px;
+            }
+
+            .critical-tag {
+                font-size: 9px;
+                padding: 4px 8px;
+            }
+        }
+
+        /* Tablet (481px to 768px) */
+        @media (min-width: 481px) and (max-width: 768px) {
+            .qr-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
+
+            .btn {
+                min-width: calc(50% - 5px);
+            }
+        }
+
+        /* Desktop Small (769px to 1024px) */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .qr-grid {
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            }
+        }
+
+        /* Desktop Large (1025px and up) */
+        @media (min-width: 1025px) {
+            .qr-grid {
+                grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            }
+        }
+
+        /* Touch Device Optimizations */
+        @media (hover: none) and (pointer: coarse) {
+            .btn {
+                padding: 14px 25px;
+                min-height: 48px;
+            }
+
+            .qr-card:hover {
+                transform: none;
+            }
+
+            .btn:hover {
+                transform: none;
+            }
+        }
+
+        /* Landscape Mobile */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .controls h1 {
+                margin-bottom: 10px;
+            }
+
+            .form-group {
+                margin-bottom: 10px;
+            }
+
+            .qr-card {
+                padding: 15px;
+            }
+
+            .tek-icon {
+                font-size: 35px;
+                margin: 8px 0;
+            }
+        }
+
+        /* High DPI Displays */
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+            .qr-code-wrapper img,
+            .qr-code-wrapper canvas {
+                image-rendering: -webkit-optimize-contrast;
+                image-rendering: crisp-edges;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="controls no-print">
+        <h1>
+            🖨️ QR CODES GENERATOR
+        </h1>
+        
+        <div class="form-group">
+            <input 
+                type="text" 
+                id="baseUrl" 
+                value="https://feedmeout.github.io/Crime-Festival/"
+                aria-label="Base URL for QR codes">
+        </div>
+
+        <div class="btn-group">
+            <button class="btn" onclick="generateAllQRCodes()" aria-label="Generate QR Codes">
+                📋 ΔΗΜΙΟΥΡΓΙΑ
+            </button>
+            <button class="btn btn-secondary" onclick="window.print()" aria-label="Print Cards">
+                🖨️ ΕΚΤΥΠΩΣΗ
+            </button>
+        </div>
+    </div>
+
+    <div id="qrContainer" class="qr-grid"></div>
+
+    <script>
+        const tekData = [
+            { id: 'entry', name: 'ΕΝΑΡΞΗ ΜΥΣΤΗΡΙΟΥ', icon: '🔎', tag: 'entry', url: 'team_entry.html' },
+            { id: 1, name: 'ΜΠΟΥΚΑΛΙ ΟΥΙΣΚΙ', icon: '🍾', tag: 'critical' },
+            { id: 2, name: 'ΚΡΥΣΤΑΛΛΙΝΑ ΠΟΤΗΡΙΑ', icon: '🥃', tag: 'critical' },
+            { id: 3, name: 'ΚΙΝΗΤΟ ΘΥΜΑΤΟΣ', icon: '📱', tag: 'threat' },
+            { id: 4, name: 'EMAIL «ΑΥΤΟΚΤΟΝΙΑΣ»', icon: '📧', tag: 'forgery' },
+            { id: 5, name: 'ΙΑΤΡΙΚΗ ΓΝΩΜΑΤΕΥΣΗ', icon: '🥼', tag: 'secret' },
+            { id: 6, name: 'ΓΑΝΤΙΑ ΛΑΤΕΞ', icon: '🧤', tag: 'clue' },
+            { id: 7, name: 'ΧΕΙΡΟΓΡΑΦΟ ΣΗΜΕΙΩΜΑ', icon: '✍️', tag: 'forgery' },
+            { id: 8, name: 'ΦΑΚΕΛΟΣ «ΕΜΠΙΣΤΕΥΤΙΚΟ»', icon: '📂', tag: 'blackmail' },
+            { id: 9, name: 'ΑΠΟΔΕΙΞΗ ΧΗΜΙΚΩΝ', icon: '🧪', tag: 'critical' },
+            { id: 10, name: 'ΚΛΕΙΔΙ ΧΡΗΜΑΤΟΚΙΒΩΤΙΟΥ', icon: '🔑', tag: 'financial' },
+            { id: 11, name: 'ΚΑΜΕΡΕΣ ΑΣΦΑΛΕΙΑΣ', icon: '🎥', tag: 'sabotage' }
+        ];
+
+        const tagLabels = {
+            'critical': 'ΚΡΙΣΙΜΟ',
+            'secret': 'ΑΠΟΡΡΗΤΟ',
+            'threat': 'ΑΠΕΙΛΗ',
+            'forgery': 'ΠΛΑΣΤΟΓΡΑΦΙΑ',
+            'clue': 'ΕΝΔΕΙΞΗ',
+            'financial': 'ΟΙΚΟΝΟΜΙΚΟ',
+            'blackmail': 'ΕΚΒΙΑΣΜΟΣ',
+            'sabotage': 'ΣΑΜΠΟΤΑΖ',
+            'entry': 'ΕΝΑΡΞΗ'
+        };
+
+        function generateAllQRCodes() {
+            let baseUrl = document.getElementById('baseUrl').value.trim();
+            
+            if (!baseUrl) {
+                alert('⚠️ Παρακαλώ εισάγετε το Base URL!');
+                return;
+            }
+
+            if (!baseUrl.endsWith('/')) {
+                baseUrl += '/';
+            }
+
+            const container = document.getElementById('qrContainer');
+            container.innerHTML = '';
+
+            tekData.forEach((tek, index) => {
+                let url;
+                if (tek.id === 'entry') {
+                    url = `${baseUrl}team_entry.html`;
+                } else {
+                    url = `${baseUrl}unlock_system.html?tek=${tek.id}`;
+                }
+                
+                const tagLabel = tagLabels[tek.tag] || '';
+                const tagClass = `tag-${tek.tag}`;
+                
+                let cardClass = 'qr-card';
+                if (tek.tag === 'critical') cardClass += ' critical';
+                if (tek.tag === 'entry') cardClass += ' entry';
+
+                let cardNumber;
+                if (tek.id === 'entry') {
+                    cardNumber = '<div class="tek-number">TEK #000</div>';
+                } else {
+                    cardNumber = `<div class="tek-number">ΤΕΚ #${tek.id.toString().padStart(3, '0')}</div>`;
+                }
+                
+                let scanInstructionClass = 'scan-instruction';
+                let scanText = '📱 ΣΚΑΝΑΡΕΤΕ ΓΙΑ ΞΕΚΛΕΙΔΩΜΑ';
+                if (tek.id === 'entry') {
+                    scanInstructionClass += ' entry-instruction';
+                    scanText = '📱 ΣΚΑΝΑΡΕΤΕ ΓΙΑ ΕΙΣΟΔΟ';
+                }
+                
+                const cardDiv = document.createElement('div');
+                cardDiv.className = cardClass;
+                cardDiv.innerHTML = `
+                    ${tagLabel ? `<div class="critical-tag ${tagClass}">⚠️ ${tagLabel}</div>` : ''}
+                    ${cardNumber}
+                    <div class="tek-icon">${tek.icon}</div>
+                    <div class="tek-name">${tek.name}</div>
+                    <div class="qr-container">
+                        <div class="qr-code-wrapper" id="qr-${tek.id}"></div>
+                    </div>
+                    <div class="${scanInstructionClass}">
+                        ${scanText}
+                    </div>
+                    <div class="url-display">${url}</div>
+                `;
+                
+                container.appendChild(cardDiv);
+
+                setTimeout(() => {
+                    const qrSize = Math.min(200, window.innerWidth - 100);
+                    new QRCode(document.getElementById(`qr-${tek.id}`), {
+                        text: url,
+                        width: qrSize,
+                        height: qrSize,
+                        colorDark: "#000000",
+                        colorLight: "#ffffff",
+                        correctLevel: QRCode.CorrectLevel.H
+                    });
+                }, 100 * index);
+            });
+
+            console.log('✅ All 12 QR codes generated successfully!');
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            generateAllQRCodes();
+        });
+
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                generateAllQRCodes();
+            }, 500);
+        });
+    </script>
+</body>
+</html>

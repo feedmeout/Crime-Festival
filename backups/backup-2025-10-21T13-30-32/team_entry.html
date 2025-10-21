@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Είσοδος Ομάδας</title>
+	
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyA_9_40aa_wO_19g-1bIrSB6742aMOPwjo",
+          authDomain: "crime-festival-2025.firebaseapp.com",
+          projectId: "crime-festival-2025",
+          storageBucket: "crime-festival-2025.firebasestorage.app",
+          messagingSenderId: "663770004335",
+          appId: "1:663770004335:web:e42dbd983ab9b5277bc69a"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        window.firebaseDB = db;
+        window.firebaseDoc = doc;
+        window.firebaseGetDoc = getDoc;
+        window.firebaseReady = true;
+        console.log("✅ Firebase connected in team_entry.html!");
+    </script>
+    
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(12px, 3vw, 20px);
+    overflow-x: hidden;
+}
+
+.entry-box {
+    background: white;
+    padding: clamp(20px, 5vw, 40px);
+    border-radius: clamp(12px, 3vw, 15px);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    max-width: 500px;
+    width: 100%;
+    text-align: center;
+}
+
+h1 {
+    color: #1a1a2e;
+    margin-bottom: clamp(8px, 2vw, 10px);
+    font-size: clamp(20px, 5vw, 28px);
+    line-height: 1.3;
+    word-wrap: break-word;
+    hyphens: auto;
+}
+
+.subtitle {
+    color: #666;
+    margin-bottom: clamp(16px, 4vw, 30px);
+    font-size: clamp(12px, 3vw, 14px);
+    line-height: 1.5;
+}
+
+.input-group {
+    margin-bottom: clamp(14px, 3.5vw, 20px);
+    text-align: left;
+}
+
+.input-group label {
+    display: block;
+    color: #333;
+    font-weight: 600;
+    margin-bottom: clamp(6px, 1.5vw, 8px);
+    font-size: clamp(13px, 3vw, 14px);
+}
+
+input {
+    width: 100%;
+    padding: clamp(10px, 3vw, 15px);
+    font-size: clamp(14px, 3.5vw, 16px);
+    border: 2px solid #ddd;
+    border-radius: clamp(6px, 2vw, 8px);
+    transition: all 0.3s ease;
+    min-height: 48px;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+input:focus {
+    outline: none;
+    border-color: #ff6b00;
+    box-shadow: 0 0 0 3px rgba(255, 107, 0, 0.1);
+}
+
+#teamName {
+    text-transform: lowercase;
+}
+
+.warning-box {
+    font-size: clamp(12px, 3vw, 13px);
+    color: #b45309;
+    background: #fef3c7;
+    padding: clamp(8px, 2.5vw, 12px);
+    border-radius: clamp(4px, 1.5vw, 6px);
+    margin-top: clamp(6px, 2vw, 8px);
+    line-height: 1.6;
+    border-left: 3px solid #f59e0b;
+    text-align: left;
+}
+
+.warning-box strong {
+    color: #92400e;
+}
+
+button {
+    background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
+    color: white;
+    padding: clamp(12px, 3vw, 15px) clamp(20px, 5vw, 40px);
+    border: none;
+    border-radius: clamp(8px, 2vw, 10px);
+    font-size: clamp(15px, 4vw, 18px);
+    font-weight: 700;
+    cursor: pointer;
+    width: 100%;
+    min-height: 50px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 15px rgba(255,107,0,0.3);
+    -webkit-tap-highlight-color: transparent;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255,107,0,0.5);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+button:disabled {
+    background: linear-gradient(135deg, #ccc 0%, #ddd 100%);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+    opacity: 0.7;
+}
+
+.alert {
+    padding: clamp(10px, 3vw, 15px);
+    border-radius: clamp(6px, 2vw, 8px);
+    margin-bottom: clamp(14px, 3vw, 20px);
+    font-size: clamp(12px, 3vw, 14px);
+    text-align: left;
+    line-height: 1.6;
+    word-wrap: break-word;
+}
+
+.alert-error {
+    background: #fee;
+    border: 1px solid #fcc;
+    color: #c00;
+}
+
+.alert-info {
+    background: #e7f5ff;
+    border: 1px solid #bee5eb;
+    color: #0c5460;
+}
+
+.footer-hint {
+    color: #999;
+    font-size: clamp(11px, 2.8vw, 12px);
+    margin-top: clamp(14px, 3.5vw, 20px);
+    line-height: 1.6;
+}
+
+.loading {
+    display: inline-block;
+    width: clamp(16px, 4vw, 20px);
+    height: clamp(16px, 4vw, 20px);
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #ff6b00;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: clamp(6px, 2vw, 10px);
+    vertical-align: middle;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+    .entry-box {
+        max-width: 480px;
+        padding: 32px;
+    }
+    
+    h1 {
+        font-size: 26px;
+    }
+    
+    input {
+        font-size: 15px;
+        padding: 13px;
+    }
+    
+    button {
+        font-size: 17px;
+        min-height: 52px;
+    }
+}
+
+@media (min-width: 568px) and (max-width: 767px) and (orientation: landscape) {
+    body {
+        padding: 16px 20px;
+    }
+    
+    .entry-box {
+        padding: 24px 32px;
+    }
+    
+    h1 {
+        font-size: 24px;
+        margin-bottom: 8px;
+    }
+    
+    .input-group {
+        margin-bottom: 14px;
+    }
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+    body {
+        padding: 12px 16px;
+        align-items: flex-start;
+    }
+    
+    .entry-box {
+        margin: 12px auto;
+        padding: 16px 20px;
+    }
+    
+    h1 {
+        font-size: 20px;
+        margin-bottom: 6px;
+    }
+    
+    .subtitle {
+        margin-bottom: 12px;
+        font-size: 12px;
+    }
+    
+    .input-group {
+        margin-bottom: 10px;
+    }
+    
+    input {
+        min-height: 44px;
+        padding: 10px;
+    }
+    
+    button {
+        min-height: 44px;
+        padding: 10px 20px;
+    }
+    
+    .footer-hint {
+        margin-top: 10px;
+    }
+}
+
+@media (max-width: 380px) {
+    .entry-box {
+        padding: 16px;
+        border-radius: 10px;
+    }
+    
+    h1 {
+        font-size: 19px;
+    }
+    
+    input {
+        padding: 10px;
+        min-height: 46px;
+    }
+    
+    button {
+        min-height: 48px;
+        font-size: 15px;
+    }
+    
+    .warning-box {
+        padding: 8px 10px;
+        font-size: 11.5px;
+        border-left-width: 2px;
+    }
+    
+    .alert {
+        padding: 10px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 320px) {
+    body {
+        padding: 10px;
+    }
+    
+    .entry-box {
+        padding: 14px;
+    }
+    
+    h1 {
+        font-size: 18px;
+        line-height: 1.2;
+    }
+    
+    .input-group {
+        margin-bottom: 12px;
+    }
+    
+    input {
+        padding: 9px;
+        font-size: 14px;
+        min-height: 44px;
+    }
+    
+    button {
+        font-size: 14px;
+        min-height: 46px;
+        padding: 10px 16px;
+    }
+    
+    .warning-box {
+        font-size: 11px;
+        padding: 8px;
+    }
+    
+    .footer-hint {
+        font-size: 10px;
+    }
+}
+
+@media (hover: none) and (pointer: coarse) {
+    button:hover {
+        transform: none;
+        box-shadow: 0 4px 15px rgba(255,107,0,0.3);
+    }
+    
+    button:active {
+        transform: scale(0.98);
+        box-shadow: 0 2px 10px rgba(255,107,0,0.4);
+    }
+    
+    input {
+        font-size: 16px;
+    }
+}
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    input,
+    button {
+        border-width: 1.5px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    body {
+        background: linear-gradient(135deg, #0a0a0f 0%, #0d1117 100%);
+    }
+}
+</style>
+
+</head>
+<body>
+    <div class="entry-box">
+        <h1>🔍 ΦΕΣΤΙΒΑΛ ΑΣΤΥΝΟΜΙΚΗΣ ΛΟΓΟΤΕΧΝΙΑΣ</h1>        
+        <div id="alertBox"></div>
+        
+        <form onsubmit="enterGame(event)">
+            <div class="input-group">
+                <label for="teamName">ΟΝΟΜΑ ΟΜΑΔΑΣ *</label>
+                <input 
+                    type="text" 
+                    id="teamName" 
+                    autocomplete="off"
+                    required
+                >
+            </div>
+            
+            <div class="input-group">
+                <label for="memberName">ΤΟ ΟΝΟΜΑ ΣΑΣ *</label>
+                <input 
+                    type="text" 
+                    id="memberName" 
+                    autocomplete="off"
+                    required
+                >
+                <div class="warning-box">
+                    Κάθε μέλος πρέπει να εισέλθει με <strong>μοναδικό όνομα!</strong><br>
+                    Αν υπάρχουν συνονυμίες χρησιμοποιήστε κάποιο παρατσούκλι.
+                </div>
+            </div>
+            
+            <div class="input-group">
+                <label for="teamPassword">ΚΩΔΙΚΟΣ ΟΜΑΔΑΣ *</label>
+                <input 
+                    type="password" 
+                    id="teamPassword" 
+                    autocomplete="off"
+                    required
+                >
+            </div>
+            
+            <button type="submit" id="enterBtn">
+                ΕΝΑΡΞΗ ΜΥΣΤΗΡΙΟΥ
+            </button>
+        </form>
+        
+        <p class="footer-hint">
+            💡 Αν δεν έχετε στοιχεία σύνδεσης, επικοινωνήστε με τον διοργανωτή.
+        </p>
+    </div>
+    
+<script>
+const StorageManager = {
+    saveAuth(teamCode, memberName) {
+        localStorage.setItem('teamCode', teamCode);
+        localStorage.setItem('memberName', memberName);
+        localStorage.setItem('memberAuth', 'true');
+        localStorage.setItem('lastLogin', new Date().toISOString());
+        
+        sessionStorage.setItem('teamCode', teamCode);
+        sessionStorage.setItem('memberName', memberName);
+        sessionStorage.setItem('sessionActive', 'true');
+        sessionStorage.setItem('sessionStart', new Date().toISOString());
+        
+        console.log('✅ Auth saved to both storages');
+    },
+    
+    getAuth() {
+        let teamCode = sessionStorage.getItem('teamCode') || localStorage.getItem('teamCode');
+        let memberName = sessionStorage.getItem('memberName') || localStorage.getItem('memberName');
+        return { teamCode, memberName };
+    },
+    
+    isAuthenticated() {
+        const hasLocalAuth = localStorage.getItem('memberAuth') === 'true';
+        const hasTeamCode = localStorage.getItem('teamCode') !== null;
+        return hasLocalAuth && hasTeamCode;
+    }
+};
+
+function showAlert(message, type = 'error') {
+    const alertBox = document.getElementById('alertBox');
+    alertBox.innerHTML = `
+        <div class="alert alert-${type}">
+            ${type === 'error' ? '❌' : 'ℹ️'} ${message}
+        </div>
+    `;
+    
+    setTimeout(() => {
+        alertBox.innerHTML = '';
+    }, 5000);
+}
+
+function setLoading(isLoading) {
+    const btn = document.getElementById('enterBtn');
+    const teamInput = document.getElementById('teamName');
+    const memberInput = document.getElementById('memberName');
+    const passwordInput = document.getElementById('teamPassword');
+    
+    if (isLoading) {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="loading"></span>Επαλήθευση...';
+        teamInput.disabled = true;
+        memberInput.disabled = true;
+        passwordInput.disabled = true;
+    } else {
+        btn.disabled = false;
+        btn.innerHTML = 'ΕΝΑΡΞΗ ΜΥΣΤΗΡΙΟΥ';
+        teamInput.disabled = false;
+        memberInput.disabled = false;
+        passwordInput.disabled = false;
+    }
+}
+
+async function enterGame(event) {
+    event.preventDefault();
+    
+    const teamName = document.getElementById('teamName').value.trim().toLowerCase();
+    const memberName = document.getElementById('memberName').value.trim();
+    const password = document.getElementById('teamPassword').value.trim();
+
+    if (!teamName) {
+        showAlert('Παρακαλώ εισάγετε το όνομα της ομάδας!');
+        return;
+    }
+
+    if (!memberName) {
+        showAlert('Παρακαλώ εισάγετε το όνομά σας!');
+        return;
+    }
+
+    if (!password) {
+        showAlert('Παρακαλώ εισάγετε τον κωδικό της ομάδας!');
+        return;
+    }
+    
+    if (!window.firebaseReady) {
+        showAlert('Αναμονή σύνδεσης... Δοκιμάστε ξανά σε λίγο.', 'info');
+        return;
+    }
+
+    setLoading(true);
+
+    try {
+        const docRef = window.firebaseDoc(window.firebaseDB, 'teams', teamName);
+        const docSnap = await window.firebaseGetDoc(docRef);
+
+        if (!docSnap.exists()) {
+            setLoading(false);
+            showAlert(`Η ομάδα "${teamName}" δεν βρέθηκε! Επικοινωνήστε με τον διοργανωτή.`);
+            return;
+        }
+
+        const teamData = docSnap.data();
+        
+        // 🔍 DEBUG: Log what we got from Firebase
+        console.log('=== TEAM LOGIN DEBUG ===');
+        console.log('Team name:', teamName);
+        console.log('Full team data:', teamData);
+        console.log('testingMode value:', teamData.testingMode);
+        console.log('testingMode type:', typeof teamData.testingMode);
+        console.log('All team keys:', Object.keys(teamData));
+        console.log('========================');
+
+        if (!teamData.password || teamData.password !== password) {
+            setLoading(false);
+            showAlert('Λάθος κωδικός! Προσπαθήστε ξανά.');
+            document.getElementById('teamPassword').value = '';
+            document.getElementById('teamPassword').focus();
+            return;
+        }
+
+        StorageManager.saveAuth(teamName, memberName);
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const redirectUrl = urlParams.get('redirect');
+
+        // ✅ ROBUST TESTING MODE CHECK
+        // Check for multiple possible truthy values
+        const isTestingMode = teamData.testingMode === true || 
+                             teamData.testingMode === 'true' || 
+                             teamData.testingMode === 1 ||
+                             teamData.testingMode === '1';
+        
+        console.log('🧪 Testing mode check:', isTestingMode);
+
+        if (isTestingMode) {
+            console.log(`✅ Testing mode ACTIVE for team ${teamName}`);
+            console.log('🚀 Bypassing all survey requirements');
+            
+            // Show confirmation alert so user knows testing mode is working
+            setLoading(false);
+            alert('🧪 ΛΕΙΤΟΥΡΓΙΑ ΔΟΚΙΜΩΝ ΕΝΕΡΓΗ\n\nΠαράκαμψη ερωτηματολογίων...');
+            setLoading(true);
+            
+            // Wait a moment then redirect
+            setTimeout(() => {
+                if (redirectUrl) {
+                    console.log(`🔄 Redirecting to: ${redirectUrl}`);
+                    window.location.href = redirectUrl;
+                } else {
+                    console.log('🔄 Redirecting to index.html');
+                    window.location.href = `index.html?team=${teamName}`;
+                }
+            }, 500);
+            return;
+        }
+
+        // ❌ NORMAL MODE: Survey requirement enforced
+        console.log('📋 Normal mode - checking survey requirements');
+        
+        const preSurveyDoc = `${teamName}_pre_${memberName}`;
+        const preSurveyRef = window.firebaseDoc(window.firebaseDB, 'surveys', preSurveyDoc);
+        const preSurveySnap = await window.firebaseGetDoc(preSurveyRef);
+
+        if (!preSurveySnap.exists()) {
+            console.log('❌ Pre-survey not found - redirecting to survey');
+            setLoading(false);
+            alert('Πρώτα πρέπει να ολοκληρώσετε την προκαταρκτική έρευνα!');
+            
+            const surveyUrl = `survey.html?team=${teamName}&member=${encodeURIComponent(memberName)}&type=pre`;
+            
+            if (redirectUrl) {
+                window.location.href = `${surveyUrl}&redirect=${encodeURIComponent(redirectUrl)}`;
+            } else {
+                window.location.href = surveyUrl;
+            }
+        } else {
+            console.log(`✅ Member authenticated: ${teamName}/${memberName}`);
+            
+            if (redirectUrl) {
+                console.log(`🔄 Redirecting to: ${redirectUrl}`);
+                window.location.href = redirectUrl;
+            } else {
+                window.location.href = `index.html?team=${teamName}`;
+            }
+        }
+
+    } catch (error) {
+        setLoading(false);
+        console.error('❌ Login error:', error);
+        showAlert('Σφάλμα σύνδεσης. Παρακαλώ δοκιμάστε ξανά.');
+    }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+    if (StorageManager.isAuthenticated()) {
+        const { teamCode: storedTeam } = StorageManager.getAuth();
+        console.log('Already authenticated, checking for redirect...');
+        
+        const urlParams = new URLSearchParams(window.location.search);
+        const redirectUrl = urlParams.get('redirect');
+        
+        if (redirectUrl) {
+            console.log(`🔄 Already logged in, redirecting to: ${redirectUrl}`);
+            window.location.href = redirectUrl;
+        } else {
+            console.log('Already logged in, redirecting to index...');
+            window.location.href = `index.html?team=${storedTeam}`;
+        }
+    }
+});
+</script>
+</body>
+</html>

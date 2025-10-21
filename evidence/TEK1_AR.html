@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Τεκμήριο Ξεκλειδώθηκε</title>
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
+    
+    
+    <link rel="stylesheet" href="../css/tek1.css">
+</head>
+<body>
+    <div class="animated-background"></div>
+
+    <div class="header">
+        <div class="header-content">
+            <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+            <h1>ΤΕΚΜΗΡΙΟ ΞΕΚΛΕΙΔΩΘΗΚΕ!</h1>
+        </div>
+        <p>Προστέθηκε στον φάκελο υπόθεσης</p>
+    </div>
+
+    <div class="container">
+        <div class="evidence-card">
+            <div class="badge-bar">
+                <div class="badge-info">
+                    <div class="evidence-id">ΤΕΚ #001</div>
+                </div>
+                <div class="official-badge">ΕΠΙΣΗΜΟ ΤΕΚΜΗΡΙΟ</div>
+            </div>
+
+            <div class="crime-scene-photo">
+                <canvas id="crimeSceneCanvas"></canvas>
+                <div class="confidential-badge">ΑΠΟΡΡΗΤΟ</div>
+            </div>
+
+            <div class="ar-container">
+                <h3 class="ar-title">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M2 16.1A5 5 0 0 1 5.9 20M2 12.05A9 9 0 0 1 9.95 20M2 8V6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-6"></path>
+                        <line x1="2" y1="20" x2="2.01" y2="20"></line>
+                    </svg>
+                    ΕΠΑΥΞΗΜΕΝΗ ΠΡΑΓΜΑΤΙΚΟΤΗΤΑ
+                </h3>
+                
+                <button class="view-3d-button" id="view3DBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                        <path d="M2 17l10 5 10-5"></path>
+                        <path d="M2 12l10 5 10-5"></path>
+                    </svg>
+                    <span>ΠΡΟΒΟΛΗ ΣΕ 3D</span>
+                </button>
+
+                <div class="model-viewer-container" id="modelViewerContainer">
+                    <model-viewer
+                        id="bottleModel"
+                        src="../assets/models/whiskey_bottle.glb"
+                        alt="Jack Daniels Whiskey Bottle 3D Model - Evidence"
+                        ar
+                        ar-modes="webxr scene-viewer quick-look"
+                        camera-controls
+                        touch-action="pan-y"
+                        auto-rotate
+                        auto-rotate-delay="1000"
+                        rotation-per-second="30deg"
+                        shadow-intensity="1"
+                        exposure="0.8"
+                        camera-orbit="0deg 75deg 2.5m"
+                        min-camera-orbit="auto 0deg auto"
+                        max-camera-orbit="auto 180deg auto">
+                        
+                        <div slot="poster" style="
+                            width: 100%;
+                            height: 100%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            background: #f5f5f5;
+                            flex-direction: column;
+                            gap: 10px;
+                        ">
+                            <div style="
+                                border: 4px solid #f3f3f3;
+                                border-top: 4px solid #ff6b00;
+                                border-radius: 50%;
+                                width: 40px;
+                                height: 40px;
+                                animation: spin 1s linear infinite;
+                            "></div>
+                            <p style="color: #666; font-size: 14px;">Φόρτωση 3D μοντέλου...</p>
+                        </div>
+                        
+                        <div slot="error" style="
+                            width: 100%;
+                            height: 100%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            background: #fff3cd;
+                            flex-direction: column;
+                            gap: 15px;
+                            padding: 20px;
+                        ">
+                            <p style="color: #856404; font-size: 16px; font-weight: bold;">⚠️ Σφάλμα Φόρτωσης</p>
+                            <p style="color: #856404; font-size: 13px; text-align: center;">
+                                Το 3D μοντέλο δεν μπορεί να φορτώσει.<br>
+                                Ελέγξτε το αρχείο: whiskey_bottle.glb
+                            </p>
+                        </div>
+                    </model-viewer>
+                    
+                    <div id="debugInfo"></div>
+                    
+                    <p style="text-align: center; color: #666; font-size: clamp(12px, 2.5vw, 13px); margin-top: 10px; font-style: italic;">
+                        💡 Σύρετε για να περιστρέψετε • Zoom με δύο δάχτυλα
+                    </p>
+
+                    <button class="close-3d-button" id="close3DBtn">
+                        ΚΛΕΙΣΙΜΟ
+                    </button>
+                </div>
+            </div>
+
+            <div class="details">
+                <h2 class="evidence-title">🍾 ΜΠΟΥΚΑΛΙ JACK DANIEL'S</h2>
+
+                <div class="section">
+                    <h3 class="section-title">
+                        🔬 ΕΓΚΛΗΜΑΤΟΛΟΓΙΚΗ ΑΝΑΛΥΣΗ
+                    </h3>
+                    <p class="section-content justified-text">
+                        Εντοπίστηκαν κρύσταλλοι κυανιόχρου καλίου (KCN) στον πάτο του μπουκαλιού που βρισκόταν στο γραφείο του Δημητρίου. Η τοξικολογική ανάλυση επιβεβαίωσε ότι η ποσότητα ήταν θανατηφόρα - αρκετή για να προκαλέσει άμεσο θάνατο. Το μπουκάλι περιείχε περίπου 200ml ουίσκι και το κυάνιο είχε διαλυθεί πλήρως στο υγρό. Η χημική ανάλυση του υπολείμματος στο ποτήρι του Δημητρίου επιβεβαίωσε την παρουσία του ίδιου κυανίου.
+                    </p>
+                    
+                    <div style="margin-top: 25px;">
+                        <p class="section-content" style="margin-bottom: 15px;"><strong style="color: #0f3460; font-size: clamp(15px, 3vw, 16px);">📊 Χημική Ανάλυση Δηλητηρίου</strong></p>
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong>Τύπος:</strong> Βιομηχανικό κυανιόχρο κάλιο (KCN)
+                        </p>
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong>Συγκέντρωση:</strong> ~200mg/L στο ουίσκι (θανατηφόρα δόση: >50mg)
+                        </p>
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong>Διάλυση:</strong> Πλήρης - υποδηλώνει ανάδευση ή παρατεταμένο χρόνο διάλυσης
+                        </p>
+                        <p class="section-content">
+                            <strong>Προέλευση:</strong> Πιθανές πηγές - βιομηχανικά εργαστήρια, φωτογραφικά στούντιο, μεταλλουργικές μονάδες
+                        </p>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">
+                        👆 ΑΠΟΤΥΠΩΜΑΤΑ ΚΑΙ ΧΡΟΝΟΛΟΓΙΟ
+                    </h3>
+                    <div>
+                        <div class="fingerprint-item primary">
+                            <div class="fingerprint-name">Θανών (Δημητρίου Πέτρος)</div>
+                            <div class="fingerprint-details">Λαιμός μπουκαλιού - πολύ πρόσφατα</div>
+                        </div>
+                        <div class="fingerprint-item">
+                            <div class="fingerprint-name">Παπαδοπούλου Μαρία</div>
+                            <div class="fingerprint-details">Σώμα μπουκαλιού - παλαιότερα</div>
+                        </div>
+                        <div class="fingerprint-item">
+                            <div class="fingerprint-name">Αναγνώστου Κωνσταντίνος</div>
+                            <div class="fingerprint-details">Πώμα και λαιμός - πρόσφατα</div>
+                        </div>
+                        <div class="fingerprint-item">
+                            <div class="fingerprint-name">Νικολάου Αλεξάνδρα</div>
+                            <div class="fingerprint-details">Βάση μπουκαλιού - 72-96 ώρες πριν</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="significance-box">
+                    <h3 class="significance-title">
+                        💡 ΣΗΜΑΣΙΑ ΓΙΑ ΤΗΝ ΕΡΕΥΝΑ
+                    </h3>
+					<p class="significance-text">
+						<strong>Ιστορικό:</strong> Το Jack Daniel's ήταν δώρο από ευχαριστημένο συγγραφέα, του οποίου το βιβλίο ο εκδοτικός οίκος δέχθηκε για έκδοση. Δόθηκε στον Δημητρίου πριν από περίπου 3 εβδομάδες.
+					</p>
+					<p class="significance-text">
+						<strong>Σημείωση θέσης:</strong> Το μπουκάλι βρέθηκε στο γραφείο του Δημητρίου, ενώ το σώμα ανακαλύφθηκε στις τουαλέτες του 7ου ορόφου - υποδηλώνοντας ότι ο Δημητρίου κατανάλωσε το δηλητιριασμένο ποτό στο γραφείο του και στη συνέχεια κινήθηκε προς τις τουαλέτες καθώς άρχισε να αισθάνεται τα συμπτώματα δηλητηρίασης (5-15 λεπτά μετά την κατάποση).
+					</p>
+                    <p class="significance-text" style="margin-top: 15px;">
+                        <strong>Ανάλυση:</strong> Η Παπαδοπούλου έχει τα παλαιότερα αποτυπώματα - πιθανώς το άγγιξε κατά την παράδοση του δώρου ή όταν το τοποθέτησε στο ράφι. Τα αποτυπώματα της Νικολάου στη βάση είναι ανησυχητικά και ασυνήθιστα - γιατί να κρατάει κανείς ένα μπουκάλι από κάτω; Μήπως το εξέταζε, το γέμιζε, ή πρόσθετε κάτι; Ο Αναγνώστου άγγιξε το πώμα - οι δυο τους συνήθιζαν να πίνουν μαζί καθημερινά μετά τη δουλειά. Τέλος, ο Δημητρίου, με αποτυπώματα στο λαιμό, το τελευταίο άτομο που το χρησιμοποίησε.
+                    </p>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">
+                        ❓ ΕΡΩΤΗΜΑΤΑ ΔΙΕΡΕΥΝΗΣΗΣ
+                    </h3>
+                    <ul class="section-content">
+                        <li>Ποιος είχε πρόσβαση στο γραφείο του Δημητρίου τις τελευταίες 24 ώρες;</li>
+                        <li>Ποιος από τους υπόπτους έχει πρόσβαση σε βιομηχανικό κυάνιο;</li>
+                        <li>Υπήρχαν άλλα άτομα που χειρίστηκαν το μπουκάλι με γάντια χωρίς να αφήσουν αποτυπώματα;</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="back-button-container">
+            <button class="back-button" onclick="window.goBackToCaseFile()">
+                ← ΕΠΙΣΤΡΟΦΗ ΣΤΟ ΦΑΚΕΛΟ
+            </button>
+        </div>
+    </div>
+
+    
+    <script src="../js/tek1.js"></script>
+</body>
+</html>
