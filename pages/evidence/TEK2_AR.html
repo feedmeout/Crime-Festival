@@ -6,8 +6,13 @@
     <title>Τεκμήριο Ξεκλειδώθηκε</title>
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
     
-    
+    <link rel="stylesheet" href="../../css/evidence/base.css">
+    <link rel="stylesheet" href="../../css/evidence/evidence-shared.css">
     <link rel="stylesheet" href="../../css/evidence/tek2.css">
+
+    
+    
+    
 </head>
 <body>
     <div class="animated-background"></div>
@@ -46,25 +51,18 @@
                     ΕΠΑΥΞΗΜΕΝΗ ΠΡΑΓΜΑΤΙΚΟΤΗΤΑ
                 </h3>
                 
-                <div class="model-controls">
-                    <button id="view3DBtn" class="view-3d-button">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
-                            <polyline points="2 17 12 22 22 17"></polyline>
-                            <polyline points="2 12 12 17 22 12"></polyline>
+                <div class="button-container">
+                    <button class="view-3d-button" id="view3DBtn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                            <line x1="12" y1="22.08" x2="12" y2="12"></line>
                         </svg>
                         ΠΡΟΒΟΛΗ ΣΕ 3D
                     </button>
-                    <button id="close3DBtn" class="close-3d-button">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="18" y1="6" x2="6" y2="18"></line>
-                            <line x1="6" y1="6" x2="18" y2="18"></line>
-                        </svg>
-                        ΚΛΕΙΣΙΜΟ
-                    </button>
                 </div>
 
-                <div id="modelViewerContainer" class="model-viewer-container">
+                <div class="model-viewer-container" id="modelViewerContainer">
                     <model-viewer
                         id="glassModel"
                         src="/Crime-Festival/assets/models/whiskey_glass.glb"
@@ -122,9 +120,21 @@
                         </div>
                     </model-viewer>
                     
+                    <div id="debugInfo"></div>
+                    
                     <p style="text-align: center; color: #666; font-size: clamp(12px, 2.5vw, 13px); margin-top: 10px; font-style: italic;">
                         💡 Σύρετε για να περιστρέψετε • Zoom με δύο δάχτυλα
                     </p>
+
+                    <div class="button-container">
+                        <button class="close-3d-button" id="close3DBtn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                            ΚΛΕΙΣΙΜΟ
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -179,37 +189,37 @@
                     </div>
 
 					<div style="margin-top: 35px;">
-											<div class="glass-item" style="background: linear-gradient(135deg, #f0f8ff 0%, #e3f2fd 100%); border-color: #2196F3; border-width: 3px; box-shadow: 0 4px 12px rgba(33, 150, 243, 0.15); padding: clamp(15px, 3vw, 20px);">
-												<div class="glass-name" style="color: #1976D2; font-size: clamp(15px, 3.2vw, 16px); margin-bottom: 10px;">Ποτήρι Β (Δεύτερου ατόμου)</div>
-												<div class="glass-details" style="padding-left: 0; margin-bottom: 15px;">
-													<strong>Μερικά Αποτυπώματα (70% σβησμένα με πανί):</strong>
-												</div>
-												
-												<div class="glass-item" style="margin-bottom: 12px;">
-													<div class="glass-name">Αναγνώστου Κωνσταντίνος</div>
-													<div class="glass-details">
-														<div>• Ίχνη στη βάση</div>
-														<div>• Χρονολόγιο: 2-4 ώρες πριν</div>
-													</div>
-												</div>
-												
-												<div class="glass-item" style="margin-bottom: 12px;">
-													<div class="glass-name">Μαυρίδη Ελένη</div>
-													<div class="glass-details">
-														<div>• Ίχνη στο χείλος</div>
-														<div>• Χρονολόγιο: 2-4 ώρες πριν</div>
-													</div>
-												</div>
-												
-												<div class="glass-item" style="margin-bottom: 0;">
-													<div class="glass-name">Παπαδοπούλου Μαρία</div>
-													<div class="glass-details">
-														<div>• Αντίχειρας αριστερό χέρι στο σώμα</div>
-														<div>• Χρονολόγιο: 48-72 ώρες πριν</div>
-													</div>
-												</div>
-											</div>
-										</div>
+						<div class="glass-item" style="background: linear-gradient(135deg, #f0f8ff 0%, #e3f2fd 100%); border-color: #2196F3; border-width: 3px; box-shadow: 0 4px 12px rgba(33, 150, 243, 0.15); padding: clamp(15px, 3vw, 20px);">
+							<div class="glass-name" style="color: #1976D2; font-size: clamp(15px, 3.2vw, 16px); margin-bottom: 10px;">Ποτήρι Β (Δεύτερου ατόμου)</div>
+							<div class="glass-details" style="padding-left: 0; margin-bottom: 15px;">
+								<strong>Μερικά Αποτυπώματα (70% σβησμένα με πανί):</strong>
+							</div>
+							
+							<div class="glass-item" style="margin-bottom: 12px;">
+								<div class="glass-name">Αναγνώστου Κωνσταντίνος</div>
+								<div class="glass-details">
+									<div>• Ίχνη στη βάση</div>
+									<div>• Χρονολόγιο: 2-4 ώρες πριν</div>
+								</div>
+							</div>
+							
+							<div class="glass-item" style="margin-bottom: 12px;">
+								<div class="glass-name">Μαυρίδη Ελένη</div>
+								<div class="glass-details">
+									<div>• Ίχνη στο χείλος</div>
+									<div>• Χρονολόγιο: 2-4 ώρες πριν</div>
+								</div>
+							</div>
+							
+							<div class="glass-item" style="margin-bottom: 0;">
+								<div class="glass-name">Παπαδοπούλου Μαρία</div>
+								<div class="glass-details">
+									<div>• Αντίχειρας αριστερό χέρι στο σώμα</div>
+									<div>• Χρονολόγιο: 48-72 ώρες πριν</div>
+								</div>
+							</div>
+						</div>
+					</div>
                 </div>
 
                 <div class="significance-box">

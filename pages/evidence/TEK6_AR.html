@@ -6,8 +6,13 @@
     <title>Τεκμήριο Ξεκλειδώθηκε</title>
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
     
-    
+    <link rel="stylesheet" href="../../css/evidence/base.css">
+    <link rel="stylesheet" href="../../css/evidence/evidence-shared.css">
     <link rel="stylesheet" href="../../css/evidence/tek6.css">
+
+    
+    
+    
 </head>
 <body>
     <div class="animated-background"></div>
@@ -46,9 +51,16 @@
                     ΕΠΑΥΞΗΜΕΝΗ ΠΡΑΓΜΑΤΙΚΟΤΗΤΑ
                 </h3>
                 
-                <button class="view-3d-button" id="view3dBtn">
-                    ΠΡΟΒΟΛΗ ΣΕ 3D
-                </button>
+                <div class="button-container">
+                    <button class="view-3d-button" id="view3dBtn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                            <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                        </svg>
+                        ΠΡΟΒΟΛΗ ΣΕ 3D
+                    </button>
+                </div>
                 
                 <div class="model-viewer-container" id="modelContainer">
                     <model-viewer
@@ -69,14 +81,16 @@
                         max-camera-orbit="auto 180deg auto">
                     </model-viewer>
                     
-                    <button class="close-3d-button" id="close3dBtn">
-                        ΚΛΕΙΣΙΜΟ
-                    </button>
+                    <p style="text-align: center; color: #666; font-size: clamp(12px, 2.5vw, 13px); margin-top: 10px; font-style: italic;">
+                        💡 Σύρετε για να περιστρέψετε • Zoom με δύο δάχτυλα
+                    </p>
+                    
+                    <div class="button-container">
+                        <button class="close-3d-button" id="close3dBtn">
+                            ΚΛΕΙΣΙΜΟ
+                        </button>
+                    </div>
                 </div>
-                
-                <p style="text-align: center; color: #666; font-size: clamp(12px, 2.5vw, 13px); margin-top: 10px; font-style: italic;">
-                    💡 Σύρετε για να περιστρέψετε • Zoom με δύο δάχτυλα
-                </p>
             </div>
 			
             <div class="details">
@@ -88,7 +102,7 @@
                         🔬 ΕΓΚΛΗΜΑΤΟΛΟΓΙΚΗ ΑΝΑΛΥΣΗ
                     </h3>
                     <p class="section-content">
-                        Εντοπίστηκαν μικροσκοπικά ίχνη λάτεξ στο εσωτερικό πόμολο της πόρτας του γραφείου του Δημητρίου. Η φασματοσκοπική ανάλυση επιβεβαίωσε ότι πρόκειται για λάτεξ καουτσούκ με πούδρα άμυλου καλαμποκιού — ο πιο συνηθισμένος τύπος γαντιών μιας χρήσης.
+                        Εντοπίστηκαν μικροσκοπικά ίχνη λάτεξ στο εσωτερικό πόμολο της πόρτας του γραφείου του Δημητρίου. Η φασματοσκοπική ανάλυση επιβεβαίωσε ότι πρόκειται για λάτεξ καουτσούκ με πούδρα άμυλου καλαμποκιού – ο πιο συνηθισμένος τύπος γαντιών μιας χρήσης.
                     </p>
                     
                     <div style="margin-top: 25px;">
@@ -218,7 +232,7 @@
                     </h3>
                     <ul class="section-content">
                         <li>Τα ίχνη είναι από την καθαρίστρια ή από κάποιον άλλο;</li>
-                        <li>Γιατί τα ίχνη εμφανίζονται ΜΟΝΟ στο εσωτερικό πόμολο - τι σημαίνει αυτό;</li>
+                        <li>Διατί τα ίχνη εμφανίζονται ΜΟΝΟ στο εσωτερικό πόμολο - τι σημαίνει αυτό;</li>
                         <li>Ποιος από τους υπόπτους έχει συνήθεια να χρησιμοποιεί γάντια λάτεξ για την εργασία του;</li>
                         <li>Μπορεί να είναι απλώς τυχαίο κατάλοιπο χωρίς σχέση με το έγκλημα;</li>
                     </ul>

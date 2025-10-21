@@ -6,8 +6,13 @@
     <title>Τεκμήριο Ξεκλειδώθηκε</title>
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
     
-    
+    <link rel="stylesheet" href="../../css/evidence/base.css">
+    <link rel="stylesheet" href="../../css/evidence/evidence-shared.css">
     <link rel="stylesheet" href="../../css/evidence/tek10.css">
+
+    
+    
+    
 </head>
 <body>
     <div class="animated-background"></div>
@@ -46,14 +51,16 @@
                     ΕΠΑΥΞΗΜΕΝΗ ΠΡΑΓΜΑΤΙΚΟΤΗΤΑ
                 </h3>
                 
-                <button id="load3DButton" class="view-3d-button">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
-                        <polyline points="2 17 12 22 22 17"></polyline>
-                        <polyline points="2 12 12 17 22 12"></polyline>
-                    </svg>
-                    ΠΡΟΒΟΛΗ ΣΕ 3D
-                </button>
+				<div class="button-container">
+					<button id="load3DButton" class="view-3d-button">
+						<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+							<polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+							<polyline points="2 17 12 22 22 17"></polyline>
+							<polyline points="2 12 12 17 22 12"></polyline>
+						</svg>
+						ΠΡΟΒΟΛΗ ΣΕ 3D
+					</button>
+				</div>
 
                 <div id="modelViewerContainer" class="model-viewer-container">
                     <model-viewer
@@ -74,14 +81,15 @@
                         max-camera-orbit="auto 180deg auto">
                     </model-viewer>
                     
-                    <button id="close3DButton" class="close-3d-button">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="18" y1="6" x2="6" y2="18"></line>
-                            <line x1="6" y1="6" x2="18" y2="18"></line>
-                        </svg>
-                        ΚΛΕΙΣΙΜΟ
-                    </button>
-                </div>
+					<div class="button-container">
+						<button id="close3DButton" class="close-3d-button">
+							<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<line x1="18" y1="6" x2="6" y2="18"></line>
+								<line x1="6" y1="6" x2="18" y2="18"></line>
+							</svg>
+							ΚΛΕΙΣΙΜΟ
+						</button>
+					</div>
 
                 <p style="text-align: center; color: #666; font-size: clamp(12px, 2.5vw, 13px); margin-top: 10px; font-style: italic;">
                     💡 Σύρετε για να περιστρέψετε • Zoom με δύο δάχτυλα

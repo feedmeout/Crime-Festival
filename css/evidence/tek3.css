@@ -1,581 +1,115 @@
-* {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            min-height: 100vh;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            position: relative;
-            overflow-x: hidden;
-        }
-
-        .animated-background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            opacity: 0.1;
-            background-image: repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,107,0,0.5) 35px, rgba(255,107,0,0.5) 70px);
-            animation: slide 20s linear infinite;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        @keyframes slide {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(70px); }
-        }
-
-        @keyframes unlock {
-            0% { transform: scale(0) rotate(-180deg); opacity: 0; }
-            50% { transform: scale(1.2) rotate(10deg); }
-            100% { transform: scale(1) rotate(0deg); opacity: 1; }
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .header {
-            background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
-            padding: clamp(15px, 4vw, 25px);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-            position: relative;
-            z-index: 10;
-        }
-
-        .header-content {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: clamp(8px, 2vw, 12px);
-            margin-bottom: clamp(8px, 2vw, 12px);
-            flex-wrap: wrap;
-        }
-
-        .check-icon {
-            width: clamp(24px, 6vw, 36px);
-            height: clamp(24px, 6vw, 36px);
-            color: #fff;
-            animation: unlock 0.6s ease-out;
-            flex-shrink: 0;
-        }
-
-        .header h1 {
-            color: #fff;
-            font-size: clamp(16px, 4vw, 26px);
-            font-weight: bold;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            text-align: center;
-            word-break: break-word;
-        }
-
-        .header p {
-            color: #fff;
-            text-align: center;
-            opacity: 0.95;
-            font-size: clamp(12px, 3vw, 15px);
-        }
-
-        .container {
-            padding: clamp(10px, 3vw, 25px);
-            position: relative;
-            z-index: 1;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .evidence-card {
-            background: rgba(255, 255, 255, 0.98);
-            border-radius: clamp(10px, 2vw, 16px);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-            overflow: hidden;
-            border: clamp(2px, 0.3vw, 3px) solid #ff6b00;
-            margin-bottom: 20px;
-        }
-
-        .badge-bar {
-            background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
-            padding: clamp(12px, 3vw, 20px);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: clamp(8px, 2vw, 15px);
-        }
-
-        .badge-info {
-            flex: 1;
-            min-width: 150px;
-        }
-
-        .evidence-id {
-            font-size: clamp(20px, 5vw, 30px);
-            font-weight: bold;
-            color: #ff6b00;
-            font-family: 'Courier New', monospace;
-            letter-spacing: clamp(1px, 0.2vw, 2px);
-            word-break: break-all;
-        }
-
-        .category {
-            font-size: clamp(10px, 2.5vw, 13px);
-            color: #aaa;
-            margin-top: 4px;
-        }
-
-        .official-badge {
-            background: rgba(255,107,0,0.2);
-            border: 2px solid #ff6b00;
-            border-radius: 8px;
-            padding: clamp(6px, 1.5vw, 10px) clamp(10px, 2vw, 18px);
-            font-size: clamp(9px, 2.2vw, 12px);
-            color: #ff6b00;
-            font-weight: bold;
-            white-space: nowrap;
-            min-height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .crime-scene-photo {
-            background: #000;
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-top: 2px solid #333;
-            border-bottom: 2px solid #333;
-            overflow: hidden;
-            min-height: 200px;
-        }
-
-        #crimeSceneCanvas {
-            width: 100%;
-            height: auto;
-            display: block;
-            max-width: 100%;
-        }
-
-        .confidential-badge {
-            position: absolute;
-            top: clamp(5px, 2vw, 12px);
-            right: clamp(5px, 2vw, 12px);
-            background: rgba(255,0,0,0.95);
-            color: white;
-            padding: clamp(4px, 1vw, 8px) clamp(8px, 2vw, 14px);
-            font-size: clamp(9px, 2vw, 12px);
-            font-weight: bold;
-            border-radius: 5px;
-            border: 1px solid #fff;
-            z-index: 5;
-        }
-
-        .ar-container {
-            margin: clamp(15px, 3vw, 25px) 0;
-            padding: clamp(15px, 3vw, 25px);
-            background: linear-gradient(135deg, rgba(255,107,0,0.05) 0%, rgba(255,136,0,0.05) 100%);
-            border: 2px solid #ff6b00;
-            border-radius: 10px;
-        }
-
-        .ar-title {
-            font-size: clamp(16px, 3.5vw, 20px);
-            color: #ff6b00;
-            font-weight: bold;
-            margin: 0 0 clamp(12px, 2.5vw, 18px) 0;
-            text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: clamp(6px, 1.5vw, 10px);
-            flex-wrap: wrap;
-        }
-
-        .view-3d-button {
-            background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
-            color: white;
-            padding: clamp(15px, 3vw, 20px) clamp(30px, 5vw, 40px);
-            border: none;
-            border-radius: 10px;
-            font-size: clamp(14px, 3vw, 18px);
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(255,107,0,0.3);
-            min-height: 44px;
-            min-width: 44px;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin: 0 auto;
-            width: 100%;
-            max-width: 300px;
-        }
-
-        .view-3d-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(255,107,0,0.4);
-        }
-
-        .view-3d-button:active {
-            transform: translateY(0);
-        }
-
-        .close-3d-button {
-            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
-            color: white;
-            padding: clamp(10px, 2vw, 12px) clamp(20px, 4vw, 25px);
-            border: none;
-            border-radius: 8px;
-            font-size: clamp(12px, 2.5vw, 14px);
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 3px 8px rgba(220,53,69,0.3);
-            min-height: 44px;
-            min-width: 44px;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin: 10px auto 0;
-        }
-
-        .close-3d-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 12px rgba(220,53,69,0.4);
-        }
-
-        .close-3d-button:active {
-            transform: translateY(0);
-        }
-
-        .button-container {
-            text-align: center;
-        }
-
-        .model-viewer-container {
-            visibility: hidden;
-            height: 0;
-            overflow: hidden;
-            transition: visibility 0s 0.3s, height 0.3s ease;
-        }
-
-        .model-viewer-container.active {
-            visibility: visible;
-            height: auto;
-            margin-top: 20px;
-            transition: visibility 0s, height 0.3s ease;
-        }
-
-        model-viewer {
-            width: 100%;
-            height: clamp(300px, 50vw, 450px);
-            background-color: #f5f5f5;
-            border-radius: 8px;
-            border: 2px solid #ddd;
-            display: block;
-            --poster-color: #f5f5f5;
-        }
-
-        model-viewer::part(default-ar-button) {
-            background-color: #0f3460;
-            color: white;
-        }
-
-        .details {
-            padding: clamp(20px, 4vw, 35px);
-            background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
-        }
-
-        .evidence-title {
-            margin: 0 0 clamp(20px, 4vw, 30px) 0;
-            font-size: clamp(18px, 4vw, 26px);
-            color: #1a1a2e;
-            border-bottom: 3px solid #ff6b00;
-            padding-bottom: clamp(12px, 2.5vw, 18px);
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: clamp(8px, 2vw, 14px);
-            flex-wrap: wrap;
-            word-break: break-word;
-        }
-
-        .section {
-            margin-bottom: clamp(20px, 4vw, 30px);
-            background: white;
-            padding: clamp(15px, 3vw, 25px);
-            border-radius: 10px;
-            border: 1px solid #e0e0e0;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-        }
-
-        .section-title {
-            font-size: clamp(15px, 3.5vw, 20px);
-            color: #0f3460;
-            margin-bottom: clamp(12px, 2.5vw, 18px);
-            display: flex;
-            align-items: center;
-            gap: clamp(8px, 2vw, 12px);
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            border-bottom: 2px solid #e0e0e0;
-            padding-bottom: clamp(8px, 1.5vw, 12px);
-            flex-wrap: wrap;
-        }
-
-        .section-content {
-            font-size: clamp(13px, 3vw, 16px);
-            line-height: 1.7;
-            color: #333;
-            text-align: left;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-        }
-
-        ul {
-            padding-left: clamp(20px, 4vw, 30px);
-            line-height: 1.8;
-        }
-
-        ul li {
-            margin-bottom: clamp(8px, 2vw, 12px);
-            word-wrap: break-word;
-        }
-
-        .sms-message {
-            background: linear-gradient(135deg, #fff5f5 0%, #ffe5e5 100%);
-            border-left: 4px solid #dc3545;
-            padding: clamp(15px, 3vw, 25px);
-            margin: clamp(12px, 2.5vw, 18px) 0;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(220,53,69,0.15);
-        }
-
-        .sms-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: clamp(10px, 2vw, 15px);
-            padding-bottom: clamp(8px, 1.5vw, 12px);
-            border-bottom: 1px solid rgba(220,53,69,0.2);
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .sms-time {
-            font-size: clamp(11px, 2.5vw, 14px);
-            color: #666;
-            font-weight: 600;
-        }
-
-        .sms-sender {
-            font-size: clamp(10px, 2.2vw, 13px);
-            color: #dc3545;
-            background: rgba(220,53,69,0.1);
-            padding: clamp(4px, 1vw, 6px) clamp(8px, 2vw, 12px);
-            border-radius: 12px;
-            font-weight: 700;
-        }
-
-        .sms-text {
-            font-size: clamp(15px, 3.5vw, 19px);
-            color: #1a1a2e;
-            font-weight: 600;
-            line-height: 1.6;
-            font-style: italic;
-            word-wrap: break-word;
-        }
-
-        .phone-data {
-            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-            border: 2px solid #dee2e6;
-            border-radius: 10px;
-            padding: clamp(12px, 2.5vw, 18px);
-            margin-bottom: clamp(10px, 2vw, 15px);
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-
-        .phone-data:hover {
-            transform: translateX(5px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-
-        .phone-data.critical {
-            background: linear-gradient(135deg, #fff5f5 0%, #ffe5e5 100%);
-            border-color: #dc3545;
-            border-width: 3px;
-            box-shadow: 0 4px 12px rgba(220,53,69,0.15);
-        }
-
-        .phone-data.critical:hover {
-            box-shadow: 0 6px 16px rgba(220,53,69,0.25);
-        }
-
-        .data-label {
-            font-weight: 700;
-            font-size: clamp(11px, 2.5vw, 14px);
-            color: #666;
-            margin-bottom: 6px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .data-value {
-            font-size: clamp(13px, 3vw, 16px);
-            color: #1a1a2e;
-            font-weight: 600;
-            word-wrap: break-word;
-        }
-
-        .phone-data.critical .data-value {
-            color: #dc3545;
-        }
-
-        .significance-box {
-            background: linear-gradient(135deg, #fff5f0 0%, #ffe8db 100%);
-            border: 2px solid #ff6b00;
-            border-radius: 12px;
-            padding: clamp(18px, 3.5vw, 28px);
-            margin-bottom: clamp(20px, 4vw, 30px);
-            box-shadow: 0 4px 12px rgba(255,107,0,0.1);
-        }
-
-        .significance-title {
-            font-size: clamp(16px, 3.5vw, 20px);
-            color: #ff6b00;
-            margin: 0 0 clamp(12px, 2.5vw, 18px) 0;
-            display: flex;
-            align-items: center;
-            gap: clamp(8px, 2vw, 12px);
-            font-weight: 700;
-            flex-wrap: wrap;
-        }
-
-        .significance-text {
-            font-size: clamp(13px, 3vw, 16px);
-            line-height: 1.7;
-            color: #1a1a2e;
-            margin: 0;
-            text-align: left;
-            word-wrap: break-word;
-        }
-
-        .back-button-container {
-            text-align: center;
-            padding: clamp(15px, 3vw, 25px);
-            background: rgba(0,0,0,0.05);
-            position: relative;
-            z-index: 100;
-        }
-
-        .back-button {
-            background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%);
-            color: white;
-            padding: clamp(12px, 2.5vw, 18px) clamp(25px, 5vw, 50px);
-            border: none;
-            border-radius: 10px;
-            font-size: clamp(14px, 3vw, 18px);
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(255,107,0,0.3);
-            position: relative;
-            z-index: 101;
-            pointer-events: auto;
-            min-height: 44px;
-            min-width: 44px;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .back-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(255,107,0,0.4);
-        }
-
-        .back-button:active {
-            transform: translateY(0);
-        }
-
-        @media (min-width: 769px) and (max-width: 1024px) {
-            .container {
-                padding: 20px;
-            }
-
-            .badge-bar {
-                flex-direction: row;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .header h1 {
-                font-size: 14px;
-            }
-
-            .badge-bar {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .official-badge {
-                align-self: stretch;
-                text-align: center;
-            }
-
-            .sms-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .phone-data:hover {
-                transform: none;
-            }
-        }
-
-        @media print {
-            .animated-background,
-            .back-button-container {
-                display: none;
-            }
-
-            body {
-                background: white;
-            }
-
-            .evidence-card {
-                box-shadow: none;
-                border: 1px solid #333;
-            }
-        }
-
-        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-            .evidence-card {
-                border-width: 2px;
-            }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            .animated-background,
-            .check-icon,
-            .phone-data,
-            .back-button,
-            .view-3d-button,
-            .close-3d-button {
-                animation: none;
-                transition: none;
-            }
-        }
+/* ========================================
+   TEK3.CSS - Phone/SMS Evidence
+   Requires: base.css, evidence-shared.css
+   ======================================== */
+
+/* ===== SMS MESSAGE STYLES ===== */
+
+.sms-message {
+    background: linear-gradient(135deg, #fff5f5 0%, #ffe5e5 100%);
+    border-left: 4px solid var(--danger);
+    padding: clamp(15px, 3vw, 25px);
+    margin: clamp(12px, 2.5vw, 18px) 0;
+    border-radius: var(--radius-md);
+    box-shadow: 0 4px 12px rgba(220,53,69,0.15);
+}
+
+.sms-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: clamp(10px, 2vw, 15px);
+    padding-bottom: clamp(8px, 1.5vw, 12px);
+    border-bottom: 1px solid rgba(220,53,69,0.2);
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.sms-time {
+    font-size: clamp(11px, 2.5vw, 14px);
+    color: var(--text-light);
+    font-weight: 600;
+}
+
+.sms-sender {
+    font-size: clamp(10px, 2.2vw, 13px);
+    color: var(--danger);
+    background: rgba(220,53,69,0.1);
+    padding: clamp(4px, 1vw, 6px) clamp(8px, 2vw, 12px);
+    border-radius: 12px;
+    font-weight: 700;
+}
+
+.sms-text {
+    font-size: clamp(15px, 3.5vw, 19px);
+    color: var(--text-dark);
+    font-weight: 600;
+    line-height: 1.6;
+    font-style: italic;
+    word-wrap: break-word;
+}
+
+/* ===== PHONE DATA STYLES ===== */
+
+.phone-data {
+    background: linear-gradient(135deg, var(--bg-white) 0%, var(--bg-light) 100%);
+    border: 2px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    padding: clamp(12px, 2.5vw, 18px);
+    margin-bottom: clamp(10px, 2vw, 15px);
+    transition: all var(--transition-base);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Desktop hover effects */
+@media (hover: hover) {
+    .phone-data:hover {
+        transform: translateX(5px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    .phone-data.critical:hover {
+        box-shadow: 0 6px 16px rgba(220,53,69,0.25);
+    }
+}
+
+/* Mobile touch feedback */
+.phone-data:active {
+    opacity: 0.95;
+}
+
+.phone-data.critical {
+    background: linear-gradient(135deg, #fff5f5 0%, #ffe5e5 100%);
+    border-color: var(--danger);
+    border-width: 3px;
+    box-shadow: 0 4px 12px rgba(220,53,69,0.15);
+}
+
+.data-label {
+    font-weight: 700;
+    font-size: clamp(11px, 2.5vw, 14px);
+    color: var(--text-light);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.data-value {
+    font-size: clamp(13px, 3vw, 16px);
+    color: var(--text-dark);
+    font-weight: 600;
+    word-wrap: break-word;
+}
+
+.phone-data.critical .data-value {
+    color: var(--danger);
+}
+
+/* ===== RESPONSIVE ADJUSTMENTS ===== */
+
+@media (max-width: 480px) {
+    .sms-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
