@@ -25,7 +25,7 @@ const view3DBtn = document.getElementById('view3DBtn');
             console.log('🔙 Button clicked! Team:', teamCode);
             
             if (teamCode) {
-                window.location.href = `../index.html?team=${teamCode}&tab=evidence`;
+                window.location.href = `../../index.html?team=${teamCode}&tab=evidence`;
             } else {
                 window.location.href = '../../index.html?tab=evidence';
             }

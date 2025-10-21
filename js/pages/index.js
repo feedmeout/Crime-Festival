@@ -258,12 +258,12 @@ function openSurvey() {
     
     if (!teamCode || !memberName) {
         alert('❌ Σφάλμα: Δεν βρέθηκαν στοιχεία σύνδεσης. Παρακαλώ συνδεθείτε ξανά.');
-        window.location.href = 'team_entry.html';
+        window.location.href = "pages/team_entry.html';
         return;
     }
 
-    const surveyUrl = `survey.html?team=${encodeURIComponent(teamCode)}&member=${encodeURIComponent(memberName)}`;
-    window.open(surveyUrl, '_blank');
+    const surveyUrl = `pages/survey.html?team=${encodeURIComponent(teamCode)}&member=${encodeURIComponent(memberName)}`;
+    window.location.href = surveyUrl;
 }
 
 function getUnlockedTeks() {
@@ -1992,7 +1992,7 @@ async function updateResultsTabState() {
                     Ολοκληρώστε Πρώτα την Τελική Έρευνα
                 </h2>
                 
-                <a href="survey.html?team=${teamCode}&member=${encodeURIComponent(memberName)}" 
+                <a href="pages/survey.html?team=${teamCode}&member=${encodeURIComponent(memberName)}" 
                    class="btn btn-primary" 
                    style="display: inline-block; text-decoration: none; font-size: clamp(16px, 3.5vw, 18px); padding: clamp(15px, 3vw, 18px) clamp(30px, 6vw, 40px);">
                     📊 ΜΕΤΑΒΑΣΗ ΣΤΗΝ ΤΕΛΙΚΗ ΕΡΕΥΝΑ
@@ -2482,7 +2482,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
     if (!StorageManager.isAuthenticated()) {
         console.warn('⚠️ Not authenticated, redirecting to member entry...');
-		window.location.href = 'team_entry.html';
+		window.location.href = "pages/team_entry.html';
         return;
     }
     
