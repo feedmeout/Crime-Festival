@@ -1,5 +1,5 @@
 const tekInfo = {
-            '1': { name: 'Μπουκάλι Ουίσκι', icon: '🍾', page: 'TEK1_AR.html' },
+            '1': { name: 'Μπουκάλι Ουίσκι', icon: '🍾', page: 'evidence/TEK1_AR.html' },
             '2': { name: 'Κρυστάλλινα Ποτήρια', icon: '🥃', page: 'TEK2_AR.html' },
             '3': { name: 'Κινητό Θύματος', icon: '📱', page: 'TEK3_AR.html' },
             '4': { name: 'Email Αυτοκτονίας', icon: '💻', page: 'TEK4_AR.html' },
@@ -281,7 +281,7 @@ const tekInfo = {
                     ${timeInfo}
                 </div>
                 <a href="${tek.page}?team=${teamCode}" class="btn">Προβολή Τεκμηρίου</a>
-                <a href="10348index.html?team=${teamCode}" class="btn btn-secondary">Επιστροφή στον Φάκελο</a>
+                <a href="../../index.html?team=${teamCode}" class="btn btn-secondary">Επιστροφή στον Φάκελο</a>
             `;
         }
 
@@ -340,7 +340,7 @@ const tekInfo = {
                     📊 Έχετε ξεκλειδώσει ${teamData.unlocked.length} από 11 τεκμήρια
                 </p>
                 <a href="${tek.page}?team=${teamCode}" class="btn">Προβολή Τεκμηρίου</a>
-                <a href="12877index.html?team=${teamCode}" class="btn btn-secondary">Επιστροφή στον Φάκελο</a>
+                <a href="../../index.html?team=${teamCode}" class="btn btn-secondary">Επιστροφή στον Φάκελο</a>
             `;
         }
 
