@@ -2172,7 +2172,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
     if (!StorageManager.isAuthenticated()) {
         console.warn('⚠️ Not authenticated, redirecting to member entry...');
-		window.location.href = "pages/team_entry.html';
+		window.location.href = 'pages/team_entry.html';
         return;
     }
     
