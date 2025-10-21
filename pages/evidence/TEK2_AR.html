@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Τεκμήριο Ξεκλειδώθηκε</title>
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
+    
+    
+    <link rel="stylesheet" href="../../css/evidence/tek2.css">
+</head>
+<body>
+    <div class="animated-background"></div>
+
+    <header class="header">
+        <div class="header-content">
+            <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+            <h1>ΤΕΚΜΗΡΙΟ ΞΕΚΛΕΙΔΩΘΗΚΕ!</h1>
+        </div>
+        <p>Προστέθηκε στον φάκελο υπόθεσης</p>
+    </header>
+
+    <main class="container">
+        <article class="evidence-card">
+            <div class="badge-bar">
+                <div class="badge-info">
+                    <div class="evidence-id">ΤΕΚ #002</div>
+                </div>
+                <div class="official-badge">ΕΠΙΣΗΜΟ ΤΕΚΜΗΡΙΟ</div>
+            </div>
+
+            <div class="crime-scene-photo">
+                <canvas id="crimeSceneCanvas"></canvas>
+                <div class="confidential-badge">ΑΠΟΡΡΗΤΟ</div>
+            </div>
+
+            <div class="ar-container">
+                <h3 class="ar-title">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M2 16.1A5 5 0 0 1 5.9 20M2 12.05A9 9 0 0 1 9.95 20M2 8V6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-6"></path>
+                        <line x1="2" y1="20" x2="2.01" y2="20"></line>
+                    </svg>
+                    ΕΠΑΥΞΗΜΕΝΗ ΠΡΑΓΜΑΤΙΚΟΤΗΤΑ
+                </h3>
+                
+                <div class="model-controls">
+                    <button id="view3DBtn" class="view-3d-button">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                            <polyline points="2 17 12 22 22 17"></polyline>
+                            <polyline points="2 12 12 17 22 12"></polyline>
+                        </svg>
+                        ΠΡΟΒΟΛΗ ΣΕ 3D
+                    </button>
+                    <button id="close3DBtn" class="close-3d-button">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                        ΚΛΕΙΣΙΜΟ
+                    </button>
+                </div>
+
+                <div id="modelViewerContainer" class="model-viewer-container">
+                    <model-viewer
+                        id="glassModel"
+                        src="../assets/models/whiskey_glass.glb"
+                        alt="Crystal Glasses 3D Model - Evidence"
+                        ar
+                        ar-modes="webxr scene-viewer quick-look"
+                        camera-controls
+                        touch-action="pan-y"
+                        auto-rotate
+                        auto-rotate-delay="1000"
+                        rotation-per-second="30deg"
+                        shadow-intensity="1"
+                        exposure="0.8"
+                        camera-orbit="0deg 75deg 2.5m"
+                        min-camera-orbit="auto 0deg auto"
+                        max-camera-orbit="auto 180deg auto">
+                        
+                        <div slot="poster" style="
+                            width: 100%;
+                            height: 100%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            background: #f5f5f5;
+                            flex-direction: column;
+                            gap: 10px;
+                        ">
+                            <div style="
+                                border: 4px solid #f3f3f3;
+                                border-top: 4px solid #ff6b00;
+                                border-radius: 50%;
+                                width: 40px;
+                                height: 40px;
+                                animation: spin 1s linear infinite;
+                            "></div>
+                            <p style="color: #666; font-size: 14px;">Φόρτωση 3D μοντέλου...</p>
+                        </div>
+                        
+                        <div slot="error" style="
+                            width: 100%;
+                            height: 100%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            background: #fff3cd;
+                            flex-direction: column;
+                            gap: 15px;
+                            padding: 20px;
+                        ">
+                            <p style="color: #856404; font-size: 16px; font-weight: bold;">⚠️ Σφάλμα Φόρτωσης</p>
+                            <p style="color: #856404; font-size: 13px; text-align: center;">
+                                Το 3D μοντέλο δεν μπορεί να φορτώσει.<br>
+                                Ελέγξτε το αρχείο: whiskey_glass.glb
+                            </p>
+                        </div>
+                    </model-viewer>
+                    
+                    <p style="text-align: center; color: #666; font-size: clamp(12px, 2.5vw, 13px); margin-top: 10px; font-style: italic;">
+                        💡 Σύρετε για να περιστρέψετε • Zoom με δύο δάχτυλα
+                    </p>
+                </div>
+            </div>
+
+            <section class="details">
+                <h2 class="evidence-title">🥃 ΚΡΥΣΤΑΛΛΙΝΑ ΠΟΤΗΡΙΑ</h2>
+
+                <div class="section">
+                    <h3 class="section-title">
+                        <span style="font-size: 24px;"></span>
+                       🔬 ΕΓΚΛΗΜΑΤΟΛΟΓΙΚΗ ΑΝΑΛΥΣΗ
+                    </h3>
+                    <div>
+                        <div class="glass-item critical">
+                            <div class="glass-name">Ποτήρι Α</div>
+                            <div class="glass-details">
+                                <div><strong>Υπόλειμμα:</strong> ~180ml ουίσκι με πάγο (πλήρως λιωμένο)</div>
+                                <div><strong>Κυάνιο:</strong> 185mg/L - ΘΑΝΑΤΗΦΟΡΟΣ ΔΟΣΗ</div>
+                                <div><strong>Χρόνος:</strong> Πάγος λιωμένος = 45-60 λεπτά σε θερμοκρασία δωματίου</div>
+                                <div><strong>Θέση:</strong> Στο γραφείο, δεξιά πλευρά</div>
+                                <div><strong>Καθαρότητα:</strong> Αποτυπώματα Δημητρίου</div>
+                            </div>
+                        </div>
+                        
+                        <div class="glass-item">
+                            <div class="glass-name">Ποτήρι Β</div>
+							<div class="glass-details">
+								<div><strong>Υπόλειμμα:</strong> ~110ml ουίσκι (ΚΑΘΑΡΟ - χωρίς πάγο)</div>
+								<div><strong>Κυάνιο:</strong> 0mg/L</div>
+								<div><strong>DNA:</strong> Μερικό στο χείλος (Δημητρίου, Αναγνώστου)</div>
+								<div><strong>Θέση:</strong> Στο ράφι δίπλα στο παράθυρο - ΟΧΙ στο γραφείο</div>
+								<div><strong>Καθαρότητα:</strong> Εξωτερικά σκουπισμένο (ίνες πανιού)</div>
+							</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">
+                        <span style="font-size: 24px;"></span>
+                        👆 ΑΠΟΤΥΠΩΜΑΤΑ ΚΑΙ ΧΡΟΝΟΛΟΓΙΟ
+                    </h3>
+                    
+                    <div style="margin-bottom: 25px;">                       
+                        <div class="glass-item critical">
+                            <div class="glass-name">Ποτήρι Α (Δημητρίου)</div>
+                            <div class="glass-details">
+                                <div>• Αντίχειρας + δείκτης (δεξί χέρι)</div>
+                                <div>• Χρονολόγιο: &lt; 30 λεπτά πριν τον θάνατο</div>
+                                <div>• Θέση: Περιμετρικά στο σώμα του ποτηριού (φυσιολογική λαβή)</div>
+                            </div>
+                        </div>
+                    </div>
+
+					<div style="margin-top: 35px;">
+											<div class="glass-item" style="background: linear-gradient(135deg, #f0f8ff 0%, #e3f2fd 100%); border-color: #2196F3; border-width: 3px; box-shadow: 0 4px 12px rgba(33, 150, 243, 0.15); padding: clamp(15px, 3vw, 20px);">
+												<div class="glass-name" style="color: #1976D2; font-size: clamp(15px, 3.2vw, 16px); margin-bottom: 10px;">Ποτήρι Β (Δεύτερου ατόμου)</div>
+												<div class="glass-details" style="padding-left: 0; margin-bottom: 15px;">
+													<strong>Μερικά Αποτυπώματα (70% σβησμένα με πανί):</strong>
+												</div>
+												
+												<div class="glass-item" style="margin-bottom: 12px;">
+													<div class="glass-name">Αναγνώστου Κωνσταντίνος</div>
+													<div class="glass-details">
+														<div>• Ίχνη στη βάση</div>
+														<div>• Χρονολόγιο: 2-4 ώρες πριν</div>
+													</div>
+												</div>
+												
+												<div class="glass-item" style="margin-bottom: 12px;">
+													<div class="glass-name">Μαυρίδη Ελένη</div>
+													<div class="glass-details">
+														<div>• Ίχνη στο χείλος</div>
+														<div>• Χρονολόγιο: 2-4 ώρες πριν</div>
+													</div>
+												</div>
+												
+												<div class="glass-item" style="margin-bottom: 0;">
+													<div class="glass-name">Παπαδοπούλου Μαρία</div>
+													<div class="glass-details">
+														<div>• Αντίχειρας αριστερό χέρι στο σώμα</div>
+														<div>• Χρονολόγιο: 48-72 ώρες πριν</div>
+													</div>
+												</div>
+											</div>
+										</div>
+                </div>
+
+                <div class="significance-box">
+                    <h3 class="significance-title">
+                        <span style="font-size: 20px;"></span>
+                       💡 ΣΗΜΑΣΙΑ ΓΙΑ ΤΗΝ ΕΡΕΥΝΑ
+                    </h3>
+                    <p class="significance-text">
+                        Δύο ποτήρια - ένα με κυάνιο, ένα καθαρό - αλλά ήταν από την ίδια στιγμή; Το χρονικό παράθυρο του λιωμένου πάγου (45-60 λεπτά) υποδηλώνει ότι ο Δημητρίου πιθανώς έριξε το ποτό του γύρω στις 20:30-20:45 ενώ περίμενε τον Αναγνώστου. Το κυάνιο προστέθηκε λίγο αργότερα - εγκληματολογικά αδιάκριτο από την αρχική χύτευση αφού διαλύθηκε πλήρως.
+                    </p>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">
+                        <span style="font-size: 24px;">❓</span>
+                        Βασικά Ερωτήματα Διερεύνησης
+                    </h3>
+                    <ul class="section-content">
+                        <li>Τα δύο ποτήρια ήταν από το ΙΔΙΟ «ποτό» την ίδια στιγμή ή το Ποτήρι Β είναι από προηγούμενη μέρα;</li>
+                        <li>Αν το Ποτήρι Β είναι παλιό, γιατί δεν το μάζεψαν; Λησμονιά ή σκηνοθεσία;</li>
+                        <li>Διατί το Ποτήρι Β βρίσκεται στο ΡΑΦΙ και όχι στο γραφείο;</li>
+                    </ul>
+                </div>
+            </section>
+        </article>
+    </main>
+
+    <footer class="back-button-container">
+        <button onclick="window.goBackToCaseFile()" class="back-button">
+            ← ΕΠΙΣΤΡΟΦΗ ΣΤΟ ΦΑΚΕΛΟ
+        </button>
+    </footer>
+
+    
+    <script src="../../js/evidence/tek2.js"></script>
+</body>
+</html>

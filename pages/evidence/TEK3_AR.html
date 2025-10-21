@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Τεκμήριο Ξεκλειδώθηκε</title>
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
+    
+    
+    <link rel="stylesheet" href="../../css/evidence/tek3.css">
+</head>
+<body>
+    <div class="animated-background"></div>
+
+    <div class="header">
+        <div class="header-content">
+            <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+            <h1>ΤΕΚΜΗΡΙΟ ΞΕΚΛΕΙΔΩΘΗΚΕ!</h1>
+        </div>
+        <p>Προστέθηκε στον φάκελο υπόθεσης</p>
+    </div>
+
+    <div class="container">
+        <div class="evidence-card">
+            <div class="badge-bar">
+                <div class="badge-info">
+                    <div class="evidence-id">ΤΕΚ #003</div>
+                </div>
+                <div class="official-badge" role="badge">ΕΠΙΣΗΜΟ ΤΕΚΜΗΡΙΟ</div>
+            </div>
+
+            <div class="crime-scene-photo">
+                <canvas id="crimeSceneCanvas" aria-label="Φωτογραφία σκηνής εγκλήματος"></canvas>
+                <div class="confidential-badge" role="status">ΑΠΟΡΡΗΤΟ</div>
+            </div>
+
+            <div class="ar-container">
+                <h3 class="ar-title">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <path d="M2 16.1A5 5 0 0 1 5.9 20M2 12.05A9 9 0 0 1 9.95 20M2 8V6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-6"></path>
+                        <line x1="2" y1="20" x2="2.01" y2="20"></line>
+                    </svg>
+                    <span>ΕΠΑΥΞΗΜΕΝΗ ΠΡΑΓΜΑΤΙΚΟΤΗΤΑ</span>
+                </h3>
+                
+                <div class="button-container">
+                    <button id="view3DBtn" class="view-3d-button">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                            <polyline points="2 17 12 22 22 17"></polyline>
+                            <polyline points="2 12 12 17 22 12"></polyline>
+                        </svg>
+                        <span>ΠΡΟΒΟΛΗ ΣΕ 3D</span>
+                    </button>
+                </div>
+
+                <div id="modelViewerContainer" class="model-viewer-container">
+                    <model-viewer
+                        id="phoneModel"
+                        src="../assets/models/mobile_phone.glb"
+                        alt="Τρισδιάστατο μοντέλο κινητού τηλεφώνου - Στοιχείο"
+                        ar
+                        ar-modes="webxr scene-viewer quick-look"
+                        camera-controls
+                        touch-action="pan-y"
+                        auto-rotate
+                        auto-rotate-delay="1000"
+                        rotation-per-second="30deg"
+                        shadow-intensity="1"
+                        exposure="0.8"
+                        camera-orbit="0deg 75deg 2.5m"
+                        min-camera-orbit="auto 0deg auto"
+                        max-camera-orbit="auto 180deg auto">
+                    </model-viewer>
+                    
+                    <div class="button-container">
+                        <button id="close3DBtn" class="close-3d-button">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                            <span>ΚΛΕΙΣΙΜΟ</span>
+                        </button>
+                    </div>
+                    
+                    <p style="text-align: center; color: #666; font-size: clamp(11px, 2.5vw, 13px); margin-top: 10px; font-style: italic;">
+                        💡 Σύρετε για να περιστρέψετε • Zoom με δύο δάχτυλα
+                    </p>
+                </div>
+            </div>
+
+            <div class="details">
+                <h2 class="evidence-title">
+                    <span aria-hidden="true">📱</span>
+                    <span>ΚΙΝΗΤΟ ΤΗΛΕΦΩΝΟ ΘΥΜΑΤΟΣ</span>
+                </h2>
+
+                <section class="section">
+                    <h3 class="section-title">
+                        <span style="font-size: 24px;" aria-hidden="true"></span>
+                        <span>🔬 ΕΓΚΛΗΜΑΤΟΛΟΓΙΚΗ ΑΝΑΛΥΣΗ</span>
+                    </h3>
+                    
+                    <div class="sms-message">
+                        <div class="sms-header">
+                            <span class="sms-time">⏰ 20:45</span>
+                            <span class="sms-sender">🔴 ΑΓΝΩΣΤΟΣ ΑΠΟΣΤΟΛΕΑΣ</span>
+                        </div>
+                        <div class="sms-text">
+                           «Θα τελειώσει απόψε...»
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 25px;">
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong>Αποστολέας:</strong> Προπληρωμένη κάρτα SIM - μη κατεγραμμένη
+                        </p>
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong>Τοποθεσία κεραίας:</strong> 250m από το κτίριο (πύργος κινητής τηλεφωνίας Α-47)
+                        </p>
+                        <p class="section-content" style="margin-bottom: 10px;">
+                            <strong>Χρονική σήμανση:</strong> 20:45:17 - 30 λεπτά πριν τον εκτιμώμενο θάνατο
+                        </p>
+                        <p class="section-content">
+                            <strong>Προηγούμενη επικοινωνία:</strong> Καμία με αυτόν τον αριθμό
+                        </p>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h3 class="section-title">
+                        <span style="font-size: 24px;" aria-hidden="true"></span>
+                        <span>🔬 ΤΕΧΝΙΚΗ ΑΝΑΛΥΣΗ ΣΥΣΚΕΥΗΣ</span>
+                    </h3>
+                    <div>
+                        <div class="phone-data critical">
+                            <div class="data-label">Κατάσταση Κλειδώματος</div>
+                            <div class="data-value">ΞΕΚΛΕΙΔΩΤΗ</div>
+                        </div>
+                        <div class="phone-data critical">
+                            <div class="data-label">Τελευταία Εξερχόμενη Κλήση</div>
+                            <div class="data-value">20:15 - Άγνωστος αριθμός (5 λεπτά διάρκεια)</div>
+                        </div>
+                        <div class="phone-data">
+                            <div class="data-label">Διαγραμμένα Μηνύματα</div>
+                            <div class="data-value">37 μηνύματα διαγράφηκαν 19:30-20:00</div>
+                        </div>
+                        <div class="phone-data">
+                            <div class="data-label">Εφαρμογή Email</div>
+                            <div class="data-value">Ανοιχτή στα «Πρόχειρα» - κενό μήνυμα</div>
+                        </div>
+                        <div class="phone-data">
+                            <div class="data-label">Μπαταρία</div>
+                            <div class="data-value">27% - Τελευταία φόρτιση 17:22</div>
+                        </div>
+                        <div class="phone-data">
+                            <div class="data-label">Τοποθεσία GPS</div>
+                            <div class="data-value">Ενεργή - Γραφείο (20:00-21:30)</div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h3 class="section-title">
+                        <span style="font-size: 24px;" aria-hidden="true">📞</span>
+                        <span>Ιστορικό Κλήσεων (Τελευταίες 24 ώρες)</span>
+                    </h3>
+                    
+                    <div>
+                        <div class="phone-data">
+                            <div class="data-label">14:30</div>
+                            <div class="data-value">Εισερχόμενη - Παπαδοπούλου Μαρία (12 λεπτά)</div>
+                        </div>
+                        <div class="phone-data">
+                            <div class="data-label">16:45</div>
+                            <div class="data-value">Εξερχόμενη - Νικολάου Αλεξάνδρα (3 λεπτά)</div>
+                        </div>
+                        <div class="phone-data">
+                            <div class="data-label">18:20</div>
+                            <div class="data-value">Αναπάντητη - Μαυρίδη Ελένη (2 κλήσεις)</div>
+                        </div>
+                        <div class="phone-data critical">
+                            <div class="data-label">20:15</div>
+                            <div class="data-value">Εξερχόμενη - Άγνωστος αριθμός (5 λεπτά)</div>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="significance-box">
+                    <h3 class="significance-title">
+                        <span style="font-size: 20px;" aria-hidden="true"></span>
+                        <span>💡 ΣΗΜΑΣΙΑ ΓΙΑ ΤΗΝ ΕΡΕΥΝΑ</span>
+                    </h3>
+                    <p class="significance-text">
+                        Ένα απειλητικό μήνυμα 30 λεπτά πριν τον θάνατο από άγνωστο αποστολέα που βρισκόταν πολύ κοντά στο κτίριο. Η συσκευή βρέθηκε ξεκλείδωτη παρά το γεγονός πως ο Δημητρίου ήταν γνωστός για την εμμονή του με την ασφάλεια - πάντα κλείδωνε το τηλέφωνο ακόμα και για λίγα δευτερόλεπτα. Τα 37 διαγραμμένα μηνύματα μεταξύ 19:30-20:00 δημιουργούν ένα κενό στην επικοινωνία του, ενώ η μυστηριώδης κλήση των 5 λεπτών στις 20:15 σε άγνωστο αριθμό παραμένει ανεξήγητη. Η ανοιχτή εφαρμογή email στα «Πρόχειρα» με κενό μήνυμα μοιάζει σαν ο Δημητρίου να ήθελε να γράψει κάτι αλλά δεν πρόλαβε ή άλλαξε γνώμη. Ήταν όντως απειλή το SMS ή προειδοποίηση από κάποιον που ήξερε τι επρόκειτο να συμβεί;
+                    </p>
+                </div>
+
+                <section class="section">
+                    <h3 class="section-title">
+                        <span style="font-size: 24px;" aria-hidden="true"></span>
+                        <span>❓ ΕΡΩΤΗΜΑΤΑ ΔΙΕΡΕΥΝΗΣΗΣ</span>
+                    </h3>
+                    <ul class="section-content">
+                        <li>Διατί ο Δημητρίου διέγραψε 37 μηνύματα μία ώρα πριν τον θάνατό του και με ποιον επικοινωνούσε;</li>
+                        <li>Ποιος ήταν ο άγνωστος αριθμός της τελευταίας κλήσης και γιατί δεν υπάρχει στο ιστορικό επαφών;</li>
+                        <li>Το ξεκλείδωτο τηλέφωνο ήταν από αμέλεια του Δημητρίου ή κάποιος το ξεκλείδωσε μετά τον θάνατο;</li>
+                    </ul>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <div class="back-button-container">
+        <button onclick="window.goBackToCaseFile()" 
+                class="back-button"
+                aria-label="Επιστροφή στον φάκελο υπόθεσης">
+            <span aria-hidden="true">←</span>
+            <span>ΕΠΙΣΤΡΟΦΗ ΣΤΟ ΦΑΚΕΛΟ</span>
+        </button>
+    </div>
+
+    
+    <script src="../../js/evidence/tek3.js"></script>
+</body>
+</html>
