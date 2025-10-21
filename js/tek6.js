@@ -22,9 +22,9 @@ const view3dBtn = document.getElementById('view3dBtn');
             console.log('🔙 Button clicked! Team:', teamCode);
             
             if (teamCode) {
-                window.location.href = `index.html?team=${teamCode}&tab=evidence`;
+                window.location.href = `../index.html?team=${teamCode}&tab=evidence`;
             } else {
-                window.location.href = 'index.html?tab=evidence';
+                window.location.href = '../index.html?tab=evidence';
             }
         };
 
