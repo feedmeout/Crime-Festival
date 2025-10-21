@@ -638,7 +638,7 @@ async function submitSurvey() {
                     </div>
                     
                     <div style="text-align: center; margin-top: 30px;">
-<button class="btn btn-primary" onclick="window.location.href='27525index.html?team=${TEAM_MEMBER.team}'" style="font-size: clamp(14px, 2.5vw, 16px);">
+<button class="btn btn-primary" onclick="window.location.href='index.html?team=${TEAM_MEMBER.team}'" style="font-size: clamp(14px, 2.5vw, 16px);">
     🎮 ΕΚΚΙΝΗΣΗ ΠΑΙΧΝΙΔΙΟΥ
 </button>
                     </div>
@@ -654,7 +654,7 @@ async function submitSurvey() {
                     </p>
                     
                     <div style="text-align: center; margin-top: 30px;">
-                        <button class="btn btn-primary" onclick="window.close(); if(!window.closed) window.location.href='28392index.html?team=${TEAM_MEMBER.team}'" style="font-size: clamp(14px, 2.5vw, 16px);">
+                        <button class="btn btn-primary" onclick="window.close(); if(!window.closed) window.location.href='index.html?team=${TEAM_MEMBER.team}'" style="font-size: clamp(14px, 2.5vw, 16px);">
                             🏠 ΕΠΙΣΤΡΟΦΗ ΣΤΟ ΠΑΙΧΝΙΔΙ
                         </button>
                     </div>

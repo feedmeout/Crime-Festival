@@ -148,7 +148,7 @@ async function enterGame(event) {
                     window.location.href = redirectUrl;
                 } else {
                     console.log('🔄 Redirecting to index.html');
-                    window.location.href = `5603index.html?team=${teamName}`;
+                    window.location.href = `index.html?team=${teamName}`;
                 }
             }, 500);
             return;
@@ -180,7 +180,7 @@ async function enterGame(event) {
                 console.log(`🔄 Redirecting to: ${redirectUrl}`);
                 window.location.href = redirectUrl;
             } else {
-                window.location.href = `6990index.html?team=${teamName}`;
+                window.location.href = `index.html?team=${teamName}`;
             }
         }
 
@@ -204,7 +204,7 @@ window.addEventListener('DOMContentLoaded', () => {
             window.location.href = redirectUrl;
         } else {
             console.log('Already logged in, redirecting to index...');
-            window.location.href = `7898index.html?team=${storedTeam}`;
+            window.location.href = `index.html?team=${storedTeam}`;
         }
     }
 });
