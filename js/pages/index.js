@@ -449,15 +449,28 @@ async function updateProgress(teamData) {
 }
 
 function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
+    const CORRECT_SUSPECTS = ['konstantinos', 'georgios', 'eleni'];
+    const SCORING = {
+        murder_diagnosis: 25,
+        cooperation: 20,
+        perpetrator: 15,
+        perfect_solution_bonus: 20,
+        evidence_use: 5,
+        prompts_1_5: 15,
+        prompts_6_10: 10,
+        prompts_11_15: 5,
+        time_under_30: 15,
+        time_30_45: 10,
+        time_45_60: 5
+    };
+    
     let score = 0;
     let breakdown = [];
     
     if (selectedSuspects.length === 0) {
         return {
             score: 0,
-            breakdown: [
-                'ERROR:Δεν επιλέξατε κανέναν ύποπτο ή αυτοκτονία'
-            ],
+            breakdown: ['ERROR:Δεν επέλεξαν κανέναν ύποπτο'],
             maxScore: 140,
             correctCount: 0
         };
@@ -467,19 +480,11 @@ function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
     const hasKiller = selectedSuspects.some(s => s !== 'suicide');
     
     if (hasSuicide && hasKiller) {
-        const killerNames = selectedSuspects
-            .filter(s => s !== 'suicide')
-            .map(s => SUSPECT_NAMES[s])
-            .join(', ');
-        
         return {
             score: 0,
             breakdown: [
-                'CONTRADICTION:ΛΟΓΙΚΗ ΑΝΤΙΦΑΣΗ - Η υπόθεση δεν μπορεί να είναι ταυτόχρονα δολοφονία ΚΑΙ αυτοκτονία',
-                '',
-                `INFO:Επιλέξατε: ${killerNames} + Αυτοκτονία`,
-                '',
-                'INFO:Πρέπει να επιλέξετε ΕΙΤΕ δολοφονία ΕΙΤΕ αυτοκτονία, όχι και τα δύο.'
+                'HEADER:🚫 ΛΟΓΙΚΗ ΑΝΤΙΦΑΣΗ (+0 πόντοι)',
+                'CONTRADICTION:Η υπόθεση δεν μπορεί να είναι ταυτόχρονα δολοφονία και αυτοκτονία',
             ],
             maxScore: 140,
             correctCount: 0
@@ -490,21 +495,24 @@ function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
         return {
             score: 0,
             breakdown: [
-                'ERROR:ΕΣΦΑΛΜΕΝΗ ΘΕΩΡΙΑ - Δεν ήταν αυτοκτονία',
-                '',
-                'SUBHEADER:Βασικά Στοιχεία που Αγνοήσατε:',
-                'ITEM:Γάντια λάτεξ στην πόρτα (ΤΕΚ #6) - κάποιος προσπάθησε να μην αφήσει αποτυπώματα',
-                'ITEM:Πλαστό email αυτοκτονίας από κοινόχρηστο υπολογιστή (ΤΕΚ #4)',
-                'ITEM:Απενεργοποίηση κάμερων 20:55-21:42 (ΤΕΚ #11)',
-                'ITEM:Κυάνιο προστέθηκε ΜΕΤΑ το άνοιγμα του μπουκαλιού (ΤΕΚ #1)',
-                '',
-                'INFO:Η δολοφονία σκηνοθετήθηκε να μοιάζει με αυτοκτονία.'
+                'HEADER:❌ ΕΣΦΑΛΜΕΝΗ ΘΕΩΡΙΑ (+0 πόντοι)',
+                'ERROR:Αυτό δεν ήταν αυτοκτονία',
+                'SUBHEADER:Βασικά Στοιχεία που Αγνόησαν',
+                'ITEM:Γάντια λάτεξ στην πόρτα',
+                'ITEM:Πλαστό email "αυτοκτονίας"',
+                'ITEM:Απενεργοποίηση κάμερων',
+                'ITEM:Κυάνιο σε μπουκάλι που δεν ήταν του θύματος',
             ],
             maxScore: 140,
             correctCount: 0
         };
     }
 
+    let basicPoints = SCORING.murder_diagnosis;
+    score += basicPoints;
+    breakdown.push(`HEADER:🧩 ΒΑΣΙΚΗ ΕΚΤΙΜΗΣΗ (+${basicPoints} πόντοι)`);
+    breakdown.push('SUCCESS:Σωστή Διάγνωση: ΔΟΛΟΦΟΝΙΑ');
+    
     let correctCount = 0;
     let wrongSuspects = [];
     let missedSuspects = [];
@@ -513,192 +521,150 @@ function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
         if (CORRECT_SUSPECTS.includes(suspect)) {
             correctCount++;
         } else {
+            const SUSPECT_NAMES = {
+                'maria': 'Παπαδοπούλου Μαρία',
+                'konstantinos': 'Αναγνώστου Κωνσταντίνος',
+                'eleni': 'Μαυρίδη Ελένη',
+                'georgios': 'Πετρόπουλος Γεώργιος',
+                'alexandra': 'Νικολάου Αλεξάνδρα',
+                'suicide': 'Αυτοκτονία'
+            };
             wrongSuspects.push(SUSPECT_NAMES[suspect] || suspect);
         }
     });
     
     CORRECT_SUSPECTS.forEach(suspect => {
         if (!selectedSuspects.includes(suspect)) {
+            const SUSPECT_NAMES = {
+                'maria': 'Παπαδοπούλου Μαρία',
+                'konstantinos': 'Αναγνώστου Κωνσταντίνος',
+                'eleni': 'Μαυρίδη Ελένη',
+                'georgios': 'Πετρόπουλος Γεώργιος',
+                'alexandra': 'Νικολάου Αλεξάνδρα',
+                'suicide': 'Αυτοκτονία'
+            };
             missedSuspects.push(SUSPECT_NAMES[suspect] || suspect);
         }
     });
-    
-	breakdown.push(`HEADER:🧩 ΒΑΣΙΚΗ ΕΚΤΙΜΗΣΗ`);
-	breakdown.push('');
-	score += SCORING.murder_diagnosis;
-	breakdown.push(`SUCCESS:Σωστή Διάγνωση: ΔΟΛΟΦΟΝΙΑ (+${SCORING.murder_diagnosis} πόντοι)`);
-	breakdown.push('ITEM:Αναγνωρίσατε ότι δεν ήταν αυτοκτονία');
-    breakdown.push('');
-    breakdown.push('HEADER:👥 ΤΑΥΤΟΠΟΙΗΣΗ ΔΡΑΣΤΩΝ');
-    breakdown.push('');
-    
-    if (correctCount >= 2) {
-        score += SCORING.cooperation;
-        breakdown.push(`SUCCESS:Εντοπισμός Συνεργασίας (+${SCORING.cooperation} πόντοι)`);
-        breakdown.push('ITEM:Καταλάβατε ότι ήταν ομαδική προσπάθεια');
-        breakdown.push('');
-    }
 
+    let perpetratorPoints = 0;
+    
     if (correctCount === 3 && selectedSuspects.length === 3) {
-        score += SCORING.perpetrator * 3;
-        score += SCORING.perfect_solution_bonus;
-        breakdown.push(`SUCCESS:ΤΕΛΕΙΑ ΑΝΑΛΥΣΗ! (+${SCORING.perpetrator * 3 + SCORING.perfect_solution_bonus} πόντοι)`);
-        breakdown.push('ITEM:Εντοπίσατε και τους 3 συνεργούς');
-        breakdown.push('');
-        breakdown.push('ITEM:✓ Αναγνώστου (Μαστρομυαλός - έριξε το κυάνιο στο ποτήρι)');
-        breakdown.push('ITEM:✓ Πετρόπουλος (Προμηθευτής - αγόρασε κυάνιο, απενεργοποίησε κάμερες)');
-        breakdown.push('ITEM:✓ Μαυρίδη (Συγκάλυψη - πλαστό email & χειρόγραφο σημείωμα)');
+        perpetratorPoints = SCORING.perpetrator * 3 + SCORING.perfect_solution_bonus + SCORING.cooperation;
+        breakdown.push(`HEADER:🎖️ ΤΕΛΕΙΑ ΑΝΑΛΥΣΗ (+${perpetratorPoints} πόντοι)`);
+        breakdown.push('SUCCESS:Εντόπισαν και τους 3 συνεργούς');
     } else {
+        breakdown.push(`HEADER:👥 ΤΑΥΤΟΠΟΙΗΣΗ ΔΡΑΣΤΩΝ (+${perpetratorPoints} πόντοι - προσωρινό)`);
+        
         if (correctCount > 0) {
-            const points = correctCount * SCORING.perpetrator;
-            score += points;
-            breakdown.push(`SUCCESS:Εντοπίσατε ${correctCount}/3 Δράστες (+${points} πόντοι)`);
-            breakdown.push('');
-            selectedSuspects.forEach(suspect => {
-                if (CORRECT_SUSPECTS.includes(suspect)) {
-                    const name = SUSPECT_NAMES[suspect];
-                    let role = '';
-                    if (suspect === 'konstantinos') role = 'Μαστρομυαλός - έριξε το κυάνιο';
-                    else if (suspect === 'georgios') role = 'Προμήθευσε κυάνιο & έσβησε κάμερες';
-                    else if (suspect === 'eleni') role = 'Δημιούργησε ψευδή στοιχεία αυτοκτονίας';
-                    breakdown.push(`ITEM:✓ ${name} (${role})`);
-                }
-            });
-        } else {
-            breakdown.push(`ERROR:Δεν εντοπίσατε κανέναν από τους πραγματικούς δράστες (0 πόντοι)`);
+            perpetratorPoints += correctCount * SCORING.perpetrator;
+            breakdown.push(`SUCCESS:Εντόπισαν ${correctCount}/3 Δράστες`);
+        }
+        
+        if (correctCount >= 2) {
+            perpetratorPoints += SCORING.cooperation;
+            breakdown.push('SUCCESS:Αναγνώριση Συνεργασίας');
         }
         
         if (correctCount >= 2 && correctCount < 3) {
-            score += SCORING.evidence_use;
-            breakdown.push('');
-            breakdown.push(`SUCCESS:Καλή Χρήση Τεκμηρίων (+${SCORING.evidence_use} πόντοι)`);
+            perpetratorPoints += SCORING.evidence_use;
+        }
+        
+        const headerIndex = breakdown.findIndex(line => line.includes('👥 ΤΑΥΤΟΠΟΙΗΣΗ ΔΡΑΣΤΩΝ'));
+        if (headerIndex !== -1) {
+            breakdown[headerIndex] = `HEADER:👥 ΤΑΥΤΟΠΟΙΗΣΗ ΔΡΑΣΤΩΝ (+${perpetratorPoints} πόντοι)`;
         }
     }
 
-    if (wrongSuspects.length === 0 && correctCount > 0 && correctCount < 3) {
-        const precisionBonus = correctCount * 15;
-        score += precisionBonus;
-        breakdown.push('');
-        breakdown.push(`SUCCESS:Bonus Ακρίβειας (+ ${precisionBonus} πόντοι)`);
-        breakdown.push(`ITEM:Όλες οι επιλογές σας ήταν σωστές - χάσατε ${3 - correctCount} δράστη`);
-    }
-    
-    breakdown.push('');
+    score += perpetratorPoints;
     
     if (correctCount >= 2) {
-        breakdown.push('HEADER:⚡ BONUSES ΑΠΟΔΟΤΙΚΟΤΗΤΑΣ');
-        breakdown.push('');
-        
-        let hasBonus = false;
+        let efficiencyPoints = 0;
+        let efficiencyItems = [];
         
         if (totalTimeMs) {
             const minutes = totalTimeMs / 60000;
             if (minutes < 30) {
-                score += SCORING.time_under_30;
-                breakdown.push(`SUCCESS:Ταχύτατη Λύση (+${SCORING.time_under_30} πόντοι)`);
-                breakdown.push('ITEM:Χρόνος: <30 λεπτά');
-                hasBonus = true;
+                efficiencyPoints += SCORING.time_under_30;
+                efficiencyItems.push('SUCCESS:Ταχύτατη Λύση (+12 πόντοι)');
+                efficiencyItems.push('ITEM:Χρόνος <30 λεπτά');
             } else if (minutes < 45) {
-                score += SCORING.time_30_45;
-                breakdown.push(`SUCCESS:Γρήγορη Λύση (+${SCORING.time_30_45} πόντοι)`);
-                breakdown.push('ITEM:Χρόνος: 30-45 λεπτά');
-                hasBonus = true;
+                efficiencyPoints += SCORING.time_30_45;
+                efficiencyItems.push('SUCCESS:Γρήγορη Λύση (+10 πόντοι)');
+                efficiencyItems.push('ITEM:Χρόνος 30-45 λεπτά');
             } else if (minutes < 60) {
-                score += SCORING.time_45_60;
-                breakdown.push(`SUCCESS:Καλός Χρόνος (+${SCORING.time_45_60} πόντοι)`);
-                breakdown.push('ITEM:Χρόνος: 45-60 λεπτά');
-                hasBonus = true;
+                efficiencyPoints += SCORING.time_45_60;
+                efficiencyItems.push('SUCCESS:Καλός Χρόνος (+5 πόντοι)');
+                efficiencyItems.push('ITEM:Χρόνος 45-60 λεπτά');
             }
         }
 
-		if (promptCount !== null && promptCount !== undefined) {
-			if (promptCount <= 5) {
-				score += SCORING.prompts_1_5;
-				breakdown.push(`SUCCESS:Ελάχιστη Χρήση ΤΝ (+${SCORING.prompts_1_5} πόντοι)`);
-				breakdown.push('ITEM:Prompts AI: ≤5');
-				hasBonus = true;
-			} else if (promptCount <= 10) {
-				score += SCORING.prompts_6_10;
-				breakdown.push(`SUCCESS:Μέτρια Χρήση ΤΝ (+${SCORING.prompts_6_10} πόντοι)`);
-				breakdown.push('ITEM:Prompts AI: 6-10');
-				hasBonus = true;
-			} else if (promptCount <= 15) {
-				score += SCORING.prompts_11_15;
-				breakdown.push(`SUCCESS:Συχνή Χρήση ΤΝ (+${SCORING.prompts_11_15} πόντοι)`);
-				breakdown.push('ITEM:Prompts AI: 11-15');
-				hasBonus = true;
-			} else {
-				breakdown.push(`INFO:Υπερβολική Χρήση ΤΝ (0 πόντοι)`);
-				breakdown.push(`ITEM:Prompts AI: ${promptCount} (>15)`);
-				hasBonus = true;
-			}
-		}
-        
-        if (!hasBonus) {
-            breakdown.push('INFO:Κανένα bonus αποδοτικότητας');
+        if (promptCount) {
+            if (promptCount <= 5) {
+                efficiencyPoints += SCORING.prompts_1_5;
+                efficiencyItems.push('SUCCESS:Ελάχιστη Χρήση AI (+15 πόντοι)');
+                efficiencyItems.push('ITEM:Prompts ≤5');
+            } else if (promptCount <= 10) {
+                efficiencyPoints += SCORING.prompts_6_10;
+                efficiencyItems.push('SUCCESS:Μέτρια Χρήση AI (+10 πόντοι)');
+                efficiencyItems.push('ITEM:Prompts 6-10');
+            } else if (promptCount <= 15) {
+                efficiencyPoints += SCORING.prompts_11_15;
+                efficiencyItems.push('SUCCESS:Αποδεκτή Χρήση AI (+5 πόντοι)');
+                efficiencyItems.push('ITEM:Prompts 11-15');
+            } else {
+                efficiencyItems.push('INFO:Υπερβολική Χρήση AI (0 πόντοι)');
+                efficiencyItems.push('ITEM:Prompts >15');
+            }
         }
         
-        breakdown.push('');
+        if (efficiencyPoints > 0 || efficiencyItems.length > 0) {
+            breakdown.push(`HEADER:⚡ BONUSES ΑΠΟΔΟΤΙΚΟΤΗΤΑΣ (+${efficiencyPoints} πόντοι)`);
+            breakdown.push(...efficiencyItems);
+        }
+        
+        score += efficiencyPoints;
     }
     
     if (wrongSuspects.length > 0) {
-        breakdown.push(`PENALTY:Κατηγορήσατε Αθώους (${wrongSuspects.length})`);
-        breakdown.push('');
-        wrongSuspects.forEach(name => {
-            breakdown.push(`ITEM:→ ${name}`);
-            if (name === 'Παπαδοπούλου Μαρία') {
-                breakdown.push('ITEM:  • Σιδηρένιο άλλοθι (γιατρός 18:30-19:30 & δείπνο με αδελφή 19:45-22:00)');
-                breakdown.push('ITEM:  • Τα μόνα αποτυπώματά της στο μπουκάλι ήταν παλιά');
-            } else if (name === 'Νικολάου Αλεξάνδρα') {
-                breakdown.push('ITEM:  • Έφυγε 18:30, πριν τη δολοφονία');
-                breakdown.push('ITEM:  • Δεν είχε πρόσβαση σε κυάνιο');
-            }
-        });
-        
         const originalScore = score;
         let multiplier = 1.0;
-        if (wrongSuspects.length === 1) multiplier = 0.5;
-        else if (wrongSuspects.length === 2) multiplier = 0.2;
-        else multiplier = 0.05;
+        
+        if (wrongSuspects.length === 1) {
+            multiplier = 0.5;
+        } else if (wrongSuspects.length === 2) {
+            multiplier = 0.2;
+        } else if (wrongSuspects.length >= 3) {
+            multiplier = 0.05;
+        }
         
         score = Math.floor(score * multiplier);
         const penalty = originalScore - score;
-        breakdown.push('');
-        breakdown.push(`PENALTY:Ποινή Λανθασμένων Κατηγοριών: - ${penalty} πόντοι`);
-        breakdown.push('');
+        
+        if (wrongSuspects.length >= 4) {
+            breakdown.push(`HEADER:❌ Απρόσεκτη Έρευνα (-${penalty} πόντοι)`);
+            breakdown.push('PENALTY:Επιλέξατε 4+ υπόπτους - «shotgun» προσέγγιση χωρίς ανάλυση');
+        } else {
+            breakdown.push(`HEADER:❌ Κατηγόρησαν Αθώους (-${penalty} πόντοι)`);
+        }
+        
+        wrongSuspects.forEach(name => {
+            breakdown.push(`PENALTY:${name}`);
+        });
     }
         
     if (missedSuspects.length > 0) {
-        breakdown.push('PENALTY:Χάσατε Πραγματικούς Δράστες');
-        breakdown.push('');
         const missedPenalty = missedSuspects.length * 20;
-        score -= missedPenalty;
+        score = Math.max(0, score - missedPenalty);
         
+        breakdown.push(`HEADER:🔍 Έχασαν Πραγματικούς Δράστες (-${missedPenalty} πόντοι)`);
         missedSuspects.forEach(name => {
-            breakdown.push(`ITEM:→ ${name}`);
-            if (name === 'Αναγνώστου Κωνσταντίνος') {
-                breakdown.push('ITEM:  • Αποτυπώματά του στο μπουκάλι (λαιμός) και κλειδί χρηματοκιβωτίου');
-                breakdown.push('ITEM:  • Υπεξαίρεση €500.000 σε Ελβετία - το κίνητρο');
-                breakdown.push('ITEM:  • Ο μαστρομυαλός - έριξε το κυάνιο στο ποτήρι');
-            } else if (name === 'Πετρόπουλος Γεώργιος') {
-                breakdown.push('ITEM:  • Αγόρασε κυάνιο 19/09 (ΤΕΚ #9 - Απόδειξη)');
-                breakdown.push('ITEM:  • Απενεργοποίησε κάμερες 20:55 (ΤΕΚ #11)');
-                breakdown.push('ITEM:  • Χρέη €60.000 - το κίνητρο');
-            } else if (name === 'Μαυρίδη Ελένη') {
-                breakdown.push('ITEM:  • Έστειλε πλαστό email «αυτοκτονίας» (ΤΕΚ #4)');
-                breakdown.push('ITEM:  • Πλαστογράφησε χειρόγραφο σημείωμα (ΤΕΚ #7)');
-                breakdown.push('ITEM:  • Εκβιασμός €100.000 για ερωτικές φωτογραφίες');
-            }
+            breakdown.push(`PENALTY:${name}`);
         });
-        
-        breakdown.push('');
-        breakdown.push(`PENALTY:Ποινή Ελλιπούς Ανάλυσης: - ${missedPenalty} πόντοι`);
     }
-    
-    breakdown.push('');
-    breakdown.push(`INFO:🏁 ΤΕΛΙΚΗ ΒΑΘΜΟΛΟΓΙΑ: ${Math.max(0, score)}/${140}`);
-    
+
     score = Math.max(0, Math.min(score, 140));
+    
     return { 
         score, 
         breakdown, 
@@ -1305,32 +1271,51 @@ function displaySolutionResult(solution) {
     breakdownCard.style.cssText = 'background: white; border-radius: 15px; padding: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);';
     
     let breakdownHTML = '<h3 style="color: #1a1a2e; margin-bottom: 20px; font-size: 20px;">📊 ΑΝΑΛΥΤΙΚΗ ΑΞΙΟΛΟΓΗΣΗ</h3>';
-    
-    solution.breakdown.forEach(line => {
-        if (!line || line.trim() === '') return;
-        if (line.includes('ΤΕΛΙΚΗ ΒΑΘΜΟΛΟΓΙΑ')) return;
-        
-        let style = 'padding: 12px; margin-bottom: 8px; border-radius: 8px; font-size: 14px; line-height: 1.6;';
-        let content = line;
-        
-        if (line.startsWith('HEADER:')) {
-            content = line.replace('HEADER:', '');
-            style += 'background: #e3f2fd; color: #0d47a1; font-weight: bold; border-left: 4px solid #2196f3;';
-        } else if (line.startsWith('SUCCESS:')) {
-            content = '✅ ' + line.replace('SUCCESS:', '');
-            style += 'background: #e8f5e9; color: #1b5e20; border-left: 4px solid #4caf50;';
-        } else if (line.startsWith('PENALTY:') || line.startsWith('ERROR:')) {
-            content = '❌ ' + line.replace(/^(PENALTY:|ERROR:)/, '');
-            style += 'background: #ffebee; color: #b71c1c; border-left: 4px solid #f44336;';
-        } else if (line.startsWith('ITEM:')) {
-            content = '• ' + line.replace('ITEM:', '');
-            style += 'background: #f5f5f5; color: #666; margin-left: 20px;';
-        } else {
-            style += 'background: #fafafa; color: #333;';
-        }
-        
-        breakdownHTML += `<div style="${style}">${content}</div>`;
-    });
+
+	solution.breakdown.forEach(line => {
+		if (!line || line.trim() === '') return;
+		if (line.includes('ΤΕΛΙΚΗ ΒΑΘΜΟΛΟΓΙΑ')) return;
+		
+		// Split only on FIRST colon to preserve content with multiple colons
+		const colonIndex = line.indexOf(':');
+		if (colonIndex === -1) {
+			// No type prefix, just show content
+			breakdownHTML += `<div style="padding: 12px; margin-bottom: 8px; border-radius: 8px; font-size: 14px; line-height: 1.6; background: #fafafa; color: #333;">${line}</div>`;
+			return;
+		}
+		
+		const type = line.substring(0, colonIndex);
+		const content = line.substring(colonIndex + 1);
+		
+		let style = 'padding: 12px; margin-bottom: 8px; border-radius: 8px; font-size: 14px; line-height: 1.6;';
+		let displayContent = content;
+		
+		if (type === 'HEADER') {
+			style += 'background: linear-gradient(135deg, #0f3460 0%, #16213e 100%); color: white; font-weight: bold; box-shadow: 0 2px 8px rgba(0,0,0,0.2);';
+		} else if (type === 'SUCCESS') {
+			displayContent = '✓ ' + content;
+			style += 'background: #fff8e1; color: #f57f17; border-left: 4px solid #ffc107; font-weight: 500;';
+		} else if (type === 'PENALTY') {
+			displayContent = '→ ' + content;
+			style += 'background: #ffebee; color: #c62828; border-left: 3px solid #dc3545; margin-left: 20px;';
+		} else if (type === 'ERROR') {
+			displayContent = '✗ ' + content;
+			style += 'background: #ffebee; color: #c62828; border-left: 4px solid #dc3545; font-weight: 500;';
+		} else if (type === 'INFO') {
+			style += 'background: #e3f2fd; color: #0d47a1; border-left: 4px solid #2196f3;';
+		} else if (type === 'CONTRADICTION') {
+			style += 'background: #fff3e0; color: #e65100; border-left: 4px solid #ff9800; font-weight: 500;';
+		} else if (type === 'SUBHEADER') {
+			style += 'background: transparent; color: #0f3460; font-weight: bold; padding-left: 8px;';
+		} else if (type === 'ITEM') {
+			// NO bullet point, just indented plain text
+			style += 'background: #f5f5f5; color: #555; margin-left: 30px; padding-left: 15px;';
+		} else {
+			style += 'background: #fafafa; color: #333;';
+		}
+		
+		breakdownHTML += `<div style="${style}">${displayContent}</div>`;
+	});
     
     breakdownCard.innerHTML = breakdownHTML;
     resultDiv.appendChild(breakdownCard);
@@ -1351,8 +1336,6 @@ function displaySolutionResult(solution) {
         }, 500);
     }
 }
-
-
 
 window.revealSolution = async function() {
     const password = document.getElementById('solutionPassword').value.toUpperCase();

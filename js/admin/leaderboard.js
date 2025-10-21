@@ -157,8 +157,8 @@ const CORRECT_SUSPECTS = ['konstantinos', 'georgios', 'eleni'];
                     score: 0,
                     breakdown: [
                         'HEADER:❌ ΕΣΦΑΛΜΕΝΗ ΘΕΩΡΙΑ (+0 πόντοι)',
-                        'ERROR:Αυτό δεν ήταν αυτοκτονία',
-                        'SUBHEADER:Βασικά Στοιχεία που Αγνόησαν',
+                        'ERROR:Δεν ήταν αυτοκτονία!',
+                        'SUBHEADER:Στοιχεία που Αγνόησαν',
                         'ITEM:Γάντια λάτεξ στην πόρτα',
                         'ITEM:Πλαστό email "αυτοκτονίας"',
                         'ITEM:Απενεργοποίηση κάμερων',
