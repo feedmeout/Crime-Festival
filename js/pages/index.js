@@ -98,7 +98,7 @@ const teks = [
 		subtitle: 'Μπουκάλι Jack Daniels',
 		icon: '🍾',
 		description: '<strong>Τοποθεσία:</strong> Γραφείο Δημητρίου (70% κενό)<br><strong>Χημική ανάλυση:</strong> Κυανιούχο κάλιο στον πάτο, συνολική ποσότητα 150mg (ο Δημητρίου κατάπιε ~75mg)<br><strong>Αποτυπώματα:</strong> Δημητρίου (πολλαπλά), Παπαδοπούλου (λαβή - παλαιό), Αναγνώστου (λαιμός - πρόσφατο), Πετρόπουλου (βάση - μερικό, αχνό)<br><strong>Σημείωση:</strong> Καπάκι χωρίς ίχνη κυανίου - προστέθηκε ΜΕΤΑ το άνοιγμα',
-		page: 'evidence/TEK1_AR.html',
+		page: 'pages/evidence/TEK1_AR.html',
 		critical: true
 	},
 	{
@@ -107,7 +107,7 @@ const teks = [
 		subtitle: 'Κρυστάλλινα Ποτήρια',
 		icon: '🥃',
 		description: '<strong>Τοποθεσία:</strong> Γραφείο Δημητρίου<br><strong>Περιεχόμενα:</strong> Ίχνη ουίσκι και κυανίου σε ΕΝΑ ποτήρι μόνο<br><strong>Αποτυπώματα:</strong> Δημητρίου (και τα δύο), Αναγνώστου (το ένα χωρίς κυάνιο)<br>',
-		page: 'evidence/TEK2_AR.html',
+		page: 'pages/evidence/TEK2_AR.html',
 		critical: true
 	},
 	{
@@ -116,7 +116,7 @@ const teks = [
 		subtitle: 'Κινητό Δημητρίου',
 		icon: '📱',
 		description: '<strong>SMS 20:45:</strong> «Θα τελειώσει απόψε»<br><strong>Προπληρωμένη κάρτα</strong> - Αγορά: Περίπτερο Σταδίου, 19/09, 14:30<br><strong>Τοποθεσία:</strong> Cell tower σε ακτίνα 250m από κτίριο<br><strong>CCTV περιπτέρου:</strong> Άτομο με κουκούλα, ύψος ~165-175cm, δεν φαίνεται πρόσωπο',
-		page: 'evidence/TEK3_AR.html',
+		page: 'pages/evidence/TEK3_AR.html',
 		critical: false,
 		threat: true
 	},
@@ -126,7 +126,7 @@ const teks = [
 		subtitle: 'Email «Αυτοκτονίας»',
 		icon: '📧',
 		description: '<strong>IP:</strong> 192.168.1.23 - 7ος όροφος (κοινόχρηστος υπολογιστής αίθουσας συσκέψεων)<br><strong>Πρόσβαση:</strong> Χωρίς κωδικό - ανοιχτή συνεδρία<br><strong>Browser History:</strong><br>• 18:15 - Σύνδεση Αναγνώστου (email check)<br>• 21:15 - Άγνωστος χρήστης (10 λεπτά σύνδεση)<br>• 21:25 - Αποστολή email «αυτοκτονίας»',
-		page: 'evidence/TEK4_AR.html',
+		page: 'pages/evidence/TEK4_AR.html',
 		critical: false,
 		forgery: true
 	},
@@ -136,7 +136,7 @@ const teks = [
         subtitle: 'Ιατρική Γνωμάτευση (Κρυφή)',
         icon: '🥼',
         description: '<strong>Διάγνωση:</strong> Καρκίνος παγκρέατος σταδίου IV<br><strong>Ημερομηνία:</strong> 28/08/2025<br><strong>Πρόγνωση:</strong> 2-3 μήνες ζωής<br><strong>Γιατρός:</strong> Δρ. Σταυρίδης',
-        page: 'evidence/TEK5_AR.html',
+        page: 'pages/evidence/TEK5_AR.html',
         critical: false,
         secret: true
     },
@@ -146,7 +146,7 @@ const teks = [
         subtitle: 'Ίχνη Γαντιών Λάτεξ',
         icon: '🧤',
         description: '<strong>Τοποθεσία:</strong> Πόμολο πόρτας (εσωτερικά)<br><strong>Τύπος:</strong> Γάντια ιατρικού τύπου<br><strong>Πρόσβαση:</strong> Όλο το προσωπικό',
-        page: 'evidence/TEK6_AR.html',
+        page: 'pages/evidence/TEK6_AR.html',
         critical: false,
         clue: true
     },
@@ -156,7 +156,7 @@ const teks = [
 		subtitle: 'Χειρόγραφο Σημείωμα',
 		icon: '✍️',
 		description: '<strong>Κείμενο:</strong> «Συγχώρεσέ με Μ.»<br><strong>Ανάλυση:</strong> Προσπάθεια μίμησης γραφικού χαρακτήρα Δημητρίου (68% ταύτιση, πίεση γραφής ασυνεπής με αυθεντικά δείγματα)',
-		page: 'evidence/TEK7_AR.html',
+		page: 'pages/evidence/TEK7_AR.html',
 		critical: false,
 		forgery: true
 	},
@@ -166,7 +166,7 @@ const teks = [
         subtitle: 'Φάκελος «ΕΜΠΙΣΤΕΥΤΙΚΟ»',
         icon: '📂',
         description: '<strong>Περιεχόμενα:</strong><br>• Υποψίες υπεξαίρεσης (Αναγνώστου)<br>• Ερωτικές φωτογραφίες (Μαυρίδη)<br>• Κλοπή χειρογράφων (Νικολάου)<br>• Απλήρωτοι μισθοί (Παπαδοπούλου)<br>• Χρέη (Πετρόπουλος)',
-        page: 'evidence/TEK8_AR.html',
+        page: 'pages/evidence/TEK8_AR.html',
         critical: false,
         blackmail: true
     },
@@ -176,7 +176,7 @@ const teks = [
 		subtitle: 'Απόδειξη Αγοράς Χημικών',
 		icon: '🧪',
 		description: '<strong>Ημερομηνία:</strong> 19/09, 14:30<br><strong>Αγορά:</strong> Κυανιούχο κάλιο 500g από «ΧημικάPlus»<br><strong>Άδεια:</strong> Επαγγελματική άδεια απεντόμωσης εταιρείας<br><strong>Υπογραφή:</strong> Γ. Πετρόπουλος (υπό γραφολογική εξέταση)<br><strong>Προμηθευτής:</strong> «Άνδρας 40-55 ετών»',
-		page: 'evidence/TEK9_AR.html',
+		page: 'pages/evidence/TEK9_AR.html',
 		critical: true
 	},
     {
@@ -185,7 +185,7 @@ const teks = [
         subtitle: 'Κλειδί Χρηματοκιβωτίου',
         icon: '🔑',
         description: '<strong>Αποτυπώματα:</strong> Δημητρίου, Αναγνώστου<br><strong>Ίχνη:</strong> Σκόνη ταλκ (από latex γάντια)',
-        page: 'evidence/TEK10_AR.html',
+        page: 'pages/evidence/TEK10_AR.html',
         critical: false,
         financial: true
     },
@@ -195,7 +195,7 @@ const teks = [
 		subtitle: 'Κάμερες Ασφαλείας',
 		icon: '🎥',
 		description: '<strong>Απενεργοποίηση:</strong> 20:55-21:42 (διάρκεια: 47 λεπτά)<br><strong>Τετράδιο Συμβάντων:</strong> «20:58 - Τεχνική βλάβη CCTV» - Αναφορά από βάρδια<br><strong>Χειρόγραφο:</strong> ΔΕΝ ταιριάζει απόλυτα με γραφικό χαρακτήρα Πετρόπουλου (υπό ανάλυση)<br><strong>Τεχνικός έλεγχος:</strong> Μη εξουσιοδοτημένη πρόσβαση στο σύστημα 20:53',
-		page: 'evidence/TEK11_AR.html',
+		page: 'pages/evidence/TEK11_AR.html',
 		critical: false,
 		sabotage: true
 	},

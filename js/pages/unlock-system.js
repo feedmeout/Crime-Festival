@@ -1,15 +1,15 @@
 const tekInfo = {
-            '1': { name: 'Μπουκάλι Ουίσκι', icon: '🍾', page: 'TEK1_AR.html' },
-            '2': { name: 'Κρυστάλλινα Ποτήρια', icon: '🥃', page: 'TEK2_AR.html' },
-            '3': { name: 'Κινητό Θύματος', icon: '📱', page: 'TEK3_AR.html' },
-            '4': { name: 'Email Αυτοκτονίας', icon: '💻', page: 'TEK4_AR.html' },
-            '5': { name: 'Ιατρική Γνωμάτευση', icon: '🥼', page: 'TEK5_AR.html' },
-            '6': { name: 'Γάντια Λάτεξ', icon: '🧤', page: 'TEK6_AR.html' },
-            '7': { name: 'Χειρόγραφο Σημείωμα', icon: '✍️', page: 'TEK7_AR.html' },
-            '8': { name: 'Φάκελος Εμπιστευτικό', icon: '📂', page: 'TEK8_AR.html' },
-            '9': { name: 'Απόδειξη Χημικών', icon: '🧪', page: 'TEK9_AR.html' },
-            '10': { name: 'Κλειδί Χρηματοκιβωτίου', icon: '🔑', page: 'TEK10_AR.html' },
-            '11': { name: 'Κάμερες Ασφαλείας', icon: '📹', page: 'TEK11_AR.html' }
+            '1': { name: 'Μπουκάλι Ουίσκι', icon: '🍾', page: 'evidence/TEK1_AR.html' },
+            '2': { name: 'Κρυστάλλινα Ποτήρια', icon: '🥃', page: 'evidence/TEK2_AR.html' },
+            '3': { name: 'Κινητό Θύματος', icon: '📱', page: 'evidence/TEK3_AR.html' },
+            '4': { name: 'Email Αυτοκτονίας', icon: '💻', page: 'evidence/TEK4_AR.html' },
+            '5': { name: 'Ιατρική Γνωμάτευση', icon: '🥼', page: 'evidence/TEK5_AR.html' },
+            '6': { name: 'Γάντια Λάτεξ', icon: '🧤', page: 'evidence/TEK6_AR.html' },
+            '7': { name: 'Χειρόγραφο Σημείωμα', icon: '✍️', page: 'evidence/TEK7_AR.html' },
+            '8': { name: 'Φάκελος Εμπιστευτικό', icon: '📂', page: 'evidence/TEK8_AR.html' },
+            '9': { name: 'Απόδειξη Χημικών', icon: '🧪', page: 'evidence/TEK9_AR.html' },
+            '10': { name: 'Κλειδί Χρηματοκιβωτίου', icon: '🔑', page: 'evidence/TEK10_AR.html' },
+            '11': { name: 'Κάμερες Ασφαλείας', icon: '📹', page: 'evidence/TEK11_AR.html' }
         };
 
         const urlParams = new URLSearchParams(window.location.search);
