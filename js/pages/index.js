@@ -258,7 +258,7 @@ function openSurvey() {
     
     if (!teamCode || !memberName) {
         alert('❌ Σφάλμα: Δεν βρέθηκαν στοιχεία σύνδεσης. Παρακαλώ συνδεθείτε ξανά.');
-        window.location.href = "pages/team_entry.html';
+        window.location.href = 'pages/team_entry.html';
         return;
     }
 
@@ -1232,16 +1232,13 @@ function displaySolutionResult(solution) {
     }
 
     const isPerfect = solution.correctCount === 3 && solution.suspects.length === 3;
-    const hasSuicide = solution.suspects.includes('suicide');
-    const hasKiller = solution.suspects.some(s => s !== 'suicide');
-    const isContradiction = hasSuicide && hasKiller;
     
     let statusMessage = '';
     let caseStatus = '';
     if (isPerfect) {
         statusMessage = 'ΤΕΛΕΙΑ ΕΚΤΕΛΕΣΗ!';
         caseStatus = 'CASE SOLVED';
-    } else if (isContradiction || solution.score === 0) {
+    } else if (solution.score === 0) {
         statusMessage = 'ΑΤΕΛΗΣ ΑΝΑΛΥΣΗ';
         caseStatus = 'CASE INCOMPLETE';
     } else if (percentage >= 70) {
@@ -1255,362 +1252,92 @@ function displaySolutionResult(solution) {
         caseStatus = 'CASE ARCHIVED';
     }
 
-    const sections = {
-        diagnosis: [],
-        suspects: [],
-        bonuses: [],
-        penalties: []
-    };
-
-    let currentCategory = null;
-
-    solution.breakdown.forEach(item => {
-        if (item.trim() === '') return;
-        if (item.includes('ΤΕΛΙΚΗ ΒΑΘΜΟΛΟΓΙΑ')) return;
-        
-        if (item.includes('ΒΑΣΙΚΗ ΕΚΤΙΜΗΣΗ')) {
-            currentCategory = 'diagnosis';
-        } else if (item.includes('ΤΑΥΤΟΠΟΙΗΣΗ ΔΡΑΣΤΩΝ')) {
-            currentCategory = 'suspects';
-        } else if (item.includes('BONUSES')) {
-            currentCategory = 'bonuses';
-        } else if (item.startsWith('PENALTY:') || item.startsWith('ERROR:') || item.startsWith('CONTRADICTION:')) {
-            currentCategory = 'penalties';
-        }
-        
-        if (currentCategory && !item.startsWith('HEADER:')) {
-            let cleanItem = item
-                .replace('SUCCESS:', '')
-                .replace('PENALTY:', '')
-                .replace('ERROR:', '')
-                .replace('INFO:', '')
-                .replace('ITEM:', '')
-                .replace('SUBHEADER:', '')
-                .replace('CONTRADICTION:', '')
-                .replace(/^→\s*/, '')
-                .replace(/^▸\s*/, '')
-                .replace(/^•\s*/, '')
-                .trim();
-            
-            if (cleanItem && !item.startsWith('HEADER:')) {
-                sections[currentCategory].push({
-                    text: cleanItem,
-                    type: item.startsWith('SUCCESS:') ? 'success' :
-                          item.startsWith('PENALTY:') ? 'penalty' :
-                          item.startsWith('ERROR:') ? 'error' :
-                          item.startsWith('CONTRADICTION:') ? 'error' :
-                          item.startsWith('ITEM:') ? 'detail' :
-                          'info'
-                });
-            }
-        }
-    });
-
-    resultDiv.innerHTML = `
-        <style>
-            @keyframes stamped {
-                0% { transform: scale(0) rotate(-45deg); opacity: 0; }
-                50% { transform: scale(1.2) rotate(-5deg); opacity: 1; }
-                100% { transform: scale(1) rotate(-3deg); opacity: 1; }
-            }
-            
-            @keyframes fadeInUp {
-                from { transform: translateY(30px); opacity: 0; }
-                to { transform: translateY(0); opacity: 1; }
-            }
-
-            @keyframes pinDrop {
-                0% { transform: translateY(-100px) rotate(180deg); opacity: 0; }
-                60% { transform: translateY(5px) rotate(-10deg); opacity: 1; }
-                80% { transform: translateY(-3px) rotate(5deg); }
-                100% { transform: translateY(0) rotate(0deg); opacity: 1; }
-            }
-            
-            .case-stamp { animation: stamped 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
-            .evidence-card { animation: fadeInUp 0.5s ease-out; opacity: 0; animation-fill-mode: forwards; }
-            .evidence-card:nth-child(1) { animation-delay: 0.1s; }
-            .evidence-card:nth-child(2) { animation-delay: 0.2s; }
-            .evidence-card:nth-child(3) { animation-delay: 0.3s; }
-            .evidence-card:nth-child(4) { animation-delay: 0.4s; }
-            
-            .paper-texture {
-                background-color: #fdfcf8;
-                background-image: 
-                    repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,.03) 2px, rgba(0,0,0,.03) 3px),
-                    repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0,0,0,.03) 2px, rgba(0,0,0,.03) 3px);
-            }
-
-            .pin {
-                width: clamp(16px, 4vw, 20px);
-                height: clamp(16px, 4vw, 20px);
-                background: radial-gradient(circle, #ff4444 0%, #cc0000 100%);
-                border-radius: 50% 50% 50% 0%;
-                transform: rotate(-45deg);
-                box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-                position: absolute;
-                top: -10px;
-                animation: pinDrop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-            }
-            
-            @media (max-width: 768px) {
-                .case-stamp {
-                    transform: rotate(0deg) !important;
-                }
-                .evidence-card {
-                    min-width: 100% !important;
-                }
-            }
-        </style>
-
-        <div style="background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%); border-radius: 0; padding: 0; margin-bottom: clamp(15px, 4vw, 25px); position: relative; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.4); border: 3px solid #ff6b00;">
-            <div style="position: absolute; top: 0; left: 0; right: 0; height: 8px; background: repeating-linear-gradient(90deg, #ff6b00 0px, #ff6b00 40px, #d45500 40px, #d45500 80px); opacity: 0.9;"></div>
-            <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 8px; background: repeating-linear-gradient(90deg, #ff6b00 0px, #ff6b00 40px, #d45500 40px, #d45500 80px); opacity: 0.9;"></div>
-            
-            <div style="padding: clamp(20px, 5vw, 30px);">
-                <div style="text-align: center; margin-bottom: clamp(15px, 4vw, 20px);">
-                    <div style="display: inline-block; border: 3px solid #ff6b00; padding: clamp(6px, 2vw, 8px) clamp(20px, 5vw, 30px); background: rgba(255,107,0,0.1); transform: rotate(-2deg);">
-                        <div style="font-size: clamp(10px, 2.5vw, 12px); color: #ff6b00; font-weight: 900; letter-spacing: clamp(2px, 1vw, 4px);">ΕΜΠΙΣΤΕΥΤΙΚΟ</div>
-                    </div>
-                </div>
-
-                <div style="text-align: center; margin-bottom: clamp(20px, 5vw, 25px);">
-                    <div style="color: rgba(255,255,255,0.5); font-size: clamp(9px, 2vw, 11px); letter-spacing: clamp(1px, 0.5vw, 2px); margin-bottom: 8px; font-family: monospace;">
-                        ΑΝΑΦΟΡΑ ΥΠΟΘΕΣΗΣ #${teamCode.toUpperCase()}
-                    </div>
-                    <div style="color: white; font-size: clamp(20px, 5vw, 28px); font-weight: 900; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 15px; text-shadow: 0 2px 10px rgba(0,0,0,0.5);">
-                        ${caseStatus}
-                    </div>
-                    
-                    <div class="case-stamp" style="position: relative; display: inline-block; margin: clamp(8px, 2vw, 10px) 0;">
-                        <div style="border: clamp(4px, 1.5vw, 6px) solid ${gradeColor}; padding: clamp(10px, 3vw, 15px) clamp(25px, 7vw, 40px); background: rgba(0,0,0,0.3); transform: rotate(-3deg); display: inline-block;">
-                            <div style="font-size: clamp(32px, 10vw, 48px); margin-bottom: 5px;">${gradeEmoji}</div>
-                            <div style="font-size: clamp(14px, 4vw, 18px); font-weight: 900; color: ${gradeColor}; letter-spacing: clamp(1px, 0.5vw, 2px);">
-                                ${grade}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div style="background: rgba(0,0,0,0.3); border: 2px solid rgba(255,107,0,0.5); border-radius: 8px; padding: clamp(15px, 4vw, 20px); backdrop-filter: blur(10px);">
-                    <div style="text-align: center;">
-                        <div style="color: rgba(255,255,255,0.6); font-size: clamp(9px, 2.5vw, 11px); text-transform: uppercase; letter-spacing: clamp(1px, 0.5vw, 2px); margin-bottom: 10px;">
-                            ${statusMessage}
-                        </div>
-                        <div style="display: flex; align-items: baseline; justify-content: center; gap: clamp(10px, 3vw, 15px); margin-bottom: 15px; flex-wrap: wrap;">
-                            <div style="font-size: clamp(48px, 15vw, 64px); font-weight: 900; color: ${gradeColor}; line-height: 1; font-family: 'Courier New', monospace; text-shadow: 0 0 30px ${gradeColor}80;">
-                                ${solution.score}
-                            </div>
-                            <div style="color: rgba(255,255,255,0.4); font-size: clamp(18px, 5vw, 24px); font-weight: 600;">
-                                / ${solution.maxScore}
-                            </div>
-                        </div>
-                        
-                        <div style="background: rgba(255,255,255,0.1); height: clamp(10px, 3vw, 12px); border-radius: 20px; overflow: hidden; position: relative; margin-bottom: 10px;">
-                            <div style="position: absolute; inset: 0; background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.05) 10px, rgba(255,255,255,0.05) 20px);"></div>
-                            <div style="background: linear-gradient(90deg, ${gradeColor}, ${gradeColor}DD); height: 100%; width: ${percentage}%; border-radius: 20px; box-shadow: 0 0 20px ${gradeColor}80; transition: width 2s ease-out;"></div>
-                        </div>
-                        <div style="color: rgba(255,255,255,0.5); font-size: clamp(10px, 2.5vw, 12px); font-weight: 700; font-family: monospace;">
-                            ΕΠΙΔΟΣΗ: ${percentage}%
-                        </div>
-                    </div>
-                </div>
+    // Build HTML using DOM manipulation instead of template literals
+    resultDiv.innerHTML = '';
+    
+    // Create score display
+    const scoreCard = document.createElement('div');
+    scoreCard.style.cssText = 'background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%); border-radius: 15px; padding: 30px; margin-bottom: 25px; border: 3px solid #ff6b00; box-shadow: 0 10px 40px rgba(0,0,0,0.4);';
+    scoreCard.innerHTML = `
+        <div style="text-align: center;">
+            <div style="font-size: 48px; margin-bottom: 20px;">${gradeEmoji}</div>
+            <div style="color: white; font-size: 28px; font-weight: bold; margin-bottom: 10px;">${caseStatus}</div>
+            <div style="color: ${gradeColor}; font-size: 20px; font-weight: bold; margin-bottom: 20px;">${grade}</div>
+            <div style="color: white; font-size: 64px; font-weight: 900; margin-bottom: 10px;">${solution.score} / ${solution.maxScore}</div>
+            <div style="color: rgba(255,255,255,0.7); font-size: 16px;">${statusMessage}</div>
+            <div style="background: rgba(255,255,255,0.1); height: 12px; border-radius: 20px; overflow: hidden; margin: 20px 0;">
+                <div style="background: ${gradeColor}; height: 100%; width: ${percentage}%; transition: width 2s ease-out;"></div>
             </div>
-        </div>
-
-        <div style="background: #3a3a3a; padding: clamp(20px, 5vw, 30px); border-radius: 12px; margin-bottom: clamp(20px, 5vw, 25px); position: relative; box-shadow: inset 0 0 100px rgba(0,0,0,0.5), 0 5px 20px rgba(0,0,0,0.3);">
-            <div style="position: absolute; top: 15px; left: 20px; color: rgba(255,255,255,0.3); font-size: clamp(9px, 2vw, 11px); letter-spacing: clamp(1px, 0.5vw, 2px); font-weight: 700;">
-                📌 ΣΤΑΤΙΣΤΙΚΑ ΕΡΕΥΝΑΣ
-            </div>
-            
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: clamp(15px, 4vw, 20px); margin-top: 25px;">
-                ${solution.completionTimeMs ? `
-                <div class="evidence-card" style="position: relative;">
-                    <div class="pin" style="left: 50%; margin-left: clamp(-8px, -2vw, -10px);"></div>
-                    <div class="paper-texture" style="padding: clamp(15px, 4vw, 20px) clamp(12px, 3vw, 15px); border-radius: 4px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); transform: rotate(-2deg); border: 1px solid #ddd;">
-                        <div style="text-align: center;">
-                            <div style="font-size: clamp(24px, 7vw, 32px); margin-bottom: 8px;">⏱️</div>
-                            <div style="font-size: clamp(18px, 5vw, 24px); font-weight: 900; color: #1a1a2e; margin-bottom: 5px; font-family: 'Courier New', monospace;">
-                                ${formatElapsedTime(solution.completionTimeMs)}
-                            </div>
-                            <div style="font-size: clamp(8px, 2vw, 10px); color: #666; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">
-                                Χρόνος
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                ` : ''}
-                
-                <div class="evidence-card" style="position: relative;">
-                    <div class="pin" style="left: 50%; margin-left: clamp(-8px, -2vw, -10px);"></div>
-                    <div class="paper-texture" style="padding: clamp(15px, 4vw, 20px) clamp(12px, 3vw, 15px); border-radius: 4px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); transform: rotate(1deg); border: 1px solid #ddd;">
-                        <div style="text-align: center;">
-                            <div style="font-size: clamp(24px, 7vw, 32px); margin-bottom: 8px;">🎯</div>
-                            <div style="font-size: clamp(18px, 5vw, 24px); font-weight: 900; color: #1a1a2e; margin-bottom: 5px; font-family: 'Courier New', monospace;">
-                                ${solution.promptCount}
-                            </div>
-                            <div style="font-size: clamp(8px, 2vw, 10px); color: #666; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">
-                                Prompts
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="evidence-card" style="position: relative;">
-                    <div class="pin" style="left: 50%; margin-left: clamp(-8px, -2vw, -10px);"></div>
-                    <div class="paper-texture" style="padding: clamp(15px, 4vw, 20px) clamp(12px, 3vw, 15px); border-radius: 4px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); transform: rotate(-1deg); border: 1px solid #ddd;">
-                        <div style="text-align: center;">
-                            <div style="font-size: clamp(24px, 7vw, 32px); margin-bottom: 8px;">✅</div>
-                            <div style="font-size: clamp(18px, 5vw, 24px); font-weight: 900; color: #1a1a2e; margin-bottom: 5px; font-family: 'Courier New', monospace;">
-                                ${solution.correctCount}/3
-                            </div>
-                            <div style="font-size: clamp(8px, 2vw, 10px); color: #666; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">
-                                Σωστοί Δράστες
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="paper-texture" style="padding: clamp(20px, 5vw, 30px); border-radius: 8px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); border: 2px solid #e0d5c7; position: relative;">
-            <div style="border-bottom: 3px double #333; padding-bottom: clamp(12px, 3vw, 15px); margin-bottom: clamp(20px, 5vw, 25px);">
-                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-                    <div>
-                        <div style="font-size: clamp(9px, 2vw, 11px); color: #666; text-transform: uppercase; letter-spacing: clamp(1px, 0.5vw, 2px); margin-bottom: 5px;">
-                            Αστυνομία Αθηνών
-                        </div>
-                        <div style="font-size: clamp(16px, 4vw, 20px); font-weight: 900; color: #1a1a2e; font-family: 'Georgia', serif;">
-                            ΑΝΑΛΥΤΙΚΗ ΕΚΘΕΣΗ
-                        </div>
-                    </div>
-                    <div style="text-align: right; font-family: 'Courier New', monospace; font-size: clamp(9px, 2vw, 11px); color: #666;">
-                        <div>ΗΜΕΡ: ${new Date().toLocaleDateString('el-GR')}</div>
-                        <div>ΩΡΑ: ${new Date().toLocaleTimeString('el-GR', {hour: '2-digit', minute: '2-digit'})}</div>
-                    </div>
-                </div>
-            </div>
-
-            <div style="display: flex; flex-direction: column; gap: clamp(15px, 4vw, 20px);">
-                ${sections.diagnosis.length > 0 ? `
-                <div style="border-left: 4px solid #2196f3; padding-left: clamp(15px, 4vw, 20px); position: relative;">
-                    <div style="position: absolute; left: clamp(-18px, -5vw, -25px); top: -5px; background: #2196f3; color: white; width: clamp(32px, 8vw, 40px); height: clamp(32px, 8vw, 40px); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: clamp(16px, 4vw, 20px); box-shadow: 0 4px 10px rgba(33,150,243,0.4);">
-                        🧩
-                    </div>
-                    <div style="font-size: clamp(12px, 3vw, 14px); font-weight: 900; color: #0d47a1; text-transform: uppercase; letter-spacing: 1px; margin-bottom: clamp(10px, 3vw, 12px); margin-left: clamp(20px, 5vw, 25px);">
-                        ΔΙΑΓΝΩΣΗ ΥΠΟΘΕΣΗΣ
-                    </div>
-                    <div style="display: flex; flex-direction: column; gap: clamp(8px, 2vw, 10px);">
-                        ${sections.diagnosis.map(item => {
-                            if (item.type === 'detail') {
-                                return `<div style="margin-left: clamp(15px, 4vw, 20px); padding-left: clamp(12px, 3vw, 15px); border-left: 2px dashed #ccc; color: #666; font-size: clamp(11px, 2.5vw, 13px); line-height: 1.7;">${item.text}</div>`;
-                            }
-                            return `
-                                <div style="background: ${item.type === 'success' ? 'linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%)' : item.type === 'error' ? 'linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%)' : '#f5f5f5'}; 
-                                            padding: clamp(10px, 3vw, 12px) clamp(12px, 3vw, 15px); border-radius: 6px; font-size: clamp(11px, 2.5vw, 13px); line-height: 1.7;
-                                            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); font-family: 'Georgia', serif;
-                                            border-left: 3px solid ${item.type === 'success' ? '#4caf50' : item.type === 'error' ? '#f44336' : '#2196f3'};">
-                                    <span style="color: ${item.type === 'success' ? '#1b5e20' : item.type === 'error' ? '#b71c1c' : '#0d47a1'}; font-weight: 600;">
-                                        ${item.type === 'success' ? '✓' : item.type === 'error' ? '✗' : '•'} ${item.text}
-                                    </span>
-                                </div>
-                            `;
-                        }).join('')}
-                    </div>
-                </div>
-                ` : ''}
-
-                ${sections.suspects.length > 0 ? `
-                <div style="border-left: 4px solid #ff9800; padding-left: clamp(15px, 4vw, 20px); position: relative;">
-                    <div style="position: absolute; left: clamp(-18px, -5vw, -25px); top: -5px; background: #ff9800; color: white; width: clamp(32px, 8vw, 40px); height: clamp(32px, 8vw, 40px); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: clamp(16px, 4vw, 20px); box-shadow: 0 4px 10px rgba(255,152,0,0.4);">
-                        👥
-                    </div>
-                    <div style="font-size: clamp(12px, 3vw, 14px); font-weight: 900; color: #e65100; text-transform: uppercase; letter-spacing: 1px; margin-bottom: clamp(10px, 3vw, 12px); margin-left: clamp(20px, 5vw, 25px);">
-                        ΤΑΥΤΟΠΟΙΗΣΗ ΥΠΟΠΤΩΝ
-                    </div>
-                    <div style="display: flex; flex-direction: column; gap: clamp(8px, 2vw, 10px);">
-                        ${sections.suspects.map(item => {
-                            if (item.type === 'detail') {
-                                return `<div style="margin-left: clamp(15px, 4vw, 20px); padding-left: clamp(12px, 3vw, 15px); border-left: 2px dashed #ccc; color: #666; font-size: clamp(11px, 2.5vw, 13px); line-height: 1.7;">${item.text}</div>`;
-                            }
-                            return `
-                                <div style="background: ${item.type === 'success' ? 'linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%)' : item.type === 'error' ? 'linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%)' : '#f5f5f5'}; 
-                                            padding: clamp(10px, 3vw, 12px) clamp(12px, 3vw, 15px); border-radius: 6px; font-size: clamp(11px, 2.5vw, 13px); line-height: 1.7;
-                                            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); font-family: 'Georgia', serif;
-                                            border-left: 3px solid ${item.type === 'success' ? '#4caf50' : item.type === 'error' ? '#f44336' : '#ff9800'};">
-                                    <span style="color: ${item.type === 'success' ? '#1b5e20' : item.type === 'error' ? '#b71c1c' : '#e65100'}; font-weight: 600;">
-                                        ${item.type === 'success' ? '✓' : item.type === 'error' ? '✗' : '•'} ${item.text}
-                                    </span>
-                                </div>
-                            `;
-                        }).join('')}
-                    </div>
-                </div>
-                ` : ''}
-
-                ${sections.bonuses.length > 0 ? `
-                <div style="border-left: 4px solid #4caf50; padding-left: clamp(15px, 4vw, 20px); position: relative;">
-                    <div style="position: absolute; left: clamp(-18px, -5vw, -25px); top: -5px; background: #4caf50; color: white; width: clamp(32px, 8vw, 40px); height: clamp(32px, 8vw, 40px); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: clamp(16px, 4vw, 20px); box-shadow: 0 4px 10px rgba(76,175,80,0.4);">
-                        ⚡
-                    </div>
-                    <div style="font-size: clamp(12px, 3vw, 14px); font-weight: 900; color: #1b5e20; text-transform: uppercase; letter-spacing: 1px; margin-bottom: clamp(10px, 3vw, 12px); margin-left: clamp(20px, 5vw, 25px);">
-                        BONUSES ΑΠΟΔΟΤΙΚΟΤΗΤΑΣ
-                    </div>
-                    <div style="display: flex; flex-direction: column; gap: clamp(8px, 2vw, 10px);">
-                        ${sections.bonuses.map(item => {
-                            if (item.type === 'detail') {
-                                return `<div style="margin-left: clamp(15px, 4vw, 20px); padding-left: clamp(12px, 3vw, 15px); border-left: 2px dashed #ccc; color: #666; font-size: clamp(11px, 2.5vw, 13px); line-height: 1.7;">${item.text}</div>`;
-                            }
-                            return `
-                                <div style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); 
-                                            padding: clamp(10px, 3vw, 12px) clamp(12px, 3vw, 15px); border-radius: 6px; font-size: clamp(11px, 2.5vw, 13px); line-height: 1.7;
-                                            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); font-family: 'Georgia', serif;
-                                            border-left: 3px solid #4caf50;">
-                                    <span style="color: #1b5e20; font-weight: 600;">
-                                        ✓ ${item.text}
-                                    </span>
-                                </div>
-                            `;
-                        }).join('')}
-                    </div>
-                </div>
-                ` : ''}
-
-                ${sections.penalties.length > 0 ? `
-                <div style="border-left: 4px solid #f44336; padding-left: clamp(15px, 4vw, 20px); position: relative;">
-                    <div style="position: absolute; left: clamp(-18px, -5vw, -25px); top: -5px; background: #f44336; color: white; width: clamp(32px, 8vw, 40px); height: clamp(32px, 8vw, 40px); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: clamp(16px, 4vw, 20px); box-shadow: 0 4px 10px rgba(244,67,54,0.4);">
-                        ⚠️
-                    </div>
-                    <div style="font-size: clamp(12px, 3vw, 14px); font-weight: 900; color: #b71c1c; text-transform: uppercase; letter-spacing: 1px; margin-bottom: clamp(10px, 3vw, 12px); margin-left: clamp(20px, 5vw, 25px);">
-                        ΠΟΙΝΕΣ & ΠΑΡΑΛΕΙΨΕΙΣ
-                    </div>
-                    <div style="display: flex; flex-direction: column; gap: clamp(8px, 2vw, 10px);">
-                        ${sections.penalties.map(item => {
-                            if (item.type === 'detail') {
-                                return `<div style="margin-left: clamp(15px, 4vw, 20px); padding-left: clamp(12px, 3vw, 15px); border-left: 2px dashed #ccc; color: #666; font-size: clamp(11px, 2.5vw, 13px); line-height: 1.7;">${item.text}</div>`;
-                            }
-                            return `
-                                <div style="background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%); 
-                                            padding: clamp(10px, 3vw, 12px) clamp(12px, 3vw, 15px); border-radius: 6px; font-size: clamp(11px, 2.5vw, 13px); line-height: 1.7;
-                                            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); font-family: 'Georgia', serif;
-                                            border-left: 3px solid #f44336;">
-                                    <span style="color: #b71c1c; font-weight: 600;">
-                                        ✗ ${item.text}
-                                    </span>
-                                </div>
-                            `;
-                        }).join('')}
-                    </div>
-                </div>
-                ` : ''}
-            </div>
-
-            <div style="margin-top: clamp(30px, 8vw, 40px); padding-top: clamp(15px, 4vw, 20px); border-top: 1px solid #ddd;">
-                <div style="text-align: right; font-family: 'Courier New', monospace; font-size: clamp(9px, 2vw, 11px); color: #999;">
-                    ΤΕΛΟΣ ΑΝΑΦΟΡΑΣ - ${teamCode.toUpperCase()}
-                </div>
-            </div>
+            <div style="color: rgba(255,255,255,0.5); font-size: 12px;">ΕΠΙΔΟΣΗ: ${percentage}%</div>
         </div>
     `;
+    resultDiv.appendChild(scoreCard);
+    
+    // Create stats display
+    const statsCard = document.createElement('div');
+    statsCard.style.cssText = 'background: white; border-radius: 15px; padding: 20px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);';
+    let statsHTML = '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px;">';
+    
+    if (solution.completionTimeMs) {
+        statsHTML += `
+            <div style="text-align: center; padding: 15px; background: #f8f9fa; border-radius: 10px;">
+                <div style="font-size: 32px; margin-bottom: 10px;">⏱️</div>
+                <div style="font-size: 24px; font-weight: bold; color: #1a1a2e;">${formatElapsedTime(solution.completionTimeMs)}</div>
+                <div style="font-size: 12px; color: #666;">Χρόνος</div>
+            </div>
+        `;
+    }
+    
+    statsHTML += `
+        <div style="text-align: center; padding: 15px; background: #f8f9fa; border-radius: 10px;">
+            <div style="font-size: 32px; margin-bottom: 10px;">🎯</div>
+            <div style="font-size: 24px; font-weight: bold; color: #1a1a2e;">${solution.promptCount}</div>
+            <div style="font-size: 12px; color: #666;">Prompts</div>
+        </div>
+        <div style="text-align: center; padding: 15px; background: #f8f9fa; border-radius: 10px;">
+            <div style="font-size: 32px; margin-bottom: 10px;">✅</div>
+            <div style="font-size: 24px; font-weight: bold; color: #1a1a2e;">${solution.correctCount}/3</div>
+            <div style="font-size: 12px; color: #666;">Σωστοί Δράστες</div>
+        </div>
+    `;
+    statsHTML += '</div>';
+    statsCard.innerHTML = statsHTML;
+    resultDiv.appendChild(statsCard);
+    
+    // Create breakdown display
+    const breakdownCard = document.createElement('div');
+    breakdownCard.style.cssText = 'background: white; border-radius: 15px; padding: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);';
+    
+    let breakdownHTML = '<h3 style="color: #1a1a2e; margin-bottom: 20px; font-size: 20px;">📊 ΑΝΑΛΥΤΙΚΗ ΑΞΙΟΛΟΓΗΣΗ</h3>';
+    
+    solution.breakdown.forEach(line => {
+        if (!line || line.trim() === '') return;
+        if (line.includes('ΤΕΛΙΚΗ ΒΑΘΜΟΛΟΓΙΑ')) return;
+        
+        let style = 'padding: 12px; margin-bottom: 8px; border-radius: 8px; font-size: 14px; line-height: 1.6;';
+        let content = line;
+        
+        if (line.startsWith('HEADER:')) {
+            content = line.replace('HEADER:', '');
+            style += 'background: #e3f2fd; color: #0d47a1; font-weight: bold; border-left: 4px solid #2196f3;';
+        } else if (line.startsWith('SUCCESS:')) {
+            content = '✅ ' + line.replace('SUCCESS:', '');
+            style += 'background: #e8f5e9; color: #1b5e20; border-left: 4px solid #4caf50;';
+        } else if (line.startsWith('PENALTY:') || line.startsWith('ERROR:')) {
+            content = '❌ ' + line.replace(/^(PENALTY:|ERROR:)/, '');
+            style += 'background: #ffebee; color: #b71c1c; border-left: 4px solid #f44336;';
+        } else if (line.startsWith('ITEM:')) {
+            content = '• ' + line.replace('ITEM:', '');
+            style += 'background: #f5f5f5; color: #666; margin-left: 20px;';
+        } else {
+            style += 'background: #fafafa; color: #333;';
+        }
+        
+        breakdownHTML += `<div style="${style}">${content}</div>`;
+    });
+    
+    breakdownCard.innerHTML = breakdownHTML;
+    resultDiv.appendChild(breakdownCard);
     
     resultDiv.style.display = 'block';
     resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -1629,44 +1356,7 @@ function displaySolutionResult(solution) {
     }
 }
 
-function createConfetti() {
-    const colors = ['#f093fb', '#f5576c', '#667eea', '#764ba2', '#ffd700'];
-    const confettiCount = 50;
-    
-    for (let i = 0; i < confettiCount; i++) {
-        const confetti = document.createElement('div');
-        confetti.style.cssText = `
-            position: fixed;
-            width: 10px;
-            height: 10px;
-            background: ${colors[Math.floor(Math.random() * colors.length)]};
-            left: ${Math.random() * 100}%;
-            top: -10px;
-            opacity: ${Math.random()};
-            transform: rotate(${Math.random() * 360}deg);
-            animation: confettiFall ${2 + Math.random() * 3}s linear forwards;
-            z-index: 10000;
-            pointer-events: none;
-        `;
-        
-        document.body.appendChild(confetti);
-        setTimeout(() => confetti.remove(), 5000);
-    }
-    
-    if (!document.getElementById('confetti-style')) {
-        const style = document.createElement('style');
-        style.id = 'confetti-style';
-        style.textContent = `
-            @keyframes confettiFall {
-                to {
-                    transform: translateY(100vh) rotate(720deg);
-                    opacity: 0;
-                }
-            }
-        `;
-        document.head.appendChild(style);
-    }
-}
+
 
 window.revealSolution = async function() {
     const password = document.getElementById('solutionPassword').value.toUpperCase();
