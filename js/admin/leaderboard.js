@@ -605,7 +605,9 @@ const CORRECT_SUSPECTS = ['konstantinos', 'georgios', 'eleni'];
                         <h3 style="margin-top: 25px; margin-bottom: 15px;">🎯 ΑΝΑΛΥΤΙΚΗ ΒΑΘΜΟΛΟΓΙΑ</h3>
                         <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: clamp(11px, 2vw, 13px); line-height: 1.7; max-height: 400px; overflow-y: auto; word-wrap: break-word;">
                             ${solution.breakdown.map(line => {
-                                const [type, content] = line.split(':');
+                                const colonIndex = line.indexOf(':');
+                                const type = line.substring(0, colonIndex);
+                                const content = line.substring(colonIndex + 1);
                                 
                                 if (type === 'HEADER') {
                                     return `<div style="background: linear-gradient(135deg, #0f3460 0%, #16213e 100%); color: white; padding: clamp(10px, 2vw, 12px) clamp(12px, 2.5vw, 15px); margin: 15px 0 10px 0; border-radius: 8px; font-weight: bold; font-size: clamp(13px, 2.5vw, 15px); box-shadow: 0 2px 8px rgba(0,0,0,0.2);">${content}</div>`;
