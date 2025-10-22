@@ -70,9 +70,9 @@
         <div id="observationInterface" style="display: none;">
             
             <div class="section quick-controls">
-                <button class="btn btn-warning" onclick="pauseSession()">⏸️ ΠΑΥΣΗ</button>
+                <button class="btn btn-secondary" onclick="window.location.href='admin.html'">← ΠΙΣΩ ΣΤΟ ADMIN</button>
                 <button class="btn btn-success" onclick="saveProgress()">💾 ΑΠΟΘΗΚΕΥΣΗ</button>
-                <button class="btn btn-danger" onclick="endSession()">⏹️ ΤΕΡΜΑΤΙΣΜΟΣ</button>
+                <button class="btn btn-primary" onclick="submitObservation()">✅ ΥΠΟΒΟΛΗ ΠΑΡΑΤΗΡΗΣΗΣ</button>
             </div>
 
             <div class="section observation-category">
@@ -211,11 +211,6 @@
                 <div class="notes-timeline" id="notesTimeline">
                     <p class="empty-state">Δεν υπάρχουν σημειώσεις ακόμα...</p>
                 </div>
-            </div>
-
-            <div class="section final-actions">
-                <button class="btn btn-secondary btn-large" onclick="saveDraft()">💾 ΑΠΟΘΗΚΕΥΣΗ ΠΡΟΧΕΙΡΟΥ</button>
-                <button class="btn btn-success btn-large" onclick="submitObservation()">✅ ΥΠΟΒΟΛΗ ΠΑΡΑΤΗΡΗΣΗΣ</button>
             </div>
         </div>
 

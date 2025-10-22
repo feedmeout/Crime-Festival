@@ -1,498 +1,369 @@
-let allObservations = [];
-let charts = {};
+let observationSession = {
+    observerId: null,
+    teamCode: null,
+    startTime: null,
+    isActive: false,
+    
+    behaviors: {
+        ai_queries: 0,
+        prompt_quality: 0,
+        ai_verification: 0,
+        
+        active_discussion: 0,
+        info_sharing: 0,
+        task_division: 0,
 
-// Behavior labels in Greek
-const behaviorLabels = {
-    // AI Usage Patterns
-    ai_queries: 'Συχνότητα ερωτημάτων AI',
-    prompt_quality: 'Ποιότητα προτροπών',
-    ai_verification: 'Επαλήθευση απαντήσεων AI',
-    
-    // Team Collaboration
-    active_discussion: 'Ενεργή συζήτηση',
-    info_sharing: 'Ανταλλαγή πληροφοριών',
-    task_division: 'Καταμερισμός καθηκόντων',
-    
-    // Problem-Solving Approach
-    systematic_analysis: 'Συστηματική ανάλυση',
-    cross_referencing: 'Διασταύρωση στοιχείων',
-    critical_thinking: 'Κριτική σκέψη',
-    
-    // Engagement & Motivation
-    enthusiasm: 'Ενθουσιασμός',
-    persistence: 'Επιμονή',
-    focus: 'Εστίαση'
+        systematic_analysis: 0,
+        cross_referencing: 0,
+        critical_thinking: 0,
+
+        enthusiasm: 0,
+        persistence: 0,
+        focus: 0
+    },
+
+    notes: []
 };
 
-const categoryBehaviors = {
-    'AI Usage Patterns': ['ai_queries', 'prompt_quality', 'ai_verification'],
-    'Team Collaboration': ['active_discussion', 'info_sharing', 'task_division'],
-    'Problem-Solving Approach': ['systematic_analysis', 'cross_referencing', 'critical_thinking'],
-    'Engagement & Motivation': ['enthusiasm', 'persistence', 'focus']
-};
+let sessionTimer = null;
+let autoSaveTimer = null;
 
 window.addEventListener('DOMContentLoaded', async () => {
-    await loadAndAnalyzeData();
+    await loadTeams();
+    checkForDraft();
 });
 
-async function loadAndAnalyzeData() {
+async function loadTeams() {
     if (!window.firebaseDB) {
-        alert('❌ Σφάλμα σύνδεσης Firebase');
+        console.error('Firebase δεν είναι έτοιμο');
         return;
     }
-
+    
     try {
-        // Load all submitted observations
-        const observationsRef = window.firebaseCollection(window.firebaseDB, 'observations');
-        const q = window.firebaseQuery(observationsRef, window.firebaseWhere('status', '==', 'submitted'));
-        const snapshot = await window.firebaseGetDocs(q);
-
-        allObservations = [];
+        const teamsRef = window.firebaseCollection(window.firebaseDB, 'teams');
+        const snapshot = await window.firebaseGetDocs(teamsRef);
+        
+        const select = document.getElementById('teamSelect');
+        const options = ['<option value="">Επιλέξτε ομάδα...</option>'];
+        
         snapshot.forEach(doc => {
-            allObservations.push({ id: doc.id, ...doc.data() });
+            const team = doc.data();
+            if (!team.deleted) {
+                options.push(`<option value="${doc.id}">${doc.id.toUpperCase()}</option>`);
+            }
         });
-
-        if (allObservations.length === 0) {
-            showNoDataMessage();
-            return;
-        }
-
-        // Calculate statistics
-        calculateSummaryStats();
         
-        // Create charts
-        createAllCharts();
-        
-        // Create detailed table
-        createDetailedStatsTable();
-
-        // Hide loading, show content
-        document.getElementById('loadingOverlay').style.display = 'none';
-        document.getElementById('mainContent').style.display = 'block';
-
+        select.innerHTML = options.join('');
     } catch (error) {
-        console.error('Σφάλμα φόρτωσης δεδομένων:', error);
-        alert('❌ Σφάλμα φόρτωσης δεδομένων');
+        console.error('Σφάλμα φόρτωσης ομάδων:', error);
     }
 }
 
-function showNoDataMessage() {
-    document.getElementById('loadingOverlay').innerHTML = `
-        <div class="loading-content">
-            <div style="font-size: 48px; margin-bottom: 20px;">📭</div>
-            <h3>Δεν υπάρχουν δεδομένα</h3>
-            <p>Δεν βρέθηκαν υποβληθείσες παρατηρήσεις.</p>
-            <button class="btn btn-primary" onclick="window.location.href='observation.html'" style="margin-top: 20px;">
-                ➕ ΝΕΑ ΠΑΡΑΤΗΡΗΣΗ
-            </button>
-        </div>
-    `;
-}
-
-function calculateSummaryStats() {
-    const totalObs = allObservations.length;
-    const uniqueTeams = new Set(allObservations.map(o => o.teamCode)).size;
+function startSession() {
+    const observerName = document.getElementById('observerName').value.trim();
+    const teamCode = document.getElementById('teamSelect').value;
     
-    const totalDurationMs = allObservations.reduce((sum, obs) => sum + (obs.durationMs || 0), 0);
-    const avgDurationMinutes = Math.round(totalDurationMs / totalObs / 60000);
-    
-    const totalBehaviorCount = allObservations.reduce((sum, obs) => sum + (obs.totalBehaviorCount || 0), 0);
-
-    document.getElementById('totalObservations').textContent = totalObs;
-    document.getElementById('totalTeams').textContent = uniqueTeams;
-    document.getElementById('avgDuration').textContent = avgDurationMinutes;
-    document.getElementById('totalBehaviors').textContent = totalBehaviorCount;
-}
-
-function createAllCharts() {
-    createCategoryChart('aiPatternsChart', 'AI Usage Patterns', '#2563eb');
-    createCategoryChart('collaborationChart', 'Team Collaboration', '#059669');
-    createCategoryChart('problemSolvingChart', 'Problem-Solving Approach', '#d97706');
-    createCategoryChart('engagementChart', 'Engagement & Motivation', '#dc2626');
-    createOverallChart();
-    createTeamComparisonChart();
-}
-
-function createCategoryChart(canvasId, category, color) {
-    const ctx = document.getElementById(canvasId);
-    if (!ctx) return;
-
-    const behaviors = categoryBehaviors[category];
-    const averages = behaviors.map(behavior => calculateAverage(behavior));
-
-    if (charts[canvasId]) {
-        charts[canvasId].destroy();
+    if (!observerName || !teamCode) {
+        alert('⚠️ ΕΙΣΑΓΕΤΕ ΤΟ ΟΝΟΜΑ ΣΑΣ ΚΑΙ ΕΠΙΛΕΞΤΕ ΟΜΑΔΑ!');
+        return;
     }
-
-    charts[canvasId] = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: behaviors.map(b => behaviorLabels[b]),
-            datasets: [{
-                label: 'Μέσος Όρος',
-                data: averages,
-                backgroundColor: color,
-                borderColor: color,
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: false
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            return `Μέσος Όρος: ${context.parsed.y.toFixed(2)}`;
-                        }
-                    }
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: 'Μέση Συχνότητα'
-                    }
-                }
-            }
-        }
-    });
+    
+    observationSession.observerId = observerName;
+    observationSession.teamCode = teamCode;
+    observationSession.startTime = new Date().toISOString();
+    observationSession.isActive = true;
+    
+    document.getElementById('setupSection').style.display = 'none';
+    document.getElementById('observationInterface').style.display = 'block';
+    
+    startTimer();
+    setupAutoSave();
+    console.log('✅ Παρατήρηση ξεκίνησε:', observationSession);
 }
 
-function createOverallChart() {
-    const ctx = document.getElementById('overallChart');
-    if (!ctx) return;
-
-    const allBehaviorKeys = Object.keys(behaviorLabels);
-    const averages = allBehaviorKeys.map(behavior => calculateAverage(behavior));
-
-    // Color code by category
-    const colors = allBehaviorKeys.map(behavior => {
-        if (categoryBehaviors['AI Usage Patterns'].includes(behavior)) return '#2563eb';
-        if (categoryBehaviors['Team Collaboration'].includes(behavior)) return '#059669';
-        if (categoryBehaviors['Problem-Solving Approach'].includes(behavior)) return '#d97706';
-        if (categoryBehaviors['Engagement & Motivation'].includes(behavior)) return '#dc2626';
-        return '#6c757d';
-    });
-
-    if (charts['overallChart']) {
-        charts['overallChart'].destroy();
-    }
-
-    charts['overallChart'] = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: allBehaviorKeys.map(b => behaviorLabels[b]),
-            datasets: [{
-                label: 'Μέσος Όρος',
-                data: averages,
-                backgroundColor: colors,
-                borderColor: colors,
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: false
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            return `Μέσος Όρος: ${context.parsed.y.toFixed(2)}`;
-                        }
-                    }
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: 'Μέση Συχνότητα'
-                    }
-                },
-                x: {
-                    ticks: {
-                        autoSkip: false,
-                        maxRotation: 45,
-                        minRotation: 45
-                    }
-                }
-            }
-        }
-    });
-}
-
-function createTeamComparisonChart() {
-    const ctx = document.getElementById('teamComparisonChart');
-    if (!ctx) return;
-
-    // Group by team
-    const teamData = {};
-    allObservations.forEach(obs => {
-        if (!teamData[obs.teamCode]) {
-            teamData[obs.teamCode] = {
-                count: 0,
-                totalBehaviors: 0
-            };
-        }
-        teamData[obs.teamCode].count++;
-        teamData[obs.teamCode].totalBehaviors += (obs.totalBehaviorCount || 0);
-    });
-
-    const teams = Object.keys(teamData).sort();
-    const averages = teams.map(team => 
-        teamData[team].totalBehaviors / teamData[team].count
-    );
-
-    if (charts['teamComparisonChart']) {
-        charts['teamComparisonChart'].destroy();
-    }
-
-    charts['teamComparisonChart'] = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: teams.map(t => t.toUpperCase()),
-            datasets: [{
-                label: 'Μέσος Όρος Συμπεριφορών',
-                data: averages,
-                backgroundColor: '#ff6b00',
-                borderColor: '#ff6b00',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: false
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            const team = teams[context.dataIndex];
-                            const count = teamData[team].count;
-                            return [
-                                `Μέσος Όρος: ${context.parsed.y.toFixed(2)}`,
-                                `Παρατηρήσεις: ${count}`
-                            ];
-                        }
-                    }
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: 'Μέση Συχνότητα Συμπεριφορών'
-                    }
-                }
-            }
-        }
-    });
-}
-
-function calculateAverage(behaviorKey) {
-    const values = allObservations
-        .map(obs => obs.behaviors?.[behaviorKey] || 0)
-        .filter(v => v !== null && v !== undefined);
-    
-    if (values.length === 0) return 0;
-    
-    const sum = values.reduce((acc, val) => acc + val, 0);
-    return sum / values.length;
-}
-
-function calculateStandardDeviation(behaviorKey) {
-    const values = allObservations
-        .map(obs => obs.behaviors?.[behaviorKey] || 0)
-        .filter(v => v !== null && v !== undefined);
-    
-    if (values.length === 0) return 0;
-    
-    const mean = calculateAverage(behaviorKey);
-    const squaredDiffs = values.map(v => Math.pow(v - mean, 2));
-    const avgSquaredDiff = squaredDiffs.reduce((acc, val) => acc + val, 0) / values.length;
-    
-    return Math.sqrt(avgSquaredDiff);
-}
-
-function createDetailedStatsTable() {
-    const container = document.getElementById('detailedStatsTable');
-    if (!container) return;
-
-    let html = '<table class="comparison-table">';
-    html += '<thead><tr>';
-    html += '<th>Συμπεριφορά</th>';
-    html += '<th>Κατηγορία</th>';
-    html += '<th>Μέσος Όρος</th>';
-    html += '<th>Τυπική Απόκλιση</th>';
-    html += '<th>Min</th>';
-    html += '<th>Max</th>';
-    html += '<th>Σύνολο</th>';
-    html += '</tr></thead><tbody>';
-
-    Object.keys(behaviorLabels).forEach(behaviorKey => {
-        const category = Object.keys(categoryBehaviors).find(cat => 
-            categoryBehaviors[cat].includes(behaviorKey)
-        );
+function startTimer() {
+    sessionTimer = setInterval(() => {
+        if (!observationSession.startTime) return;
         
-        const values = allObservations.map(obs => obs.behaviors?.[behaviorKey] || 0);
-        const avg = calculateAverage(behaviorKey);
-        const std = calculateStandardDeviation(behaviorKey);
-        const min = Math.min(...values);
-        const max = Math.max(...values);
-        const total = values.reduce((sum, v) => sum + v, 0);
-
-        html += '<tr>';
-        html += `<td class="behavior-label">${behaviorLabels[behaviorKey]}</td>`;
-        html += `<td>${category}</td>`;
-        html += `<td>${avg.toFixed(2)}</td>`;
-        html += `<td>${std.toFixed(2)}</td>`;
-        html += `<td>${min}</td>`;
-        html += `<td>${max}</td>`;
-        html += `<td><strong>${total}</strong></td>`;
-        html += '</tr>';
-    });
-
-    html += '</tbody></table>';
-    container.innerHTML = html;
+        const elapsed = Date.now() - new Date(observationSession.startTime).getTime();
+        const hours = Math.floor(elapsed / 3600000);
+        const minutes = Math.floor((elapsed % 3600000) / 60000);
+        const seconds = Math.floor((elapsed % 60000) / 1000);
+        
+        document.getElementById('sessionTimer').textContent = 
+            `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }, 100);
+    
+    document.getElementById('statusIndicator').textContent = '🟢 Σε εξέλιξη';
+    document.getElementById('statusIndicator').className = 'status-indicator active';
 }
 
-async function exportToExcel() {
-    try {
-        const statusDiv = document.createElement('div');
-        statusDiv.className = 'loading-overlay';
-        statusDiv.innerHTML = `
-            <div class="loading-content">
-                <div class="loading-spinner">⚙️</div>
-                <h3>Δημιουργία αρχείου Excel...</h3>
+function stopTimer() {
+    if (sessionTimer) {
+        clearInterval(sessionTimer);
+        sessionTimer = null;
+    }
+}
+
+function incrementBehavior(behaviorKey) {
+    if (!observationSession.isActive) {
+        alert('⚠️ ΞΕΚΙΝΗΣΤΕ ΤΗΝ ΠΑΡΑΤΗΡΗΣΗ ΠΡΩΤΑ!');
+        return;
+    }
+    
+    observationSession.behaviors[behaviorKey]++;
+    updateCounterDisplay(behaviorKey);
+    scheduleAutoSave();
+}
+
+function decrementBehavior(behaviorKey) {
+    if (!observationSession.isActive) return;
+    
+    if (observationSession.behaviors[behaviorKey] > 0) {
+        observationSession.behaviors[behaviorKey]--;
+        updateCounterDisplay(behaviorKey);
+        scheduleAutoSave();
+    }
+}
+
+function updateCounterDisplay(behaviorKey) {
+    const display = document.getElementById(`counter_${behaviorKey}`);
+    if (display) {
+        display.textContent = observationSession.behaviors[behaviorKey];
+        display.style.transform = 'scale(1.2)';
+        display.style.color = 'var(--primary-color)';
+        setTimeout(() => {
+            display.style.transform = 'scale(1)';
+            display.style.color = 'var(--text-dark)';
+        }, 200);
+    }
+}
+
+function addTimestampedNote() {
+    const noteText = document.getElementById('generalNotes').value.trim();
+    
+    if (!noteText) {
+        alert('⚠️ ΓΡΑΨΤΕ ΜΙΑ ΣΗΜΕΙΩΣΗ!');
+        return;
+    }
+    
+    if (!observationSession.isActive) {
+        alert('⚠️ ΞΕΚΙΝΗΣΤΕ ΤΗΝ ΠΑΡΑΤΗΡΗΣΗ ΠΡΩΤΑ!');
+        return;
+    }
+    
+    const now = new Date();
+    const elapsed = now.getTime() - new Date(observationSession.startTime).getTime();
+    
+    const note = {
+        timestamp: now.toISOString(),
+        elapsed: elapsed,
+        content: noteText
+    };
+    
+    observationSession.notes.push(note);
+    renderNotes();
+
+    document.getElementById('generalNotes').value = '';
+
+    scheduleAutoSave();
+}
+
+function renderNotes() {
+    const timeline = document.getElementById('notesTimeline');
+    
+    if (observationSession.notes.length === 0) {
+        timeline.innerHTML = '<p class="empty-state">Δεν υπάρχουν σημειώσεις ακόμα...</p>';
+        return;
+    }
+    
+    const html = observationSession.notes.map((note, index) => {
+        const elapsed = formatElapsedTime(note.elapsed);
+        const time = new Date(note.timestamp).toLocaleTimeString('el-GR');
+        
+        return `
+            <div class="note-item">
+                <div class="note-timestamp">⏱️ ${elapsed} (${time})</div>
+                <div class="note-content">${escapeHtml(note.content)}</div>
+                <button class="note-delete" onclick="deleteNote(${index})">×</button>
             </div>
         `;
-        document.body.appendChild(statusDiv);
+    }).join('');
+    
+    timeline.innerHTML = html;
+}
 
-        // Prepare data sheets
-        const summaryData = prepareSummaryData();
-        const detailedData = prepareDetailedData();
-        const teamComparisonData = prepareTeamComparisonData();
-
-        // Import SheetJS
-        const XLSX = await import('https://cdn.sheetjs.com/xlsx-0.20.1/package/xlsx.mjs');
-        
-        // Create workbook
-        const wb = XLSX.utils.book_new();
-        
-        // Add sheets
-        const ws1 = XLSX.utils.json_to_sheet(summaryData);
-        XLSX.utils.book_append_sheet(wb, ws1, 'Συγκεντρωτικά');
-        
-        const ws2 = XLSX.utils.json_to_sheet(detailedData);
-        XLSX.utils.book_append_sheet(wb, ws2, 'Λεπτομερή Στατιστικά');
-        
-        const ws3 = XLSX.utils.json_to_sheet(teamComparisonData);
-        XLSX.utils.book_append_sheet(wb, ws3, 'Σύγκριση Ομάδων');
-        
-        // Add raw observations
-        const rawData = allObservations.map(obs => ({
-            'ID': obs.id,
-            'Παρατηρητής': obs.observerId,
-            'Ομάδα': obs.teamCode,
-            'Ημερομηνία': new Date(obs.submittedAt).toLocaleDateString('el-GR'),
-            'Διάρκεια (λεπτά)': Math.round(obs.durationMs / 60000),
-            'Σύνολο Συμπεριφορών': obs.totalBehaviorCount,
-            ...Object.keys(behaviorLabels).reduce((acc, key) => {
-                acc[behaviorLabels[key]] = obs.behaviors?.[key] || 0;
-                return acc;
-            }, {})
-        }));
-        
-        const ws4 = XLSX.utils.json_to_sheet(rawData);
-        XLSX.utils.book_append_sheet(wb, ws4, 'Ακατέργαστα Δεδομένα');
-
-        // Export
-        const timestamp = new Date().toISOString().slice(0, 10);
-        const filename = `Αναλυτικά_Παρατηρήσεων_${timestamp}.xlsx`;
-        XLSX.writeFile(wb, filename);
-
-        document.body.removeChild(statusDiv);
-        alert(`✅ Εξαγωγή ολοκληρώθηκε: ${filename}`);
-
-    } catch (error) {
-        console.error('Σφάλμα εξαγωγής:', error);
-        alert('❌ Σφάλμα εξαγωγής!');
+function deleteNote(index) {
+    if (confirm('Διαγραφή αυτής της σημείωσης;')) {
+        observationSession.notes.splice(index, 1);
+        renderNotes();
+        scheduleAutoSave();
     }
 }
 
-function prepareSummaryData() {
-    return [{
-        'Μετρική': 'Συνολικές Παρατηρήσεις',
-        'Τιμή': allObservations.length
-    }, {
-        'Μετρική': 'Ομάδες που Παρατηρήθηκαν',
-        'Τιμή': new Set(allObservations.map(o => o.teamCode)).size
-    }, {
-        'Μετρική': 'Μέση Διάρκεια (λεπτά)',
-        'Τιμή': Math.round(allObservations.reduce((sum, o) => sum + o.durationMs, 0) / allObservations.length / 60000)
-    }, {
-        'Μετρική': 'Συνολικές Καταγεγραμμένες Συμπεριφορές',
-        'Τιμή': allObservations.reduce((sum, o) => sum + (o.totalBehaviorCount || 0), 0)
-    }];
+function formatElapsedTime(ms) {
+    const minutes = Math.floor(ms / 60000);
+    const seconds = Math.floor((ms % 60000) / 1000);
+    return `${minutes}λ ${seconds}δ`;
 }
 
-function prepareDetailedData() {
-    return Object.keys(behaviorLabels).map(behaviorKey => {
-        const category = Object.keys(categoryBehaviors).find(cat => 
-            categoryBehaviors[cat].includes(behaviorKey)
-        );
-        
-        const values = allObservations.map(obs => obs.behaviors?.[behaviorKey] || 0);
-        const avg = calculateAverage(behaviorKey);
-        const std = calculateStandardDeviation(behaviorKey);
-
-        return {
-            'Συμπεριφορά': behaviorLabels[behaviorKey],
-            'Κατηγορία': category,
-            'Μέσος Όρος': parseFloat(avg.toFixed(2)),
-            'Τυπική Απόκλιση': parseFloat(std.toFixed(2)),
-            'Ελάχιστο': Math.min(...values),
-            'Μέγιστο': Math.max(...values),
-            'Σύνολο': values.reduce((sum, v) => sum + v, 0)
-        };
-    });
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
 }
 
-function prepareTeamComparisonData() {
-    const teamData = {};
-    
-    allObservations.forEach(obs => {
-        if (!teamData[obs.teamCode]) {
-            teamData[obs.teamCode] = {
-                observations: [],
-                totalBehaviors: 0
-            };
+function setupAutoSave() {
+    setInterval(() => {
+        if (observationSession.isActive) {
+            saveDraft(true);
         }
-        teamData[obs.teamCode].observations.push(obs);
-        teamData[obs.teamCode].totalBehaviors += (obs.totalBehaviorCount || 0);
-    });
-
-    return Object.keys(teamData).map(team => ({
-        'Ομάδα': team.toUpperCase(),
-        'Παρατηρήσεις': teamData[team].observations.length,
-        'Συνολικές Συμπεριφορές': teamData[team].totalBehaviors,
-        'Μέσος Όρος Συμπεριφορών': parseFloat((teamData[team].totalBehaviors / teamData[team].observations.length).toFixed(2))
-    }));
+    }, 30000);
 }
 
-async function exportChartsAsPDF() {
-    alert('ℹ️ Η λειτουργία εξαγωγής σε PDF θα υλοποιηθεί σύντομα. Προς το παρόν, μπορείτε να χρησιμοποιήσετε τη λειτουργία εκτύπωσης του προγράμματος περιήγησης (Ctrl+P).');
+function scheduleAutoSave() {
+    if (autoSaveTimer) {
+        clearTimeout(autoSaveTimer);
+    }
+    
+    autoSaveTimer = setTimeout(() => {
+        saveDraft(true);
+    }, 3000);
+}
+
+async function saveDraft(silent = false) {
+    if (!observationSession.isActive) {
+        if (!silent) alert('⚠️ ΞΕΚΙΝΗΣΤΕ ΤΗΝ ΠΑΡΑΤΗΡΗΣΗ ΠΡΩΤΑ!');
+        return;
+    }
+    
+    const draftData = {
+        ...observationSession,
+        lastSaved: new Date().toISOString()
+    };
+
+    localStorage.setItem('observation_draft', JSON.stringify(draftData));
+    
+    try {
+        const draftId = `draft_${observationSession.teamCode}_${observationSession.observerId.replace(/\s+/g, '_')}`;
+        const draftRef = window.firebaseDoc(window.firebaseDB, 'observations', draftId);
+        
+        await window.firebaseSetDoc(draftRef, draftData);
+        
+        if (!silent) {
+            showSaveStatus('saved', '💾 ΤΟ ΠΡΟΧΕΙΡΟ ΑΠΟΘΗΚΕΥΤΗΚΕ ΕΠΙΤΥΧΩΣ!');
+        } else {
+            showSaveStatus('saved', '💾 ΑΥΤΟΜΑΤΗ ΑΠΟΘΗΚΕΥΣΗ', 2000);
+        }
+    } catch (error) {
+        console.error('Σφάλμα αποθήκευσης:', error);
+        if (!silent) {
+            showSaveStatus('error', '❌ ΑΠΟΤΥΧΙΑ ΑΠΟΘΗΚΕΥΣΗΣ (ΑΠΟΘΗΚΕΥΤΗΚΕ ΤΟΠΙΚΑ)');
+        }
+    }
+}
+
+function checkForDraft() {
+    const draft = localStorage.getItem('observation_draft');
+    if (!draft) return;
+    
+    if (confirm('ΒΡΕΘΗΚΕ ΑΠΟΘΗΚΕΥΜΕΝΟ ΠΡΟΧΕΙΡΟ. ΘΕΛΕΤΕ ΝΑ ΣΥΝΕΧΙΣΕΤΕ ΑΠΟ ΕΚΕΙ ΠΟΥ ΣΤΑΜΑΤΗΣΑΤΕ;')) {
+        loadDraft(JSON.parse(draft));
+    } else {
+        localStorage.removeItem('observation_draft');
+    }
+}
+
+function loadDraft(data) {
+    observationSession = data;
+    observationSession.isActive = true;
+
+    document.getElementById('observerName').value = data.observerId;
+    document.getElementById('teamSelect').value = data.teamCode;
+    
+    document.getElementById('setupSection').style.display = 'none';
+    document.getElementById('observationInterface').style.display = 'block';
+    
+    Object.keys(observationSession.behaviors).forEach(key => {
+        updateCounterDisplay(key);
+    });
+    
+    renderNotes();
+    startTimer();
+    setupAutoSave();
+}
+
+function saveProgress() {
+    saveDraft(false);
+}
+
+async function submitObservation() {
+    if (!observationSession.isActive) {
+        alert('⚠️ ΠΑΡΑΚΑΛΩ ΞΕΚΙΝΗΣΤΕ ΤΗΝ ΠΑΡΑΤΗΡΗΣΗ ΠΡΩΤΑ!');
+        return;
+    }
+    
+    const totalBehaviors = Object.values(observationSession.behaviors).reduce((sum, count) => sum + count, 0);
+    
+    if (totalBehaviors === 0) {
+        if (!confirm('ΔΕΝ ΕΧΕΤΕ ΚΑΤΑΓΡΑΨΕΙ ΚΑΜΙΑ ΣΥΜΠΕΡΙΦΟΡΑ. ΘΕΛΕΤΕ ΝΑ ΥΠΟΒΑΛΕΤΕ ΟΥΤΩΣ Η ΑΛΛΩΣ;')) {
+            return;
+        }
+    }
+    
+    if (!confirm('ΥΠΟΒΟΛΗ ΤΕΛΙΚΗΣ ΠΑΡΑΤΗΡΗΣΗΣ; ΔΕΝ ΜΠΟΡΕΙ ΝΑ ΑΝΑΙΡΕΘΕΙ.')) {
+        return;
+    }
+    
+    const now = new Date();
+    const finalData = {
+        observerId: observationSession.observerId,
+        teamCode: observationSession.teamCode,
+        startTime: observationSession.startTime,
+        endTime: now.toISOString(),
+        durationMs: now.getTime() - new Date(observationSession.startTime).getTime(),
+        behaviors: observationSession.behaviors,
+        totalBehaviorCount: Object.values(observationSession.behaviors).reduce((sum, count) => sum + count, 0),
+        notes: observationSession.notes,
+        notesCount: observationSession.notes.length,
+        submittedAt: now.toISOString(),
+        status: 'submitted'
+    };
+    
+    try {
+        const observationId = `obs_${observationSession.teamCode}_${Date.now()}`;
+        const observationRef = window.firebaseDoc(window.firebaseDB, 'observations', observationId);
+        
+        await window.firebaseSetDoc(observationRef, finalData);
+        localStorage.removeItem('observation_draft');
+
+        try {
+            const draftId = `draft_${observationSession.teamCode}_${observationSession.observerId.replace(/\s+/g, '_')}`;
+            const draftRef = window.firebaseDoc(window.firebaseDB, 'observations', draftId);
+            await window.firebaseDeleteDoc(draftRef);
+        } catch (e) {
+            console.warn('Αποτυχία καθαρισμού προχείρου:', e);
+        }
+        
+        stopTimer();
+        
+        alert('✅ Η ΠΑΡΑΤΗΡΗΣΗ ΥΠΟΒΛΗΘΗΚΕ!');
+        window.location.href = 'admin.html';
+        
+    } catch (error) {
+        console.error('Σφάλμα υποβολής:', error);
+        alert('❌ ΑΠΟΤΥΧΙΑ ΥΠΟΒΟΛΗΣ! ΤΑ ΔΕΔΟΜΕΝΑ ΣΑΣ ΕΙΝΑΙ ΑΠΟΘΗΚΕΥΜΕΝΑ ΤΟΠΙΚΑ. ΠΑΡΑΚΑΛΩ ΔΟΚΙΜΑΣΤΕ ΞΑΝΑ.');
+    }
+}
+
+function showSaveStatus(type, message, duration = 3000) {
+    const indicator = document.getElementById('autoSaveIndicator');
+    const status = document.getElementById('saveStatus');
+    
+    indicator.className = 'auto-save-indicator ' + type;
+    status.textContent = message;
+    
+    setTimeout(() => {
+        indicator.className = 'auto-save-indicator';
+    }, duration);
 }
