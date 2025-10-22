@@ -143,9 +143,9 @@ const CORRECT_SUSPECTS = ['konstantinos', 'georgios', 'eleni'];
                 return {
                     score: 0,
                     breakdown: [
-                        'HEADER:🚫 ΛΟΓΙΚΗ ΑΝΤΙΦΑΣΗ (+0 πόντοι)',
-                        'CONTRADICTION:Η υπόθεση δεν μπορεί να είναι ταυτόχρονα δολοφονία και αυτοκτονία',
-                        `INFO:Επέλεξαν: ${killerNames} + Αυτοκτονία`,
+                        'HEADER:🚫 ΛΟΓΙΚΗ ΑΝΤΙΦΑΣΗ (0 πόντοι)',
+                        'CONTRADICTION:Η υπόθεση δεν μπορεί να είναι ταυτόχρονα δολοφονία & αυτοκτονία',
+                        `INFO:Επέλεξαν: ${killerNames} & Αυτοκτονία`,
                     ],
                     maxScore: 140,
                     correctCount: 0
@@ -156,7 +156,7 @@ const CORRECT_SUSPECTS = ['konstantinos', 'georgios', 'eleni'];
                 return {
                     score: 0,
                     breakdown: [
-                        'HEADER:❌ ΕΣΦΑΛΜΕΝΗ ΘΕΩΡΙΑ (+0 πόντοι)',
+                        'HEADER:❌ ΕΣΦΑΛΜΕΝΗ ΘΕΩΡΙΑ (0 πόντοι)',
                         'ERROR:Δεν ήταν αυτοκτονία!',
                         'SUBHEADER:Στοιχεία που Αγνόησαν',
                         'ITEM:Γάντια λάτεξ στην πόρτα',
@@ -554,7 +554,7 @@ const CORRECT_SUSPECTS = ['konstantinos', 'georgios', 'eleni'];
                         ${isContradiction ? `
                             <div style="background: #f8d7da; border: 2px solid #dc3545; padding: 15px; border-radius: 8px; margin: 15px 0;">
                                 <strong style="color: #721c24;">⚠️ ΛΟΓΙΚΗ ΑΝΤΙΦΑΣΗ:</strong>
-                                <p style="color: #721c24; margin: 5px 0;">Η ομάδα επέλεξε ταυτόχρονα δολοφονία ΚΑΙ αυτοκτονία</p>
+                                <p style="color: #721c24; margin: 5px 0;">Η ομάδα επέλεξε ταυτόχρονα δολοφονία & αυτοκτονία</p>
                             </div>
                         ` : ''}
                         
