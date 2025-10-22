@@ -33,7 +33,7 @@ let autoSaveTimer = null;
 
 window.addEventListener('DOMContentLoaded', async () => {
     await loadTeams();
-    checkForDraft();
+    // REMOVED: checkForDraft() - Draft recovery feature removed
 });
 
 async function loadTeams() {
@@ -291,43 +291,6 @@ async function saveDraft(silent = false) {
     }
 }
 
-function checkForDraft() {
-    const draft = localStorage.getItem('observation_draft');
-    if (!draft) return;
-    
-    if (confirm('ΒΡΕΘΗΚΕ ΑΠΟΘΗΚΕΥΜΕΝΟ ΠΡΟΧΕΙΡΟ. ΘΕΛΕΤΕ ΝΑ ΣΥΝΕΧΙΣΕΤΕ ΑΠΟ ΕΚΕΙ ΠΟΥ ΣΤΑΜΑΤΗΣΑΤΕ;')) {
-        loadDraft(JSON.parse(draft));
-    } else {
-        localStorage.removeItem('observation_draft');
-    }
-}
-
-function loadDraft(data) {
-    observationSession = data;
-    observationSession.isActive = true;
-
-    document.getElementById('observerName').value = data.observerId;
-    document.getElementById('teamSelect').value = data.teamCode;
-    
-    document.getElementById('setupSection').style.display = 'none';
-    document.getElementById('observationInterface').style.display = 'block';
-    
-    Object.keys(observationSession.behaviors).forEach(key => {
-        updateCounterDisplay(key);
-    });
-    
-    renderNotes();
-    
-    if (!data.isPaused) {
-        startTimer();
-    } else {
-        document.getElementById('statusIndicator').textContent = '⏸️ Παύση';
-        document.getElementById('statusIndicator').className = 'status-indicator paused';
-    }
-    
-    setupAutoSave();
-}
-
 function saveProgress() {
     saveDraft(false);
 }
@@ -346,6 +309,7 @@ async function submitObservation() {
         }
     }
     
+    // FIXED: Changed confirmation message to all caps
     if (!confirm('ΥΠΟΒΟΛΗ ΤΕΛΙΚΗΣ ΠΑΡΑΤΗΡΗΣΗΣ; ΔΕΝ ΜΠΟΡΕΙ ΝΑ ΑΝΑΙΡΕΘΕΙ!')) {
         return;
     }
@@ -384,11 +348,8 @@ async function submitObservation() {
         
         alert('✅ Η ΠΑΡΑΤΗΡΗΣΗ ΥΠΟΒΛΗΘΗΚΕ!');
         
-        if (confirm('ΕΠΙΣΤΡΟΦΗ ΣΤΟ ΠΑΝΕΛ ΔΙΑΧΕΙΡΙΣΗΣ;')) {
-            window.location.href = 'admin.html';
-        } else {
-            resetSession();
-        }
+        // FIXED: Removed confirmation, automatically redirect to admin.html
+        window.location.href = 'admin.html';
         
     } catch (error) {
         console.error('Σφάλμα υποβολής:', error);

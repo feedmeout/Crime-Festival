@@ -243,11 +243,12 @@ function renderBehaviorData(behaviors) {
         focus: 'Εστίαση'
     };
 
+    // FIXED: Translated category names from English to Greek
     const categories = {
-        'AI Usage Patterns': ['ai_queries', 'prompt_quality', 'ai_verification'],
-        'Team Collaboration': ['active_discussion', 'info_sharing', 'task_division'],
-        'Problem-Solving Approach': ['systematic_analysis', 'cross_referencing', 'critical_thinking'],
-        'Engagement & Motivation': ['enthusiasm', 'persistence', 'focus']
+        'Μοτίβα Χρήσης ΤΝ': ['ai_queries', 'prompt_quality', 'ai_verification'],
+        'Συνεργασία Ομάδας': ['active_discussion', 'info_sharing', 'task_division'],
+        'Προσέγγιση Επίλυσης Προβλημάτων': ['systematic_analysis', 'cross_referencing', 'critical_thinking'],
+        'Εμπλοκή και Κινητροδότηση': ['enthusiasm', 'persistence', 'focus']
     };
 
     let html = '';
@@ -427,19 +428,14 @@ async function deleteAllObservations() {
     if (!confirm(confirmMessage)) return;
     if (!confirm('ΤΕΛΕΥΤΑΙΑ ΕΠΙΒΕΒΑΙΩΣΗ: ΔΙΑΓΡΑΦΗ ΟΛΩΝ ΤΩΝ ΠΑΡΑΤΗΡΗΣΕΩΝ;')) return;
     
+    // FIXED: Removed visible indicator during delete operation
     try {
-        const statusDiv = document.createElement('div');
-        statusDiv.style.cssText = 'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); z-index: 10000; text-align: center;';
-        statusDiv.innerHTML = '<div style="font-size: 48px; margin-bottom: 20px;">🗑️</div><h3>Διαγραφή σε εξέλιξη...</h3>';
-        document.body.appendChild(statusDiv);
-
         const deletePromises = allObservations.map(obs => 
             window.firebaseDeleteDoc(window.firebaseDoc(window.firebaseDB, 'observations', obs.id))
         );
         
         await Promise.all(deletePromises);
         
-        document.body.removeChild(statusDiv);
         alert(`✅ ΟΙ ΠΑΡΑΤΗΡΗΣΕΙΣ ΔΙΑΓΡΑΦΗΚΑΝ ΕΠΙΤΥΧΩΣ!`);
         await loadObservations();
         

@@ -19,11 +19,12 @@ const behaviorLabels = {
     focus: 'Εστίαση'
 };
 
+// FIXED: Translated category names from English to Greek
 const categoryBehaviors = {
-    'AI Usage Patterns': ['ai_queries', 'prompt_quality', 'ai_verification'],
-    'Team Collaboration': ['active_discussion', 'info_sharing', 'task_division'],
-    'Problem-Solving Approach': ['systematic_analysis', 'cross_referencing', 'critical_thinking'],
-    'Engagement & Motivation': ['enthusiasm', 'persistence', 'focus']
+    'Μοτίβα Χρήσης ΤΝ': ['ai_queries', 'prompt_quality', 'ai_verification'],
+    'Συνεργασία Ομάδας': ['active_discussion', 'info_sharing', 'task_division'],
+    'Προσέγγιση Επίλυσης Προβλημάτων': ['systematic_analysis', 'cross_referencing', 'critical_thinking'],
+    'Εμπλοκή και Κινητροδότηση': ['enthusiasm', 'persistence', 'focus']
 };
 
 window.addEventListener('DOMContentLoaded', async () => {
@@ -93,10 +94,10 @@ function calculateSummaryStats() {
 }
 
 function createAllCharts() {
-    createCategoryChart('aiPatternsChart', 'AI Usage Patterns', '#2563eb');
-    createCategoryChart('collaborationChart', 'Team Collaboration', '#059669');
-    createCategoryChart('problemSolvingChart', 'Problem-Solving Approach', '#d97706');
-    createCategoryChart('engagementChart', 'Engagement & Motivation', '#dc2626');
+    createCategoryChart('aiPatternsChart', 'Μοτίβα Χρήσης ΤΝ', '#2563eb');
+    createCategoryChart('collaborationChart', 'Συνεργασία Ομάδας', '#059669');
+    createCategoryChart('problemSolvingChart', 'Προσέγγιση Επίλυσης Προβλημάτων', '#d97706');
+    createCategoryChart('engagementChart', 'Εμπλοκή και Κινητροδότηση', '#dc2626');
     createOverallChart();
     createTeamComparisonChart();
 }
@@ -159,10 +160,10 @@ function createOverallChart() {
     const allBehaviorKeys = Object.keys(behaviorLabels);
     const averages = allBehaviorKeys.map(behavior => calculateAverage(behavior));
     const colors = allBehaviorKeys.map(behavior => {
-        if (categoryBehaviors['AI Usage Patterns'].includes(behavior)) return '#2563eb';
-        if (categoryBehaviors['Team Collaboration'].includes(behavior)) return '#059669';
-        if (categoryBehaviors['Problem-Solving Approach'].includes(behavior)) return '#d97706';
-        if (categoryBehaviors['Engagement & Motivation'].includes(behavior)) return '#dc2626';
+        if (categoryBehaviors['Μοτίβα Χρήσης ΤΝ'].includes(behavior)) return '#2563eb';
+        if (categoryBehaviors['Συνεργασία Ομάδας'].includes(behavior)) return '#059669';
+        if (categoryBehaviors['Προσέγγιση Επίλυσης Προβλημάτων'].includes(behavior)) return '#d97706';
+        if (categoryBehaviors['Εμπλοκή και Κινητροδότηση'].includes(behavior)) return '#dc2626';
         return '#6c757d';
     });
 
