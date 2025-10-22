@@ -382,7 +382,7 @@ async function submitObservation() {
             console.warn('Αποτυχία καθαρισμού προχείρου:', e);
         }
         
-        alert('✅ Η παρατήρηση υποβλήθηκε επιτυχώς!');
+        alert('✅ Η ΠΑΡΑΤΗΡΗΣΗ ΥΠΟΒΛΗΘΗΚΕ!');
         
         if (confirm('Επιστροφή στο πάνελ διαχείρισης;')) {
             window.location.href = 'admin.html';
