@@ -295,7 +295,7 @@ function checkForDraft() {
     const draft = localStorage.getItem('observation_draft');
     if (!draft) return;
     
-    if (confirm('Βρέθηκε αποθηκευμένο πρόχειρο. Θέλετε να συνεχίσετε από εκεί που σταματήσατε;')) {
+    if (confirm('ΒΡΕΘΗΚΕ ΑΠΟΘΗΚΕΥΜΕΝΟ ΠΡΟΧΕΙΡΟ. ΘΕΛΕΤΕ ΝΑ ΣΥΝΕΧΙΣΕΤΕ ΑΠΟ ΕΚΕΙ ΠΟΥ ΣΤΑΜΑΤΗΣΑΤΕ;')) {
         loadDraft(JSON.parse(draft));
     } else {
         localStorage.removeItem('observation_draft');
@@ -392,20 +392,20 @@ async function submitObservation() {
         
     } catch (error) {
         console.error('Σφάλμα υποβολής:', error);
-        alert('❌ Αποτυχία υποβολής! Τα δεδομένα σας είναι αποθηκευμένα τοπικά. Παρακαλώ δοκιμάστε ξανά.');
+        alert('❌ ΑΠΟΤΥΧΙΑ ΥΠΟΒΟΛΗΣ! ΤΑ ΔΕΔΟΜΕΝΑ ΣΑΣ ΕΙΝΑΙ ΑΠΟΘΗΚΕΥΜΕΝΑ ΤΟΠΙΚΑ. ΠΑΡΑΚΑΛΩ ΔΟΚΙΜΑΣΤΕ ΞΑΝΑ.');
     }
 }
 
 function endSession() {
     if (!observationSession.isActive) return;
     
-    if (!confirm('Τερματισμός παρατήρησης; Βεβαιωθείτε ότι έχετε αποθηκεύσει ή υποβάλει τις παρατηρήσεις σας!')) {
+    if (!confirm('ΤΕΡΜΑΤΙΣΜΟΣ ΠΑΡΑΤΗΡΗΣΗΣ; ΒΕΒΑΙΩΘΕΙΤΕ ΟΤΙ ΕΧΕΤΕ ΑΠΟΘΗΚΕΥΣΕΙ Η ΥΠΟΒΑΛΕΙ ΤΙΣ ΠΑΡΑΤΗΡΗΣΕΙΣ ΣΑΣ!')) {
         return;
     }
     
     stopTimer();
     
-    if (confirm('Θέλετε να διαγράψετε τα δεδομένα αυτής της συνεδρίας;')) {
+    if (confirm('ΘΕΛΕΤΕ ΝΑ ΔΙΑΓΡΑΨΕΤΕ ΤΑ ΔΕΔΟΜΕΝΑ ΑΥΤΗΣ ΤΗΣ ΣΥΝΕΔΡΙΑΣ;')) {
         resetSession();
     }
 }

@@ -42,14 +42,14 @@ async function loadObservations() {
 
 function populateFilters(teams, observers) {
     const teamFilter = document.getElementById('teamFilter');
-    const teamOptions = ['<option value="all">Όλες οι Ομάδες</option>'];
+    const teamOptions = ['<option value="all">ΟΛΕΣ ΟΙ ΟΜΑΔΕΣ</option>'];
     Array.from(teams).sort().forEach(team => {
         teamOptions.push(`<option value="${team}">${team.toUpperCase()}</option>`);
     });
     teamFilter.innerHTML = teamOptions.join('');
 
     const observerFilter = document.getElementById('observerFilter');
-    const observerOptions = ['<option value="all">Όλοι οι Παρατηρητές</option>'];
+    const observerOptions = ['<option value="all">ΟΛΟΙ ΟΙ ΠΑΡΑΤΗΡΗΤΕΣ</option>'];
     Array.from(observers).sort().forEach(observer => {
         observerOptions.push(`<option value="${observer}">${observer}</option>`);
     });
@@ -179,7 +179,7 @@ function viewObservation(obsId) {
     let html = `
         <div style="padding: 20px;">
             <div style="background: ${isDraft ? '#fff3cd' : '#d4edda'}; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-                <h3 style="margin-bottom: 10px;">📋 Βασικές Πληροφορίες</h3>
+                <h3 style="margin-bottom: 10px;">📋 ΒΑΣΙΚΕΣ ΠΛΗΡΟΦΟΡΙΕΣ</h3>
                 <div style="display: grid; gap: 10px;">
                     <div><strong>Ομάδα:</strong> ${obs.teamCode?.toUpperCase() || 'Μ/Δ'}</div>
                     <div><strong>Παρατηρητής:</strong> ${obs.observerId || 'Μ/Δ'}</div>
