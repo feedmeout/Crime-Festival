@@ -195,7 +195,7 @@ function viewObservation(obsId) {
     if (obs.notes && obs.notes.length > 0) {
         html += `
             <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-                <h3 style="margin-bottom: 15px;">📝 Σημειώσεις με Χρονική Σήμανση (${obs.notes.length})</h3>
+                <h3 style="margin-bottom: 15px;">📝 ΣΗΜΕΙΩΣΕΙΣ (${obs.notes.length})</h3>
                 ${obs.notes.map((note, idx) => `
                     <div style="background: white; padding: 12px; margin-bottom: 10px; border-radius: 5px; border-left: 4px solid #2563eb;">
                         <div style="font-size: 12px; color: #666; margin-bottom: 5px;">
@@ -212,7 +212,7 @@ function viewObservation(obsId) {
     if (obs.behaviors) {
         html += `
             <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
-                <h3 style="margin-bottom: 15px;">📊 Συχνότητες Συμπεριφορών</h3>
+                <h3 style="margin-bottom: 15px;">📊 ΣΥΧΝΟΤΗΤΕΣ ΣΥΜΠΕΡΙΦΟΡΩΝ</h3>
                 ${renderBehaviorData(obs.behaviors)}
             </div>
         `;

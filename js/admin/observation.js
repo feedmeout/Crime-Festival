@@ -1,4 +1,3 @@
-// Observation Session State
 let observationSession = {
     observerId: null,
     teamCode: null,
@@ -8,37 +7,30 @@ let observationSession = {
     isActive: false,
     isPaused: false,
     
-    // Behavior frequency counters
     behaviors: {
-        // AI Usage Patterns
         ai_queries: 0,
         prompt_quality: 0,
         ai_verification: 0,
         
-        // Team Collaboration
         active_discussion: 0,
         info_sharing: 0,
         task_division: 0,
-        
-        // Problem-Solving Approach
+
         systematic_analysis: 0,
         cross_referencing: 0,
         critical_thinking: 0,
-        
-        // Engagement & Motivation
+
         enthusiasm: 0,
         persistence: 0,
         focus: 0
     },
-    
-    // Timestamped notes
+
     notes: []
 };
 
 let sessionTimer = null;
 let autoSaveTimer = null;
 
-// Initialize
 window.addEventListener('DOMContentLoaded', async () => {
     await loadTeams();
     checkForDraft();
@@ -85,16 +77,11 @@ function startSession() {
     observationSession.isActive = true;
     observationSession.isPaused = false;
     
-    // Hide setup, show observation interface
     document.getElementById('setupSection').style.display = 'none';
     document.getElementById('observationInterface').style.display = 'block';
     
-    // Start timer
     startTimer();
-    
-    // Setup auto-save
     setupAutoSave();
-    
     console.log('✅ Παρατήρηση ξεκίνησε:', observationSession);
 }
 
@@ -102,7 +89,6 @@ function pauseSession() {
     if (!observationSession.isActive) return;
     
     if (observationSession.isPaused) {
-        // Resume
         const pauseDuration = Date.now() - new Date(observationSession.pauseTime).getTime();
         observationSession.totalPausedMs += pauseDuration;
         observationSession.isPaused = false;
@@ -113,7 +99,6 @@ function pauseSession() {
         
         startTimer();
     } else {
-        // Pause
         observationSession.isPaused = true;
         observationSession.pauseTime = new Date().toISOString();
         
@@ -173,8 +158,6 @@ function updateCounterDisplay(behaviorKey) {
     const display = document.getElementById(`counter_${behaviorKey}`);
     if (display) {
         display.textContent = observationSession.behaviors[behaviorKey];
-        
-        // Visual feedback
         display.style.transform = 'scale(1.2)';
         display.style.color = 'var(--primary-color)';
         setTimeout(() => {
@@ -208,11 +191,9 @@ function addTimestampedNote() {
     
     observationSession.notes.push(note);
     renderNotes();
-    
-    // Clear input
+
     document.getElementById('generalNotes').value = '';
-    
-    // Auto-save
+
     scheduleAutoSave();
 }
 
@@ -261,7 +242,6 @@ function escapeHtml(text) {
 }
 
 function setupAutoSave() {
-    // Auto-save every 30 seconds
     setInterval(() => {
         if (observationSession.isActive && !observationSession.isPaused) {
             saveDraft(true);
@@ -290,10 +270,8 @@ async function saveDraft(silent = false) {
         lastSaved: new Date().toISOString()
     };
     
-    // Save to localStorage
     localStorage.setItem('observation_draft', JSON.stringify(draftData));
     
-    // Save to Firebase
     try {
         const draftId = `draft_${observationSession.teamCode}_${observationSession.observerId.replace(/\s+/g, '_')}`;
         const draftRef = window.firebaseDoc(window.firebaseDB, 'observations', draftId);
@@ -327,23 +305,19 @@ function checkForDraft() {
 function loadDraft(data) {
     observationSession = data;
     observationSession.isActive = true;
-    
-    // Restore UI
+
     document.getElementById('observerName').value = data.observerId;
     document.getElementById('teamSelect').value = data.teamCode;
     
     document.getElementById('setupSection').style.display = 'none';
     document.getElementById('observationInterface').style.display = 'block';
     
-    // Restore counters
     Object.keys(observationSession.behaviors).forEach(key => {
         updateCounterDisplay(key);
     });
     
-    // Restore notes
     renderNotes();
     
-    // Restart timer if not paused
     if (!data.isPaused) {
         startTimer();
     } else {
@@ -364,7 +338,6 @@ async function submitObservation() {
         return;
     }
     
-    // Validation
     const totalBehaviors = Object.values(observationSession.behaviors).reduce((sum, count) => sum + count, 0);
     
     if (totalBehaviors === 0) {
@@ -385,18 +358,10 @@ async function submitObservation() {
         endTime: now.toISOString(),
         durationMs: now.getTime() - new Date(observationSession.startTime).getTime() - observationSession.totalPausedMs,
         totalPausedMs: observationSession.totalPausedMs,
-        
-        // Behavior frequencies
         behaviors: observationSession.behaviors,
-        
-        // Total behavior count for quick reference
         totalBehaviorCount: Object.values(observationSession.behaviors).reduce((sum, count) => sum + count, 0),
-        
-        // Notes
         notes: observationSession.notes,
         notesCount: observationSession.notes.length,
-        
-        // Metadata
         submittedAt: now.toISOString(),
         status: 'submitted'
     };
@@ -406,11 +371,9 @@ async function submitObservation() {
         const observationRef = window.firebaseDoc(window.firebaseDB, 'observations', observationId);
         
         await window.firebaseSetDoc(observationRef, finalData);
-        
-        // Clear draft
+		
         localStorage.removeItem('observation_draft');
-        
-        // Delete draft from Firebase
+
         try {
             const draftId = `draft_${observationSession.teamCode}_${observationSession.observerId.replace(/\s+/g, '_')}`;
             const draftRef = window.firebaseDoc(window.firebaseDB, 'observations', draftId);
@@ -421,11 +384,9 @@ async function submitObservation() {
         
         alert('✅ Η παρατήρηση υποβλήθηκε επιτυχώς!');
         
-        // Redirect
         if (confirm('Επιστροφή στο πάνελ διαχείρισης;')) {
             window.location.href = 'admin.html';
         } else {
-            // Reset for new observation
             resetSession();
         }
         
@@ -477,22 +438,18 @@ function resetSession() {
         notes: []
     };
     
-    // Reset UI
     document.getElementById('observerName').value = '';
     document.getElementById('teamSelect').value = '';
     document.getElementById('generalNotes').value = '';
     document.getElementById('sessionTimer').textContent = '00:00:00';
     
-    // Reset counters
     Object.keys(observationSession.behaviors).forEach(key => {
         const display = document.getElementById(`counter_${key}`);
         if (display) display.textContent = '0';
     });
     
-    // Reset notes
     renderNotes();
     
-    // Show setup
     document.getElementById('setupSection').style.display = 'block';
     document.getElementById('observationInterface').style.display = 'none';
     
