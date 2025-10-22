@@ -777,12 +777,12 @@ function displaySubmissionConfirmation() {
     }
     
     resultDiv.innerHTML = `
-        <div style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; padding: 20px 30px; border-radius: 12px; margin: 20px 0; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 15px rgba(40,167,69,0.3); flex-wrap: wrap; gap: 15px;">
-            <div style="display: flex; align-items: center; gap: 15px;">
-                <div style="font-size: 40px;"></div>
+        <div class="submission-success-banner">
+            <div class="submission-success-content">
+                <div class="submission-success-icon">✅</div>
                 <div>
-                    <div style="font-size: 20px; font-weight: bold; margin-bottom: 5px;">ΛΥΣΗ ΥΠΟΒΛΗΘΗΚΕ ΕΠΙΤΥΧΩΣ!</div>
-                    <div style="font-size: 14px; opacity: 0.9;">📅 ${new Date().toLocaleString('el-GR', {
+                    <div class="submission-success-title">ΛΥΣΗ ΥΠΟΒΛΗΘΗΚΕ ΕΠΙΤΥΧΩΣ!</div>
+                    <div class="submission-success-date">📅 ${new Date().toLocaleString('el-GR', {
                         day: '2-digit',
                         month: '2-digit',
                         year: 'numeric',
@@ -793,51 +793,46 @@ function displaySubmissionConfirmation() {
             </div>
         </div>
 
-        <div style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); border: 3px solid #ff6b00; padding: 0; border-radius: 15px; margin-top: 20px; box-shadow: 0 10px 40px rgba(255, 107, 0, 0.4); overflow: hidden;">
-            <div style="background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%); padding: 25px; text-align: center; position: relative;">
-                <div style="font-size: 56px; margin-bottom: 10px; filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));">🔒</div>
-                <h3 style="color: #000; font-size: 24px; font-weight: bold; margin: 0; text-transform: uppercase; letter-spacing: 2px; text-shadow: 1px 1px 2px rgba(255,255,255,0.3);">
-                    Η ΑΛΗΘΕΙΑ ΘΑ ΑΠΟΚΑΛΥΦΘΕΙ ΣΥΝΤΟΜΑ...
-                </h3>
-                <div style="position: absolute; top: 0; left: 0; right: 0; height: 100%; background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(0,0,0,0.05) 10px, rgba(0,0,0,0.05) 20px); pointer-events: none;"></div>
+        <div class="reveal-container">
+            <div class="reveal-header">
+                <div class="reveal-lock-icon">🔒</div>
+                <h3 class="reveal-title">Η ΑΛΗΘΕΙΑ ΘΑ ΑΠΟΚΑΛΥΦΘΕΙ ΣΥΝΤΟΜΑ...</h3>
             </div>
-            <div style="padding: 30px;">
-                <div style="background: linear-gradient(135deg, rgba(255, 107, 0, 0.2) 0%, rgba(255, 136, 0, 0.2) 100%); border: 2px solid #ff6b00; border-radius: 12px; padding: 20px; margin-bottom: 30px; position: relative; overflow: hidden;">
-                    <div style="position: absolute; top: -20px; right: -20px; font-size: 100px; opacity: 0.1;">⚠️</div>
-                    <div style="position: relative; z-index: 1;">
-                        <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 10px;">
-                            <span style="font-size: 28px;">💡</span>
-                            <span style="color: #ff6b00; font-size: 16px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">ΠΡΟΣΟΧΗ!</span>
+            
+            <div class="reveal-content">
+                <div class="reveal-warning-box">
+                    <div class="reveal-warning-icon">⚠️</div>
+                    <div class="reveal-warning-content">
+                        <div class="reveal-warning-header">
+                            <span class="reveal-warning-emoji">💡</span>
+                            <span class="reveal-warning-label">ΠΡΟΣΟΧΗ!</span>
                         </div>
-                        <p style="color: #fff; font-size: 14px; margin: 0; text-align: center; line-height: 1.7; font-weight: 600;">
+                        <p class="reveal-warning-text">
                             ΚΡΑΤΗΣΤΕ ΤΗ ΛΥΣΗ ΣΑΣ ΜΥΣΤΙΚΗ!<br>
                             ΜΗΝ ΜΟΙΡΑΣΤΕΙΤΕ ΠΛΗΡΟΦΟΡΙΕΣ ΜΕ ΑΛΛΕΣ ΟΜΑΔΕΣ ΜΕΧΡΙ ΤΗΝ ΕΠΙΣΗΜΗ ΛΗΞΗ ΤΟΥ ΔΙΑΓΩΝΙΣΜΟΥ!
                         </p>
                     </div>
                 </div>
 
-                <div style="background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 25px; backdrop-filter: blur(5px);">
-                    <div style="text-align: center; margin-bottom: 20px;">
-                        <div style="display: inline-flex; align-items: center; gap: 10px; background: rgba(255, 107, 0, 0.2); padding: 10px 20px; border-radius: 25px; border: 1px solid rgba(255, 107, 0, 0.4);">
-                            <span style="font-size: 20px;">🔓</span>
-                            <span style="color: #ff6b00; font-weight: bold; font-size: 15px; text-transform: uppercase; letter-spacing: 1px;">Έχετε τον κωδικό πρόσβασης;</span>
+                <div class="reveal-password-section">
+                    <div class="reveal-password-header">
+                        <div class="reveal-password-badge">
+                            <span class="reveal-password-badge-icon">🔓</span>
+                            <span class="reveal-password-badge-text">Έχετε τον κωδικό πρόσβασης;</span>
                         </div>
                     </div>
                     
-                    <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: stretch; max-width: 500px; margin: 0 auto;">
-                        <input type="password" id="solutionPassword" placeholder="Εισάγετε κωδικό..." 
-                               style="flex: 1; min-width: 200px; padding: 15px 20px; border: 2px solid rgba(255, 107, 0, 0.5); background: rgba(255, 255, 255, 0.9); border-radius: 10px; font-size: 16px; font-weight: 500; transition: all 0.3s ease; outline: none; color: #1a1a2e;"
-                               onfocus="this.style.borderColor='#ff6b00'; this.style.background='#fff'; this.style.boxShadow='0 0 20px rgba(255, 107, 0, 0.3)'"
-                               onblur="this.style.borderColor='rgba(255, 107, 0, 0.5)'; this.style.background='rgba(255, 255, 255, 0.9)'; this.style.boxShadow='none'">
-                        <button onclick="revealSolution()" 
-                                style="padding: 15px 35px; background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%); color: #000; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 16px; box-shadow: 0 4px 15px rgba(255, 107, 0, 0.4); transition: all 0.3s ease; white-space: nowrap; text-transform: uppercase; letter-spacing: 1px;"
-                                onmouseover="this.style.transform='translateY(-3px) scale(1.05)'; this.style.boxShadow='0 6px 25px rgba(255, 107, 0, 0.6)'"
-                                onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='0 4px 15px rgba(255, 107, 0, 0.4)'">
+                    <div class="reveal-password-form">
+                        <input type="password" 
+                               id="solutionPassword" 
+                               class="reveal-password-input"
+                               placeholder="Εισάγετε κωδικό...">
+                        <button onclick="revealSolution()" class="reveal-password-button">
                             🔓 ΑΠΟΚΑΛΥΨΗ
                         </button>
                     </div>
                     
-                    <p style="color: rgba(255, 255, 255, 0.6); font-size: 12px; text-align: center; margin: 15px 0 0 0; font-style: italic;">
+                    <p class="reveal-password-hint">
                         Ο κωδικός θα ανακοινωθεί από τους διοργανωτές
                     </p>
                 </div>
@@ -1042,21 +1037,21 @@ function calculateScore(selectedSuspects, totalTimeMs, promptCount) {
             if (promptCount <= 5) {
                 score += SCORING.prompts_1_5;
                 breakdown.push(`SUCCESS:Ελάχιστη Χρήση AI (+${SCORING.prompts_1_5} πόντοι)`);
-                breakdown.push('ITEM:Prompts AI: ≤5');
+                breakdown.push('ITEM:Prompts : ≤5');
                 hasEfficiencyBonus = true;
             } else if (promptCount <= 10) {
                 score += SCORING.prompts_6_10;
                 breakdown.push(`SUCCESS:Μέτρια Χρήση AI (+${SCORING.prompts_6_10} πόντοι)`);
-                breakdown.push('ITEM:Prompts AI: 6-10');
+                breakdown.push('ITEM:Prompts : 6-10');
                 hasEfficiencyBonus = true;
             } else if (promptCount <= 15) {
                 score += SCORING.prompts_11_15;
                 breakdown.push(`SUCCESS:Συχνή Χρήση AI (+${SCORING.prompts_11_15} πόντοι)`);
-                breakdown.push('ITEM:Prompts AI: 11-15');
+                breakdown.push('ITEM:Prompts : 11-15');
                 hasEfficiencyBonus = true;
             } else {
                 breakdown.push(`INFO:Υπερβολική Χρήση AI (0 πόντοι)`);
-                breakdown.push(`ITEM:Prompts AI: ${promptCount}`);
+                breakdown.push(`ITEM:Prompts : ${promptCount}`);
             }
         }
         
@@ -1221,46 +1216,44 @@ function displaySolutionResult(solution) {
     resultDiv.innerHTML = '';
 
     const scoreCard = document.createElement('div');
-    scoreCard.style.cssText = 'background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%); border-radius: 15px; padding: 30px; margin-bottom: 25px; border: 3px solid #ff6b00; box-shadow: 0 10px 40px rgba(0,0,0,0.4);';
+    scoreCard.className = 'solution-score-card';
     scoreCard.innerHTML = `
-        <div style="text-align: center;">
-            <div style="font-size: 48px; margin-bottom: 20px;">${gradeEmoji}</div>
-            <div style="color: white; font-size: 28px; font-weight: bold; margin-bottom: 10px;">${caseStatus}</div>
-            <div style="color: ${gradeColor}; font-size: 20px; font-weight: bold; margin-bottom: 20px;">${grade}</div>
-            <div style="color: white; font-size: 64px; font-weight: 900; margin-bottom: 10px;">${solution.score} / ${solution.maxScore}</div>
-            <div style="color: rgba(255,255,255,0.7); font-size: 16px;">${statusMessage}</div>
-            <div style="background: rgba(255,255,255,0.1); height: 12px; border-radius: 20px; overflow: hidden; margin: 20px 0;">
-                <div style="background: ${gradeColor}; height: 100%; width: ${percentage}%; transition: width 2s ease-out;"></div>
-            </div>
-            <div style="color: rgba(255,255,255,0.5); font-size: 12px;">ΕΠΙΔΟΣΗ: ${percentage}%</div>
+        <div class="solution-grade-emoji">${gradeEmoji}</div>
+        <div class="solution-case-status">${caseStatus}</div>
+        <div class="solution-grade-title" style="color: ${gradeColor};">${grade}</div>
+        <div class="solution-score-display">${solution.score} / ${solution.maxScore}</div>
+        <div class="solution-status-message">${statusMessage}</div>
+        <div style="background: rgba(255,255,255,0.1); height: 12px; border-radius: 20px; overflow: hidden; margin: 20px 0;">
+            <div style="background: ${gradeColor}; height: 100%; width: ${percentage}%; transition: width 2s ease-out;"></div>
         </div>
+        <div class="solution-performance-label">ΕΠΙΔΟΣΗ: ${percentage}%</div>
     `;
     resultDiv.appendChild(scoreCard);
     
     const statsCard = document.createElement('div');
-    statsCard.style.cssText = 'background: white; border-radius: 15px; padding: 20px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);';
-    let statsHTML = '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px;">';
+    statsCard.className = 'solution-stats-card';
+    let statsHTML = '<div class="solution-stats-grid">';
     
     if (solution.completionTimeMs) {
         statsHTML += `
-            <div style="text-align: center; padding: 15px; background: #f8f9fa; border-radius: 10px;">
-                <div style="font-size: 32px; margin-bottom: 10px;">⏱️</div>
-                <div style="font-size: 24px; font-weight: bold; color: #1a1a2e;">${formatElapsedTime(solution.completionTimeMs)}</div>
-                <div style="font-size: 12px; color: #666;">Χρόνος</div>
+            <div class="solution-stat-item">
+                <div class="solution-stat-icon">⏱️</div>
+                <div class="solution-stat-value">${formatElapsedTime(solution.completionTimeMs)}</div>
+                <div class="solution-stat-label">Χρόνος</div>
             </div>
         `;
     }
     
     statsHTML += `
-        <div style="text-align: center; padding: 15px; background: #f8f9fa; border-radius: 10px;">
-            <div style="font-size: 32px; margin-bottom: 10px;">🎯</div>
-            <div style="font-size: 24px; font-weight: bold; color: #1a1a2e;">${solution.promptCount}</div>
-            <div style="font-size: 12px; color: #666;">Prompts</div>
+        <div class="solution-stat-item">
+            <div class="solution-stat-icon">🎯</div>
+            <div class="solution-stat-value">${solution.promptCount}</div>
+            <div class="solution-stat-label">Prompts</div>
         </div>
-        <div style="text-align: center; padding: 15px; background: #f8f9fa; border-radius: 10px;">
-            <div style="font-size: 32px; margin-bottom: 10px;">✅</div>
-            <div style="font-size: 24px; font-weight: bold; color: #1a1a2e;">${solution.correctCount}/3</div>
-            <div style="font-size: 12px; color: #666;">Σωστοί Δράστες</div>
+        <div class="solution-stat-item">
+            <div class="solution-stat-icon">✅</div>
+            <div class="solution-stat-value">${solution.correctCount}/3</div>
+            <div class="solution-stat-label">Σωστοί Δράστες</div>
         </div>
     `;
     statsHTML += '</div>';
@@ -1268,51 +1261,253 @@ function displaySolutionResult(solution) {
     resultDiv.appendChild(statsCard);
     
     const breakdownCard = document.createElement('div');
-    breakdownCard.style.cssText = 'background: white; border-radius: 15px; padding: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);';
+    breakdownCard.className = 'breakdown-card';
     
-    let breakdownHTML = '<h3 style="color: #1a1a2e; margin-bottom: 20px; font-size: 20px;">📊 ΑΝΑΛΥΤΙΚΗ ΑΞΙΟΛΟΓΗΣΗ</h3>';
+    let breakdownHTML = `
+        <div class="breakdown-header">
+            <div class="breakdown-header-icon">📊</div>
+            <div>
+                <h3 class="breakdown-header-title">ΑΝΑΛΥΤΙΚΗ ΑΞΙΟΛΟΓΗΣΗ</h3>
+            </div>
+        </div>
+    `;
 
-	solution.breakdown.forEach(line => {
-		if (!line || line.trim() === '') return;
-		if (line.includes('ΤΕΛΙΚΗ ΒΑΘΜΟΛΟΓΙΑ')) return;
+    solution.breakdown.forEach(line => {
+        if (!line || line.trim() === '') return;
+        if (line.includes('ΤΕΛΙΚΗ ΒΑΘΜΟΛΟΓΙΑ')) return;
 
-		const colonIndex = line.indexOf(':');
-		if (colonIndex === -1) {
-			breakdownHTML += `<div style="padding: 12px; margin-bottom: 8px; border-radius: 8px; font-size: 14px; line-height: 1.6; background: #fafafa; color: #333;">${line}</div>`;
-			return;
-		}
-		
-		const type = line.substring(0, colonIndex);
-		const content = line.substring(colonIndex + 1);
-		
-		let style = 'padding: 12px; margin-bottom: 8px; border-radius: 8px; font-size: 14px; line-height: 1.6;';
-		let displayContent = content;
-		
-		if (type === 'HEADER') {
-			style += 'background: linear-gradient(135deg, #0f3460 0%, #16213e 100%); color: white; font-weight: bold; box-shadow: 0 2px 8px rgba(0,0,0,0.2);';
-		} else if (type === 'SUCCESS') {
-			displayContent = '✓ ' + content;
-			style += 'background: #fff8e1; color: #f57f17; border-left: 4px solid #ffc107; font-weight: 500;';
-		} else if (type === 'PENALTY') {
-			displayContent = '→ ' + content;
-			style += 'background: #ffebee; color: #c62828; border-left: 3px solid #dc3545; margin-left: 20px;';
-		} else if (type === 'ERROR') {
-			displayContent = '✗ ' + content;
-			style += 'background: #ffebee; color: #c62828; border-left: 4px solid #dc3545; font-weight: 500;';
-		} else if (type === 'INFO') {
-			style += 'background: #e3f2fd; color: #0d47a1; border-left: 4px solid #2196f3;';
-		} else if (type === 'CONTRADICTION') {
-			style += 'background: #fff3e0; color: #e65100; border-left: 4px solid #ff9800; font-weight: 500;';
-		} else if (type === 'SUBHEADER') {
-			style += 'background: transparent; color: #0f3460; font-weight: bold; padding-left: 8px;';
-		} else if (type === 'ITEM') {
-			style += 'background: #f5f5f5; color: #555; margin-left: 30px; padding-left: 15px;';
-		} else {
-			style += 'background: #fafafa; color: #333;';
-		}
-		
-		breakdownHTML += `<div style="${style}">${displayContent}</div>`;
-	});
+        const colonIndex = line.indexOf(':');
+        if (colonIndex === -1) {
+            breakdownHTML += `<div class="breakdown-item">${line}</div>`;
+            return;
+        }
+        
+        const type = line.substring(0, colonIndex);
+        const content = line.substring(colonIndex + 1);
+        
+        let itemClass = '';
+        let icon = '';
+        
+        if (type === 'HEADER') {
+            itemClass = 'header';
+        } else if (type === 'SUCCESS') {
+            itemClass = 'success';
+            icon = '✓';
+        } else if (type === 'PENALTY') {
+            itemClass = 'penalty';
+            icon = '✗';
+        } else if (type === 'ERROR') {
+            itemClass = 'error';
+            icon = '⚠';
+        } else if (type === 'INFO') {
+            itemClass = 'info';
+            icon = 'ℹ';
+        } else if (type === 'CONTRADICTION') {
+            itemClass = 'contradiction';
+            icon = '⚠';
+        } else if (type === 'SUBHEADER') {
+            itemClass = 'subheader';
+        } else if (type === 'ITEM') {
+            itemClass = 'item';
+            icon = '';
+        }
+        
+        breakdownHTML += `
+            <div class="breakdown-item ${itemClass}">
+                ${icon ? `<div class="breakdown-item-icon">${icon}</div>` : ''}
+                <div class="breakdown-item-content">${content}</div>
+            </div>
+        `;
+    });
+    
+    breakdownCard.innerHTML = breakdownHTML;
+    resultDiv.appendChild(breakdownCard);
+    
+    resultDiv.style.display = 'block';
+    resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    
+    const solutionForm = document.getElementById('solutionForm');
+    if (solutionForm) {
+        solutionForm.style.display = 'none';
+    }
+    
+    stopTimer();
+    
+    if (isPerfect && percentage >= 90) {
+        setTimeout(() => {
+            createConfetti();
+        }, 500);
+    }
+}
+function displaySolutionResult(solution) {
+    const resultDiv = document.getElementById('solutionResult');
+    const solutionIntroBox = document.getElementById('solutionIntroBox');
+    if (solutionIntroBox) {
+        solutionIntroBox.style.display = 'none';
+    }
+    
+    const percentage = Math.round((solution.score / solution.maxScore) * 100);
+    let grade = '';
+    let gradeColor = '';
+    let gradeEmoji = '';
+    
+    if (percentage >= 90) {
+        grade = 'ΑΡΧΙ-ΝΤΕΤΕΚΤΙΒ';
+        gradeEmoji = '🕵️';
+        gradeColor = '#00d4ff';
+    } else if (percentage >= 80) {
+        grade = 'ΑΝΩΤΕΡΟΣ ΑΝΑΚΡΙΤΗΣ';
+        gradeEmoji = '🎖️';
+        gradeColor = '#ffd700';
+    } else if (percentage >= 70) {
+        grade = 'ΝΤΕΤΕΚΤΙΒ';
+        gradeEmoji = '🔎';
+        gradeColor = '#c0c0c0';
+    } else if (percentage >= 60) {
+        grade = 'ΑΣΤΥΝΟΜΟΣ';
+        gradeEmoji = '👮';
+        gradeColor = '#cd7f32';
+    } else if (percentage >= 50) {
+        grade = 'ΕΡΕΥΝΗΤΗΣ';
+        gradeEmoji = '🔍';
+        gradeColor = '#ffcc00';
+    } else if (percentage >= 40) {
+        grade = 'ΑΣΚΟΥΜΕΝΟΣ';
+        gradeEmoji = '🎓';
+        gradeColor = '#28a745';
+    } else {
+        grade = 'ΝΕΟΣΥΛΛΕΚΤΟΣ';
+        gradeEmoji = '🎯';
+        gradeColor = '#6c757d';
+    }
+
+    const isPerfect = solution.correctCount === 3 && solution.suspects.length === 3;
+    
+    let statusMessage = '';
+    let caseStatus = '';
+    if (isPerfect) {
+        statusMessage = 'ΤΕΛΕΙΑ ΕΚΤΕΛΕΣΗ!';
+        caseStatus = 'CASE SOLVED';
+    } else if (solution.score === 0) {
+        statusMessage = 'ΑΤΕΛΗΣ ΑΝΑΛΥΣΗ';
+        caseStatus = 'CASE INCOMPLETE';
+    } else if (percentage >= 70) {
+        statusMessage = 'ΕΞΑΙΡΕΤΙΚΗ ΔΟΥΛΕΙΑ!';
+        caseStatus = 'CASE CLOSED';
+    } else if (percentage >= 50) {
+        statusMessage = 'ΚΑΛΗ ΠΡΟΣΠΑΘΕΙΑ';
+        caseStatus = 'CASE CLOSED';
+    } else {
+        statusMessage = 'ΥΠΟΘΕΣΗ ΟΛΟΚΛΗΡΩΘΗΚΕ';
+        caseStatus = 'CASE ARCHIVED';
+    }
+
+    resultDiv.innerHTML = '';
+
+    const scoreCard = document.createElement('div');
+    scoreCard.className = 'solution-score-card';
+    scoreCard.innerHTML = `
+        <div class="solution-grade-emoji">${gradeEmoji}</div>
+        <div class="solution-case-status">${caseStatus}</div>
+        <div class="solution-grade-title" style="color: ${gradeColor};">${grade}</div>
+        <div class="solution-score-display">${solution.score} / ${solution.maxScore}</div>
+        <div class="solution-status-message">${statusMessage}</div>
+        <div style="background: rgba(255,255,255,0.1); height: 12px; border-radius: 20px; overflow: hidden; margin: 20px 0;">
+            <div style="background: ${gradeColor}; height: 100%; width: ${percentage}%; transition: width 2s ease-out;"></div>
+        </div>
+        <div class="solution-performance-label">ΕΠΙΔΟΣΗ: ${percentage}%</div>
+    `;
+    resultDiv.appendChild(scoreCard);
+    
+    const statsCard = document.createElement('div');
+    statsCard.className = 'solution-stats-card';
+    let statsHTML = '<div class="solution-stats-grid">';
+    
+    if (solution.completionTimeMs) {
+        statsHTML += `
+            <div class="solution-stat-item">
+                <div class="solution-stat-icon">⏱️</div>
+                <div class="solution-stat-value">${formatElapsedTime(solution.completionTimeMs)}</div>
+                <div class="solution-stat-label">Χρόνος</div>
+            </div>
+        `;
+    }
+    
+    statsHTML += `
+        <div class="solution-stat-item">
+            <div class="solution-stat-icon">🎯</div>
+            <div class="solution-stat-value">${solution.promptCount}</div>
+            <div class="solution-stat-label">Prompts</div>
+        </div>
+        <div class="solution-stat-item">
+            <div class="solution-stat-icon">✅</div>
+            <div class="solution-stat-value">${solution.correctCount}/3</div>
+            <div class="solution-stat-label">Σωστοί Δράστες</div>
+        </div>
+    `;
+    statsHTML += '</div>';
+    statsCard.innerHTML = statsHTML;
+    resultDiv.appendChild(statsCard);
+    
+    const breakdownCard = document.createElement('div');
+    breakdownCard.className = 'breakdown-card';
+    
+    let breakdownHTML = `
+        <div class="breakdown-header">
+            <div class="breakdown-header-icon">📊</div>
+            <div>
+                <h3 class="breakdown-header-title">ΑΝΑΛΥΤΙΚΗ ΑΞΙΟΛΟΓΗΣΗ</h3>
+            </div>
+        </div>
+    `;
+
+    solution.breakdown.forEach(line => {
+        if (!line || line.trim() === '') return;
+        if (line.includes('ΤΕΛΙΚΗ ΒΑΘΜΟΛΟΓΙΑ')) return;
+
+        const colonIndex = line.indexOf(':');
+        if (colonIndex === -1) {
+            breakdownHTML += `<div class="breakdown-item">${line}</div>`;
+            return;
+        }
+        
+        const type = line.substring(0, colonIndex);
+        const content = line.substring(colonIndex + 1);
+        
+        let itemClass = '';
+        let icon = '';
+        
+        if (type === 'HEADER') {
+            itemClass = 'header';
+        } else if (type === 'SUCCESS') {
+            itemClass = 'success';
+            icon = '✓';
+        } else if (type === 'PENALTY') {
+            itemClass = 'penalty';
+            icon = '✗';
+        } else if (type === 'ERROR') {
+            itemClass = 'error';
+            icon = '⚠';
+        } else if (type === 'INFO') {
+            itemClass = 'info';
+            icon = 'ℹ';
+        } else if (type === 'CONTRADICTION') {
+            itemClass = 'contradiction';
+            icon = '⚠';
+        } else if (type === 'SUBHEADER') {
+            itemClass = 'subheader';
+        } else if (type === 'ITEM') {
+            itemClass = 'item';
+            icon = '';
+        }
+        
+        breakdownHTML += `
+            <div class="breakdown-item ${itemClass}">
+                ${icon ? `<div class="breakdown-item-icon">${icon}</div>` : ''}
+                <div class="breakdown-item-content">${content}</div>
+            </div>
+        `;
+    });
     
     breakdownCard.innerHTML = breakdownHTML;
     resultDiv.appendChild(breakdownCard);
@@ -1870,27 +2065,19 @@ function displayResultsLeaderboard(teams) {
         const rankEmoji = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : rank;
 
         const isCurrentTeam = team.name === teamCode;
-        const rowStyle = isCurrentTeam ? 'background: #fff3cd; font-weight: bold;' : '';
+        const rowClass = isCurrentTeam ? 'current-team-row' : '';
 
         return `
-            <tr style="${rowStyle}">
-                <td class="rank ${rankClass}" style="padding: 12px 10px; font-size: clamp(18px, 4vw, 24px); font-weight: bold; text-align: center;">
-                    ${rankEmoji}
-                </td>
-                <td style="padding: 12px 10px; font-weight: bold; color: #1a1a2e; text-transform: uppercase;">
-                    ${team.name.toUpperCase()}
-                </td>
-                <td style="padding: 12px 10px; font-weight: bold; color: #28a745;">
-                    ${solution.score}/${maxScore}
-                </td>
+            <tr class="${rowClass}">
+                <td class="leaderboard-rank ${rankClass}">${rankEmoji}</td>
+                <td class="leaderboard-team-name">${team.name.toUpperCase()}</td>
+                <td class="leaderboard-score">${solution.score}/${maxScore}</td>
                 <td style="padding: 12px 10px;">
-                    <span style="display: inline-block; padding: 6px 12px; border-radius: 6px; font-size: clamp(10px, 2vw, 12px); font-weight: bold; background: ${grade.color}; color: ${percentage >= 50 ? '#000' : '#fff'};">
+                    <span class="leaderboard-grade-badge" style="background: ${grade.color}; color: ${percentage >= 50 ? '#000' : '#fff'};">
                         ${grade.name}
                     </span>
                 </td>
-                <td style="padding: 12px 10px;">
-                    ${formatTime(solution.completionTimeMs)}
-                </td>
+                <td class="leaderboard-time">${formatTime(solution.completionTimeMs)}</td>
             </tr>
         `;
     }).join('');
@@ -1906,32 +2093,28 @@ function displayResultsLeaderboard(teams) {
         const rankEmoji = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `#${rank}`;
 
         const isCurrentTeam = team.name === teamCode;
-        const cardStyle = isCurrentTeam ? 'border: 3px solid #ffc107; box-shadow: 0 5px 25px rgba(255,193,7,0.4);' : '';
+        const cardClass = isCurrentTeam ? 'current-team' : '';
 
         return `
-            <div style="background: white; border: 2px solid #e0e0e0; border-radius: 12px; padding: 20px; margin-bottom: 15px; ${cardStyle}">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 2px solid #f0f0f0;">
-                    <div class="${rankClass}" style="font-size: 36px; font-weight: bold;">${rankEmoji}</div>
-                    <div style="font-size: 18px; font-weight: bold; color: #1a1a2e; text-transform: uppercase; flex: 1; margin: 0 15px;">
-                        ${team.name.toUpperCase()}
-                    </div>
-                    <div style="font-size: 24px; font-weight: bold; color: #28a745;">
-                        ${solution.score}/${maxScore}
-                    </div>
+            <div class="leaderboard-mobile-card ${cardClass}">
+                <div class="leaderboard-card-header">
+                    <div class="leaderboard-card-rank ${rankClass}">${rankEmoji}</div>
+                    <div class="leaderboard-card-team">${team.name.toUpperCase()}</div>
+                    <div class="leaderboard-card-score">${solution.score}/${maxScore}</div>
                 </div>
                 
-                <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f5f5f5;">
-                    <div style="font-weight: bold; color: #666; font-size: 13px;">ΤΙΤΛΟΣ</div>
-                    <div>
-                        <span style="display: inline-block; padding: 6px 12px; border-radius: 6px; font-size: 10px; font-weight: bold; background: ${grade.color}; color: ${percentage >= 50 ? '#000' : '#fff'};">
+                <div class="leaderboard-card-row">
+                    <div class="leaderboard-card-label">ΤΙΤΛΟΣ</div>
+                    <div class="leaderboard-card-value">
+                        <span class="leaderboard-grade-badge" style="background: ${grade.color}; color: ${percentage >= 50 ? '#000' : '#fff'};">
                             ${grade.name}
                         </span>
                     </div>
                 </div>
                 
-                <div style="display: flex; justify-content: space-between; padding: 10px 0;">
-                    <div style="font-weight: bold; color: #666; font-size: 13px;">ΧΡΟΝΟΣ</div>
-                    <div style="color: #333;">${formatTime(solution.completionTimeMs)}</div>
+                <div class="leaderboard-card-row">
+                    <div class="leaderboard-card-label">ΧΡΟΝΟΣ</div>
+                    <div class="leaderboard-card-value">${formatTime(solution.completionTimeMs)}</div>
                 </div>
             </div>
         `;
