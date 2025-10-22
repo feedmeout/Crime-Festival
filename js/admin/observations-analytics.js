@@ -1,24 +1,19 @@
 let allObservations = [];
 let charts = {};
 
-// Behavior labels in Greek
 const behaviorLabels = {
-    // AI Usage Patterns
     ai_queries: 'Συχνότητα ερωτημάτων AI',
     prompt_quality: 'Ποιότητα προτροπών',
     ai_verification: 'Επαλήθευση απαντήσεων AI',
     
-    // Team Collaboration
     active_discussion: 'Ενεργή συζήτηση',
     info_sharing: 'Ανταλλαγή πληροφοριών',
     task_division: 'Καταμερισμός καθηκόντων',
     
-    // Problem-Solving Approach
     systematic_analysis: 'Συστηματική ανάλυση',
     cross_referencing: 'Διασταύρωση στοιχείων',
     critical_thinking: 'Κριτική σκέψη',
     
-    // Engagement & Motivation
     enthusiasm: 'Ενθουσιασμός',
     persistence: 'Επιμονή',
     focus: 'Εστίαση'
@@ -42,7 +37,6 @@ async function loadAndAnalyzeData() {
     }
 
     try {
-        // Load all submitted observations
         const observationsRef = window.firebaseCollection(window.firebaseDB, 'observations');
         const q = window.firebaseQuery(observationsRef, window.firebaseWhere('status', '==', 'submitted'));
         const snapshot = await window.firebaseGetDocs(q);
@@ -57,16 +51,10 @@ async function loadAndAnalyzeData() {
             return;
         }
 
-        // Calculate statistics
         calculateSummaryStats();
-        
-        // Create charts
         createAllCharts();
-        
-        // Create detailed table
         createDetailedStatsTable();
 
-        // Hide loading, show content
         document.getElementById('loadingOverlay').style.display = 'none';
         document.getElementById('mainContent').style.display = 'block';
 
@@ -170,8 +158,6 @@ function createOverallChart() {
 
     const allBehaviorKeys = Object.keys(behaviorLabels);
     const averages = allBehaviorKeys.map(behavior => calculateAverage(behavior));
-
-    // Color code by category
     const colors = allBehaviorKeys.map(behavior => {
         if (categoryBehaviors['AI Usage Patterns'].includes(behavior)) return '#2563eb';
         if (categoryBehaviors['Team Collaboration'].includes(behavior)) return '#059669';
@@ -234,8 +220,6 @@ function createOverallChart() {
 function createTeamComparisonChart() {
     const ctx = document.getElementById('teamComparisonChart');
     if (!ctx) return;
-
-    // Group by team
     const teamData = {};
     allObservations.forEach(obs => {
         if (!teamData[obs.teamCode]) {
@@ -380,19 +364,12 @@ async function exportToExcel() {
             </div>
         `;
         document.body.appendChild(statusDiv);
-
-        // Prepare data sheets
+		
         const summaryData = prepareSummaryData();
         const detailedData = prepareDetailedData();
         const teamComparisonData = prepareTeamComparisonData();
-
-        // Import SheetJS
         const XLSX = await import('https://cdn.sheetjs.com/xlsx-0.20.1/package/xlsx.mjs');
-        
-        // Create workbook
         const wb = XLSX.utils.book_new();
-        
-        // Add sheets
         const ws1 = XLSX.utils.json_to_sheet(summaryData);
         XLSX.utils.book_append_sheet(wb, ws1, 'Συγκεντρωτικά');
         
@@ -401,8 +378,7 @@ async function exportToExcel() {
         
         const ws3 = XLSX.utils.json_to_sheet(teamComparisonData);
         XLSX.utils.book_append_sheet(wb, ws3, 'Σύγκριση Ομάδων');
-        
-        // Add raw observations
+
         const rawData = allObservations.map(obs => ({
             'ID': obs.id,
             'Παρατηρητής': obs.observerId,
@@ -419,7 +395,6 @@ async function exportToExcel() {
         const ws4 = XLSX.utils.json_to_sheet(rawData);
         XLSX.utils.book_append_sheet(wb, ws4, 'Ακατέργαστα Δεδομένα');
 
-        // Export
         const timestamp = new Date().toISOString().slice(0, 10);
         const filename = `Αναλυτικά_Παρατηρήσεων_${timestamp}.xlsx`;
         XLSX.writeFile(wb, filename);
