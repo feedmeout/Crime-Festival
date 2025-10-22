@@ -317,13 +317,13 @@ function createDetailedStatsTable() {
 
     let html = '<table class="comparison-table">';
     html += '<thead><tr>';
-    html += '<th>Συμπεριφορά</th>';
-    html += '<th>Κατηγορία</th>';
-    html += '<th>Μέσος Όρος</th>';
-    html += '<th>Τυπική Απόκλιση</th>';
-    html += '<th>Min</th>';
-    html += '<th>Max</th>';
-    html += '<th>Σύνολο</th>';
+    html += '<th>ΣΥΜΠΕΡΙΦΟΡΑ</th>';
+    html += '<th>ΚΑΤΗΓΟΡΙΑ</th>';
+    html += '<th>ΜΕΣΟΣ ΟΡΟΣ</th>';
+    html += '<th>ΤΥΠΙΚΗ ΑΠΟΚΛΙΣΗ</th>';
+    html += '<th>MIN</th>';
+    html += '<th>MAX</th>';
+    html += '<th>ΣΥΝΟΛΟ</th>';
     html += '</tr></thead><tbody>';
 
     Object.keys(behaviorLabels).forEach(behaviorKey => {
