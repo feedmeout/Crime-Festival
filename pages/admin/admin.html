@@ -70,12 +70,22 @@
     </div>
 
     <h3 style="color: #0f3460; margin-top: 0;">🎪 EVENT OPERATIONS</h3>
+    
+    <!-- Row 1: Main Operations -->
     <div class="quick-actions">
         <button class="btn" style="background: #ffc107; color: #000;" onclick="window.location.href='leaderboard.html'">🏆 LEADERBOARD (ADMIN)</button>
-        <button class="btn" id="leaderboardToggleBtn" style="background: #dc3545; color: white;" onclick="toggleLeaderboard()">🔒 LOADING...</button>
+        <button class="btn" id="leaderboardToggleBtn" style="background: #dc3545; color: white;" onclick="toggleLeaderboard()">🔒 LEADERBOARD (TEAMS)</button>
         <button class="btn" style="background: #9c27b0; color: white;" onclick="openAlertModal()">📢 ΑΠΟΣΤΟΛΗ ΕΙΔΟΠΟΙΗΣΗΣ</button>
     </div>
 
+    <!-- Row 2: Game Master Observations -->
+    <div class="quick-actions" style="margin-top: 10px;">
+        <button class="btn" style="background: #059669; color: white;" onclick="window.location.href='observation.html'">➕ NEW OBSERVATION</button>
+        <button class="btn" style="background: #2563eb; color: white;" onclick="window.location.href='observations-dashboard.html'">👁️ VIEW OBSERVATIONS</button>
+        <button class="btn" style="background: #7c3aed; color: white;" onclick="window.location.href='observations-analytics.html'">📊 OBSERVATION ANALYTICS</button>
+    </div>
+
+    <!-- Rest of your sections remain the same -->
     <h3 style="color: #0f3460;">💾 DATA MANAGEMENT</h3>
     <div class="quick-actions">
         <button class="btn" style="background: #17a2b8; color: white;" onclick="exportAllData()">💾 EXPORT DATA (GAME)</button>

@@ -1916,3 +1916,100 @@ window.addEventListener('offline', () => {
     console.log('🔴 Offline');
     showSyncStatus('🔴 Offline - Changes may not save', 'error');
 });
+
+async function exportObservations() {
+    if (!window.firebaseDB) {
+        alert('❌ Firebase not available!');
+        return;
+    }
+
+    try {
+        const statusDiv = document.createElement('div');
+        statusDiv.style.cssText = 'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); z-index: 10000; text-align: center;';
+        statusDiv.innerHTML = '<div style="font-size: 48px; margin-bottom: 20px;">👁️</div><h3>Exporting Observations...</h3><p>Please wait...</p>';
+        document.body.appendChild(statusDiv);
+
+        const observationsRef = window.firebaseCollection(window.firebaseDB, 'observations');
+        const querySnapshot = await window.firebaseGetDocs(observationsRef);
+        
+        if (querySnapshot.size === 0) {
+            alert('No observation data found!');
+            document.body.removeChild(statusDiv);
+            return;
+        }
+
+        const observations = [];
+        querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            if (data.status === 'submitted') {
+                observations.push({
+                    docId: doc.id,
+                    ...data
+                });
+            }
+        });
+
+        const processedData = observations.map(obs => {
+            const flatData = {
+                'Document_ID': obs.docId,
+                'Observer_ID': obs.observerId,
+                'Team_Code': obs.teamCode,
+                'Start_Time': obs.startTime,
+                'End_Time': obs.endTime,
+                'Duration_Minutes': Math.round(obs.durationMs / 60000),
+                'Submitted_At': obs.submittedAt,
+                'Number_of_Notes': obs.notes?.length || 0
+            };
+            
+            if (obs.notes && obs.notes.length > 0) {
+                obs.notes.forEach((note, idx) => {
+                    flatData[`Note_${idx + 1}_Time`] = note.timestamp;
+                    flatData[`Note_${idx + 1}_Elapsed`] = Math.round(note.elapsed / 1000) + 's';
+                    flatData[`Note_${idx + 1}_Content`] = note.content;
+                });
+            }
+            
+            if (obs.formData) {
+                Object.keys(obs.formData).forEach(key => {
+                    const value = obs.formData[key];
+                    if (Array.isArray(value)) {
+                        flatData[key] = value.join('; ');
+                    } else {
+                        flatData[key] = value;
+                    }
+                });
+            }
+            
+            return flatData;
+        });
+
+        const XLSX = await import('https://cdn.sheetjs.com/xlsx-0.20.1/package/xlsx.mjs');
+        const wb = XLSX.utils.book_new();
+        const ws = XLSX.utils.json_to_sheet(processedData);
+        
+        const colWidths = Object.keys(processedData[0] || {}).map(key => {
+            const maxLength = Math.max(
+                key.length,
+                ...processedData.map(row => String(row[key] || '').length).slice(0, 100)
+            );
+            return { wch: Math.min(Math.max(maxLength + 2, 10), 50) };
+        });
+        ws['!cols'] = colWidths;
+
+        XLSX.utils.book_append_sheet(wb, ws, 'Observations');
+        
+        const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
+        const filename = `Game_Master_Observations_${timestamp}.xlsx`;
+
+        XLSX.writeFile(wb, filename);
+
+        document.body.removeChild(statusDiv);
+        alert(`✅ Exported: ${filename}\n\n${observations.length} observations exported.`);
+
+    } catch (error) {
+        console.error('❌ Export error:', error);
+        alert('❌ Export failed! Check console.');
+        const statusDiv = document.querySelector('div[style*="position: fixed"]');
+        if (statusDiv) document.body.removeChild(statusDiv);
+    }
+}

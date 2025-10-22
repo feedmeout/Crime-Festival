@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>Game Master Observation - Crime Festival 2025</title>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, doc, setDoc, getDoc, getDocs, collection, updateDoc, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyA_9_40aa_wO_19g-1bIrSB6742aMOPwjo",
+            authDomain: "crime-festival-2025.firebaseapp.com",
+            projectId: "crime-festival-2025",
+            storageBucket: "crime-festival-2025.firebasestorage.app",
+            messagingSenderId: "663770004335",
+            appId: "1:663770004335:web:e42dbd983ab9b5277bc69a"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        window.firebaseDB = db;
+        window.firebaseDoc = doc;
+        window.firebaseSetDoc = setDoc;
+        window.firebaseGetDoc = getDoc;
+        window.firebaseGetDocs = getDocs;
+        window.firebaseCollection = collection;
+        window.firebaseUpdateDoc = updateDoc;
+        window.firebaseOnSnapshot = onSnapshot;
+        
+        console.log("✅ Firebase connected for observations!");
+    </script>
+
+    <link rel="stylesheet" href="../../css/admin/observation.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>👁️ GAME MASTER OBSERVATION PANEL</h1>
+            <p>Crime Festival 2025 - Research Data Collection</p>
+        </div>
+
+        <!-- Session Info -->
+        <div class="section session-info">
+            <h2>📋 SESSION INFORMATION</h2>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Observer Name *</label>
+                    <input type="text" id="observerName" placeholder="Your name" required>
+                </div>
+                <div class="form-group">
+                    <label>Team Being Observed *</label>
+                    <select id="teamSelect" required>
+                        <option value="">Select team...</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="session-status" id="sessionStatus">
+                <div class="status-indicator" id="statusIndicator">⏸️ Not Started</div>
+                <div class="session-timer" id="sessionTimer">00:00:00</div>
+                <button class="btn btn-primary" id="startStopBtn" onclick="toggleSession()">
+                    🎬 Start Observation
+                </button>
+            </div>
+        </div>
+
+        <!-- Quick Notes Section -->
+        <div class="section" id="observationSection" style="display: none;">
+            <h2>📝 QUICK TIMESTAMPED NOTES</h2>
+            <div class="quick-note-input">
+                <textarea id="quickNote" placeholder="Type observation and press 'Add Note' to timestamp it..."></textarea>
+                <button class="btn btn-success" onclick="addQuickNote()">➕ Add Note</button>
+            </div>
+            
+            <div class="notes-timeline" id="notesTimeline">
+                <p class="empty-state">No notes yet. Start adding timestamped observations...</p>
+            </div>
+        </div>
+
+        <!-- Detailed Observation Form -->
+        <div class="section" id="detailedSection" style="display: none;">
+            <h2>🔍 DETAILED OBSERVATIONS</h2>
+            
+            <!-- AI Usage Patterns -->
+            <div class="observation-category">
+                <h3>🤖 AI Usage Patterns</h3>
+                
+                <div class="form-group">
+                    <label>How frequently is the team using AI?</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="ai-frequency" value="constantly"> Constantly (every few minutes)</label>
+                        <label><input type="radio" name="ai-frequency" value="frequently"> Frequently (multiple times per section)</label>
+                        <label><input type="radio" name="ai-frequency" value="occasionally"> Occasionally (a few times total)</label>
+                        <label><input type="radio" name="ai-frequency" value="rarely"> Rarely (once or twice)</label>
+                        <label><input type="radio" name="ai-frequency" value="never"> Never</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Quality of prompts/questions to AI</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="prompt-quality" value="excellent"> Excellent (specific, contextual, well-structured)</label>
+                        <label><input type="radio" name="prompt-quality" value="good"> Good (clear and relevant)</label>
+                        <label><input type="radio" name="prompt-quality" value="average"> Average (basic questions)</label>
+                        <label><input type="radio" name="prompt-quality" value="poor"> Poor (vague or unclear)</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>AI Usage Strategy (check all that apply)</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="ai-strategy" value="evidence-analysis"> Analyzing evidence</label>
+                        <label><input type="checkbox" name="ai-strategy" value="timeline-reconstruction"> Reconstructing timeline</label>
+                        <label><input type="checkbox" name="ai-strategy" value="suspect-evaluation"> Evaluating suspects</label>
+                        <label><input type="checkbox" name="ai-strategy" value="fact-checking"> Fact-checking information</label>
+                        <label><input type="checkbox" name="ai-strategy" value="brainstorming"> Brainstorming theories</label>
+                        <label><input type="checkbox" name="ai-strategy" value="clarification"> Asking for clarification</label>
+                        <label><input type="checkbox" name="ai-strategy" value="cross-referencing"> Cross-referencing evidence</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Notes on AI Usage</label>
+                    <textarea name="ai-usage-notes" rows="3" placeholder="Describe how the team is using AI, any notable patterns, effective or ineffective approaches..."></textarea>
+                </div>
+            </div>
+
+            <!-- Team Collaboration -->
+            <div class="observation-category">
+                <h3>👥 Team Collaboration</h3>
+                
+                <div class="form-group">
+                    <label>Level of collaboration</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="collaboration-level" value="excellent"> Excellent (constant discussion, shared decision-making)</label>
+                        <label><input type="radio" name="collaboration-level" value="good"> Good (regular discussion, mostly collaborative)</label>
+                        <label><input type="radio" name="collaboration-level" value="moderate"> Moderate (some collaboration, some individual work)</label>
+                        <label><input type="radio" name="collaboration-level" value="low"> Low (mostly individual work, minimal discussion)</label>
+                        <label><input type="radio" name="collaboration-level" value="poor"> Poor (conflicts, lack of coordination)</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Communication patterns (check all observed)</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="communication" value="shared-screen"> Sharing screen/evidence</label>
+                        <label><input type="checkbox" name="communication" value="verbal-discussion"> Active verbal discussion</label>
+                        <label><input type="checkbox" name="communication" value="taking-turns"> Taking turns speaking</label>
+                        <label><input type="checkbox" name="communication" value="note-taking"> Collaborative note-taking</label>
+                        <label><input type="checkbox" name="communication" value="role-division"> Clear role division</label>
+                        <label><input type="checkbox" name="communication" value="debate"> Healthy debate/disagreement</label>
+                        <label><input type="checkbox" name="communication" value="silent"> Mostly silent/individual</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Notes on Team Dynamics</label>
+                    <textarea name="collaboration-notes" rows="3" placeholder="Describe team dynamics, leadership patterns, conflicts, synergy..."></textarea>
+                </div>
+            </div>
+
+            <!-- Problem-Solving Approach -->
+            <div class="observation-category">
+                <h3>🧩 Problem-Solving Approach</h3>
+                
+                <div class="form-group">
+                    <label>Overall strategy</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="strategy" value="systematic"> Systematic (methodical, organized approach)</label>
+                        <label><input type="radio" name="strategy" value="analytical"> Analytical (focused on logic and evidence)</label>
+                        <label><input type="radio" name="strategy" value="intuitive"> Intuitive (gut feelings, hunches)</label>
+                        <label><input type="radio" name="strategy" value="random"> Random (jumping between topics)</label>
+                        <label><input type="radio" name="strategy" value="mixed"> Mixed approach</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Evidence handling (check all observed)</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="evidence-handling" value="thorough-reading"> Thorough reading of all evidence</label>
+                        <label><input type="checkbox" name="evidence-handling" value="selective-reading"> Selective/skimming evidence</label>
+                        <label><input type="checkbox" name="evidence-handling" value="cross-referencing"> Cross-referencing evidence pieces</label>
+                        <label><input type="checkbox" name="evidence-handling" value="timeline-building"> Building timeline</label>
+                        <label><input type="checkbox" name="evidence-handling" value="note-taking"> Taking detailed notes</label>
+                        <label><input type="checkbox" name="evidence-handling" value="dismissing-evidence"> Dismissing evidence prematurely</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Critical thinking observed?</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="critical-thinking" value="high"> High (questioning AI, verifying information, considering alternatives)</label>
+                        <label><input type="radio" name="critical-thinking" value="moderate"> Moderate (some questioning, some acceptance)</label>
+                        <label><input type="radio" name="critical-thinking" value="low"> Low (accepting information at face value)</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Notes on Problem-Solving</label>
+                    <textarea name="problem-solving-notes" rows="3" placeholder="Describe their approach, any 'aha' moments, dead ends, breakthroughs..."></textarea>
+                </div>
+            </div>
+
+            <!-- Engagement & Motivation -->
+            <div class="observation-category">
+                <h3>🎯 Engagement & Motivation</h3>
+                
+                <div class="form-group">
+                    <label>Overall engagement level</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="engagement" value="very-high"> Very High (enthusiastic, focused, animated)</label>
+                        <label><input type="radio" name="engagement" value="high"> High (engaged, on-task)</label>
+                        <label><input type="radio" name="engagement" value="moderate"> Moderate (some engagement, some distraction)</label>
+                        <label><input type="radio" name="engagement" value="low"> Low (distracted, minimal effort)</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Observable behaviors (check all observed)</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="behaviors" value="excitement"> Excitement/enthusiasm</label>
+                        <label><input type="checkbox" name="behaviors" value="frustration"> Frustration</label>
+                        <label><input type="checkbox" name="behaviors" value="confusion"> Confusion</label>
+                        <label><input type="checkbox" name="behaviors" value="confidence"> Confidence</label>
+                        <label><input type="checkbox" name="behaviors" value="competitiveness"> Competitiveness</label>
+                        <label><input type="checkbox" name="behaviors" value="giving-up"> Signs of giving up</label>
+                        <label><input type="checkbox" name="behaviors" value="perseverance"> Perseverance through difficulty</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Notes on Engagement</label>
+                    <textarea name="engagement-notes" rows="3" placeholder="Describe team mood, energy levels, reactions to discoveries or setbacks..."></textarea>
+                </div>
+            </div>
+
+            <!-- Critical Incidents -->
+            <div class="observation-category">
+                <h3>⚡ Critical Incidents</h3>
+                
+                <div class="form-group">
+                    <label>Breakthrough Moments</label>
+                    <textarea name="breakthroughs" rows="3" placeholder="Describe any major insights, 'aha' moments, or key discoveries..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Challenges/Difficulties</label>
+                    <textarea name="challenges" rows="3" placeholder="Describe any major obstacles, misunderstandings, or struggles..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Unexpected Behaviors</label>
+                    <textarea name="unexpected" rows="3" placeholder="Note anything surprising or unexpected in their approach..."></textarea>
+                </div>
+            </div>
+
+            <!-- Final Assessment -->
+            <div class="observation-category">
+                <h3>📊 Final Assessment</h3>
+                
+                <div class="form-group">
+                    <label>Overall AI effectiveness for this team</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="ai-effectiveness" value="very-helpful"> Very Helpful (significant aid to solving)</label>
+                        <label><input type="radio" name="ai-effectiveness" value="helpful"> Helpful (useful assistance)</label>
+                        <label><input type="radio" name="ai-effectiveness" value="neutral"> Neutral (neither helped nor hindered)</label>
+                        <label><input type="radio" name="ai-effectiveness" value="hindering"> Hindering (may have confused or misled)</label>
+                        <label><input type="radio" name="ai-effectiveness" value="not-used"> Not used</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Predicted solution quality</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="predicted-quality" value="excellent"> Excellent (likely to solve correctly)</label>
+                        <label><input type="radio" name="predicted-quality" value="good"> Good (on the right track)</label>
+                        <label><input type="radio" name="predicted-quality" value="uncertain"> Uncertain</label>
+                        <label><input type="radio" name="predicted-quality" value="poor"> Poor (significant errors in reasoning)</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Overall Observer Notes</label>
+                    <textarea name="overall-notes" rows="4" placeholder="Any additional observations, patterns, or insights about this team's performance..."></textarea>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button class="btn btn-secondary" onclick="saveDraft()">💾 Save Draft</button>
+                <button class="btn btn-success" onclick="submitObservation()">✅ Submit Final Observation</button>
+            </div>
+        </div>
+
+        <!-- Auto-save indicator -->
+        <div id="autoSaveIndicator" class="auto-save-indicator">
+            <span id="saveStatus">💾 Auto-saved</span>
+        </div>
+    </div>
+
+    <script src="../../js/admin/observation.js"></script>
+</body>
+</html>
