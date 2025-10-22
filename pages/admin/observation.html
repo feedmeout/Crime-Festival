@@ -39,18 +39,17 @@
     <div class="container">
         <div class="header">
             <h1>🕵🏻‍♂️ ΠΑΡΑΤΗΡΗΣΕΙΣ GAME MASTER</h1>
-            <p>Crime Festival 2025</p>
         </div>
 
         <div class="section session-setup" id="setupSection">
             <h2>📋 ΣΤΟΙΧΕΙΑ ΣΥΝΕΔΡΙΑΣ</h2>
             <div class="form-row">
                 <div class="form-group">
-                    <label>Όνομα Παρατηρητή *</label>
-                    <input type="text" id="observerName" placeholder="Το όνομά σας">
+                    <label>ΟΝΟΜΑ ΠΑΡΑΤΗΡΗΤΗ *</label>
+                    <input type="text" id="observerName" placeholder="">
                 </div>
                 <div class="form-group">
-                    <label>Ομάδα προς Παρατήρηση *</label>
+                    <label>ΟΜΑΔΑ *</label>
                     <select id="teamSelect">
                         <option value="">Επιλέξτε ομάδα...</option>
                     </select>
@@ -59,7 +58,7 @@
             
             <div class="session-status">
                 <div class="status-info">
-                    <div class="status-indicator" id="statusIndicator">⏸️ Δεν έχει ξεκινήσει</div>
+                    <div class="status-indicator" id="statusIndicator">⏸️ ΔΕΝ ΕΧΕΙ ΞΕΚΙΝΗΣΕΙ</div>
                     <div class="session-timer" id="sessionTimer">00:00:00</div>
                 </div>
                 <button class="btn btn-primary btn-large" id="startBtn" onclick="startSession()">
@@ -77,7 +76,7 @@
             </div>
 
             <div class="section observation-category">
-                <h2 class="category-title">🤖 Artificial Intelligence Usage Patterns</h2>
+                <h2 class="category-title">🤖 ΜΟΤΙΒΑ ΧΡΗΣΗΣ ΤΝ</h2>
                 <div class="behaviors-grid">
                     <div class="behavior-card">
                         <div class="behavior-label">Συχνότητα ερωτημάτων στο AI</div>
@@ -109,7 +108,7 @@
             </div>
 
             <div class="section observation-category">
-                <h2 class="category-title">👥 Team Collaboration</h2>
+                <h2 class="category-title">👥 ΣΥΝΕΡΓΑΣΙΑ ΟΜΑΔΑΣ</h2>
                 <div class="behaviors-grid">
                     <div class="behavior-card">
                         <div class="behavior-label">Ενεργή συζήτηση μεταξύ μελών</div>
@@ -141,7 +140,7 @@
             </div>
 
             <div class="section observation-category">
-                <h2 class="category-title">🧩 Problem-Solving Approach</h2>
+                <h2 class="category-title">🧩 ΠΡΟΣΕΓΓΙΣΗ ΕΠΙΛΥΣΗΣ ΠΡΟΒΛΗΜΑΤΩΝ</h2>
                 <div class="behaviors-grid">
                     <div class="behavior-card">
                         <div class="behavior-label">Συστηματική ανάλυση στοιχείων</div>
@@ -173,7 +172,7 @@
             </div>
 
             <div class="section observation-category">
-                <h2 class="category-title">🎯 Engagement & Motivation</h2>
+                <h2 class="category-title">🎯 ΕΜΠΛΟΚΗ ΚΑΙ ΚΙΝΗΤΡΟΔΟΤΗΣΗ</h2>
                 <div class="behaviors-grid">
                     <div class="behavior-card">
                         <div class="behavior-label">Ενθουσιασμός / Ενέργεια</div>
@@ -206,7 +205,7 @@
 
             <div class="section notes-section">
                 <h2>📝 ΓΕΝΙΚΕΣ ΣΗΜΕΙΩΣΕΙΣ</h2>
-                <textarea id="generalNotes" placeholder="Γενικές παρατηρήσεις - Πατήστε 'Προσθήκη Σημείωσης' για να αποθηκευτεί με χρονική σήμανση."></textarea>
+                <textarea id="generalNotes" placeholder="Γενικές παρατηρήσεις - πατήστε 'ΠΡΟΣΘΗΚΗ ΣΗΜΕΙΩΣΗΣ' για να αποθηκευτεί με χρονική σήμανση."></textarea>
                 <button class="btn btn-success" onclick="addTimestampedNote()">➕ ΠΡΟΣΘΗΚΗ ΣΗΜΕΙΩΣΗΣ</button>
                 
                 <div class="notes-timeline" id="notesTimeline">

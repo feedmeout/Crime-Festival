@@ -67,7 +67,7 @@ function startSession() {
     const teamCode = document.getElementById('teamSelect').value;
     
     if (!observerName || !teamCode) {
-        alert('⚠️ Παρακαλώ εισάγετε το όνομά σας και επιλέξτε ομάδα!');
+        alert('⚠️ ΕΙΣΑΓΕΤΕ ΤΟ ΟΝΟΜΑ ΣΑΣ ΚΑΙ ΕΠΙΛΕΞΤΕ ΟΜΑΔΑ!');
         return;
     }
     
@@ -135,7 +135,7 @@ function stopTimer() {
 
 function incrementBehavior(behaviorKey) {
     if (!observationSession.isActive || observationSession.isPaused) {
-        alert('⚠️ Παρακαλώ ξεκινήστε ή συνεχίστε την παρατήρηση!');
+        alert('⚠️ ΞΕΚΙΝΗΣΤΕ Η ΣΥΝΕΧΙΣΤΕ ΤΗΝ ΠΑΡΑΤΗΡΗΣΗ!');
         return;
     }
     
@@ -171,12 +171,12 @@ function addTimestampedNote() {
     const noteText = document.getElementById('generalNotes').value.trim();
     
     if (!noteText) {
-        alert('⚠️ Παρακαλώ γράψτε μια σημείωση!');
+        alert('⚠️ ΓΡΑΨΤΕ ΜΙΑ ΣΗΜΕΙΩΣΗ!');
         return;
     }
     
     if (!observationSession.isActive) {
-        alert('⚠️ Παρακαλώ ξεκινήστε την παρατήρηση πρώτα!');
+        alert('⚠️ ΞΕΚΙΝΗΣΤΕ ΤΗΝ ΠΑΡΑΤΗΡΗΣΗ ΠΡΩΤΑ!');
         return;
     }
     
@@ -261,7 +261,7 @@ function scheduleAutoSave() {
 
 async function saveDraft(silent = false) {
     if (!observationSession.isActive) {
-        if (!silent) alert('⚠️ Παρακαλώ ξεκινήστε την παρατήρηση πρώτα!');
+        if (!silent) alert('⚠️ ΞΕΚΙΝΗΣΤΕ ΤΗΝ ΠΑΡΑΤΗΡΗΣΗ ΠΡΩΤΑ!');
         return;
     }
     
