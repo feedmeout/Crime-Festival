@@ -69,8 +69,7 @@ function showNoDataMessage() {
     document.getElementById('loadingOverlay').innerHTML = `
         <div class="loading-content">
             <div style="font-size: 48px; margin-bottom: 20px;">📭</div>
-            <h3>Δεν υπάρχουν δεδομένα</h3>
-            <p>Δεν βρέθηκαν υποβληθείσες παρατηρήσεις.</p>
+            <h3>ΔΕΝ ΥΠΑΡΧΟΥΝ ΔΕΔΟΜΕΝΑ</h3>
             <button class="btn btn-primary" onclick="window.location.href='observation.html'" style="margin-top: 20px;">
                 ➕ ΝΕΑ ΠΑΡΑΤΗΡΗΣΗ
             </button>

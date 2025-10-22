@@ -43,16 +43,37 @@ async function loadTeams() {
     }
     
     try {
+        // Load all teams
         const teamsRef = window.firebaseCollection(window.firebaseDB, 'teams');
-        const snapshot = await window.firebaseGetDocs(teamsRef);
+        const teamsSnapshot = await window.firebaseGetDocs(teamsRef);
+        
+        // Load all submitted observations to check which teams already have observations
+        const observationsRef = window.firebaseCollection(window.firebaseDB, 'observations');
+        const observationsSnapshot = await window.firebaseGetDocs(observationsRef);
+        
+        const observedTeams = new Set();
+        observationsSnapshot.forEach(doc => {
+            const data = doc.data();
+            if (data.status === 'submitted' && data.teamCode) {
+                observedTeams.add(data.teamCode);
+            }
+        });
         
         const select = document.getElementById('teamSelect');
         const options = ['<option value="">Επιλέξτε ομάδα...</option>'];
         
-        snapshot.forEach(doc => {
+        teamsSnapshot.forEach(doc => {
             const team = doc.data();
             if (!team.deleted) {
-                options.push(`<option value="${doc.id}">${doc.id.toUpperCase()}</option>`);
+                const teamCode = doc.id;
+                const isObserved = observedTeams.has(teamCode);
+                const label = isObserved ? 
+                    `${teamCode.toUpperCase()} ✅ (ΗΔΗ ΠΑΡΑΤΗΡΗΘΗΚΕ)` : 
+                    teamCode.toUpperCase();
+                
+                // Add option but keep it enabled for transparency
+                // The validation in startSession will prevent actual duplicate observations
+                options.push(`<option value="${teamCode}">${label}</option>`);
             }
         });
         
@@ -62,13 +83,41 @@ async function loadTeams() {
     }
 }
 
-function startSession() {
+async function startSession() {
     const observerName = document.getElementById('observerName').value.trim();
     const teamCode = document.getElementById('teamSelect').value;
     
     if (!observerName || !teamCode) {
         alert('⚠️ ΕΙΣΑΓΕΤΕ ΤΟ ΟΝΟΜΑ ΣΑΣ ΚΑΙ ΕΠΙΛΕΞΤΕ ΟΜΑΔΑ!');
         return;
+    }
+    
+    // FIXED: Check if team already has a submitted observation
+    try {
+        const observationsRef = window.firebaseCollection(window.firebaseDB, 'observations');
+        const snapshot = await window.firebaseGetDocs(observationsRef);
+        
+        let existingObservation = null;
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            if (data.teamCode === teamCode && data.status === 'submitted') {
+                existingObservation = data;
+            }
+        });
+        
+        if (existingObservation) {
+            const observerInfo = existingObservation.observerId || 'Άγνωστος παρατηρητής';
+            const dateInfo = existingObservation.submittedAt ? 
+                new Date(existingObservation.submittedAt).toLocaleString('el-GR') : 'Άγνωστη ημερομηνία';
+            
+            alert(`⚠️ Η ΟΜΑΔΑ "${teamCode.toUpperCase()}" ΕΧΕΙ ΗΔΗ ΠΑΡΑΤΗΡΗΘΕΙ!\n\nΠαρατηρητής: ${observerInfo}\nΗμερομηνία: ${dateInfo}\n\nΚΑΘΕ ΟΜΑΔΑ ΜΠΟΡΕΙ ΝΑ ΠΑΙΞΕΙ ΜΟΝΟ ΜΙΑ ΦΟΡΑ.`);
+            return;
+        }
+    } catch (error) {
+        console.error('Σφάλμα ελέγχου υπάρχουσας παρατήρησης:', error);
+        if (!confirm('⚠️ ΔΕΝ ΜΠΟΡΕΣΑΜΕ ΝΑ ΕΛΕΓΞΟΥΜΕ ΑΝ Η ΟΜΑΔΑ ΕΧΕΙ ΗΔΗ ΠΑΡΑΤΗΡΗΘΕΙ.\n\nΘΕΛΕΤΕ ΝΑ ΣΥΝΕΧΙΣΕΤΕ;')) {
+            return;
+        }
     }
     
     observationSession.observerId = observerName;
