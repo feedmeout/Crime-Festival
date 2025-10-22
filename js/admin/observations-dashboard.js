@@ -8,7 +8,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
 async function loadObservations() {
     if (!window.firebaseDB) {
-        console.error('Firebase not ready');
+        console.error('Firebase δεν είναι έτοιμο');
         return;
     }
 
@@ -28,34 +28,28 @@ async function loadObservations() {
             if (data.observerId) observers.add(data.observerId);
         });
 
-        // Populate filters
         populateFilters(teams, observers);
-
-        // Calculate stats
         updateStats();
 
-        // Display observations
         filteredObservations = [...allObservations];
         renderObservations();
 
     } catch (error) {
-        console.error('Error loading observations:', error);
+        console.error('Σφάλμα φόρτωσης παρατηρήσεων:', error);
         showError();
     }
 }
 
 function populateFilters(teams, observers) {
-    // Team filter
     const teamFilter = document.getElementById('teamFilter');
-    const teamOptions = ['<option value="all">All Teams</option>'];
+    const teamOptions = ['<option value="all">Όλες οι Ομάδες</option>'];
     Array.from(teams).sort().forEach(team => {
         teamOptions.push(`<option value="${team}">${team.toUpperCase()}</option>`);
     });
     teamFilter.innerHTML = teamOptions.join('');
 
-    // Observer filter
     const observerFilter = document.getElementById('observerFilter');
-    const observerOptions = ['<option value="all">All Observers</option>'];
+    const observerOptions = ['<option value="all">Όλοι οι Παρατηρητές</option>'];
     Array.from(observers).sort().forEach(observer => {
         observerOptions.push(`<option value="${observer}">${observer}</option>`);
     });
@@ -100,14 +94,13 @@ function renderObservations() {
         grid.innerHTML = `
             <div class="empty-state">
                 <div class="empty-state-icon">📭</div>
-                <h3>No observations found</h3>
-                <p>Start a new observation or adjust your filters</p>
+                <h3>Δεν βρέθηκαν παρατηρήσεις</h3>
+                <p>Ξεκινήστε μια νέα παρατήρηση ή προσαρμόστε τα φίλτρα</p>
             </div>
         `;
         return;
     }
 
-    // Sort by date (newest first)
     const sorted = [...filteredObservations].sort((a, b) => {
         const dateA = new Date(a.submittedAt || a.startTime || 0);
         const dateB = new Date(b.submittedAt || b.startTime || 0);
@@ -116,44 +109,52 @@ function renderObservations() {
 
     const html = sorted.map(obs => {
         const isDraft = obs.status !== 'submitted';
-        const duration = obs.durationMs ? formatDuration(obs.durationMs) : 'N/A';
+        const duration = obs.durationMs ? formatDuration(obs.durationMs) : 'Μ/Δ';
         const date = obs.submittedAt || obs.startTime;
-        const formattedDate = date ? new Date(date).toLocaleString('el-GR') : 'N/A';
+        const formattedDate = date ? new Date(date).toLocaleString('el-GR') : 'Μ/Δ';
+        
+        // Handle both old and new formats
+        const behaviorCount = obs.totalBehaviorCount || obs.behaviors ? 
+            (obs.totalBehaviorCount || Object.values(obs.behaviors || {}).reduce((sum, val) => sum + val, 0)) : 0;
 
         return `
             <div class="observation-card ${isDraft ? 'draft' : ''}">
                 <div class="observation-header">
-                    <div class="observation-title">👥 ${obs.teamCode?.toUpperCase() || 'Unknown Team'}</div>
+                    <div class="observation-title">👥 ${obs.teamCode?.toUpperCase() || 'Άγνωστη Ομάδα'}</div>
                     <div class="observation-status ${isDraft ? 'status-draft' : 'status-submitted'}">
-                        ${isDraft ? '📝 DRAFT' : '✅ SUBMITTED'}
+                        ${isDraft ? '📝 ΠΡΟΧΕΙΡΟ' : '✅ ΥΠΟΒΛΗΘΗΚΕ'}
                     </div>
                 </div>
 
                 <div class="observation-meta">
                     <div class="meta-item">
-                        <span class="meta-label">Observer:</span>
-                        <span class="meta-value">${obs.observerId || 'N/A'}</span>
+                        <span class="meta-label">Παρατηρητής:</span>
+                        <span class="meta-value">${obs.observerId || 'Μ/Δ'}</span>
                     </div>
                     <div class="meta-item">
-                        <span class="meta-label">Duration:</span>
+                        <span class="meta-label">Διάρκεια:</span>
                         <span class="meta-value">${duration}</span>
                     </div>
                     <div class="meta-item">
-                        <span class="meta-label">Notes:</span>
-                        <span class="meta-value">${obs.notes?.length || 0} timestamped</span>
+                        <span class="meta-label">Συμπεριφορές:</span>
+                        <span class="meta-value"><strong>${behaviorCount}</strong></span>
                     </div>
                     <div class="meta-item">
-                        <span class="meta-label">Date:</span>
+                        <span class="meta-label">Σημειώσεις:</span>
+                        <span class="meta-value">${obs.notes?.length || 0}</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Ημερομηνία:</span>
                         <span class="meta-value">${formattedDate}</span>
                     </div>
                 </div>
 
                 <div class="observation-actions">
                     <button class="btn btn-primary btn-small" onclick="viewObservation('${obs.id}')">
-                        👁️ VIEW
+                        👁️ ΠΡΟΒΟΛΗ
                     </button>
                     <button class="btn btn-danger btn-small" onclick="deleteObservation('${obs.id}')">
-                        🗑️ DELETE
+                        🗑️ ΔΙΑΓΡΑΦΗ
                     </button>
                 </div>
             </div>
@@ -166,7 +167,7 @@ function renderObservations() {
 function formatDuration(ms) {
     const minutes = Math.floor(ms / 60000);
     const seconds = Math.floor((ms % 60000) / 1000);
-    return `${minutes}m ${seconds}s`;
+    return `${minutes}λ ${seconds}δ`;
 }
 
 function viewObservation(obsId) {
@@ -174,18 +175,18 @@ function viewObservation(obsId) {
     if (!obs) return;
 
     const isDraft = obs.status !== 'submitted';
-    const duration = obs.durationMs ? formatDuration(obs.durationMs) : 'N/A';
+    const duration = obs.durationMs ? formatDuration(obs.durationMs) : 'Μ/Δ';
 
     let html = `
         <div style="padding: 20px;">
             <div style="background: ${isDraft ? '#fff3cd' : '#d4edda'}; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-                <h3 style="margin-bottom: 10px;">📋 Basic Information</h3>
+                <h3 style="margin-bottom: 10px;">📋 Βασικές Πληροφορίες</h3>
                 <div style="display: grid; gap: 10px;">
-                    <div><strong>Team:</strong> ${obs.teamCode?.toUpperCase() || 'N/A'}</div>
-                    <div><strong>Observer:</strong> ${obs.observerId || 'N/A'}</div>
-                    <div><strong>Duration:</strong> ${duration}</div>
-                    <div><strong>Status:</strong> ${isDraft ? '📝 DRAFT' : '✅ SUBMITTED'}</div>
-                    <div><strong>Date:</strong> ${new Date(obs.submittedAt || obs.startTime).toLocaleString('el-GR')}</div>
+                    <div><strong>Ομάδα:</strong> ${obs.teamCode?.toUpperCase() || 'Μ/Δ'}</div>
+                    <div><strong>Παρατηρητής:</strong> ${obs.observerId || 'Μ/Δ'}</div>
+                    <div><strong>Διάρκεια:</strong> ${duration}</div>
+                    <div><strong>Κατάσταση:</strong> ${isDraft ? '📝 ΠΡΟΧΕΙΡΟ' : '✅ ΥΠΟΒΛΗΘΗΚΕ'}</div>
+                    <div><strong>Ημερομηνία:</strong> ${new Date(obs.submittedAt || obs.startTime).toLocaleString('el-GR')}</div>
                 </div>
             </div>
     `;
@@ -194,7 +195,7 @@ function viewObservation(obsId) {
     if (obs.notes && obs.notes.length > 0) {
         html += `
             <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-                <h3 style="margin-bottom: 15px;">📝 Timestamped Notes (${obs.notes.length})</h3>
+                <h3 style="margin-bottom: 15px;">📝 Σημειώσεις με Χρονική Σήμανση (${obs.notes.length})</h3>
                 ${obs.notes.map((note, idx) => `
                     <div style="background: white; padding: 12px; margin-bottom: 10px; border-radius: 5px; border-left: 4px solid #2563eb;">
                         <div style="font-size: 12px; color: #666; margin-bottom: 5px;">
@@ -207,11 +208,18 @@ function viewObservation(obsId) {
         `;
     }
 
-    // Form Responses
-    if (obs.formData) {
+    // Behavior Data or Form Data
+    if (obs.behaviors) {
         html += `
             <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
-                <h3 style="margin-bottom: 15px;">📊 Observation Data</h3>
+                <h3 style="margin-bottom: 15px;">📊 Συχνότητες Συμπεριφορών</h3>
+                ${renderBehaviorData(obs.behaviors)}
+            </div>
+        `;
+    } else if (obs.formData) {
+        html += `
+            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                <h3 style="margin-bottom: 15px;">📊 Δεδομένα Παρατήρησης</h3>
                 ${renderFormData(obs.formData)}
             </div>
         `;
@@ -223,6 +231,54 @@ function viewObservation(obsId) {
     document.getElementById('viewModal').classList.add('active');
 }
 
+function renderBehaviorData(behaviors) {
+    const behaviorLabels = {
+        ai_queries: 'Συχνότητα ερωτημάτων AI',
+        prompt_quality: 'Ποιότητα προτροπών',
+        ai_verification: 'Επαλήθευση απαντήσεων AI',
+        active_discussion: 'Ενεργή συζήτηση',
+        info_sharing: 'Ανταλλαγή πληροφοριών',
+        task_division: 'Καταμερισμός καθηκόντων',
+        systematic_analysis: 'Συστηματική ανάλυση',
+        cross_referencing: 'Διασταύρωση στοιχείων',
+        critical_thinking: 'Κριτική σκέψη',
+        enthusiasm: 'Ενθουσιασμός',
+        persistence: 'Επιμονή',
+        focus: 'Εστίαση'
+    };
+
+    const categories = {
+        'AI Usage Patterns': ['ai_queries', 'prompt_quality', 'ai_verification'],
+        'Team Collaboration': ['active_discussion', 'info_sharing', 'task_division'],
+        'Problem-Solving Approach': ['systematic_analysis', 'cross_referencing', 'critical_thinking'],
+        'Engagement & Motivation': ['enthusiasm', 'persistence', 'focus']
+    };
+
+    let html = '';
+
+    Object.keys(categories).forEach(category => {
+        html += `<div style="margin-bottom: 20px;">`;
+        html += `<h4 style="color: #0f3460; margin-bottom: 10px; border-bottom: 2px solid #ddd; padding-bottom: 5px;">${category}</h4>`;
+        html += `<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">`;
+
+        categories[category].forEach(key => {
+            const value = behaviors[key] || 0;
+            const label = behaviorLabels[key] || key;
+            
+            html += `
+                <div style="background: white; padding: 12px; border-radius: 5px; display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-weight: 600; color: #333;">${label}</span>
+                    <span style="font-weight: 700; color: #ff6b00; font-size: 20px;">${value}</span>
+                </div>
+            `;
+        });
+
+        html += `</div></div>`;
+    });
+
+    return html;
+}
+
 function renderFormData(formData) {
     let html = '<div style="display: grid; gap: 15px;">';
 
@@ -232,9 +288,9 @@ function renderFormData(formData) {
         
         let displayValue;
         if (Array.isArray(value)) {
-            displayValue = value.length > 0 ? value.join(', ') : 'None';
+            displayValue = value.length > 0 ? value.join(', ') : 'Κανένα';
         } else {
-            displayValue = value || 'N/A';
+            displayValue = value || 'Μ/Δ';
         }
 
         html += `
@@ -267,52 +323,60 @@ function closeViewModal() {
 }
 
 async function deleteObservation(obsId) {
-    if (!confirm('Delete this observation? This cannot be undone.')) return;
+    if (!confirm('Διαγραφή αυτής της παρατήρησης; Αυτό δεν μπορεί να αναιρεθεί.')) return;
 
     try {
         await window.firebaseDeleteDoc(window.firebaseDoc(window.firebaseDB, 'observations', obsId));
-        alert('✅ Observation deleted!');
+        alert('✅ Η παρατήρηση διαγράφηκε!');
         await loadObservations();
     } catch (error) {
-        console.error('Error deleting:', error);
-        alert('❌ Delete failed!');
+        console.error('Σφάλμα διαγραφής:', error);
+        alert('❌ Αποτυχία διαγραφής!');
     }
 }
 
 async function exportObservationsToExcel() {
     if (filteredObservations.length === 0) {
-        alert('No observations to export!');
+        alert('Δεν υπάρχουν παρατηρήσεις για εξαγωγή!');
         return;
     }
 
     try {
         const statusDiv = document.createElement('div');
         statusDiv.style.cssText = 'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); z-index: 10000; text-align: center;';
-        statusDiv.innerHTML = '<div style="font-size: 48px; margin-bottom: 20px;">👁️</div><h3>Exporting...</h3>';
+        statusDiv.innerHTML = '<div style="font-size: 48px; margin-bottom: 20px;">👁️</div><h3>Εξαγωγή...</h3>';
         document.body.appendChild(statusDiv);
 
         const processedData = filteredObservations.map(obs => {
             const flatData = {
-                'Document_ID': obs.id,
-                'Observer_ID': obs.observerId,
-                'Team_Code': obs.teamCode,
-                'Status': obs.status,
-                'Start_Time': obs.startTime,
-                'End_Time': obs.endTime,
-                'Duration_Minutes': obs.durationMs ? Math.round(obs.durationMs / 60000) : 0,
-                'Submitted_At': obs.submittedAt,
-                'Number_of_Notes': obs.notes?.length || 0
+                'ID_Εγγράφου': obs.id,
+                'Παρατηρητής': obs.observerId,
+                'Κωδικός_Ομάδας': obs.teamCode,
+                'Κατάσταση': obs.status,
+                'Ώρα_Έναρξης': obs.startTime,
+                'Ώρα_Λήξης': obs.endTime,
+                'Διάρκεια_Λεπτά': obs.durationMs ? Math.round(obs.durationMs / 60000) : 0,
+                'Υποβλήθηκε_Στις': obs.submittedAt,
+                'Αριθμός_Σημειώσεων': obs.notes?.length || 0,
+                'Σύνολο_Συμπεριφορών': obs.totalBehaviorCount || 0
             };
+
+            // Add behavior frequencies if available
+            if (obs.behaviors) {
+                Object.keys(obs.behaviors).forEach(key => {
+                    flatData[key] = obs.behaviors[key];
+                });
+            }
 
             // Add notes
             if (obs.notes) {
                 obs.notes.forEach((note, idx) => {
-                    flatData[`Note_${idx + 1}_Time`] = note.timestamp;
-                    flatData[`Note_${idx + 1}_Content`] = note.content;
+                    flatData[`Σημείωση_${idx + 1}_Χρόνος`] = note.timestamp;
+                    flatData[`Σημείωση_${idx + 1}_Περιεχόμενο`] = note.content;
                 });
             }
 
-            // Add form data
+            // Add old format form data if available
             if (obs.formData) {
                 Object.keys(obs.formData).forEach(key => {
                     const value = obs.formData[key];
@@ -326,18 +390,18 @@ async function exportObservationsToExcel() {
         const XLSX = await import('https://cdn.sheetjs.com/xlsx-0.20.1/package/xlsx.mjs');
         const wb = XLSX.utils.book_new();
         const ws = XLSX.utils.json_to_sheet(processedData);
-        XLSX.utils.book_append_sheet(wb, ws, 'Observations');
+        XLSX.utils.book_append_sheet(wb, ws, 'Παρατηρήσεις');
 
         const timestamp = new Date().toISOString().slice(0, 10);
-        const filename = `Game_Master_Observations_${timestamp}.xlsx`;
+        const filename = `Παρατηρήσεις_Game_Master_${timestamp}.xlsx`;
         XLSX.writeFile(wb, filename);
 
         document.body.removeChild(statusDiv);
-        alert(`✅ Exported: ${filename}`);
+        alert(`✅ Εξαγωγή ολοκληρώθηκε: ${filename}`);
 
     } catch (error) {
-        console.error('Export error:', error);
-        alert('❌ Export failed!');
+        console.error('Σφάλμα εξαγωγής:', error);
+        alert('❌ Αποτυχία εξαγωγής!');
     }
 }
 
@@ -354,8 +418,8 @@ function showError() {
     document.getElementById('observationsGrid').innerHTML = `
         <div class="empty-state">
             <div class="empty-state-icon">❌</div>
-            <h3>Error Loading Observations</h3>
-            <p>Please refresh the page</p>
+            <h3>Σφάλμα Φόρτωσης Παρατηρήσεων</h3>
+            <p>Παρακαλώ ανανεώστε τη σελίδα</p>
         </div>
     `;
 }

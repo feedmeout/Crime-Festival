@@ -1,10 +1,38 @@
+// Observation Session State
 let observationSession = {
     observerId: null,
     teamCode: null,
     startTime: null,
-    notes: [],
-    formData: {},
-    isActive: false
+    pauseTime: null,
+    totalPausedMs: 0,
+    isActive: false,
+    isPaused: false,
+    
+    // Behavior frequency counters
+    behaviors: {
+        // AI Usage Patterns
+        ai_queries: 0,
+        prompt_quality: 0,
+        ai_verification: 0,
+        
+        // Team Collaboration
+        active_discussion: 0,
+        info_sharing: 0,
+        task_division: 0,
+        
+        // Problem-Solving Approach
+        systematic_analysis: 0,
+        cross_referencing: 0,
+        critical_thinking: 0,
+        
+        // Engagement & Motivation
+        enthusiasm: 0,
+        persistence: 0,
+        focus: 0
+    },
+    
+    // Timestamped notes
+    notes: []
 };
 
 let sessionTimer = null;
@@ -13,22 +41,12 @@ let autoSaveTimer = null;
 // Initialize
 window.addEventListener('DOMContentLoaded', async () => {
     await loadTeams();
-    loadDraft();
-    setupAutoSave();
-    
-    // Listen for form changes
-    document.querySelectorAll('input, textarea, select').forEach(element => {
-        element.addEventListener('change', () => {
-            if (observationSession.isActive) {
-                scheduleAutoSave();
-            }
-        });
-    });
+    checkForDraft();
 });
 
 async function loadTeams() {
     if (!window.firebaseDB) {
-        console.error('Firebase not ready');
+        console.error('Firebase δεν είναι έτοιμο');
         return;
     }
     
@@ -37,7 +55,7 @@ async function loadTeams() {
         const snapshot = await window.firebaseGetDocs(teamsRef);
         
         const select = document.getElementById('teamSelect');
-        const options = ['<option value="">Select team...</option>'];
+        const options = ['<option value="">Επιλέξτε ομάδα...</option>'];
         
         snapshot.forEach(doc => {
             const team = doc.data();
@@ -48,81 +66,79 @@ async function loadTeams() {
         
         select.innerHTML = options.join('');
     } catch (error) {
-        console.error('Error loading teams:', error);
+        console.error('Σφάλμα φόρτωσης ομάδων:', error);
     }
 }
 
-function toggleSession() {
+function startSession() {
     const observerName = document.getElementById('observerName').value.trim();
     const teamCode = document.getElementById('teamSelect').value;
     
-    if (!observationSession.isActive) {
-        // Start session
-        if (!observerName || !teamCode) {
-            alert('⚠️ Please enter observer name and select a team!');
-            return;
-        }
-        
-        observationSession.observerId = observerName;
-        observationSession.teamCode = teamCode;
-        observationSession.startTime = new Date().toISOString();
-        observationSession.isActive = true;
-        
-        // Update UI
-        document.getElementById('statusIndicator').textContent = '🟢 Observing...';
-        document.getElementById('statusIndicator').classList.add('active');
-        document.getElementById('startStopBtn').textContent = '⏸️ End Observation';
-        document.getElementById('startStopBtn').classList.remove('btn-primary');
-        document.getElementById('startStopBtn').classList.add('btn-secondary');
-        
-        // Disable editing session info
-        document.getElementById('observerName').disabled = true;
-        document.getElementById('teamSelect').disabled = true;
-        
-        // Show observation sections
-        document.getElementById('observationSection').style.display = 'block';
-        document.getElementById('detailedSection').style.display = 'block';
-        
-        // Start timer
-        startTimer();
-        
-        console.log('✅ Observation session started');
-    } else {
-        // End session
-        if (!confirm('End observation session? Make sure you\'ve saved or submitted your observations!')) {
-            return;
-        }
-        
-        stopSession();
+    if (!observerName || !teamCode) {
+        alert('⚠️ Παρακαλώ εισάγετε το όνομά σας και επιλέξτε ομάδα!');
+        return;
     }
+    
+    observationSession.observerId = observerName;
+    observationSession.teamCode = teamCode;
+    observationSession.startTime = new Date().toISOString();
+    observationSession.isActive = true;
+    observationSession.isPaused = false;
+    
+    // Hide setup, show observation interface
+    document.getElementById('setupSection').style.display = 'none';
+    document.getElementById('observationInterface').style.display = 'block';
+    
+    // Start timer
+    startTimer();
+    
+    // Setup auto-save
+    setupAutoSave();
+    
+    console.log('✅ Παρατήρηση ξεκίνησε:', observationSession);
 }
 
-function stopSession() {
-    observationSession.isActive = false;
-    stopTimer();
+function pauseSession() {
+    if (!observationSession.isActive) return;
     
-    // Update UI
-    document.getElementById('statusIndicator').textContent = '⏸️ Session Ended';
-    document.getElementById('statusIndicator').classList.remove('active');
-    document.getElementById('startStopBtn').textContent = '🎬 Start New Observation';
-    document.getElementById('startStopBtn').classList.remove('btn-secondary');
-    document.getElementById('startStopBtn').classList.add('btn-primary');
-    
-    console.log('⏸️ Observation session ended');
+    if (observationSession.isPaused) {
+        // Resume
+        const pauseDuration = Date.now() - new Date(observationSession.pauseTime).getTime();
+        observationSession.totalPausedMs += pauseDuration;
+        observationSession.isPaused = false;
+        observationSession.pauseTime = null;
+        
+        document.getElementById('statusIndicator').textContent = '🟢 Σε εξέλιξη';
+        document.getElementById('statusIndicator').className = 'status-indicator active';
+        
+        startTimer();
+    } else {
+        // Pause
+        observationSession.isPaused = true;
+        observationSession.pauseTime = new Date().toISOString();
+        
+        document.getElementById('statusIndicator').textContent = '⏸️ Παύση';
+        document.getElementById('statusIndicator').className = 'status-indicator paused';
+        
+        stopTimer();
+    }
 }
 
 function startTimer() {
     sessionTimer = setInterval(() => {
-        if (!observationSession.startTime) return;
+        if (!observationSession.startTime || observationSession.isPaused) return;
         
-        const elapsed = Date.now() - new Date(observationSession.startTime).getTime();
+        const elapsed = Date.now() - new Date(observationSession.startTime).getTime() - observationSession.totalPausedMs;
         const hours = Math.floor(elapsed / 3600000);
         const minutes = Math.floor((elapsed % 3600000) / 60000);
         const seconds = Math.floor((elapsed % 60000) / 1000);
         
         document.getElementById('sessionTimer').textContent = 
             `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-    }, 1000);
+    }, 100);
+    
+    document.getElementById('statusIndicator').textContent = '🟢 Σε εξέλιξη';
+    document.getElementById('statusIndicator').className = 'status-indicator active';
 }
 
 function stopTimer() {
@@ -132,22 +148,61 @@ function stopTimer() {
     }
 }
 
-function addQuickNote() {
-    const noteText = document.getElementById('quickNote').value.trim();
+function incrementBehavior(behaviorKey) {
+    if (!observationSession.isActive || observationSession.isPaused) {
+        alert('⚠️ Παρακαλώ ξεκινήστε ή συνεχίστε την παρατήρηση!');
+        return;
+    }
+    
+    observationSession.behaviors[behaviorKey]++;
+    updateCounterDisplay(behaviorKey);
+    scheduleAutoSave();
+}
+
+function decrementBehavior(behaviorKey) {
+    if (!observationSession.isActive) return;
+    
+    if (observationSession.behaviors[behaviorKey] > 0) {
+        observationSession.behaviors[behaviorKey]--;
+        updateCounterDisplay(behaviorKey);
+        scheduleAutoSave();
+    }
+}
+
+function updateCounterDisplay(behaviorKey) {
+    const display = document.getElementById(`counter_${behaviorKey}`);
+    if (display) {
+        display.textContent = observationSession.behaviors[behaviorKey];
+        
+        // Visual feedback
+        display.style.transform = 'scale(1.2)';
+        display.style.color = 'var(--primary-color)';
+        setTimeout(() => {
+            display.style.transform = 'scale(1)';
+            display.style.color = 'var(--text-dark)';
+        }, 200);
+    }
+}
+
+function addTimestampedNote() {
+    const noteText = document.getElementById('generalNotes').value.trim();
     
     if (!noteText) {
-        alert('⚠️ Please enter a note!');
+        alert('⚠️ Παρακαλώ γράψτε μια σημείωση!');
         return;
     }
     
     if (!observationSession.isActive) {
-        alert('⚠️ Please start an observation session first!');
+        alert('⚠️ Παρακαλώ ξεκινήστε την παρατήρηση πρώτα!');
         return;
     }
     
+    const now = new Date();
+    const elapsed = now.getTime() - new Date(observationSession.startTime).getTime() - observationSession.totalPausedMs;
+    
     const note = {
-        timestamp: new Date().toISOString(),
-        elapsed: Date.now() - new Date(observationSession.startTime).getTime(),
+        timestamp: now.toISOString(),
+        elapsed: elapsed,
         content: noteText
     };
     
@@ -155,7 +210,7 @@ function addQuickNote() {
     renderNotes();
     
     // Clear input
-    document.getElementById('quickNote').value = '';
+    document.getElementById('generalNotes').value = '';
     
     // Auto-save
     scheduleAutoSave();
@@ -165,7 +220,7 @@ function renderNotes() {
     const timeline = document.getElementById('notesTimeline');
     
     if (observationSession.notes.length === 0) {
-        timeline.innerHTML = '<p class="empty-state">No notes yet. Start adding timestamped observations...</p>';
+        timeline.innerHTML = '<p class="empty-state">Δεν υπάρχουν σημειώσεις ακόμα...</p>';
         return;
     }
     
@@ -186,7 +241,7 @@ function renderNotes() {
 }
 
 function deleteNote(index) {
-    if (confirm('Delete this note?')) {
+    if (confirm('Διαγραφή αυτής της σημείωσης;')) {
         observationSession.notes.splice(index, 1);
         renderNotes();
         scheduleAutoSave();
@@ -196,7 +251,7 @@ function deleteNote(index) {
 function formatElapsedTime(ms) {
     const minutes = Math.floor(ms / 60000);
     const seconds = Math.floor((ms % 60000) / 1000);
-    return `${minutes}m ${seconds}s`;
+    return `${minutes}λ ${seconds}δ`;
 }
 
 function escapeHtml(text) {
@@ -205,39 +260,11 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
-function collectFormData() {
-    const formData = {};
-    
-    // Collect all radio buttons
-    document.querySelectorAll('input[type="radio"]:checked').forEach(radio => {
-        formData[radio.name] = radio.value;
-    });
-    
-    // Collect all checkboxes
-    const checkboxGroups = {};
-    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-        if (!checkboxGroups[checkbox.name]) {
-            checkboxGroups[checkbox.name] = [];
-        }
-        if (checkbox.checked) {
-            checkboxGroups[checkbox.name].push(checkbox.value);
-        }
-    });
-    Object.assign(formData, checkboxGroups);
-    
-    // Collect all textareas
-    document.querySelectorAll('textarea[name]').forEach(textarea => {
-        formData[textarea.name] = textarea.value.trim();
-    });
-    
-    return formData;
-}
-
 function setupAutoSave() {
-    // Auto-save every 30 seconds during active observation
+    // Auto-save every 30 seconds
     setInterval(() => {
-        if (observationSession.isActive) {
-            saveDraft(true); // Silent save
+        if (observationSession.isActive && !observationSession.isPaused) {
+            saveDraft(true);
         }
     }, 30000);
 }
@@ -248,21 +275,18 @@ function scheduleAutoSave() {
     }
     
     autoSaveTimer = setTimeout(() => {
-        saveDraft(true); // Silent save
+        saveDraft(true);
     }, 3000);
 }
 
 async function saveDraft(silent = false) {
     if (!observationSession.isActive) {
-        if (!silent) alert('⚠️ Please start an observation session first!');
+        if (!silent) alert('⚠️ Παρακαλώ ξεκινήστε την παρατήρηση πρώτα!');
         return;
     }
     
-    const formData = collectFormData();
-    
     const draftData = {
         ...observationSession,
-        formData: formData,
         lastSaved: new Date().toISOString()
     };
     
@@ -271,112 +295,109 @@ async function saveDraft(silent = false) {
     
     // Save to Firebase
     try {
-        const draftRef = window.firebaseDoc(
-            window.firebaseDB, 
-            'observations', 
-            `draft_${observationSession.teamCode}_${observationSession.observerId.replace(/\s+/g, '_')}`
-        );
+        const draftId = `draft_${observationSession.teamCode}_${observationSession.observerId.replace(/\s+/g, '_')}`;
+        const draftRef = window.firebaseDoc(window.firebaseDB, 'observations', draftId);
         
         await window.firebaseSetDoc(draftRef, draftData);
         
         if (!silent) {
-            showSaveStatus('saved', '💾 Draft saved successfully!');
+            showSaveStatus('saved', '💾 Το πρόχειρο αποθηκεύτηκε επιτυχώς!');
         } else {
-            showSaveStatus('saved', '💾 Auto-saved', 2000);
+            showSaveStatus('saved', '💾 Αυτόματη αποθήκευση', 2000);
         }
     } catch (error) {
-        console.error('Error saving draft:', error);
+        console.error('Σφάλμα αποθήκευσης:', error);
         if (!silent) {
-            showSaveStatus('error', '❌ Save failed (stored locally)');
+            showSaveStatus('error', '❌ Αποτυχία αποθήκευσης (αποθηκεύτηκε τοπικά)');
         }
     }
 }
 
-function loadDraft() {
+function checkForDraft() {
     const draft = localStorage.getItem('observation_draft');
     if (!draft) return;
     
-    if (confirm('Found a saved draft. Would you like to continue from where you left off?')) {
-        const data = JSON.parse(draft);
-        
-        // Restore session
-        observationSession = data;
-        observationSession.isActive = true;
-        
-        // Restore UI
-        document.getElementById('observerName').value = data.observerId;
-        document.getElementById('teamSelect').value = data.teamCode;
-        document.getElementById('observerName').disabled = true;
-        document.getElementById('teamSelect').disabled = true;
-        
-        document.getElementById('statusIndicator').textContent = '🟢 Observing...';
-        document.getElementById('statusIndicator').classList.add('active');
-        document.getElementById('startStopBtn').textContent = '⏸️ End Observation';
-        document.getElementById('startStopBtn').classList.remove('btn-primary');
-        document.getElementById('startStopBtn').classList.add('btn-secondary');
-        
-        document.getElementById('observationSection').style.display = 'block';
-        document.getElementById('detailedSection').style.display = 'block';
-        
-        // Restore notes
-        renderNotes();
-        
-        // Restore form data
-        if (data.formData) {
-            Object.keys(data.formData).forEach(key => {
-                const value = data.formData[key];
-                
-                if (Array.isArray(value)) {
-                    // Checkboxes
-                    value.forEach(val => {
-                        const checkbox = document.querySelector(`input[name="${key}"][value="${val}"]`);
-                        if (checkbox) checkbox.checked = true;
-                    });
-                } else {
-                    // Radio buttons
-                    const radio = document.querySelector(`input[name="${key}"][value="${value}"]`);
-                    if (radio) {
-                        radio.checked = true;
-                    } else {
-                        // Textarea
-                        const textarea = document.querySelector(`textarea[name="${key}"]`);
-                        if (textarea) textarea.value = value;
-                    }
-                }
-            });
-        }
-        
-        startTimer();
+    if (confirm('Βρέθηκε αποθηκευμένο πρόχειρο. Θέλετε να συνεχίσετε από εκεί που σταματήσατε;')) {
+        loadDraft(JSON.parse(draft));
+    } else {
+        localStorage.removeItem('observation_draft');
     }
+}
+
+function loadDraft(data) {
+    observationSession = data;
+    observationSession.isActive = true;
+    
+    // Restore UI
+    document.getElementById('observerName').value = data.observerId;
+    document.getElementById('teamSelect').value = data.teamCode;
+    
+    document.getElementById('setupSection').style.display = 'none';
+    document.getElementById('observationInterface').style.display = 'block';
+    
+    // Restore counters
+    Object.keys(observationSession.behaviors).forEach(key => {
+        updateCounterDisplay(key);
+    });
+    
+    // Restore notes
+    renderNotes();
+    
+    // Restart timer if not paused
+    if (!data.isPaused) {
+        startTimer();
+    } else {
+        document.getElementById('statusIndicator').textContent = '⏸️ Παύση';
+        document.getElementById('statusIndicator').className = 'status-indicator paused';
+    }
+    
+    setupAutoSave();
+}
+
+function saveProgress() {
+    saveDraft(false);
 }
 
 async function submitObservation() {
     if (!observationSession.isActive) {
-        alert('⚠️ Please start an observation session first!');
+        alert('⚠️ Παρακαλώ ξεκινήστε την παρατήρηση πρώτα!');
         return;
     }
     
-    if (!confirm('Submit final observation? This cannot be undone.')) {
+    // Validation
+    const totalBehaviors = Object.values(observationSession.behaviors).reduce((sum, count) => sum + count, 0);
+    
+    if (totalBehaviors === 0) {
+        if (!confirm('Δεν έχετε καταγράψει καμία συμπεριφορά. Θέλετε να υποβάλετε ούτως ή άλλως;')) {
+            return;
+        }
+    }
+    
+    if (!confirm('Υποβολή τελικής παρατήρησης; Αυτό δεν μπορεί να αναιρεθεί.')) {
         return;
     }
     
-    const formData = collectFormData();
-    
-    // Validate essential fields
-    if (!formData['ai-frequency']) {
-        alert('⚠️ Please complete the AI Usage Patterns section!');
-        return;
-    }
-    
+    const now = new Date();
     const finalData = {
         observerId: observationSession.observerId,
         teamCode: observationSession.teamCode,
         startTime: observationSession.startTime,
-        endTime: new Date().toISOString(),
-        durationMs: Date.now() - new Date(observationSession.startTime).getTime(),
+        endTime: now.toISOString(),
+        durationMs: now.getTime() - new Date(observationSession.startTime).getTime() - observationSession.totalPausedMs,
+        totalPausedMs: observationSession.totalPausedMs,
+        
+        // Behavior frequencies
+        behaviors: observationSession.behaviors,
+        
+        // Total behavior count for quick reference
+        totalBehaviorCount: Object.values(observationSession.behaviors).reduce((sum, count) => sum + count, 0),
+        
+        // Notes
         notes: observationSession.notes,
-        formData: formData,
-        submittedAt: new Date().toISOString(),
+        notesCount: observationSession.notes.length,
+        
+        // Metadata
+        submittedAt: now.toISOString(),
         status: 'submitted'
     };
     
@@ -391,58 +412,91 @@ async function submitObservation() {
         
         // Delete draft from Firebase
         try {
-            const draftRef = window.firebaseDoc(
-                window.firebaseDB, 
-                'observations', 
-                `draft_${observationSession.teamCode}_${observationSession.observerId.replace(/\s+/g, '_')}`
-            );
+            const draftId = `draft_${observationSession.teamCode}_${observationSession.observerId.replace(/\s+/g, '_')}`;
+            const draftRef = window.firebaseDoc(window.firebaseDB, 'observations', draftId);
             await window.firebaseDeleteDoc(draftRef);
         } catch (e) {
-            console.warn('Draft cleanup failed:', e);
+            console.warn('Αποτυχία καθαρισμού προχείρου:', e);
         }
         
-        alert('✅ Observation submitted successfully!');
+        alert('✅ Η παρατήρηση υποβλήθηκε επιτυχώς!');
         
-        // Reset
-        stopSession();
-        resetForm();
-        
-        // Redirect to admin panel
-        if (confirm('Return to admin panel?')) {
+        // Redirect
+        if (confirm('Επιστροφή στο πάνελ διαχείρισης;')) {
             window.location.href = 'admin.html';
+        } else {
+            // Reset for new observation
+            resetSession();
         }
         
     } catch (error) {
-        console.error('Error submitting observation:', error);
-        alert('❌ Submission failed! Your data is saved locally. Please try again.');
+        console.error('Σφάλμα υποβολής:', error);
+        alert('❌ Αποτυχία υποβολής! Τα δεδομένα σας είναι αποθηκευμένα τοπικά. Παρακαλώ δοκιμάστε ξανά.');
     }
 }
 
-function resetForm() {
+function endSession() {
+    if (!observationSession.isActive) return;
+    
+    if (!confirm('Τερματισμός παρατήρησης; Βεβαιωθείτε ότι έχετε αποθηκεύσει ή υποβάλει τις παρατηρήσεις σας!')) {
+        return;
+    }
+    
+    stopTimer();
+    
+    if (confirm('Θέλετε να διαγράψετε τα δεδομένα αυτής της συνεδρίας;')) {
+        resetSession();
+    }
+}
+
+function resetSession() {
+    stopTimer();
+    
     observationSession = {
         observerId: null,
         teamCode: null,
         startTime: null,
-        notes: [],
-        formData: {},
-        isActive: false
+        pauseTime: null,
+        totalPausedMs: 0,
+        isActive: false,
+        isPaused: false,
+        behaviors: {
+            ai_queries: 0,
+            prompt_quality: 0,
+            ai_verification: 0,
+            active_discussion: 0,
+            info_sharing: 0,
+            task_division: 0,
+            systematic_analysis: 0,
+            cross_referencing: 0,
+            critical_thinking: 0,
+            enthusiasm: 0,
+            persistence: 0,
+            focus: 0
+        },
+        notes: []
     };
     
+    // Reset UI
     document.getElementById('observerName').value = '';
     document.getElementById('teamSelect').value = '';
-    document.getElementById('observerName').disabled = false;
-    document.getElementById('teamSelect').disabled = false;
-    document.getElementById('quickNote').value = '';
+    document.getElementById('generalNotes').value = '';
+    document.getElementById('sessionTimer').textContent = '00:00:00';
     
-    document.getElementById('observationSection').style.display = 'none';
-    document.getElementById('detailedSection').style.display = 'none';
+    // Reset counters
+    Object.keys(observationSession.behaviors).forEach(key => {
+        const display = document.getElementById(`counter_${key}`);
+        if (display) display.textContent = '0';
+    });
     
-    // Clear all form inputs
-    document.querySelectorAll('input[type="radio"]').forEach(radio => radio.checked = false);
-    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => checkbox.checked = false);
-    document.querySelectorAll('textarea[name]').forEach(textarea => textarea.value = '');
-    
+    // Reset notes
     renderNotes();
+    
+    // Show setup
+    document.getElementById('setupSection').style.display = 'block';
+    document.getElementById('observationInterface').style.display = 'none';
+    
+    localStorage.removeItem('observation_draft');
 }
 
 function showSaveStatus(type, message, duration = 3000) {
