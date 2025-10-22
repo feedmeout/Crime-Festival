@@ -111,8 +111,7 @@ function renderObservations() {
         const duration = obs.durationMs ? formatDuration(obs.durationMs) : 'Μ/Δ';
         const date = obs.submittedAt || obs.startTime;
         const formattedDate = date ? new Date(date).toLocaleString('el-GR') : 'Μ/Δ';
-        
-        // Handle both old and new formats
+
         const behaviorCount = obs.totalBehaviorCount || obs.behaviors ? 
             (obs.totalBehaviorCount || Object.values(obs.behaviors || {}).reduce((sum, val) => sum + val, 0)) : 0;
 
@@ -190,7 +189,6 @@ function viewObservation(obsId) {
             </div>
     `;
 
-    // Timestamped Notes
     if (obs.notes && obs.notes.length > 0) {
         html += `
             <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
@@ -207,7 +205,6 @@ function viewObservation(obsId) {
         `;
     }
 
-    // Behavior Data or Form Data
     if (obs.behaviors) {
         html += `
             <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
@@ -358,14 +355,12 @@ async function exportObservationsToExcel() {
                 'Σύνολο_Συμπεριφορών': obs.totalBehaviorCount || 0
             };
 
-            // Add behavior frequencies if available
             if (obs.behaviors) {
                 Object.keys(obs.behaviors).forEach(key => {
                     flatData[key] = obs.behaviors[key];
                 });
             }
 
-            // Add notes
             if (obs.notes) {
                 obs.notes.forEach((note, idx) => {
                     flatData[`Σημείωση_${idx + 1}_Χρόνος`] = note.timestamp;
@@ -373,7 +368,6 @@ async function exportObservationsToExcel() {
                 });
             }
 
-            // Add old format form data if available
             if (obs.formData) {
                 Object.keys(obs.formData).forEach(key => {
                     const value = obs.formData[key];
@@ -418,6 +412,46 @@ function showError() {
             <p>Παρακαλώ ανανεώστε τη σελίδα</p>
         </div>
     `;
+}
+
+async function deleteAllObservations() {
+    const count = allObservations.length;
+    
+    if (count === 0) {
+        alert('ΔΕΝ ΥΠΑΡΧΟΥΝ ΠΑΡΑΤΗΡΗΣΕΙΣ ΓΙΑ ΔΙΑΓΡΑΦΗ!');
+        return;
+    }
+    
+    const confirmMessage = `⚠️ ΠΡΟΣΟΧΗ! ΕΠΙΚΙΝΔΥΝΗ ΕΝΕΡΓΕΙΑ!\n\nΘΑ ΔΙΑΓΡΑΨΕΤΕ ΟΛΕΣ ΤΙΣ ΠΑΡΑΤΗΡΗΣΕΙΣ (${count} συνολικά).\n\nΑΥΤΗ Η ΕΝΕΡΓΕΙΑ ΔΕΝ ΜΠΟΡΕΙ ΝΑ ΑΝΑΙΡΕΘΕΙ!\n\nΕΙΣΤΕ ΣΙΓΟΥΡΟΙ;`;
+    
+    if (!confirm(confirmMessage)) return;
+    
+    // Double confirmation
+    if (!confirm('ΤΕΛΕΥΤΑΙΑ ΕΠΙΒΕΒΑΙΩΣΗ: ΔΙΑΓΡΑΦΗ ΟΛΩΝ ΤΩΝ ΠΑΡΑΤΗΡΗΣΕΩΝ;')) return;
+    
+    try {
+        const statusDiv = document.createElement('div');
+        statusDiv.style.cssText = 'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); z-index: 10000; text-align: center;';
+        statusDiv.innerHTML = '<div style="font-size: 48px; margin-bottom: 20px;">🗑️</div><h3>Διαγραφή σε εξέλιξη...</h3>';
+        document.body.appendChild(statusDiv);
+        
+        // Delete all observations
+        const deletePromises = allObservations.map(obs => 
+            window.firebaseDeleteDoc(window.firebaseDoc(window.firebaseDB, 'observations', obs.id))
+        );
+        
+        await Promise.all(deletePromises);
+        
+        document.body.removeChild(statusDiv);
+        alert(`✅ ΔΙΑΓΡΑΦΗΚΑΝ ${count} ΠΑΡΑΤΗΡΗΣΕΙΣ ΕΠΙΤΥΧΩΣ!`);
+        
+        // Reload data
+        await loadObservations();
+        
+    } catch (error) {
+        console.error('Σφάλμα διαγραφής:', error);
+        alert('❌ ΣΦΑΛΜΑ ΚΑΤΑ ΤΗ ΔΙΑΓΡΑΦΗ!');
+    }
 }
 
 window.onclick = function(event) {

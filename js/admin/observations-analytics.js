@@ -467,7 +467,3 @@ function prepareTeamComparisonData() {
         'Μέσος Όρος Συμπεριφορών': parseFloat((teamData[team].totalBehaviors / teamData[team].observations.length).toFixed(2))
     }));
 }
-
-async function exportChartsAsPDF() {
-    alert('ℹ️ Η λειτουργία εξαγωγής σε PDF θα υλοποιηθεί σύντομα. Προς το παρόν, μπορείτε να χρησιμοποιήσετε τη λειτουργία εκτύπωσης του προγράμματος περιήγησης (Ctrl+P).');
-}
