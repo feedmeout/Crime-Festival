@@ -869,7 +869,6 @@ async function addTeam() {
     await saveTeam(teamName, teamData);
     
     const modeText = testingMode ? ' (🧪 ΛΕΙΤΟΥΡΓΙΑ ΔΟΚΙΜΩΝ)' : '';
-    alertDiv.innerHTML = `<div class="alert alert-success">✅ Η ομάδα "${teamName}" δημιουργήθηκε με κωδικό: <strong>${password}</strong> και <strong>${teamSize} μέλη</strong>${modeText}</div>`;
     
     document.getElementById('newTeamName').value = '';
     document.getElementById('newTeamPassword').value = '';

@@ -134,7 +134,7 @@ async function enterGame(event) {
             console.log('🚀 Bypassing all survey requirements');
             
             setLoading(false);
-            alert('🧪 ΛΕΙΤΟΥΡΓΙΑ ΔΟΚΙΜΩΝ ΕΝΕΡΓΗ\n\nΠαράκαμψη ερωτηματολογίων...');
+            //alert('🧪 ΛΕΙΤΟΥΡΓΙΑ ΔΟΚΙΜΩΝ ΕΝΕΡΓΗ\n\nΠαράκαμψη ερωτηματολογίων...');
             setLoading(true);
             
             setTimeout(() => {
