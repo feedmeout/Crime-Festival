@@ -1086,35 +1086,26 @@ async function showTimestamps(teamName) {
     const team = teams.find(t => t.name === teamName);
     
     if (!team) return;
-
     const modal = document.getElementById('timestampModal');
     const modalTeamName = document.getElementById('modalTeamName');
     const modalContent = document.getElementById('modalContent');
-
     modalTeamName.textContent = `ΧΡΟΝΙΚΑ ΣΗΜΕΙΑ - ${teamName.toUpperCase()}`;
-
     let html = '';
     if (team.startTime || team.completedAt) {
         html += '<div class="info-box info-box-start">';
-        html += '<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 10px;">';
+        html += '<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: nowrap; gap: 15px;">';
         
         if (team.startTime) {
-            html += `<div><strong>🚀 ΕΝΑΡΞΗ:</strong> ${formatDateTime(team.startTime)}</div>`;
+            html += `<div style="white-space: nowrap;"><strong>🚀 ΕΝΑΡΞΗ:</strong> ${formatDateTime(team.startTime)}</div>`;
         }
         
         if (team.completedAt) {
-            html += `<div><strong>🏁 ΟΛΟΚΛΗΡΩΣΗ:</strong> ${formatDateTime(team.completedAt)}</div>`;
+            html += `<div style="white-space: nowrap;"><strong>🏁 ΟΛΟΚΛΗΡΩΣΗ:</strong> ${formatDateTime(team.completedAt)}</div>`;
         }
         
         html += '</div>';
-        
-        if (team.completedAt && team.totalTimeMs) {
-            html += `<div><strong>⏱️ ΣΥΝΟΛΙΚΟΣ ΧΡΟΝΟΣ:</strong> ${formatTime(team.totalTimeMs)}</div>`;
-        }
-        
         html += '</div>';
     }
-
     if (team.timestamps && Object.keys(team.timestamps).length > 0) {
         html += '<h3 style="margin: 20px 0 10px 0;">ΞΕΚΛΕΙΔΩΜΕΝΑ ΤΕΚΜΗΡΙΑ:</h3>';
         html += '<ul class="timestamp-list">';
@@ -1134,21 +1125,21 @@ async function showTimestamps(teamName) {
     } else {
         html += '<p style="color: #999; text-align: center; padding: 20px;">Δεν υπάρχουν χρονικά δεδομένα</p>';
     }
-
     modalContent.innerHTML = html;
     modal.classList.add('active');
 }
-    function closeModal() {
-        const modal = document.getElementById('timestampModal');
-        modal.classList.remove('active');
+
+function closeModal() {
+    const modal = document.getElementById('timestampModal');
+    modal.classList.remove('active');
+}
+
+window.onclick = function(event) {
+    const modal = document.getElementById('timestampModal');
+    if (event.target === modal) {
+        closeModal();
     }
-    
-    window.onclick = function(event) {
-        const modal = document.getElementById('timestampModal');
-        if (event.target === modal) {
-            closeModal();
-        }
-    }
+}
 
 function viewTeam(teamName) {
     window.open(`${BASE_URL}index.html?team=${teamName}`, '_blank');
