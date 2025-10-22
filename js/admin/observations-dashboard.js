@@ -422,11 +422,9 @@ async function deleteAllObservations() {
         return;
     }
     
-    const confirmMessage = `⚠️ ΠΡΟΣΟΧΗ! ΕΠΙΚΙΝΔΥΝΗ ΕΝΕΡΓΕΙΑ!\n\nΘΑ ΔΙΑΓΡΑΨΕΤΕ ΟΛΕΣ ΤΙΣ ΠΑΡΑΤΗΡΗΣΕΙΣ (${count} συνολικά).\n\nΑΥΤΗ Η ΕΝΕΡΓΕΙΑ ΔΕΝ ΜΠΟΡΕΙ ΝΑ ΑΝΑΙΡΕΘΕΙ!\n\nΕΙΣΤΕ ΣΙΓΟΥΡΟΙ;`;
+    const confirmMessage = `⚠️ ΠΡΟΣΟΧΗ! ΕΠΙΚΙΝΔΥΝΗ ΕΝΕΡΓΕΙΑ!\n\nΘΑ ΔΙΑΓΡΑΨΕΤΕ ΟΛΕΣ ΤΙΣ ΠΑΡΑΤΗΡΗΣΕΙΣ (${count} συνολικά).\n\nΗ ΕΝΕΡΓΕΙΑ ΔΕΝ ΜΠΟΡΕΙ ΝΑ ΑΝΑΙΡΕΘΕΙ!\n\nΕΙΣΤΕ ΣΙΓΟΥΡΟΙ;`;
     
     if (!confirm(confirmMessage)) return;
-    
-    // Double confirmation
     if (!confirm('ΤΕΛΕΥΤΑΙΑ ΕΠΙΒΕΒΑΙΩΣΗ: ΔΙΑΓΡΑΦΗ ΟΛΩΝ ΤΩΝ ΠΑΡΑΤΗΡΗΣΕΩΝ;')) return;
     
     try {
@@ -434,8 +432,7 @@ async function deleteAllObservations() {
         statusDiv.style.cssText = 'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); z-index: 10000; text-align: center;';
         statusDiv.innerHTML = '<div style="font-size: 48px; margin-bottom: 20px;">🗑️</div><h3>Διαγραφή σε εξέλιξη...</h3>';
         document.body.appendChild(statusDiv);
-        
-        // Delete all observations
+
         const deletePromises = allObservations.map(obs => 
             window.firebaseDeleteDoc(window.firebaseDoc(window.firebaseDB, 'observations', obs.id))
         );
@@ -443,9 +440,7 @@ async function deleteAllObservations() {
         await Promise.all(deletePromises);
         
         document.body.removeChild(statusDiv);
-        alert(`✅ ΔΙΑΓΡΑΦΗΚΑΝ ${count} ΠΑΡΑΤΗΡΗΣΕΙΣ ΕΠΙΤΥΧΩΣ!`);
-        
-        // Reload data
+        alert(`✅ ΟΙ ΠΑΡΑΤΗΡΗΣΕΙΣ ΔΙΑΓΡΑΦΗΚΑΝ ΕΠΙΤΥΧΩΣ!`);
         await loadObservations();
         
     } catch (error) {

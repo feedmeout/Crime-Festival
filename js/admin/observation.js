@@ -334,19 +334,19 @@ function saveProgress() {
 
 async function submitObservation() {
     if (!observationSession.isActive) {
-        alert('⚠️ Παρακαλώ ξεκινήστε την παρατήρηση πρώτα!');
+        alert('⚠️ ΞΕΚΙΝΗΣΤΕ ΤΗΝ ΠΑΡΑΤΗΡΗΣΗ ΠΡΩΤΑ!');
         return;
     }
     
     const totalBehaviors = Object.values(observationSession.behaviors).reduce((sum, count) => sum + count, 0);
     
     if (totalBehaviors === 0) {
-        if (!confirm('Δεν έχετε καταγράψει καμία συμπεριφορά. Θέλετε να υποβάλετε ούτως ή άλλως;')) {
+        if (!confirm('ΔΕΝ ΕΧΕΤΕ ΚΑΤΑΓΡΑΨΕΙ ΚΑΜΙΑ ΣΥΜΠΕΡΙΦΟΡΑ. ΘΕΛΕΤΕ ΝΑ ΥΠΟΒΑΛΕΤΕ;')) {
             return;
         }
     }
     
-    if (!confirm('Υποβολή τελικής παρατήρησης; Αυτό δεν μπορεί να αναιρεθεί.')) {
+    if (!confirm('ΥΠΟΒΟΛΗ ΤΕΛΙΚΗΣ ΠΑΡΑΤΗΡΗΣΗΣ; ΔΕΝ ΜΠΟΡΕΙ ΝΑ ΑΝΑΙΡΕΘΕΙ!')) {
         return;
     }
     
@@ -384,7 +384,7 @@ async function submitObservation() {
         
         alert('✅ Η ΠΑΡΑΤΗΡΗΣΗ ΥΠΟΒΛΗΘΗΚΕ!');
         
-        if (confirm('Επιστροφή στο πάνελ διαχείρισης;')) {
+        if (confirm('ΕΠΙΣΤΡΟΦΗ ΣΤΟ ΠΑΝΕΛ ΔΙΑΧΕΙΡΙΣΗΣ;')) {
             window.location.href = 'admin.html';
         } else {
             resetSession();
