@@ -94,8 +94,7 @@ function renderObservations() {
         grid.innerHTML = `
             <div class="empty-state">
                 <div class="empty-state-icon">📭</div>
-                <h3>Δεν βρέθηκαν παρατηρήσεις</h3>
-                <p>Ξεκινήστε μια νέα παρατήρηση ή προσαρμόστε τα φίλτρα</p>
+                <h3>ΔΕΝ ΒΡΕΘΗΚΑΝ ΠΑΡΑΤΗΡΗΣΕΙΣ</h3>
             </div>
         `;
         return;
@@ -327,17 +326,15 @@ async function deleteObservation(obsId) {
 
     try {
         await window.firebaseDeleteDoc(window.firebaseDoc(window.firebaseDB, 'observations', obsId));
-        alert('✅ Η παρατήρηση διαγράφηκε!');
         await loadObservations();
     } catch (error) {
         console.error('Σφάλμα διαγραφής:', error);
-        alert('❌ Αποτυχία διαγραφής!');
     }
 }
 
 async function exportObservationsToExcel() {
     if (filteredObservations.length === 0) {
-        alert('Δεν υπάρχουν παρατηρήσεις για εξαγωγή!');
+        alert('ΔΕΝ ΥΠΑΡΧΟΥΝ ΠΑΡΑΤΗΡΗΣΕΙΣ ΓΙΑ ΕΞΑΓΩΓΗ!');
         return;
     }
 
@@ -397,11 +394,10 @@ async function exportObservationsToExcel() {
         XLSX.writeFile(wb, filename);
 
         document.body.removeChild(statusDiv);
-        alert(`✅ Εξαγωγή ολοκληρώθηκε: ${filename}`);
 
     } catch (error) {
         console.error('Σφάλμα εξαγωγής:', error);
-        alert('❌ Αποτυχία εξαγωγής!');
+        alert('❌ ΑΠΟΤΥΧΙΑ ΕΞΑΓΩΓΗΣ!');
     }
 }
 
