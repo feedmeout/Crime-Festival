@@ -4,7 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <meta name="theme-color" content="#1a1a2e">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>Φάκελος Υπόθεσης - Φεστιβάλ Αστυνομικής Λογοτεχνίας 2025</title>
+
+    <!-- Preload critical CSS files -->
+    <link rel="preload" href="css/variables.css" as="style">
+    <link rel="preload" href="css/common.css" as="style">
+
+    <!-- Load CSS files -->
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/common.css">
 
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
@@ -32,11 +43,6 @@
         
         console.log("✅ Firebase connected in index.html!");
     </script>
-
-
-
-    <link rel="stylesheet" href="css/variables.css">
-    <link rel="stylesheet" href="css/common.css">
 </head>
 
 <body>
@@ -352,9 +358,6 @@
 <div id="alertOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 9999; backdrop-filter: blur(3px);"></div>
 
 <script src="js/suspects.js"></script>
-
-
-
-    <script src="js/pages/index.js"></script>
+<script src="js/pages/index.js"></script>
 </body>
 </html>
