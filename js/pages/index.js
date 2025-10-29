@@ -91,6 +91,56 @@ const StorageManager = {
     }
 };
 
+// ============================================================
+// NEW: Pre-survey verification function
+// ============================================================
+async function verifyPreSurveyCompleted(teamCode, memberName) {
+    if (!window.firebaseDB) {
+        console.warn('⚠️ Firebase not ready for pre-survey check, allowing access');
+        return true; // Allow access if Firebase isn't ready yet
+    }
+
+    try {
+        // First check if team is in testing mode
+        const teamDocRef = window.firebaseDoc(window.firebaseDB, 'teams', teamCode);
+        const teamDoc = await window.firebaseGetDoc(teamDocRef);
+        
+        if (teamDoc.exists()) {
+            const teamData = teamDoc.data();
+            const isTestingMode = teamData.testingMode === true || 
+                                 teamData.testingMode === 'true' || 
+                                 teamData.testingMode === 1 ||
+                                 teamData.testingMode === '1';
+            
+            if (isTestingMode) {
+                console.log(`🧪 Team ${teamCode} in testing mode - bypassing pre-survey check`);
+                return true;
+            }
+        } else {
+            console.warn(`⚠️ Team ${teamCode} not found in database, allowing access`);
+            return true; // Allow access if team doesn't exist yet
+        }
+
+        // Check if pre-survey exists
+        const preSurveyDoc = `${teamCode}_pre_${memberName}`;
+        const preSurveyRef = window.firebaseDoc(window.firebaseDB, 'surveys', preSurveyDoc);
+        const preSurveySnap = await window.firebaseGetDoc(preSurveyRef);
+
+        if (!preSurveySnap.exists()) {
+            console.warn(`❌ Pre-survey not completed for ${teamCode}/${memberName}`);
+            console.log(`🔍 Looking for survey document: ${preSurveyDoc}`);
+            return false;
+        }
+
+        console.log(`✅ Pre-survey verified for ${teamCode}/${memberName}`);
+        return true;
+    } catch (error) {
+        console.error('❌ Error verifying pre-survey:', error);
+        // On error, allow access to prevent blocking users
+        return true;
+    }
+}
+
 const teks = [
 	{
 		id: '1',
@@ -1339,195 +1389,6 @@ function displaySolutionResult(solution) {
         }, 500);
     }
 }
-function displaySolutionResult(solution) {
-    const resultDiv = document.getElementById('solutionResult');
-    const solutionIntroBox = document.getElementById('solutionIntroBox');
-    if (solutionIntroBox) {
-        solutionIntroBox.style.display = 'none';
-    }
-    
-    const percentage = Math.round((solution.score / solution.maxScore) * 100);
-    let grade = '';
-    let gradeColor = '';
-    let gradeEmoji = '';
-    
-    if (percentage >= 90) {
-        grade = 'ΑΡΧΙ-ΝΤΕΤΕΚΤΙΒ';
-        gradeEmoji = '🕵️';
-        gradeColor = '#00d4ff';
-    } else if (percentage >= 80) {
-        grade = 'ΑΝΩΤΕΡΟΣ ΑΝΑΚΡΙΤΗΣ';
-        gradeEmoji = '🎖️';
-        gradeColor = '#ffd700';
-    } else if (percentage >= 70) {
-        grade = 'ΝΤΕΤΕΚΤΙΒ';
-        gradeEmoji = '🔎';
-        gradeColor = '#c0c0c0';
-    } else if (percentage >= 60) {
-        grade = 'ΑΣΤΥΝΟΜΟΣ';
-        gradeEmoji = '👮';
-        gradeColor = '#cd7f32';
-    } else if (percentage >= 50) {
-        grade = 'ΕΡΕΥΝΗΤΗΣ';
-        gradeEmoji = '🔍';
-        gradeColor = '#ffcc00';
-    } else if (percentage >= 40) {
-        grade = 'ΑΣΚΟΥΜΕΝΟΣ';
-        gradeEmoji = '🎓';
-        gradeColor = '#28a745';
-    } else {
-        grade = 'ΝΕΟΣΥΛΛΕΚΤΟΣ';
-        gradeEmoji = '🎯';
-        gradeColor = '#6c757d';
-    }
-
-    const isPerfect = solution.correctCount === 3 && solution.suspects.length === 3;
-    
-    let statusMessage = '';
-    let caseStatus = '';
-    if (isPerfect) {
-        statusMessage = 'ΤΕΛΕΙΑ ΕΚΤΕΛΕΣΗ!';
-        caseStatus = 'CASE SOLVED';
-    } else if (solution.score === 0) {
-        statusMessage = 'ΑΤΕΛΗΣ ΑΝΑΛΥΣΗ';
-        caseStatus = 'CASE INCOMPLETE';
-    } else if (percentage >= 70) {
-        statusMessage = 'ΕΞΑΙΡΕΤΙΚΗ ΔΟΥΛΕΙΑ!';
-        caseStatus = 'CASE CLOSED';
-    } else if (percentage >= 50) {
-        statusMessage = 'ΚΑΛΗ ΠΡΟΣΠΑΘΕΙΑ';
-        caseStatus = 'CASE CLOSED';
-    } else {
-        statusMessage = 'ΥΠΟΘΕΣΗ ΟΛΟΚΛΗΡΩΘΗΚΕ';
-        caseStatus = 'CASE ARCHIVED';
-    }
-
-    resultDiv.innerHTML = '';
-
-    const scoreCard = document.createElement('div');
-    scoreCard.className = 'solution-score-card';
-    scoreCard.innerHTML = `
-        <div class="solution-grade-emoji">${gradeEmoji}</div>
-        <div class="solution-case-status">${caseStatus}</div>
-        <div class="solution-grade-title" style="color: ${gradeColor};">${grade}</div>
-        <div class="solution-score-display">${solution.score} / ${solution.maxScore}</div>
-        <div class="solution-status-message">${statusMessage}</div>
-        <div style="background: rgba(255,255,255,0.1); height: 12px; border-radius: 20px; overflow: hidden; margin: 20px 0;">
-            <div style="background: ${gradeColor}; height: 100%; width: ${percentage}%; transition: width 2s ease-out;"></div>
-        </div>
-        <div class="solution-performance-label">ΕΠΙΔΟΣΗ: ${percentage}%</div>
-    `;
-    resultDiv.appendChild(scoreCard);
-    
-    const statsCard = document.createElement('div');
-    statsCard.className = 'solution-stats-card';
-    let statsHTML = '<div class="solution-stats-grid">';
-    
-    if (solution.completionTimeMs) {
-        statsHTML += `
-            <div class="solution-stat-item">
-                <div class="solution-stat-icon">⏱️</div>
-                <div class="solution-stat-value">${formatElapsedTime(solution.completionTimeMs)}</div>
-                <div class="solution-stat-label">Χρόνος</div>
-            </div>
-        `;
-    }
-    
-    statsHTML += `
-        <div class="solution-stat-item">
-            <div class="solution-stat-icon">🎯</div>
-            <div class="solution-stat-value">${solution.promptCount}</div>
-            <div class="solution-stat-label">Prompts</div>
-        </div>
-        <div class="solution-stat-item">
-            <div class="solution-stat-icon">✅</div>
-            <div class="solution-stat-value">${solution.correctCount}/3</div>
-            <div class="solution-stat-label">Σωστοί Δράστες</div>
-        </div>
-    `;
-    statsHTML += '</div>';
-    statsCard.innerHTML = statsHTML;
-    resultDiv.appendChild(statsCard);
-    
-    const breakdownCard = document.createElement('div');
-    breakdownCard.className = 'breakdown-card';
-    
-    let breakdownHTML = `
-        <div class="breakdown-header">
-            <div class="breakdown-header-icon">📊</div>
-            <div>
-                <h3 class="breakdown-header-title">ΑΝΑΛΥΤΙΚΗ ΑΞΙΟΛΟΓΗΣΗ</h3>
-            </div>
-        </div>
-    `;
-
-    solution.breakdown.forEach(line => {
-        if (!line || line.trim() === '') return;
-        if (line.includes('ΤΕΛΙΚΗ ΒΑΘΜΟΛΟΓΙΑ')) return;
-
-        const colonIndex = line.indexOf(':');
-        if (colonIndex === -1) {
-            breakdownHTML += `<div class="breakdown-item">${line}</div>`;
-            return;
-        }
-        
-        const type = line.substring(0, colonIndex);
-        const content = line.substring(colonIndex + 1);
-        
-        let itemClass = '';
-        let icon = '';
-        
-        if (type === 'HEADER') {
-            itemClass = 'header';
-        } else if (type === 'SUCCESS') {
-            itemClass = 'success';
-            icon = '✓';
-        } else if (type === 'PENALTY') {
-            itemClass = 'penalty';
-            icon = '✗';
-        } else if (type === 'ERROR') {
-            itemClass = 'error';
-            icon = '⚠';
-        } else if (type === 'INFO') {
-            itemClass = 'info';
-            icon = 'ℹ';
-        } else if (type === 'CONTRADICTION') {
-            itemClass = 'contradiction';
-            icon = '⚠';
-        } else if (type === 'SUBHEADER') {
-            itemClass = 'subheader';
-        } else if (type === 'ITEM') {
-            itemClass = 'item';
-            icon = '';
-        }
-        
-        breakdownHTML += `
-            <div class="breakdown-item ${itemClass}">
-                ${icon ? `<div class="breakdown-item-icon">${icon}</div>` : ''}
-                <div class="breakdown-item-content">${content}</div>
-            </div>
-        `;
-    });
-    
-    breakdownCard.innerHTML = breakdownHTML;
-    resultDiv.appendChild(breakdownCard);
-    
-    resultDiv.style.display = 'block';
-    resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    
-    const solutionForm = document.getElementById('solutionForm');
-    if (solutionForm) {
-        solutionForm.style.display = 'none';
-    }
-    
-    stopTimer();
-    
-    if (isPerfect && percentage >= 90) {
-        setTimeout(() => {
-            createConfetti();
-        }, 500);
-    }
-}
 
 window.revealSolution = async function() {
     const password = document.getElementById('solutionPassword').value.toUpperCase();
@@ -2294,27 +2155,51 @@ window.addEventListener('beforeunload', () => {
     }
 });
 
+// ============================================================
+// MAIN INITIALIZATION WITH PRE-SURVEY CHECK
+// ============================================================
 window.addEventListener('DOMContentLoaded', async () => {
+    console.log('🔄 Initializing application...');
+
+    // Step 1: Check authentication
+    if (!StorageManager.isAuthenticated()) {
+        console.warn('⚠️ Not authenticated, redirecting to team entry...');
+        window.location.href = 'pages/team_entry.html';
+        return;
+    }
+
+    const { teamCode: authTeamCode, memberName } = StorageManager.getAuth();
+    if (authTeamCode) {
+        teamCode = authTeamCode;
+    }
+    
+    console.log(`✅ Authenticated as ${memberName} in team ${teamCode}`);
+
+    // Step 2: Verify pre-survey completion (NEW)
+    console.log(`🔍 Verifying pre-survey for ${memberName} in team ${teamCode}...`);
+    const preSurveyCompleted = await verifyPreSurveyCompleted(teamCode, memberName);
+    
+    if (!preSurveyCompleted) {
+        console.warn('❌ Pre-survey not completed, redirecting...');
+        
+        // Clear authentication to prevent redirect loop
+        StorageManager.clearAuth();
+        
+        alert('Πρέπει να ολοκληρώσετε την προκαταρκτική έρευνα πριν συνεχίσετε!');
+        
+        // Redirect to team entry without redirect param to avoid loops
+        window.location.href = 'pages/team_entry.html';
+        return;
+    }
+
+    console.log('✅ Pre-survey verified, continuing initialization...');
+
+    // Step 3: Initialize tabs
     console.log('🔄 Initializing tabs...');
     initTabsWithResults();
     console.log('✅ Tabs initialized');
 
-    function checkFirestoreConnection() {
-        if (!window.firebaseDB) return false;
-        
-        const testRef = window.firebaseDoc(window.firebaseDB, 'config', 'test');
-        window.firebaseGetDoc(testRef)
-            .then(() => {
-                console.log('🟢 Firestore connection active');
-            })
-            .catch((error) => {
-                console.error('🔴 Firestore connection failed:', error);
-                alert('⚠️ Connection issues - Your progress may not save!');
-            });
-    }
-
-    setInterval(checkFirestoreConnection, 30000);
-    
+    // Step 4: Check for requested tab from URL
     const urlParams = new URLSearchParams(window.location.search);
     const requestedTab = urlParams.get('tab');
     if (requestedTab) {
@@ -2329,20 +2214,11 @@ window.addEventListener('DOMContentLoaded', async () => {
             targetPane.classList.add('active');
         }
     }
-    if (!StorageManager.isAuthenticated()) {
-        console.warn('⚠️ Not authenticated, redirecting to member entry...');
-		window.location.href = 'pages/team_entry.html';
-        return;
-    }
-    
-    const { teamCode: authTeamCode, memberName } = StorageManager.getAuth();
-    if (authTeamCode) {
-        teamCode = authTeamCode;
-    }
-    
-    console.log(`✅ Authenticated as ${memberName} in team ${teamCode}`);
+
+    // Step 5: Sync session
     await StorageManager.syncSessionToFirebase();
 
+    // Step 6: Load team data
     try {
         const teamData = await getTeamData();
         if (!teamData.unlocked) {
@@ -2355,6 +2231,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         console.error('Error checking/creating team:', error);
     }
 
+    // Step 7: Initialize UI
     try {
         if (typeof SuspectsModule !== 'undefined') {
             SuspectsModule.renderSuspects('suspectsContainer');
@@ -2372,6 +2249,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         alert('Σφάλμα φόρτωσης! Παρακαλώ ανανεώστε τη σελίδα.');
     }
 
+    // Step 8: Monitor for solution updates
     setInterval(async () => {
         const solutionTab = document.getElementById('tab-solution');
         if (solutionTab && solutionTab.classList.contains('active')) {
@@ -2384,77 +2262,94 @@ window.addEventListener('DOMContentLoaded', async () => {
         }
     }, 5000);
 
-let pollingInterval = null;
-let isFirestoreActive = false;
-
-function startPolling() {
-    if (pollingInterval) return;
-    console.log('📡 Starting polling mode (every 3 seconds)');
-    pollingInterval = setInterval(checkForUpdates, 3000);
-}
-
-function stopPolling() {
-    if (pollingInterval) {
-        clearInterval(pollingInterval);
-        pollingInterval = null;
-        console.log('🛑 Polling stopped');
-    }
-}
-
-function setupRealtimeListener() {
-    if (!window.firebaseDB || !window.firebaseOnSnapshot) {
-        console.warn('Firebase not ready, falling back to polling');
-        startPolling();
-        return;
-    }
-    
-    if (firestoreUnsubscribe) {
-        console.log('🧹 Cleaning up old Firestore listener');
-        firestoreUnsubscribe();
-        firestoreUnsubscribe = null;
-    }
-    
-    try {
-        const docRef = window.firebaseDoc(window.firebaseDB, 'teams', teamCode);
+    // Step 9: Setup listeners
+    function checkFirestoreConnection() {
+        if (!window.firebaseDB) return false;
         
-        firestoreUnsubscribe = window.firebaseOnSnapshot(docRef, 
-            async (doc) => {
-                if (doc.exists()) {
-                    const firebaseData = doc.data();
-                    console.log('⚡ Real-time update received for team:', teamCode);
-                    console.log('📦 Firebase data testingMode:', firebaseData.testingMode, '(type:', typeof firebaseData.testingMode, ')');
-                    
-                    isFirestoreActive = true;
-                    stopPolling();
-                    const dataToSave = {
-                        ...firebaseData,
-                        testingMode: firebaseData.testingMode !== undefined ? firebaseData.testingMode : false
-                    };
-                    
-                    localStorage.setItem(getStorageKey(), JSON.stringify(dataToSave));
-                    renderEvidence();
-                    await updateProgress(dataToSave);
-                    
-                    const solutionTab = document.getElementById('tab-solution');
-                    if (solutionTab && solutionTab.classList.contains('active')) {
-                        await initSolutionTab(dataToSave);
+        const testRef = window.firebaseDoc(window.firebaseDB, 'config', 'test');
+        window.firebaseGetDoc(testRef)
+            .then(() => {
+                console.log('🟢 Firestore connection active');
+            })
+            .catch((error) => {
+                console.error('🔴 Firestore connection failed:', error);
+                alert('⚠️ Connection issues - Your progress may not save!');
+            });
+    }
+
+    setInterval(checkFirestoreConnection, 30000);
+
+    let pollingInterval = null;
+    let isFirestoreActive = false;
+
+    function startPolling() {
+        if (pollingInterval) return;
+        console.log('📡 Starting polling mode (every 3 seconds)');
+        pollingInterval = setInterval(checkForUpdates, 3000);
+    }
+
+    function stopPolling() {
+        if (pollingInterval) {
+            clearInterval(pollingInterval);
+            pollingInterval = null;
+            console.log('🛑 Polling stopped');
+        }
+    }
+
+    function setupRealtimeListener() {
+        if (!window.firebaseDB || !window.firebaseOnSnapshot) {
+            console.warn('Firebase not ready, falling back to polling');
+            startPolling();
+            return;
+        }
+        
+        if (firestoreUnsubscribe) {
+            console.log('🧹 Cleaning up old Firestore listener');
+            firestoreUnsubscribe();
+            firestoreUnsubscribe = null;
+        }
+        
+        try {
+            const docRef = window.firebaseDoc(window.firebaseDB, 'teams', teamCode);
+            
+            firestoreUnsubscribe = window.firebaseOnSnapshot(docRef, 
+                async (doc) => {
+                    if (doc.exists()) {
+                        const firebaseData = doc.data();
+                        console.log('⚡ Real-time update received for team:', teamCode);
+                        console.log('📦 Firebase data testingMode:', firebaseData.testingMode, '(type:', typeof firebaseData.testingMode, ')');
+                        
+                        isFirestoreActive = true;
+                        stopPolling();
+                        const dataToSave = {
+                            ...firebaseData,
+                            testingMode: firebaseData.testingMode !== undefined ? firebaseData.testingMode : false
+                        };
+                        
+                        localStorage.setItem(getStorageKey(), JSON.stringify(dataToSave));
+                        renderEvidence();
+                        await updateProgress(dataToSave);
+                        
+                        const solutionTab = document.getElementById('tab-solution');
+                        if (solutionTab && solutionTab.classList.contains('active')) {
+                            await initSolutionTab(dataToSave);
+                        }
                     }
+                }, 
+                (error) => {
+                    console.error('❌ Real-time listener error:', error);
+                    isFirestoreActive = false;
+                    console.log('📡 Falling back to polling mode');
+                    startPolling();
                 }
-            }, 
-            (error) => {
-                console.error('❌ Real-time listener error:', error);
-                isFirestoreActive = false;
-                console.log('📡 Falling back to polling mode');
-                startPolling();
-            }
-        );
-        
-        console.log('✅ Real-time listener active for team:', teamCode);
-    } catch (error) {
-        console.error('❌ Error setting up real-time listener:', error);
-        startPolling();
+            );
+            
+            console.log('✅ Real-time listener active for team:', teamCode);
+        } catch (error) {
+            console.error('❌ Error setting up real-time listener:', error);
+            startPolling();
+        }
     }
-}
 
     function startPolling() {
         if (pollingInterval) {
@@ -2499,24 +2394,24 @@ function setupRealtimeListener() {
         }
     }
 
-async function initializeAllListeners() {
-    if (!window.firebaseDB) {
-        setTimeout(initializeAllListeners, 500);
-        return;
+    async function initializeAllListeners() {
+        if (!window.firebaseDB) {
+            setTimeout(initializeAllListeners, 500);
+            return;
+        }
+        
+        console.log('🔄 Initializing all listeners...');
+        
+        await Promise.allSettled([
+            setupRealtimeListener(),
+            setupResultsListener(),
+            setupAlertListener()
+        ]);
+        
+        console.log('✅ All listeners initialized');
     }
-    
-    console.log('🔄 Initializing all listeners...');
-    
-    await Promise.allSettled([
-        setupRealtimeListener(),
-        setupResultsListener(),
-        setupAlertListener()
-    ]);
-    
-    console.log('✅ All listeners initialized');
-}
 
-setTimeout(initializeAllListeners, 500);
+    setTimeout(initializeAllListeners, 500);
 });
 
 window.addEventListener('resize', () => {

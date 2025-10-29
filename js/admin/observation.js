@@ -33,7 +33,6 @@ let autoSaveTimer = null;
 
 window.addEventListener('DOMContentLoaded', async () => {
     await loadTeams();
-    // REMOVED: checkForDraft() - Draft recovery feature removed
 });
 
 async function loadTeams() {
@@ -43,19 +42,16 @@ async function loadTeams() {
     }
     
     try {
-        // Load all teams
         const teamsRef = window.firebaseCollection(window.firebaseDB, 'teams');
         const teamsSnapshot = await window.firebaseGetDocs(teamsRef);
-        
-        // Load all submitted observations to check which teams already have observations
         const observationsRef = window.firebaseCollection(window.firebaseDB, 'observations');
         const observationsSnapshot = await window.firebaseGetDocs(observationsRef);
         
-        const observedTeams = new Set();
+        const submittedTeams = new Set();
         observationsSnapshot.forEach(doc => {
             const data = doc.data();
             if (data.status === 'submitted' && data.teamCode) {
-                observedTeams.add(data.teamCode);
+                submittedTeams.add(data.teamCode.toLowerCase());
             }
         });
         
@@ -66,18 +62,18 @@ async function loadTeams() {
             const team = doc.data();
             if (!team.deleted) {
                 const teamCode = doc.id;
-                const isObserved = observedTeams.has(teamCode);
-                const label = isObserved ? 
-                    `${teamCode.toUpperCase()} ✅ (ΗΔΗ ΠΑΡΑΤΗΡΗΘΗΚΕ)` : 
-                    teamCode.toUpperCase();
+                const isSubmitted = submittedTeams.has(teamCode.toLowerCase());
                 
-                // Add option but keep it enabled for transparency
-                // The validation in startSession will prevent actual duplicate observations
-                options.push(`<option value="${teamCode}">${label}</option>`);
+                if (isSubmitted) {
+                    options.push(`<option value="${teamCode}">${teamCode.toUpperCase()} 🔒 (ΚΛΕΙΔΩΜΕΝΗ)</option>`);
+                } else {
+                    options.push(`<option value="${teamCode}">${teamCode.toUpperCase()}</option>`);
+                }
             }
         });
         
         select.innerHTML = options.join('');
+        
     } catch (error) {
         console.error('Σφάλμα φόρτωσης ομάδων:', error);
     }
@@ -92,7 +88,6 @@ async function startSession() {
         return;
     }
     
-    // FIXED: Check if team already has a submitted observation
     try {
         const observationsRef = window.firebaseCollection(window.firebaseDB, 'observations');
         const snapshot = await window.firebaseGetDocs(observationsRef);
@@ -100,7 +95,7 @@ async function startSession() {
         let existingObservation = null;
         snapshot.forEach(doc => {
             const data = doc.data();
-            if (data.teamCode === teamCode && data.status === 'submitted') {
+            if (data.teamCode && data.teamCode.toLowerCase() === teamCode.toLowerCase() && data.status === 'submitted') {
                 existingObservation = data;
             }
         });
@@ -110,14 +105,17 @@ async function startSession() {
             const dateInfo = existingObservation.submittedAt ? 
                 new Date(existingObservation.submittedAt).toLocaleString('el-GR') : 'Άγνωστη ημερομηνία';
             
-            alert(`⚠️ Η ΟΜΑΔΑ "${teamCode.toUpperCase()}" ΕΧΕΙ ΗΔΗ ΠΑΡΑΤΗΡΗΘΕΙ!\n\nΠαρατηρητής: ${observerInfo}\nΗμερομηνία: ${dateInfo}\n\nΚΑΘΕ ΟΜΑΔΑ ΜΠΟΡΕΙ ΝΑ ΠΑΙΞΕΙ ΜΟΝΟ ΜΙΑ ΦΟΡΑ.`);
+            alert(`🚫 Η ΠΑΡΑΤΗΡΗΣΗ ΓΙΑ ΤΗΝ ΟΜΑΔΑ "${teamCode.toUpperCase()}" ΕΧΕΙ ΗΔΗ ΥΠΟΒΛΗΘΕΙ!\n\n` +
+                  `Παρατηρητής: ${observerInfo}\n` +
+                  `Ημερομηνία: ${dateInfo}\n\n` +
+                  `ΔΕΝ ΜΠΟΡΕΙΤΕ ΝΑ ΔΗΜΙΟΥΡΓΗΣΕΤΕ ΑΛΛΗ ΠΑΡΑΤΗΡΗΣΗ.`);
             return;
         }
+        
     } catch (error) {
         console.error('Σφάλμα ελέγχου υπάρχουσας παρατήρησης:', error);
-        if (!confirm('⚠️ ΔΕΝ ΜΠΟΡΕΣΑΜΕ ΝΑ ΕΛΕΓΞΟΥΜΕ ΑΝ Η ΟΜΑΔΑ ΕΧΕΙ ΗΔΗ ΠΑΡΑΤΗΡΗΘΕΙ.\n\nΘΕΛΕΤΕ ΝΑ ΣΥΝΕΧΙΣΕΤΕ;')) {
-            return;
-        }
+        alert('❌ ΣΦΑΛΜΑ ΕΛΕΓΧΟΥ! ΔΕΝ ΜΠΟΡΕΙΤΕ ΝΑ ΣΥΝΕΧΙΣΕΤΕ.');
+        return;
     }
     
     observationSession.observerId = observerName;
@@ -357,10 +355,17 @@ async function submitObservation() {
             return;
         }
     }
-    
-    // FIXED: Changed confirmation message to all caps
+
     if (!confirm('ΥΠΟΒΟΛΗ ΤΕΛΙΚΗΣ ΠΑΡΑΤΗΡΗΣΗΣ; ΔΕΝ ΜΠΟΡΕΙ ΝΑ ΑΝΑΙΡΕΘΕΙ!')) {
         return;
+    }
+    
+    const submitButton = document.querySelector('button[onclick="submitObservation()"]');
+    if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.style.opacity = '0.5';
+        submitButton.style.cursor = 'not-allowed';
+        submitButton.textContent = '⏳ ΥΠΟΒΟΛΗ ΣΕ ΕΞΕΛΙΞΗ...';
     }
     
     const now = new Date();
@@ -396,13 +401,18 @@ async function submitObservation() {
         }
         
         alert('✅ Η ΠΑΡΑΤΗΡΗΣΗ ΥΠΟΒΛΗΘΗΚΕ!');
-        
-        // FIXED: Removed confirmation, automatically redirect to admin.html
         window.location.href = 'admin.html';
         
     } catch (error) {
         console.error('Σφάλμα υποβολής:', error);
         alert('❌ ΑΠΟΤΥΧΙΑ ΥΠΟΒΟΛΗΣ! ΤΑ ΔΕΔΟΜΕΝΑ ΣΑΣ ΕΙΝΑΙ ΑΠΟΘΗΚΕΥΜΕΝΑ ΤΟΠΙΚΑ. ΠΑΡΑΚΑΛΩ ΔΟΚΙΜΑΣΤΕ ΞΑΝΑ.');
+        
+        if (submitButton) {
+            submitButton.disabled = false;
+            submitButton.style.opacity = '1';
+            submitButton.style.cursor = 'pointer';
+            submitButton.textContent = '✅ ΥΠΟΒΟΛΗ ΠΑΡΑΤΗΡΗΣΗΣ';
+        }
     }
 }
 
