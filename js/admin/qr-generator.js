@@ -40,13 +40,13 @@ const tekData = [
             const container = document.getElementById('qrContainer');
             container.innerHTML = '';
 
-            tekData.forEach((tek, index) => {
-                let url;
-                if (tek.id === 'entry') {
-                    url = `${baseUrl}team_entry.html`;
-                } else {
-                    url = `${baseUrl}unlock_system.html?tek=${tek.id}`;
-                }
+			tekData.forEach((tek, index) => {
+				let url;
+				if (tek.id === 'entry') {
+					url = `${baseUrl}pages/team_entry.html`;
+				} else {
+					url = `${baseUrl}pages/unlock_system.html?tek=${tek.id}`;
+				}
                 
                 const tagLabel = tagLabels[tek.tag] || '';
                 const tagClass = `tag-${tek.tag}`;
