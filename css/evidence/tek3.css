@@ -1,0 +1,102 @@
+.sms-message {
+    background: linear-gradient(135deg, #fff5f5 0%, #ffe5e5 100%);
+    border-left: 4px solid var(--danger);
+    padding: clamp(15px, 3vw, 25px);
+    margin: clamp(12px, 2.5vw, 18px) 0;
+    border-radius: var(--radius-md);
+    box-shadow: 0 4px 12px rgba(220,53,69,0.15);
+}
+
+.sms-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: clamp(10px, 2vw, 15px);
+    padding-bottom: clamp(8px, 1.5vw, 12px);
+    border-bottom: 1px solid rgba(220,53,69,0.2);
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.sms-time {
+    font-size: clamp(11px, 2.5vw, 14px);
+    color: var(--text-light);
+    font-weight: 600;
+}
+
+.sms-sender {
+    font-size: clamp(10px, 2.2vw, 13px);
+    color: var(--danger);
+    background: rgba(220,53,69,0.1);
+    padding: clamp(4px, 1vw, 6px) clamp(8px, 2vw, 12px);
+    border-radius: 12px;
+    font-weight: 700;
+}
+
+.sms-text {
+    font-size: clamp(15px, 3.5vw, 19px);
+    color: var(--text-dark);
+    font-weight: 600;
+    line-height: 1.6;
+    font-style: italic;
+    word-wrap: break-word;
+}
+
+.phone-data {
+    background: linear-gradient(135deg, var(--bg-white) 0%, var(--bg-light) 100%);
+    border: 2px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    padding: clamp(12px, 2.5vw, 18px);
+    margin-bottom: clamp(10px, 2vw, 15px);
+    transition: all var(--transition-base);
+    box-shadow: var(--shadow-sm);
+}
+
+@media (hover: hover) {
+    .phone-data:hover {
+        transform: translateX(5px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    .phone-data.critical:hover {
+        box-shadow: 0 6px 16px rgba(220,53,69,0.25);
+    }
+}
+
+.phone-data:active {
+    opacity: 0.95;
+}
+
+.phone-data.critical {
+    background: linear-gradient(135deg, #fff5f5 0%, #ffe5e5 100%);
+    border-color: var(--danger);
+    border-width: 3px;
+    box-shadow: 0 4px 12px rgba(220,53,69,0.15);
+}
+
+.data-label {
+    font-weight: 700;
+    font-size: clamp(11px, 2.5vw, 14px);
+    color: var(--text-light);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.data-value {
+    font-size: clamp(13px, 3vw, 16px);
+    color: var(--text-dark);
+    font-weight: 600;
+    word-wrap: break-word;
+}
+
+.phone-data.critical .data-value {
+    color: var(--danger);
+}
+
+@media (max-width: 480px) {
+    .sms-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

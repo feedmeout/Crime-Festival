@@ -1,0 +1,73 @@
+.fingerprint-item {
+    background: linear-gradient(135deg, var(--bg-white) 0%, var(--bg-light) 100%);
+    border: 2px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    padding: clamp(12px, 2.5vw, 15px);
+    margin-bottom: 12px;
+    transition: all var(--transition-base);
+    box-shadow: var(--shadow-sm);
+}
+
+@media (hover: hover) {
+    .fingerprint-item:hover {
+        transform: translateX(5px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    .fingerprint-item.primary:hover {
+        box-shadow: 0 6px 16px rgba(255,107,0,0.25);
+    }
+}
+
+.fingerprint-item:active {
+    opacity: 0.95;
+}
+
+.fingerprint-item.primary {
+    background: linear-gradient(135deg, #fff5f5 0%, #ffe5e5 100%);
+    border-color: var(--primary);
+    border-width: 3px;
+    box-shadow: 0 4px 12px rgba(255,107,0,0.15);
+}
+
+.fingerprint-name {
+    font-weight: 700;
+    font-size: clamp(14px, 3vw, 15px);
+    color: var(--text-dark);
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.fingerprint-name::before {
+    content: "👤";
+    font-size: clamp(16px, 3.5vw, 18px);
+}
+
+.fingerprint-item.primary .fingerprint-name {
+    color: #c00;
+    font-size: clamp(15px, 3.2vw, 16px);
+}
+
+.fingerprint-item.primary .fingerprint-name::before {
+    content: "⚠️";
+}
+
+.fingerprint-details {
+    font-size: clamp(12px, 2.5vw, 13px);
+    color: var(--text-light);
+    padding-left: clamp(24px, 5vw, 26px);
+    line-height: 1.5;
+}
+
+@media (max-width: 375px) {
+    .fingerprint-item {
+        padding: 10px;
+    }
+    
+    .fingerprint-details {
+        padding-left: 20px;
+    }
+}

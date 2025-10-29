@@ -1,0 +1,386 @@
+.critical-alert {
+    background: linear-gradient(135deg, var(--danger) 0%, var(--danger-dark) 100%);
+    border-radius: var(--radius-xl);
+    padding: clamp(18px, 3vw, 20px);
+    margin-bottom: clamp(25px, 4vw, 30px);
+    box-shadow: 0 6px 20px rgba(220,53,69,0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.critical-alert::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(0,0,0,0.05) 10px,
+        rgba(0,0,0,0.05) 20px
+    );
+    pointer-events: none;
+}
+
+.alert-badge {
+    position: absolute;
+    top: clamp(12px, 2vw, 15px);
+    right: clamp(12px, 2vw, 15px);
+    background: rgba(0,0,0,0.3);
+    color: white;
+    padding: clamp(5px, 1vw, 6px) clamp(10px, 2vw, 12px);
+    border-radius: 20px;
+    font-size: clamp(10px, 2vw, 11px);
+    font-weight: 700;
+    letter-spacing: 1px;
+    z-index: 1;
+}
+
+.alert-content {
+    position: relative;
+    z-index: 1;
+}
+
+.alert-title {
+    color: white;
+    font-size: clamp(15px, 4vw, 16px);
+    font-weight: 700;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.alert-text {
+    color: white;
+    font-size: clamp(14px, 3.5vw, 15px);
+    line-height: 1.6;
+    font-weight: 500;
+}
+
+.medical-document {
+    background: var(--bg-white);
+    border: 3px solid #1e3a8a;
+    border-radius: var(--radius-md);
+    padding: clamp(15px, 3vw, 20px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    position: relative;
+}
+
+.doc-header {
+    background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+    margin: clamp(-15px, -3vw, -20px) clamp(-15px, -3vw, -20px) clamp(15px, 3vw, 20px);
+    padding: clamp(15px, 3vw, 20px);
+    border-radius: 5px 5px 0 0;
+    position: relative;
+}
+
+.doc-stamp {
+    position: absolute;
+    top: 50%;
+    right: clamp(15px, 3vw, 20px);
+    transform: translateY(-50%) rotate(-15deg);
+    border: 3px solid rgba(220,53,69,0.8);
+    color: var(--danger);
+    padding: clamp(6px, 1.5vw, 8px) clamp(12px, 2vw, 15px);
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: clamp(11px, 3vw, 14px);
+    background: rgba(255,255,255,0.9);
+}
+
+.doc-title {
+    color: white;
+    font-size: clamp(16px, 4vw, 20px);
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.doc-subtitle {
+    color: rgba(255,255,255,0.9);
+    font-size: clamp(12px, 3vw, 13px);
+    text-align: center;
+}
+
+.doc-field {
+    margin-bottom: 15px;
+    padding: 10px;
+    background: rgba(30,58,138,0.03);
+    border-left: 3px solid #1e3a8a;
+    border-radius: 3px;
+}
+
+.doc-label {
+    font-weight: 700;
+    color: var(--bg-medium);
+    font-size: clamp(11px, 3vw, 12px);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 5px;
+}
+
+.doc-value {
+    color: var(--text-medium);
+    font-size: clamp(13px, 3.5vw, 14px);
+    line-height: 1.6;
+}
+
+.doc-critical {
+    background: linear-gradient(135deg, #fff5f5 0%, #ffe5e5 100%);
+    border: 3px solid var(--danger);
+    border-radius: var(--radius-md);
+    padding: 15px;
+    margin: clamp(15px, 3vw, 20px) 0;
+}
+
+.doc-critical .doc-label {
+    color: var(--danger);
+}
+
+.doc-critical .doc-value {
+    color: var(--danger);
+    font-weight: 600;
+    font-size: clamp(14px, 3.5vw, 15px);
+}
+
+.medication-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+    gap: 15px;
+    margin-bottom: clamp(15px, 3vw, 20px);
+}
+
+.medication-card {
+    background: linear-gradient(135deg, var(--bg-light) 0%, var(--bg-white) 100%);
+    border: 2px solid var(--border-light);
+    border-radius: var(--radius-xl);
+    padding: clamp(15px, 3vw, 20px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    position: relative;
+}
+
+.medication-card.critical {
+    background: linear-gradient(135deg, #fff5f5 0%, #ffe5e5 100%);
+    border: 3px solid var(--danger);
+    box-shadow: 0 4px 12px rgba(220,53,69,0.2);
+}
+
+.med-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--danger);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: clamp(9px, 2.5vw, 10px);
+    font-weight: bold;
+}
+
+.med-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.med-icon {
+    font-size: clamp(30px, 8vw, 36px);
+    flex-shrink: 0;
+}
+
+.med-name {
+    font-weight: 700;
+    font-size: clamp(15px, 4vw, 16px);
+    color: var(--bg-medium);
+    margin-bottom: 3px;
+}
+
+.medication-card.critical .med-name {
+    color: var(--danger);
+}
+
+.med-dose {
+    font-size: clamp(12px, 3vw, 13px);
+    color: var(--text-light);
+}
+
+.med-info {
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    margin-bottom: 10px;
+}
+
+.med-label {
+    font-size: clamp(10px, 2.5vw, 11px);
+    color: var(--text-lighter);
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.med-text {
+    font-size: clamp(13px, 3.5vw, 14px);
+    color: var(--text-medium);
+}
+
+.med-warning {
+    background: rgba(255,193,7,0.15);
+    border-left: 4px solid var(--warning);
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 12px;
+}
+
+.med-warning-title {
+    font-size: clamp(11px, 3vw, 12px);
+    color: #856404;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.med-warning-text {
+    font-size: clamp(11px, 3vw, 12px);
+    color: #856404;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.timeline {
+    position: relative;
+    padding-left: 40px;
+}
+
+.timeline::before {
+    content: "";
+    position: absolute;
+    left: 18px;
+    top: 20px;
+    bottom: 20px;
+    width: 3px;
+    background: linear-gradient(to bottom, var(--border-light) 0%, var(--primary) 100%);
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: clamp(20px, 4vw, 25px);
+}
+
+.timeline-icon {
+    position: absolute;
+    left: -33px;
+    top: 8px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--bg-medium);
+    border: 4px solid white;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(12px, 3vw, 14px);
+}
+
+.timeline-icon.warning {
+    background: var(--warning);
+}
+
+.timeline-icon.critical {
+    background: var(--danger);
+    animation: pulse 2s infinite;
+}
+
+.timeline-content {
+    background: linear-gradient(135deg, var(--bg-light) 0%, var(--bg-white) 100%);
+    border: 2px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    padding: 15px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.timeline-content.warning {
+    background: linear-gradient(135deg, #fff9e6 0%, var(--bg-white) 100%);
+    border-color: var(--warning);
+    box-shadow: 0 2px 6px rgba(255,193,7,0.15);
+}
+
+.timeline-content.critical {
+    background: linear-gradient(135deg, #fff5f5 0%, #ffe5e5 100%);
+    border: 3px solid var(--danger);
+    box-shadow: 0 4px 12px rgba(220,53,69,0.2);
+}
+
+.timeline-date {
+    font-weight: 700;
+    font-size: clamp(14px, 3.5vw, 15px);
+    color: var(--bg-medium);
+    margin-bottom: 8px;
+}
+
+.timeline-content.warning .timeline-date {
+    color: #f57c00;
+}
+
+.timeline-content.critical .timeline-date {
+    color: var(--danger);
+}
+
+.timeline-text {
+    font-size: clamp(12px, 3vw, 13px);
+    color: var(--text-light);
+    line-height: 1.6;
+}
+
+.timeline-badge {
+    display: inline-block;
+    background: var(--danger);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: clamp(9px, 2.5vw, 10px);
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.timeline-note {
+    font-size: clamp(11px, 3vw, 12px);
+    color: var(--danger);
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+@media (max-width: 480px) {
+    .timeline {
+        padding-left: 30px;
+    }
+    
+    .timeline::before {
+        left: 13px;
+    }
+    
+    .timeline-icon {
+        left: -28px;
+        width: 24px;
+        height: 24px;
+    }
+    
+    .doc-stamp {
+        right: 10px;
+        padding: 6px 10px;
+    }
+    
+    .medical-document {
+        padding: 15px;
+    }
+    
+    .doc-header {
+        margin: -15px -15px 15px -15px;
+        padding: 15px;
+    }
+}

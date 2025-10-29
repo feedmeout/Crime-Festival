@@ -1,0 +1,100 @@
+.fingerprint-item {
+    background: linear-gradient(135deg, var(--bg-white) 0%, var(--bg-light) 100%);
+    border: 2px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    padding: clamp(12px, 2.5vw, 15px);
+    margin-bottom: 12px;
+    transition: all var(--transition-base);
+    box-shadow: var(--shadow-sm);
+}
+
+.fingerprint-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.fingerprint-item.critical {
+    background: linear-gradient(135deg, #fff5f5 0%, #ffe5e5 100%);
+    border-color: var(--danger);
+    border-width: 3px;
+    box-shadow: 0 4px 12px rgba(220,53,69,0.15);
+}
+
+.fingerprint-item.critical:hover {
+    box-shadow: 0 6px 16px rgba(220,53,69,0.25);
+}
+
+.fingerprint-name {
+    font-weight: 700;
+    font-size: clamp(14px, 3vw, 15px);
+    color: var(--text-dark);
+    margin-bottom: clamp(6px, 1.5vw, 8px);
+    display: flex;
+    align-items: center;
+    gap: clamp(6px, 1.5vw, 8px);
+    flex-wrap: wrap;
+    word-wrap: break-word;
+}
+
+.fingerprint-name::before {
+    content: "👤";
+    font-size: clamp(18px, 4vw, 20px);
+    flex-shrink: 0;
+}
+
+.fingerprint-item.critical .fingerprint-name {
+    color: var(--danger);
+    font-size: clamp(15px, 3.2vw, 16px);
+}
+
+.fingerprint-item.critical .fingerprint-name::before {
+    content: "⚠️";
+}
+
+.fingerprint-details {
+    font-size: clamp(12px, 2.5vw, 13px);
+    color: var(--text-light);
+    padding-left: clamp(24px, 5vw, 28px);
+    line-height: 1.6;
+}
+
+.fingerprint-details div {
+    margin-bottom: 4px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+/* New classes to replace inline styles */
+
+.subsection-wrapper {
+    margin-top: 25px;
+}
+
+.subsection-header {
+    color: var(--bg-medium);
+    font-size: clamp(15px, 3vw, 16px);
+}
+
+.section-intro {
+    margin-bottom: 15px;
+}
+
+.section-item {
+    margin-bottom: 10px;
+}
+
+.text-critical {
+    color: var(--danger);
+}
+
+@media (max-width: 374px) {
+    .fingerprint-details {
+        padding-left: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .fingerprint-item:hover {
+        transform: none;
+    }
+}

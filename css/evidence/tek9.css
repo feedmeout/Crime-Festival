@@ -1,0 +1,117 @@
+.receipt-box {
+    background: linear-gradient(135deg, var(--bg-white) 0%, var(--bg-light) 100%);
+    border: 3px solid var(--danger);
+    border-radius: var(--radius-lg);
+    padding: clamp(15px, 3vw, 20px);
+    margin-bottom: clamp(15px, 3vw, 20px);
+    box-shadow: 0 4px 12px rgba(220,53,69,0.15);
+    font-family: 'Courier New', monospace;
+}
+
+.receipt-header {
+    text-align: center;
+    border-bottom: 2px dashed var(--text-medium);
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+}
+
+.receipt-company {
+    font-size: clamp(16px, 3.5vw, 18px);
+    font-weight: bold;
+    color: var(--text-dark);
+    margin-bottom: 5px;
+}
+
+.receipt-details {
+    font-size: clamp(10px, 2.2vw, 12px);
+    color: var(--text-light);
+    line-height: 1.6;
+}
+
+.receipt-item {
+    display: flex;
+    justify-content: space-between;
+    padding: clamp(6px, 1.5vw, 8px) 0;
+    border-bottom: 1px solid var(--border-light);
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.receipt-item.critical {
+    background: rgba(220,53,69,0.1);
+    padding: clamp(10px, 2vw, 12px);
+    margin: 10px clamp(-10px, -2vw, -10px);
+    border-radius: 5px;
+    font-weight: bold;
+    border: 2px solid var(--danger);
+}
+
+.receipt-label {
+    color: var(--text-medium);
+    font-size: clamp(12px, 2.5vw, 14px);
+    flex: 1;
+    min-width: 120px;
+}
+
+.receipt-value {
+    color: var(--text-dark);
+    font-weight: 600;
+    font-size: clamp(12px, 2.5vw, 14px);
+    text-align: right;
+}
+
+.receipt-total {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 2px solid var(--text-medium);
+    display: flex;
+    justify-content: space-between;
+    font-size: clamp(14px, 3vw, 16px);
+    font-weight: bold;
+    gap: 10px;
+}
+
+.signature-box {
+    margin-top: clamp(15px, 3vw, 20px);
+    padding: 15px;
+    background: rgba(255,107,0,0.05);
+    border: 2px dashed var(--primary);
+    border-radius: var(--radius-md);
+}
+
+.signature-label {
+    font-size: clamp(10px, 2.2vw, 12px);
+    color: var(--text-light);
+    margin-bottom: 10px;
+}
+
+.signature-name {
+    font-size: clamp(14px, 3vw, 16px);
+    font-weight: bold;
+    color: var(--text-dark);
+    font-style: italic;
+}
+
+.signature-box > div:last-child {
+    margin-top: 10px;
+    font-size: clamp(9px, 2vw, 11px);
+    color: var(--text-lighter);
+    line-height: 1.6;
+}
+
+@media (max-width: 375px) {
+    .receipt-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .receipt-value {
+        text-align: left;
+    }
+}
+
+@media (min-width: 769px) {
+    .receipt-item {
+        flex-wrap: nowrap;
+    }
+}

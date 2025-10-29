@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>Παρατήρηση Game Master - Crime Festival 2025</title>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, doc, setDoc, getDoc, getDocs, collection, updateDoc, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyA_9_40aa_wO_19g-1bIrSB6742aMOPwjo",
+            authDomain: "crime-festival-2025.firebaseapp.com",
+            projectId: "crime-festival-2025",
+            storageBucket: "crime-festival-2025.firebasestorage.app",
+            messagingSenderId: "663770004335",
+            appId: "1:663770004335:web:e42dbd983ab9b5277bc69a"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        window.firebaseDB = db;
+        window.firebaseDoc = doc;
+        window.firebaseSetDoc = setDoc;
+        window.firebaseGetDoc = getDoc;
+        window.firebaseGetDocs = getDocs;
+        window.firebaseCollection = collection;
+        window.firebaseUpdateDoc = updateDoc;
+        window.firebaseDeleteDoc = deleteDoc;
+        
+        console.log("✅ Firebase συνδέθηκε!");
+    </script>
+
+    <link rel="stylesheet" href="../../css/admin/observation.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🕵🏻‍♂️ ΠΑΡΑΤΗΡΗΣΕΙΣ GAME MASTER</h1>
+        </div>
+
+        <div class="section session-setup" id="setupSection">
+            <h2>📋 ΣΤΟΙΧΕΙΑ ΣΥΝΕΔΡΙΑΣ</h2>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>ΟΝΟΜΑ ΠΑΡΑΤΗΡΗΤΗ *</label>
+                    <input type="text" id="observerName" placeholder="">
+                </div>
+                <div class="form-group">
+                    <label>ΟΜΑΔΑ *</label>
+                    <select id="teamSelect">
+                        <option value="">Επιλέξτε ομάδα...</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="session-status">
+                <div class="status-info">
+                    <div class="status-indicator" id="statusIndicator">⏸️ ΔΕΝ ΕΧΕΙ ΞΕΚΙΝΗΣΕΙ</div>
+                    <div class="session-timer" id="sessionTimer">00:00:00</div>
+                </div>
+                <button class="btn btn-primary btn-large" id="startBtn" onclick="startSession()">
+                    🎬 ΕΝΑΡΞΗ ΠΑΡΑΤΗΡΗΣΗΣ
+                </button>
+            </div>
+        </div>
+
+        <div id="observationInterface" style="display: none;">
+            
+            <div class="section quick-controls">
+                <button class="btn btn-secondary" onclick="window.location.href='admin.html'">⬅️ ADMIN</button>
+                <button class="btn btn-primary" onclick="submitObservation()">✅ ΥΠΟΒΟΛΗ ΠΑΡΑΤΗΡΗΣΗΣ</button>
+            </div>
+
+            <div class="section observation-category">
+                <h2 class="category-title">🤖 ΜΟΤΙΒΑ ΧΡΗΣΗΣ ΤΝ</h2>
+                <div class="behaviors-grid">
+                    <div class="behavior-card">
+                        <div class="behavior-label">Συχνότητα ερωτημάτων στο AI</div>
+                        <div class="counter-control">
+                            <button class="counter-btn" onclick="decrementBehavior('ai_queries')">−</button>
+                            <span class="counter-display" id="counter_ai_queries">0</span>
+                            <button class="counter-btn counter-btn-plus" onclick="incrementBehavior('ai_queries')">+</button>
+                        </div>
+                    </div>
+
+                    <div class="behavior-card">
+                        <div class="behavior-label">Ποιότητα prompts</div>
+                        <div class="counter-control">
+                            <button class="counter-btn" onclick="decrementBehavior('prompt_quality')">−</button>
+                            <span class="counter-display" id="counter_prompt_quality">0</span>
+                            <button class="counter-btn counter-btn-plus" onclick="incrementBehavior('prompt_quality')">+</button>
+                        </div>
+                    </div>
+
+                    <div class="behavior-card">
+                        <div class="behavior-label">Επαλήθευση απαντήσεων AI</div>
+                        <div class="counter-control">
+                            <button class="counter-btn" onclick="decrementBehavior('ai_verification')">−</button>
+                            <span class="counter-display" id="counter_ai_verification">0</span>
+                            <button class="counter-btn counter-btn-plus" onclick="incrementBehavior('ai_verification')">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section observation-category">
+                <h2 class="category-title">👥 ΣΥΝΕΡΓΑΣΙΑ ΟΜΑΔΑΣ</h2>
+                <div class="behaviors-grid">
+                    <div class="behavior-card">
+                        <div class="behavior-label">Ενεργή συζήτηση μεταξύ μελών</div>
+                        <div class="counter-control">
+                            <button class="counter-btn" onclick="decrementBehavior('active_discussion')">−</button>
+                            <span class="counter-display" id="counter_active_discussion">0</span>
+                            <button class="counter-btn counter-btn-plus" onclick="incrementBehavior('active_discussion')">+</button>
+                        </div>
+                    </div>
+
+                    <div class="behavior-card">
+                        <div class="behavior-label">Ανταλλαγή πληροφοριών/στοιχείων</div>
+                        <div class="counter-control">
+                            <button class="counter-btn" onclick="decrementBehavior('info_sharing')">−</button>
+                            <span class="counter-display" id="counter_info_sharing">0</span>
+                            <button class="counter-btn counter-btn-plus" onclick="incrementBehavior('info_sharing')">+</button>
+                        </div>
+                    </div>
+
+                    <div class="behavior-card">
+                        <div class="behavior-label">Καταμερισμός καθηκόντων</div>
+                        <div class="counter-control">
+                            <button class="counter-btn" onclick="decrementBehavior('task_division')">−</button>
+                            <span class="counter-display" id="counter_task_division">0</span>
+                            <button class="counter-btn counter-btn-plus" onclick="incrementBehavior('task_division')">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section observation-category">
+                <h2 class="category-title">🧩 ΠΡΟΣΕΓΓΙΣΗ ΕΠΙΛΥΣΗΣ ΠΡΟΒΛΗΜΑΤΩΝ</h2>
+                <div class="behaviors-grid">
+                    <div class="behavior-card">
+                        <div class="behavior-label">Συστηματική ανάλυση στοιχείων</div>
+                        <div class="counter-control">
+                            <button class="counter-btn" onclick="decrementBehavior('systematic_analysis')">−</button>
+                            <span class="counter-display" id="counter_systematic_analysis">0</span>
+                            <button class="counter-btn counter-btn-plus" onclick="incrementBehavior('systematic_analysis')">+</button>
+                        </div>
+                    </div>
+
+                    <div class="behavior-card">
+                        <div class="behavior-label">Διασταύρωση αποδεικτικών στοιχείων</div>
+                        <div class="counter-control">
+                            <button class="counter-btn" onclick="decrementBehavior('cross_referencing')">−</button>
+                            <span class="counter-display" id="counter_cross_referencing">0</span>
+                            <button class="counter-btn counter-btn-plus" onclick="incrementBehavior('cross_referencing')">+</button>
+                        </div>
+                    </div>
+
+                    <div class="behavior-card">
+                        <div class="behavior-label">Κριτική σκέψη / Αμφισβήτηση</div>
+                        <div class="counter-control">
+                            <button class="counter-btn" onclick="decrementBehavior('critical_thinking')">−</button>
+                            <span class="counter-display" id="counter_critical_thinking">0</span>
+                            <button class="counter-btn counter-btn-plus" onclick="incrementBehavior('critical_thinking')">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section observation-category">
+                <h2 class="category-title">🎯 ΕΜΠΛΟΚΗ ΚΑΙ ΚΙΝΗΤΡΟΔΟΤΗΣΗ</h2>
+                <div class="behaviors-grid">
+                    <div class="behavior-card">
+                        <div class="behavior-label">Ενθουσιασμός / Ενέργεια</div>
+                        <div class="counter-control">
+                            <button class="counter-btn" onclick="decrementBehavior('enthusiasm')">−</button>
+                            <span class="counter-display" id="counter_enthusiasm">0</span>
+                            <button class="counter-btn counter-btn-plus" onclick="incrementBehavior('enthusiasm')">+</button>
+                        </div>
+                    </div>
+
+                    <div class="behavior-card">
+                        <div class="behavior-label">Επιμονή παρά τις δυσκολίες</div>
+                        <div class="counter-control">
+                            <button class="counter-btn" onclick="decrementBehavior('persistence')">−</button>
+                            <span class="counter-display" id="counter_persistence">0</span>
+                            <button class="counter-btn counter-btn-plus" onclick="incrementBehavior('persistence')">+</button>
+                        </div>
+                    </div>
+
+                    <div class="behavior-card">
+                        <div class="behavior-label">Εστίαση / Προσοχή</div>
+                        <div class="counter-control">
+                            <button class="counter-btn" onclick="decrementBehavior('focus')">−</button>
+                            <span class="counter-display" id="counter_focus">0</span>
+                            <button class="counter-btn counter-btn-plus" onclick="incrementBehavior('focus')">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section notes-section">
+                <h2>📝 ΓΕΝΙΚΕΣ ΣΗΜΕΙΩΣΕΙΣ</h2>
+                <textarea id="generalNotes" placeholder=""></textarea>
+                <button class="btn btn-success" onclick="addTimestampedNote()">➕ ΠΡΟΣΘΗΚΗ ΣΗΜΕΙΩΣΗΣ</button>
+                
+                <div class="notes-timeline" id="notesTimeline">
+                    <p class="empty-state">Δεν υπάρχουν σημειώσεις ακόμα...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../js/admin/observation.js"></script>
+</body>
+</html>
